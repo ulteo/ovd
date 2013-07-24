@@ -311,12 +311,6 @@ function get_users_list() {
 			</div>
 		</noscript>
 
-
-		<div id="notification" style="display: none;">
-			<div id="error" style="display: none;"></div>
-			<div id="ok" style="display: none;"></div>
-			<div id="info" style="display: none;"></div>
-		</div>
 		<div id="overlay" style="display: none;">
 			<div id="lock" style="display: none;"></div>
 			<div id="systemTest" class="rounded" style="display: none;">
@@ -776,7 +770,8 @@ function get_users_list() {
 ?>
 											</table>
 										</div>
-										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 35px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
+										<div id="loginError"></div>
+										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="height: 40px;">
 												<td style="text-align: left; vertical-align: bottom;">
 													<?php if (!$big_image_map) { ?>

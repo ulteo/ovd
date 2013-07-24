@@ -82,6 +82,14 @@ function hideSystemTestError(message) {
 	jQuery('#systemTestError').hide();
 }
 
+function showLoginError(message) {
+	jQuery('#loginError').html(message);
+}
+
+function hideLoginError() {
+	jQuery('#loginError').html("");
+}
+
 function showError(errormsg) {
 	var message = '<div style="width: 16px; height: 16px; float: right; margin-right: 20px;">'+
 	              	'<a href="javascript:;" onclick="hideError(); return false;">'+

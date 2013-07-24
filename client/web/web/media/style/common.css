@@ -101,6 +101,16 @@ div#image_ulteo-small_png {
 	background: #eee;
 }
 
+#loginError {
+	height: 1em;
+	margin: 20px 7px 0px 0px;
+	overflow: hidden;
+	color: #a30505;
+	text-align: right;
+	font-weight: bold;
+	word-wrap: break-word;
+}
+
 /* ---------------------------------------- Loading screen
    Loadin and unloading screens :
    - ProgressBar

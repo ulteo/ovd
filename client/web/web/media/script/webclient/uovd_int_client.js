@@ -128,7 +128,7 @@ function validate_settings() {
 
 	if(defaults.force_use_local_credentials || settings.use_local_credentials) {
 		if(! framework.rdp_providers.java || ! framework.tests.java) {
-			showError("Use local credentials : Java support required");
+			showLoginError("Use local credentials : Java support required");
 			settings.use_local_credentials = false;
 			jQuery("#use_local_credentials_true").removeAttr('checked');
 			jQuery("#use_local_credentials_false").prop("checked", "checked")
@@ -279,11 +279,7 @@ function initialize_ui() {
 		}
 	});
 	jQuery('#startsession').on('submit', function() {
-		if (jQuery('#error').filter(":visible")[0]) {
-			hideError();
-			return false;
-		}
-
+		hideLoginError();
 		disableLogin();
 		startSession();
 	});
@@ -412,14 +408,14 @@ function initialize_framework() {
 		var message = params["message"];
 
 		if(code == "bad_xml") {
-			showError(i18n['internal_error']);
+			showLoginError(i18n['internal_error']);
 			enableLogin();
 			return;
 		}
 
 		if(from == "start" || from == "session_status") { /* = xml 'response' || 'error' */
 			var message = i18n[code] || i18n['internal_error'];
-			showError(message);
+			showLoginError(message);
 			enableLogin();
 			return;
 		}
