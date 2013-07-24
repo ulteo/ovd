@@ -163,8 +163,12 @@ class Profile(AbstractProfile):
 				if s != 0:
 					Logger.error("Profile sharedFolder umount dir failed")
 					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(s, o))
+					continue
 				
-				os.rmdir(sharedFolder["mountdest"])
+				try:
+					os.rmdir(sharedFolder["mountdest"])
+				except OSError, e:
+					Logger.error("Unable to delete mount point (%s): %s"%(sharedFolder["mountdest"], str(e)))
 		
 		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
