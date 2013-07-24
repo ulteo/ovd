@@ -13,9 +13,9 @@
  *  Sound Channel Process Functions
  *  Copyright (C) Matthew Chapman 2003
  *  Copyright (C) GuoJunBo guojunbo@ict.ac.cn 2003
- *  Copyright (C) 2010-2011 Ulteo SAS
+ *  Copyright (C) 2010-2013 Ulteo SAS
  *  http://www.ulteo.com
- *  Author David LECHEVALIER <david@ulteo.com> 2010-2011
+ *  Author David LECHEVALIER <david@ulteo.com> 2010,2011,2013
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -152,7 +152,6 @@ public class SoundDriver {
 		current.s = s;
 		current.tick = tick;
 		current.index = packetIndex;
-		current.s.incrementPosition(4);
 		current.time = new GregorianCalendar().getTimeInMillis();
 		try {
 			this.spool.add(current);

@@ -11,9 +11,9 @@
  *  Sound Channel Process Functions
  *  Copyright (C) Matthew Chapman 2003
  *  Copyright (C) GuoJunBo guojunbo@ict.ac.cn 2003
- *  Copyright (C) 2010-2011 Ulteo SAS
+ *  Copyright (C) 2010-2013 Ulteo SAS
  *  http://www.ulteo.com
- *  Author David LECHEVALIER <david@ulteo.com> 2010-2011
+ *  Author David LECHEVALIER <david@ulteo.com> 2010,2011,2013
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,6 +65,8 @@ public class SoundChannel extends VChannel {
 	private SoundDriver		soundDriver;
 
 	private WaveFormatEx[]	formats;
+	private byte[] pendingData;
+	
 
 	public SoundChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -79,6 +81,7 @@ public class SoundChannel extends VChannel {
 		for( int i = 0; i <this. MAX_FORMATS; i++ )
 			this.formats[ i ] = new WaveFormatEx();
 		this.soundDriver = new SoundDriver( this );
+		this.pendingData = new byte[4];
 		
 		//init & run playThread
 		this.soundDriver.start();
@@ -119,6 +122,7 @@ public class SoundChannel extends VChannel {
 				this.deviceOpen = true;
 				this.currentFormat = format;
 			}
+			data.copyFromByteArray(pendingData, 0, 0, 4);
 			this.soundDriver.waveOutWrite( data, this.tick, this.packetIndex );
 			this.awaitingDataPacket = false;
 			return;
@@ -132,7 +136,9 @@ public class SoundChannel extends VChannel {
 			case RDPSND_WRITE:
 				this.tick = data.getLittleEndian16() & 0xFFFF;
 				this.format = data.getLittleEndian16() & 0xFFFF;
-				this.packetIndex = data.getLittleEndian16() & 0xFFFF;
+				this.packetIndex = data.get8() & 0xFF;
+				data.incrementPosition(3); // pad
+				data.copyToByteArray(pendingData, 0, data.getPosition(), 4);
 				this.awaitingDataPacket = true;
 				break;
 			case RDPSND_CLOSE:
@@ -180,6 +186,7 @@ public class SoundChannel extends VChannel {
 
 	private void negotiate( RdpPacket data ) {
 		boolean deviceAvailable = false;
+		int formatLength = 0;
 
 		data.incrementPosition( 14 ); // advance 14 bytes - flags, volume, pitch, UDP port
 
@@ -219,12 +226,15 @@ public class SoundChannel extends VChannel {
 
 				if( deviceAvailable && soundDriver.waveOutFormatSupported( format ) ) {
 					this.formatCount++;
+					formatLength += 18;
+					formatLength += format.cbSize;
+					
 					if( this.formatCount == MAX_FORMATS ) break;
 				}
 			}
 		}
-
-		RdpPacket_Localised out = initPacket( RDPSND_NEGOTIATE | 0x200, 20 + 18 * formatCount );
+		
+		RdpPacket_Localised out = initPacket( RDPSND_NEGOTIATE | 0x200, 20 + formatLength );
 		out.setLittleEndian32( 3 ); // flags
 		out.setLittleEndian32( 0xffffffff ); // volume
 		out.setLittleEndian32( 0 ); // pitch
@@ -243,7 +253,11 @@ public class SoundChannel extends VChannel {
 			out.setLittleEndian32( format.nAvgBytesPerSec );
 			out.setLittleEndian16( format.nBlockAlign );
 			out.setLittleEndian16( format.wBitsPerSample );
-			out.setLittleEndian16( 0 ); // cbSize
+			out.setLittleEndian16( format.cbSize ); // cbSize
+			if (format.cbSize > 0) {
+				out.copyFromByteArray(format.cb, 0, out.getPosition(), format.cbSize);
+				out.incrementPosition(format.cbSize);
+			}
 		}
 
 		out.markEnd();
