@@ -96,7 +96,7 @@ function get_available_languages() {
 // 		array('id' => 'be', 'english_name' => 'Belarusian'),
 		array('id' => 'zh-cn', 'english_name' => 'Chinese', 'local_name' => '中文'),
 // 		array('id' => 'hr', 'english_name' => 'Croatian'),
-// 		array('id' => 'cs', 'english_name' => 'Czech', 'local_name' => 'Česky'),
+		array('id' => 'cs-cz', 'english_name' => 'Czech', 'local_name' => 'Česky'),
 		array('id' => 'da-dk', 'english_name' => 'Danish', 'local_name' => 'Dansk'),
 		array('id' => 'nl', 'english_name' => 'Dutch', 'local_name' => 'Nederlands'),
 		array('id' => 'en-us', 'english_name' => 'English (US)'),

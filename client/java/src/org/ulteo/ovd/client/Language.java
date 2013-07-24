@@ -31,7 +31,7 @@ public class Language {
 //			{"Belarusian", "", "be"},
 			{"Chinese", "中文", "zh", "cn"},
 //			{"Croatian", "", "hr"},
-//			{"Czech", "Česky", "cs"},
+			{"Czech", "Česky", "cs"},
 			{"Danish", "Dansk", "da"},
 			{"Dutch", "Nederlands", "nl"},
 			{"English (US)", "", "en", "us"},

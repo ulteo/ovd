@@ -50,6 +50,7 @@ scripts_DATA = ad.png \
                co.png \
                cr.png \
                cs.png \
+               cs-cz.png \
                cu.png \
                cv.png \
                cx.png \

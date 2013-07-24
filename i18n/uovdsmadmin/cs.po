@@ -1,0 +1,4760 @@
+# Czech translations for uovdsmadmin package.
+# Copyright (C) 2013 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2013.
+# Author: Marek Cachel <cachel@itprime.cz>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdsmadmin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-23 12:22+0100\n"
+"PO-Revision-Date: 2013-02-27 14:10+0200\n"
+"Last-Translator: Marek Cachel\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../SessionManager/web/admin/actions.php:83
+msgid ""
+"Task to add application '%APPLICATION%' on server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"Úkol přidání aplikace '%APPLICATION%' na server '%SERVER%' byl úspěšně "
+"přidán"
+
+#: ../../SessionManager/web/admin/actions.php:90
+msgid ""
+"Task to remove application '%APPLICATION%' from server '%SERVER%' was "
+"successfully added"
+msgstr ""
+"Úkol odebrání aplikace '%APPLICATION%' ze serveru '%SERVER%' byl úspěšně "
+"přidán"
+
+#: ../../SessionManager/web/admin/actions.php:101
+msgid "Application '%APPLICATION%' successfully added to server '%SERVER%'"
+msgstr "Aplikace '%APPLICATION%' byla úspěšně přidána na server '%SERVER%'"
+
+#: ../../SessionManager/web/admin/actions.php:104
+msgid ""
+"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"%'"
+msgstr ""
+"Při přidávání aplikace '%APPLICATION%' na server '%SERVER%' nastala chyba."
+
+#: ../../SessionManager/web/admin/actions.php:110
+msgid "Application '%APPLICATION%' successfully deleted from server '%SERVER%'"
+msgstr "Aplikace '%APPLICATION%' byla úspěšně smazána ze serveru '%SERVER%'"
+
+#: ../../SessionManager/web/admin/actions.php:146
+#: ../../SessionManager/web/admin/actions.php:333
+#: ../../SessionManager/web/admin/actions.php:496
+msgid "ApplicationDB is not writeable"
+msgstr "Aplikační DB není nastavena pro zápis"
+
+#: ../../SessionManager/web/admin/actions.php:153
+#: ../../SessionManager/web/admin/actions.php:211
+#: ../../SessionManager/web/admin/actions.php:251
+#, php-format
+msgid "Failed to import application '%s'"
+msgstr "Import aplikace '%s' se nezdařil"
+
+#: ../../SessionManager/web/admin/actions.php:158
+#: ../../SessionManager/web/admin/actions.php:378
+#, php-format
+msgid "Failed to delete application '%s'"
+msgstr "Smazání aplikace '%s' se nezdařilo"
+
+#: ../../SessionManager/web/admin/actions.php:161
+#: ../../SessionManager/web/admin/actions.php:383
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Aplikace '%s' byla úspěšně smazána"
+
+#: ../../SessionManager/web/admin/actions.php:170
+#, php-format
+msgid "Unable to import application %s"
+msgstr "Nelze naimportovat aplikaci %s"
+
+#: ../../SessionManager/web/admin/actions.php:177
+#, php-format
+msgid "Unable to modify application '%s'"
+msgstr "Nelze změnit aplikaci '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:180
+#: ../../SessionManager/web/admin/actions.php:432
+#, php-format
+msgid "Application '%s' successfully modified"
+msgstr "Aplikace '%s' byla úspěšně změněna"
+
+#: ../../SessionManager/web/admin/actions.php:199
+msgid "Orphan applications successfully removed"
+msgstr "Osiřelá aplikace byla úspěšně odstraněna"
+
+#: ../../SessionManager/web/admin/actions.php:202
+msgid "Problem while removing orphan applications"
+msgstr "V průběhu odstraňování osiřelé aplikace nastal problém"
+
+#: ../../SessionManager/web/admin/actions.php:222
+#: ../../SessionManager/web/admin/actions.php:360
+#, php-format
+msgid "Failed to add application '%s'"
+msgstr "Chyba při přidávání aplikace '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:225
+#: ../../SessionManager/web/admin/actions.php:363
+#, php-format
+msgid "Application '%s' successfully added"
+msgstr "Aplikace '%s' byla úspěšně přidána"
+
+#. UPLOAD_ERR_INI_SIZE
+#: ../../SessionManager/web/admin/actions.php:262
+#: ../../SessionManager/web/admin/actions.php:441
+msgid "Oversized file for server rules"
+msgstr "Překročený limit souboru podle pravidel serveru"
+
+#. UPLOAD_ERR_PARTIAL
+#: ../../SessionManager/web/admin/actions.php:266
+#: ../../SessionManager/web/admin/actions.php:445
+msgid "The file was corrupted while upload"
+msgstr "Soubor byl poškozen v průběhu nahrávání"
+
+#: ../../SessionManager/web/admin/actions.php:278
+#: ../../SessionManager/web/admin/actions.php:457
+msgid "The file is not readable"
+msgstr "Souber nelze přečíst"
+
+#: ../../SessionManager/web/admin/actions.php:283
+msgid "No Imagick support found"
+msgstr "Podpora Imagick nebyla nalezena"
+
+#: ../../SessionManager/web/admin/actions.php:289
+#, php-format
+msgid "Unable to write icon file for application '%s'"
+msgstr "Nelze uložit soubor ikony aplikace '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:300
+msgid "Uploaded file is not a valid image"
+msgstr "Nahraný soubor není obrázkem"
+
+#: ../../SessionManager/web/admin/actions.php:305
+#, php-format
+msgid "Icon for application '%s' has been successfully uploaded"
+msgstr "Ikona aplikace '%s' byla úspěšně nahrána"
+
+#: ../../SessionManager/web/admin/actions.php:312
+#, php-format
+msgid "Failed to load server '%s'"
+msgstr "Nelze zavést server '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:319
+#, php-format
+msgid "Icon of application '%s' has been updated from server '%s'"
+msgstr "Ikona aplikace '%s' byla aktualizována ze serveru '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:353
+msgid "Application is not ok"
+msgstr "Aplikace není v pořádku"
+
+#: ../../SessionManager/web/admin/actions.php:373
+#: ../../SessionManager/web/admin/actions.php:415
+#: ../../SessionManager/web/admin/actions.php:503
+#: ../../SessionManager/web/admin/actions.php:521
+#, php-format
+msgid "Unable to import application '%s'"
+msgstr "Nelze naimportovat aplikaci '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:394
+#, php-format
+msgid "'%s' application's icon was successfully deleted"
+msgstr "Ikona aplikace '%s' byla úspěšně vymazána"
+
+#: ../../SessionManager/web/admin/actions.php:427
+#: ../../SessionManager/web/admin/actions.php:513
+#: ../../SessionManager/web/admin/actions.php:531
+#, php-format
+msgid "Failed to modify application '%s'"
+msgstr "Chyba úpravy aplikace '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:472
+msgid "The icon is not an image"
+msgstr "Ikona není obrázkem"
+
+#: ../../SessionManager/web/admin/actions.php:547
+#: ../../SessionManager/web/admin/actions.php:557
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "Skupina aplikací '%s' byla úspěšně upravena"
+
+#: ../../SessionManager/web/admin/actions.php:568
+msgid "Application Group Database is not writeable"
+msgstr "Databáze skupiny aplikací není pro zápis"
+
+#: ../../SessionManager/web/admin/actions.php:579
+#, php-format
+msgid "Unable to create applications group '%s'"
+msgstr "Nelze vytvořit skupinu aplikací '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:583
+#, php-format
+msgid "Applications group '%s' successfully added"
+msgstr "Skupina aplikací '%s' byla úspěšně přidána"
+
+#: ../../SessionManager/web/admin/actions.php:595
+#: ../../SessionManager/web/admin/actions.php:701
+#, php-format
+msgid "Importing applications group '%s' failed"
+msgstr "Import skupiny aplikací '%s' byl neúspěšný"
+
+#: ../../SessionManager/web/admin/actions.php:600
+#, php-format
+msgid "Unable to remove applications group '%s'"
+msgstr "Nelze odstranit skupinu aplikací '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:603
+#, php-format
+msgid "Applications group '%s' successfully deleted"
+msgstr "Skupina aplikací '%s' byla úspěšně smazána"
+
+#: ../../SessionManager/web/admin/actions.php:614
+#, php-format
+msgid "Import of applications group '%s' failed"
+msgstr "Import skupiny aplikací '%s' se nezdařil"
+
+#: ../../SessionManager/web/admin/actions.php:635
+#, php-format
+msgid "Unable to modify applications group '%s'"
+msgstr "Nelze upravit skupinu aplikací '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:637
+#, php-format
+msgid "Applications group '%s' successfully modified"
+msgstr "Skupina aplikací '%s' byla úspěšně upravena"
+
+#. problem, what to do ?
+#: ../../SessionManager/web/admin/actions.php:654
+#: ../../SessionManager/web/admin/actions.php:658
+#: ../../SessionManager/web/admin/actions.php:678
+#: ../../SessionManager/web/admin/actions.php:973
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "Skupina uživatelů '%s' byla úspěšně upravena"
+
+#: ../../SessionManager/web/admin/actions.php:668
+#, php-format
+msgid "Usergroup '%s' does not exist"
+msgstr "Skupina uživatelů '%s' neexistuje"
+
+#: ../../SessionManager/web/admin/actions.php:673
+#, php-format
+msgid ""
+"Unable to remove an user from usergroup '%s' because it is the default "
+"usergroup"
+msgstr ""
+"Nelze odstranit uživatele ze skupiny uživatelů '%s' protože je výchozí "
+"uživatelskou skupinou"
+
+#: ../../SessionManager/web/admin/actions.php:695
+#, php-format
+msgid "Importing usergroup '%s' failed"
+msgstr "Import skupiny uživatelů '%s' se nezdařil"
+
+#: ../../SessionManager/web/admin/actions.php:709
+msgid "Publication successfully added"
+msgstr "Publikace byla úspěšně přidána"
+
+#: ../../SessionManager/web/admin/actions.php:711
+msgid "Unable to save the publication"
+msgstr "Nelze uložit publikaci"
+
+#: ../../SessionManager/web/admin/actions.php:714
+msgid "This publication already exists"
+msgstr "Tato publikace už existuje"
+
+#: ../../SessionManager/web/admin/actions.php:722
+msgid "Publication successfully deleted"
+msgstr "Publikace byla úspěšně odstraněna"
+
+#: ../../SessionManager/web/admin/actions.php:724
+msgid "Unable to delete the publication"
+msgstr "Nelze smazat publikaci"
+
+#: ../../SessionManager/web/admin/actions.php:727
+msgid "This publication does not exist"
+msgstr "Tato pulikace neexistuje"
+
+#: ../../SessionManager/web/admin/actions.php:741
+msgid "You must define a name for your usergroup"
+msgstr "Musíte stanovit název Vaší uživatelské skupiny"
+
+#: ../../SessionManager/web/admin/actions.php:747
+msgid "User Group Database is not writeable"
+msgstr "Databáze uživatelské skupiny není k zápisu"
+
+#: ../../SessionManager/web/admin/actions.php:753
+#: ../../SessionManager/web/modules/UserGroupDBDynamic.php:32
+msgid "UserGroupDBDynamic module must be enabled"
+msgstr "UserGroupDBDynamic modul musí být povolen"
+
+#: ../../SessionManager/web/admin/actions.php:758
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached.php:32
+msgid "UserGroupDBDynamicCached module must be enabled"
+msgstr "UserGroupDBDynamicCached musí být povolen"
+
+#: ../../SessionManager/web/admin/actions.php:765
+msgid "You must provide a value to each rule of your usergroup"
+msgstr "Musíte zadat hodnotu pro každé pravidlo své uživatelské skupiny"
+
+#: ../../SessionManager/web/admin/actions.php:783
+msgid "Unknow usergroup type"
+msgstr "Neznámý druh skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/actions.php:788
+#, php-format
+msgid "Unable to create usergroup '%s'"
+msgstr "Nelze vytvořit skupinu uživatelů '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:792
+msgid "UserGroup successfully added"
+msgstr "Skupina uživatelů byla úspěšně přidána"
+
+#: ../../SessionManager/web/admin/actions.php:802
+#: ../../SessionManager/web/admin/actions.php:831
+#: ../../SessionManager/web/admin/actions.php:910
+#: ../../SessionManager/web/admin/actions.php:984
+#, php-format
+msgid "Failed to import Usergroup '%s'"
+msgstr "Import skupiny uživatelů  '%s' selhal"
+
+#: ../../SessionManager/web/admin/actions.php:808
+#: ../../SessionManager/web/admin/actions.php:826
+msgid "User Group Database not writeable"
+msgstr "Databáze skupiny uživatelů není pro zápis"
+
+#: ../../SessionManager/web/admin/actions.php:813
+#, php-format
+msgid "Unable to remove usergroup '%s'"
+msgstr "Nelze odstranit skupinu uživatelů '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:816
+#, php-format
+msgid "UserGroup '%s' successfully deleted"
+msgstr "Skupina uživatelů '%s' byla úspěšně smazána"
+
+#: ../../SessionManager/web/admin/actions.php:861
+#: ../../SessionManager/web/admin/actions.php:934
+#, php-format
+msgid "Unable to update Usergroup '%s'"
+msgstr "Nelze aktualizovat skupinu uživatelů '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:865
+#: ../../SessionManager/web/admin/actions.php:899
+#, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr "Skupina uživatelů '%s' byla úspěšně upravena"
+
+#: ../../SessionManager/web/admin/actions.php:872
+msgid "Not enough rights"
+msgstr "Nedostatečná oprávnění"
+
+#: ../../SessionManager/web/admin/actions.php:889
+#, php-format
+msgid "Failed to import group '%s'"
+msgstr "Chyba při importu skupiny '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:896
+msgid "Unable to save prefs"
+msgstr "Nelze uložit předvolby"
+
+#: ../../SessionManager/web/admin/actions.php:917
+msgid "You must give a value to each rule of your usergroup"
+msgstr "Musíte zadat hodnotu pro každé pravidlo Vaší skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/actions.php:936
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "Pravidla '%s' byla úspěšně upravena"
+
+#: ../../SessionManager/web/admin/actions.php:1042
+msgid "Usergroup successfully modified"
+msgstr "Skupina uživatelů byla úspěšně upravena"
+
+#: ../../SessionManager/web/admin/actions.php:1045
+msgid "Failed to modify usergroup"
+msgstr "Úprava skupiny uživatelů selhala"
+
+#: ../../SessionManager/web/admin/actions.php:1056
+msgid "User Database not writeable"
+msgstr "Databáze uživatele není k zápisu"
+
+#: ../../SessionManager/web/admin/actions.php:1062
+msgid "Unable to create user"
+msgstr "Nelze vytvořit uživatele"
+
+#: ../../SessionManager/web/admin/actions.php:1072
+msgid "Unable to create user with an empty password"
+msgstr "Nelze vytvořit uživatele s prázdným heslem"
+
+#: ../../SessionManager/web/admin/actions.php:1078
+#, php-format
+msgid "Unable to create user '%s'"
+msgstr "Nelze vytvořit uživatele '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1082
+#, php-format
+msgid "User '%s' successfully added"
+msgstr "Uživatel '%s' byl úspěšně vytvořen"
+
+#: ../../SessionManager/web/admin/actions.php:1092
+#, php-format
+msgid "Unable to delete user '%s' because he has an active session"
+msgstr "Nelze smazat uživatele '%s' protože jeho sekce je aktívní"
+
+#: ../../SessionManager/web/admin/actions.php:1097
+#: ../../SessionManager/web/admin/actions.php:1111
+#, php-format
+msgid "Unable to delete user '%s'"
+msgstr "Nelze smazat uživatele '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1114
+#, php-format
+msgid "User '%s' successfully deleted"
+msgstr "Uživatel '%s' byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1127
+#, php-format
+msgid "Unable to import user '%s'"
+msgstr "Nelze naimportovat uživatele '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1137
+#, php-format
+msgid "Unable to modify user '%s'"
+msgstr "Nelze upravit uživatele '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1139
+#, php-format
+msgid "User '%s' successfully modified"
+msgstr "Uživatel '%s' byl úspěšně upraven"
+
+#: ../../SessionManager/web/admin/actions.php:1147
+msgid "No custom password given for populating the database."
+msgstr "Nebylo zadáno heslo pro zapsání do databáze"
+
+#: ../../SessionManager/web/admin/actions.php:1158
+msgid "User database populated."
+msgstr "Databáze uživatele byla vyplněna"
+
+#: ../../SessionManager/web/admin/actions.php:1161
+msgid "User database population failed."
+msgstr "Vyplnění uživatelské databáze se nezdařilo."
+
+#: ../../SessionManager/web/admin/actions.php:1169
+#: ../../SessionManager/web/admin/actions.php:1228
+msgid "Shared folder management is not enabled"
+msgstr "Správce sdíleného adresáře není povolen"
+
+#: ../../SessionManager/web/admin/actions.php:1190
+#, php-format
+msgid "Unable to delete network folder '%s'"
+msgstr "Nelze smazat síťový adresář '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1193
+#, php-format
+msgid "Unable to delete network folder with id '%s'"
+msgstr "Nelze smazat síťový adresář s id '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1198
+msgid "Network folders successfully deleted"
+msgstr "Síťový adresář byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1215
+msgid "Shared folder successfully renamed"
+msgstr "Sdílený adresář byl úspěšně přejmenován"
+
+#: ../../SessionManager/web/admin/actions.php:1217
+msgid "Update of the shared folder failed"
+msgstr "Aktualizace sdíleného adresáře se nezdařila"
+
+#: ../../SessionManager/web/admin/actions.php:1219
+msgid "A shared folder with that name already exists!"
+msgstr "Sdílený adresář s tímto jménem už existuje!"
+
+#: ../../SessionManager/web/admin/actions.php:1247
+msgid "Profile management is not enabled"
+msgstr "Správce profilu není povolen"
+
+#: ../../SessionManager/web/admin/actions.php:1265
+#, php-format
+msgid "Unable to delete profile '%s'"
+msgstr "Nelze smazat profil '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1267
+#, php-format
+msgid "Profile '%s' successfully deleted"
+msgstr "Profil '%s' byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1270
+#, php-format
+msgid "Unable to load profile '%s'"
+msgstr "Nelze zavést profil '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1283
+msgid "Untitled"
+msgstr "Nepojmenován"
+
+#: ../../SessionManager/web/admin/actions.php:1288
+msgid "News successfully added"
+msgstr "Novinka byla úspěšně přidána"
+
+#: ../../SessionManager/web/admin/actions.php:1295
+msgid "Unable to delete this news"
+msgstr "Nelze smazat tuto novinku"
+
+#: ../../SessionManager/web/admin/actions.php:1297
+msgid "News successfully deleted"
+msgstr "Novinka byla úspěšně smazána"
+
+#: ../../SessionManager/web/admin/actions.php:1307
+msgid "Password is empty"
+msgstr "Heslo je prázdné"
+
+#: ../../SessionManager/web/admin/actions.php:1310
+msgid "Passwords are not identical"
+msgstr "Hesla nejsou stejná"
+
+#: ../../SessionManager/web/admin/actions.php:1313
+msgid "Current password is not correct"
+msgstr "Současné heslo nesouhlasí"
+
+#: ../../SessionManager/web/admin/actions.php:1318
+msgid "Password successfully changed"
+msgstr "Heslo bylo úspěšně změněno"
+
+#: ../../SessionManager/web/admin/actions.php:1322
+msgid "Password not changed"
+msgstr "Heslo nebylo změněno"
+
+#: ../../SessionManager/web/admin/actions.php:1341
+#, php-format
+msgid "Unable to delete session '%s'"
+msgstr "Nelze smazat relaci '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1345
+#, php-format
+msgid "Session '%s' successfully deleted"
+msgstr "Relace '%s' byla úspěšně smazána"
+
+#: ../../SessionManager/web/admin/actions.php:1363
+#, php-format
+msgid ""
+"Unable to delete the server '%s' because there are active sessions on it."
+msgstr "Nelze smazat server '%s' protože obsahuje aktivní relace"
+
+#: ../../SessionManager/web/admin/actions.php:1371
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "Server '%s' byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1389
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "Server '%s' byl úspěšně registrován"
+
+#: ../../SessionManager/web/admin/actions.php:1392
+#, php-format
+msgid "Failed to register Server '%s'"
+msgstr "Registrace serveru '%s' se nezdařila"
+
+#: ../../SessionManager/web/admin/actions.php:1414
+#: ../../SessionManager/web/admin/actions.php:1425
+#: ../../SessionManager/web/admin/actions.php:1441
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "Server '%s' byl úspěšně upraven"
+
+#: ../../SessionManager/web/admin/actions.php:1434
+#, php-format
+msgid "Redirection name \"%s\" is invalid"
+msgstr "Název přesměrování '%s' je chybný "
+
+#: ../../SessionManager/web/admin/actions.php:1454
+#: ../../SessionManager/web/admin/actions.php:1507
+#: ../../SessionManager/web/admin/actions.php:1530
+msgid "Task successfully added"
+msgstr "Úkol byl úspěšně přidán"
+
+#: ../../SessionManager/web/admin/actions.php:1467
+#, php-format
+msgid "Server '%s' is upgrading"
+msgstr "Server '%s' se upgraduje"
+
+#: ../../SessionManager/web/admin/actions.php:1501
+#: ../../SessionManager/web/admin/actions.php:1562
+msgid "Task successfully deleted"
+msgstr "Úkol byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1575
+msgid "You must provide a name to your shared folder"
+msgstr "Musíte poskytnout název vašeho sdíleného adresáře"
+
+#: ../../SessionManager/web/admin/actions.php:1581
+msgid "A shared folder with this name already exists"
+msgstr "Sdílený adresář s tímto názvem již existuje"
+
+#: ../../SessionManager/web/admin/actions.php:1596
+msgid "No server avalaible for shared folder"
+msgstr "Není dostupný žádný server pro sdílený adresář"
+
+#: ../../SessionManager/web/admin/actions.php:1604
+msgid "Unable to add shared folder"
+msgstr "Nelze přidat sdílený adresář"
+
+#: ../../SessionManager/web/admin/actions.php:1608
+#, php-format
+msgid "Shared folder '%s' successfully added"
+msgstr "Sdílený adresář '%s' byl úspěšně přidán"
+
+#: ../../SessionManager/web/admin/actions.php:1617
+#: ../../SessionManager/web/admin/actions.php:1640
+msgid "Unable to delete this shared folder"
+msgstr "Nelze smazat tento sdílený adresář"
+
+#: ../../SessionManager/web/admin/actions.php:1623
+#: ../../SessionManager/web/admin/actions.php:1634
+#, php-format
+msgid "Unable to delete shared folder on file server '%s'"
+msgstr "Nelze smazat sdílený adresář na souborovém serveru '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1628
+#, php-format
+msgid "Unable to delete shared folder '%s' because it is currently being used"
+msgstr "Nelze smazat sdílený adresář '%s' protože je používán"
+
+#: ../../SessionManager/web/admin/actions.php:1644
+msgid "Shared folder successfully deleted"
+msgstr "Sdílený adresář byl úspěšně smazán"
+
+#: ../../SessionManager/web/admin/actions.php:1653
+msgid "Unable to create this shared folder access"
+msgstr "Nelze vytvořit přístup pro tento sdílený adresář"
+
+#: ../../SessionManager/web/admin/actions.php:1660
+#: ../../SessionManager/web/admin/actions.php:1686
+msgid "Unable to load usergroup"
+msgstr "Nelze načíst skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/actions.php:1666
+#: ../../SessionManager/web/admin/actions.php:1692
+msgid "Shared folder successfully modified"
+msgstr "Sdílený adresář byl úspěšně upraven"
+
+#: ../../SessionManager/web/admin/actions.php:1670
+#: ../../SessionManager/web/admin/actions.php:1696
+#, php-format
+msgid "Unable to modify shared folder named '%s'"
+msgstr "Nelze upravit název sdíleného adresáře '%s'"
+
+#: ../../SessionManager/web/admin/actions.php:1679
+msgid "Unable to delete this shared folder access"
+msgstr "Nelze smazat přístup pro tento sdílený adresář"
+
+#. general div
+#: ../../SessionManager/web/admin/applications.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:56
+#: ../../SessionManager/web/admin/includes/page_template.php:129
+#: ../../SessionManager/web/admin/sessions.php:79
+#: ../../SessionManager/web/admin/summary.php:58
+#: ../../SessionManager/web/admin/sumup.php:221
+#: ../../SessionManager/web/classes/Preferences.class.php:395
+msgid "Applications"
+msgstr "Aplikace"
+
+#: ../../SessionManager/web/admin/applications.php:60
+#: ../../SessionManager/web/admin/applications_static.php:65
+#: ../../SessionManager/web/admin/wizard.php:159
+#: ../../SessionManager/web/admin/wizard.php:309
+msgid "No available application"
+msgstr "Žádná dostupná aplikace"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../../SessionManager/web/admin/applications.php:68
+#: ../../SessionManager/web/admin/applications_static.php:74
+#: ../../SessionManager/web/admin/applications_static.php:366
+#: ../../SessionManager/web/admin/appsgroup.php:58
+#: ../../SessionManager/web/admin/appsgroup.php:126
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:76
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:549
+#: ../../SessionManager/web/admin/mimetypes.php:56
+#: ../../SessionManager/web/admin/mimetypes.php:101
+#: ../../SessionManager/web/admin/sharedfolders.php:122
+#: ../../SessionManager/web/admin/summary.php:64
+#: ../../SessionManager/web/admin/usersgroup.php:96
+#: ../../SessionManager/web/admin/usersgroup.php:211
+#: ../../SessionManager/web/admin/usersgroup.php:816
+#: ../../SessionManager/web/admin/wizard.php:261
+#: ../../SessionManager/web/admin/wizard.php:411
+msgid "Name"
+msgstr "Název"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../../SessionManager/web/admin/applications.php:69
+#: ../../SessionManager/web/admin/applications.php:257
+#: ../../SessionManager/web/admin/applications.php:510
+#: ../../SessionManager/web/admin/applications_static.php:75
+#: ../../SessionManager/web/admin/applications_static.php:290
+#: ../../SessionManager/web/admin/appsgroup.php:59
+#: ../../SessionManager/web/admin/appsgroup.php:131
+#: ../../SessionManager/web/admin/appsgroup.php:218
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:80
+#: ../../SessionManager/web/admin/usersgroup.php:97
+#: ../../SessionManager/web/admin/usersgroup.php:216
+#: ../../SessionManager/web/admin/usersgroup.php:422
+#: ../../SessionManager/web/admin/wizard.php:266
+#: ../../SessionManager/web/admin/wizard.php:416
+msgid "Description"
+msgstr "Popis"
+
+#. echo '<th>'._('Package').'</th>';
+#: ../../SessionManager/web/admin/applications.php:70
+#: ../../SessionManager/web/admin/applications.php:255
+#: ../../SessionManager/web/admin/applications.php:383
+#: ../../SessionManager/web/admin/applications.php:508
+#: ../../SessionManager/web/admin/applications_static.php:76
+#: ../../SessionManager/web/admin/applications_static.php:289
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:387
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:237
+#: ../../SessionManager/web/admin/servers.php:403
+#: ../../SessionManager/web/admin/sumup.php:219
+#: ../../SessionManager/web/admin/tasks.php:68
+#: ../../SessionManager/web/admin/tasks.php:143
+#: ../../SessionManager/web/admin/usersgroup.php:99
+msgid "Type"
+msgstr "Typ"
+
+#: ../../SessionManager/web/admin/applications.php:100
+#: ../../SessionManager/web/admin/applications_static.php:106
+#: ../../SessionManager/web/admin/appsgroup.php:81
+#: ../../SessionManager/web/admin/servers.php:154
+#: ../../SessionManager/web/admin/usersgroup.php:127
+#: ../../SessionManager/web/admin/users.php:92
+msgid "Manage"
+msgstr "Spravovat"
+
+#: ../../SessionManager/web/admin/applications.php:144
+msgid "Orphan Applications"
+msgstr "Osiřelé aplikace"
+
+#: ../../SessionManager/web/admin/applications.php:145
+msgid "Are you sure you want to remove orphan applications?"
+msgstr "Jste si jist, že chcete odstranit osiřelou aplikaci ?"
+
+#: ../../SessionManager/web/admin/applications.php:148
+msgid "Remove orphan applications"
+msgstr "Odstranit osiřelé aplikace"
+
+#: ../../SessionManager/web/admin/applications.php:171
+msgid "Available"
+msgstr "Dostupné"
+
+#: ../../SessionManager/web/admin/applications.php:172
+#: ../../SessionManager/web/admin/appsgroup.php:164
+#: ../../SessionManager/web/admin/usersgroup.php:319
+msgid "Block"
+msgstr "Zablokovat"
+
+#: ../../SessionManager/web/admin/applications.php:175
+#: ../../SessionManager/web/admin/appsgroup.php:71
+#: ../../SessionManager/web/admin/appsgroup.php:168
+#: ../../SessionManager/web/admin/usersgroup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:323
+msgid "Blocked"
+msgstr "Zablokován"
+
+#: ../../SessionManager/web/admin/applications.php:176
+msgid "Unblock"
+msgstr "Odblokovat"
+
+#: ../../SessionManager/web/admin/applications.php:254
+#: ../../SessionManager/web/admin/applications.php:507
+msgid "Package"
+msgstr "Balíček"
+
+#: ../../SessionManager/web/admin/applications.php:258
+#: ../../SessionManager/web/admin/applications.php:511
+msgid "Executable"
+msgstr "Spustitelný"
+
+#: ../../SessionManager/web/admin/applications.php:276
+msgid "Set custom icon"
+msgstr "Nastavit vlastní ikonu"
+
+#: ../../SessionManager/web/admin/applications.php:283
+msgid "Clone to static application"
+msgstr "Vytvořit duplikát jako statickou aplikaci"
+
+#: ../../SessionManager/web/admin/applications.php:292
+msgid "Are you sure you want to remove this application?"
+msgstr "Jste si jisti, že chcete odstranit tuto aplikaci?"
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "This application is orphan"
+msgstr "Tato aplikace je osiřelá"
+
+#: ../../SessionManager/web/admin/applications.php:296
+msgid "Remove this application"
+msgstr "Odstraň tuto aplikaci"
+
+#: ../../SessionManager/web/admin/applications.php:315
+#: ../../SessionManager/web/admin/applications_static.php:412
+msgid "Servers with this application"
+msgstr "Servery s touto aplikací"
+
+#: ../../SessionManager/web/admin/applications.php:328
+#: ../../SessionManager/web/admin/applications_static.php:420
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:310
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "Jste si jisti, že chcete odtranit tuto aplikaci z tohoto serveru?"
+
+#: ../../SessionManager/web/admin/applications.php:333
+#: ../../SessionManager/web/admin/applications_static.php:425
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:315
+msgid "Remove from this server"
+msgstr "Odstraň z tohoto serveru"
+
+#: ../../SessionManager/web/admin/applications.php:369
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:351
+msgid "Install on this server"
+msgstr "Nainstaluj na tento server"
+
+#: ../../SessionManager/web/admin/applications.php:379
+msgid "Active tasks on this application"
+msgstr "Aktivní úkoly této aplikace"
+
+#: ../../SessionManager/web/admin/applications.php:382
+#: ../../SessionManager/web/admin/ha/status.php:186
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:386
+#: ../../SessionManager/web/admin/tasks.php:141
+msgid "ID"
+msgstr "ID"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:384
+#: ../../SessionManager/web/admin/appsgroup.php:60
+#: ../../SessionManager/web/admin/appsgroup.php:219
+#: ../../SessionManager/web/admin/ha/menu.inc.php:30
+#: ../../SessionManager/web/admin/includes/page_template.php:68
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:388
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:551
+#: ../../SessionManager/web/admin/index.php:158
+#: ../../SessionManager/web/admin/servers.php:79
+#: ../../SessionManager/web/admin/servers.php:403
+#: ../../SessionManager/web/admin/sessions.php:174
+#: ../../SessionManager/web/admin/sessions.php:232
+#: ../../SessionManager/web/admin/sumup.php:222
+#: ../../SessionManager/web/admin/tasks.php:70
+#: ../../SessionManager/web/admin/tasks.php:145
+#: ../../SessionManager/web/admin/usersgroup.php:98
+#: ../../SessionManager/web/admin/usersgroup.php:423
+msgid "Status"
+msgstr "Stav"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../../SessionManager/web/admin/applications.php:385
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:389
+#: ../../SessionManager/web/admin/servers.php:79
+#: ../../SessionManager/web/admin/servers.php:240
+#: ../../SessionManager/web/admin/servers.php:404
+#: ../../SessionManager/web/admin/tasks.php:71
+#: ../../SessionManager/web/admin/tasks.php:146
+msgid "Details"
+msgstr "Podrobnosti"
+
+#: ../../SessionManager/web/admin/applications.php:392
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+#: ../../SessionManager/web/admin/ha/status.php:256
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:396
+#: ../../SessionManager/web/admin/tasks.php:80
+#: ../../SessionManager/web/admin/tasks.php:158
+#: ../../SessionManager/web/classes/Session.class.php:353
+msgid "Error"
+msgstr "Chyba"
+
+#: ../../SessionManager/web/admin/applications.php:410
+#: ../../SessionManager/web/admin/applications_static.php:452
+msgid "Groups with this application"
+msgstr "Skupiny s touto aplikací"
+
+#: ../../SessionManager/web/admin/applications.php:418
+#: ../../SessionManager/web/admin/applications_static.php:459
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "Jste si jisti, že chcete smazat tuto aplikaci z této skupiny?"
+
+#: ../../SessionManager/web/admin/applications.php:423
+#: ../../SessionManager/web/admin/applications_static.php:464
+#: ../../SessionManager/web/admin/appsgroup.php:286
+#: ../../SessionManager/web/admin/usersgroup.php:623
+#: ../../SessionManager/web/admin/users.php:342
+msgid "Delete from this group"
+msgstr "Smaž z této skupiny"
+
+#: ../../SessionManager/web/admin/applications.php:439
+#: ../../SessionManager/web/admin/applications_static.php:479
+#: ../../SessionManager/web/admin/appsgroup.php:303
+#: ../../SessionManager/web/admin/usersgroup.php:640
+#: ../../SessionManager/web/admin/users.php:357
+msgid "Add to this group"
+msgstr "Přidej do této skupiny"
+
+#: ../../SessionManager/web/admin/applications.php:450
+#: ../../SessionManager/web/admin/applications_static.php:489
+#: ../../SessionManager/web/admin/includes/page_template.php:143
+#: ../../SessionManager/web/admin/mimetypes.php:47
+msgid "Mime-Types"
+msgstr "Mime-Types"
+
+#: ../../SessionManager/web/admin/applications.php:453
+#: ../../SessionManager/web/admin/mimetypes.php:51
+msgid "No available mimes-type"
+msgstr "Žádný dostupný mimes-type"
+
+#: ../../SessionManager/web/admin/applications.php:524
+msgid "Select an icon from an Application Server"
+msgstr "Vyber ikonu z aplikačního serveru"
+
+#: ../../SessionManager/web/admin/applications.php:553
+msgid "Select this icon"
+msgstr "Vyber tuto ikonu"
+
+#: ../../SessionManager/web/admin/applications.php:559
+msgid "Upload an icon"
+msgstr "Nahrát ikonu"
+
+#: ../../SessionManager/web/admin/applications.php:568
+msgid "Upload this icon"
+msgstr "Nahrát tuto ikonu"
+
+#. general div
+#: ../../SessionManager/web/admin/applications_static.php:61
+msgid "Static Applications"
+msgstr "Statické aplikace"
+
+#: ../../SessionManager/web/admin/applications_static.php:112
+#: ../../SessionManager/web/admin/applications_static.php:309
+#: ../../SessionManager/web/admin/appsgroup.php:281
+msgid "Are you sure you want to delete this application?"
+msgstr "Jste si jisti, že chcete smazat tuto aplikaci ?"
+
+#: ../../SessionManager/web/admin/applications_static.php:116
+#: ../../SessionManager/web/admin/applications_static.php:136
+#: ../../SessionManager/web/admin/applications_static.php:313
+#: ../../SessionManager/web/admin/appsgroup.php:88
+#: ../../SessionManager/web/admin/appsgroup.php:106
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:603
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:623
+#: ../../SessionManager/web/admin/publications.php:112
+#: ../../SessionManager/web/admin/servers.php:296
+#: ../../SessionManager/web/admin/servers.php:325
+#: ../../SessionManager/web/admin/servers.php:493
+#: ../../SessionManager/web/admin/tasks.php:97
+#: ../../SessionManager/web/admin/tasks.php:176
+#: ../../SessionManager/web/admin/usersgroup.php:135
+#: ../../SessionManager/web/admin/usersgroup.php:155
+#: ../../SessionManager/web/admin/users.php:99
+#: ../../SessionManager/web/admin/users.php:120
+msgid "Delete"
+msgstr "Smazat"
+
+#: ../../SessionManager/web/admin/applications_static.php:129
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:616
+#: ../../SessionManager/web/admin/servers.php:189
+#: ../../SessionManager/web/admin/servers.php:311
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:113
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Mark all"
+msgstr "Označ vše"
+
+#: ../../SessionManager/web/admin/applications_static.php:130
+#: ../../SessionManager/web/admin/appsgroup.php:101
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:617
+#: ../../SessionManager/web/admin/servers.php:190
+#: ../../SessionManager/web/admin/servers.php:312
+#: ../../SessionManager/web/admin/sessions.php:218
+#: ../../SessionManager/web/admin/usersgroup.php:150
+#: ../../SessionManager/web/admin/users.php:114
+#: ../../SessionManager/web/admin/wizard.php:211
+#: ../../SessionManager/web/admin/wizard.php:230
+#: ../../SessionManager/web/admin/wizard.php:356
+#: ../../SessionManager/web/admin/wizard.php:375
+msgid "Unmark all"
+msgstr "Zruš označení všech"
+
+#: ../../SessionManager/web/admin/applications_static.php:133
+msgid "Are you sure you want to delete these static applications?"
+msgstr "Jste si jisti, že chcete smazat tyto statické aplikace ?"
+
+#: ../../SessionManager/web/admin/applications_static.php:147
+msgid "Add a static application"
+msgstr "Přidej statickou aplikaci"
+
+#: ../../SessionManager/web/admin/applications_static.php:187
+#: ../../SessionManager/web/admin/applications_static.php:291
+#: ../../SessionManager/web/admin/applications_static.php:363
+msgid "Command"
+msgstr "Příkaz"
+
+#: ../../SessionManager/web/admin/applications_static.php:204
+#: ../../SessionManager/web/admin/applications_static.php:520
+#: ../../SessionManager/web/admin/applications_static.php:532
+#: ../../SessionManager/web/admin/appsgroup.php:144
+#: ../../SessionManager/web/admin/publications.php:150
+#: ../../SessionManager/web/admin/usersgroup.php:271
+#: ../../SessionManager/web/admin/users.php:130
+#: ../../SessionManager/web/admin/users.php:150
+msgid "Add"
+msgstr "Přidej"
+
+#: ../../SessionManager/web/admin/applications_static.php:327
+msgid "Clone to new application"
+msgstr "Duplikací vytvoř novou apliaci"
+
+#: ../../SessionManager/web/admin/applications_static.php:331
+#: ../../SessionManager/web/admin/applications_static.php:400
+#: ../../SessionManager/web/admin/news.php:126
+#: ../../SessionManager/web/admin/news.php:135
+msgid "Modify"
+msgstr "Uprav"
+
+#: ../../SessionManager/web/admin/applications_static.php:382
+msgid "Icon"
+msgstr "Ikona"
+
+#: ../../SessionManager/web/admin/applications_static.php:386
+msgid "Delete this icon"
+msgstr "Smaž tuto ikonu"
+
+#: ../../SessionManager/web/admin/applications_static.php:386
+msgid "Are you sure you want to delete this icon?"
+msgstr "Jste si jisti, že chcete smazat tuto ikonu?"
+
+#: ../../SessionManager/web/admin/applications_static.php:442
+msgid "Add to this server"
+msgstr "Přidej na tento server"
+
+#: ../../SessionManager/web/admin/applications_static.php:502
+msgid "Del"
+msgstr "Smaž"
+
+#: ../../SessionManager/web/admin/applications_static.php:530
+msgid "Custom Mime-Type: "
+msgstr "Vlastní Mime-Type:"
+
+#: ../../SessionManager/web/admin/appsgroup.php:47
+msgid "Application groups"
+msgstr "Aplikační skupiny"
+
+#: ../../SessionManager/web/admin/appsgroup.php:51
+msgid "No available application groups"
+msgstr "Žádné dostupné aplikační skupiny"
+
+#: ../../SessionManager/web/admin/appsgroup.php:69
+#: ../../SessionManager/web/admin/appsgroup.php:163
+#: ../../SessionManager/web/admin/usersgroup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:318
+msgid "Enabled"
+msgstr "Povolené"
+
+#: ../../SessionManager/web/admin/appsgroup.php:87
+#: ../../SessionManager/web/admin/appsgroup.php:231
+#: ../../SessionManager/web/admin/usersgroup.php:133
+#: ../../SessionManager/web/admin/usersgroup.php:454
+msgid "Are you sure you want to delete this group?"
+msgstr "Jste si jisti, že chcete smazat tuto skupinu?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:103
+#: ../../SessionManager/web/admin/usersgroup.php:152
+msgid "Are you sure you want to delete these groups?"
+msgstr "Jste si jisti, že chcete smazat tyto skupiny?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:119
+#: ../../SessionManager/web/admin/usersgroup.php:177
+msgid "Create a new group"
+msgstr "Vytvoř novou skupinu"
+
+#: ../../SessionManager/web/admin/appsgroup.php:169
+#: ../../SessionManager/web/admin/ha/configuration.php:294
+#: ../../SessionManager/web/admin/usersgroup.php:324
+msgid "Enable"
+msgstr "Povol"
+
+#: ../../SessionManager/web/admin/appsgroup.php:215
+msgid "Application groups management"
+msgstr "Správce skupin aplikací"
+
+#: ../../SessionManager/web/admin/appsgroup.php:230
+#: ../../SessionManager/web/admin/usersgroup.php:435
+#: ../../SessionManager/web/admin/users.php:264
+msgid "Settings"
+msgstr "Nastavení"
+
+#: ../../SessionManager/web/admin/appsgroup.php:232
+#: ../../SessionManager/web/admin/usersgroup.php:455
+msgid "Delete this group"
+msgstr "Smaž tuto skupinu"
+
+#: ../../SessionManager/web/admin/appsgroup.php:254
+#: ../../SessionManager/web/admin/usersgroup.php:476
+msgid "Update the name"
+msgstr "Aktualizuj název"
+
+#: ../../SessionManager/web/admin/appsgroup.php:263
+#: ../../SessionManager/web/admin/usersgroup.php:485
+msgid "Update the description"
+msgstr "Aktualizuj popis"
+
+#: ../../SessionManager/web/admin/appsgroup.php:271
+msgid "List of applications in this group"
+msgstr "Seznam aplikací v této skupině"
+
+#: ../../SessionManager/web/admin/appsgroup.php:358
+#: ../../SessionManager/web/admin/usersgroup.php:658
+msgid "List of publications for this group"
+msgstr "Seznam publikací v této skupině"
+
+#: ../../SessionManager/web/admin/appsgroup.php:368
+#: ../../SessionManager/web/admin/publications.php:107
+#: ../../SessionManager/web/admin/usersgroup.php:667
+msgid "Are you sure you want to delete this publication?"
+msgstr "Jste si jisti, že chcete smazat tuto publikaci ?"
+
+#: ../../SessionManager/web/admin/appsgroup.php:373
+#: ../../SessionManager/web/admin/usersgroup.php:672
+msgid "Delete this publication"
+msgstr "Smaž tuto publikaci"
+
+#: ../../SessionManager/web/admin/appsgroup.php:390
+#: ../../SessionManager/web/admin/usersgroup.php:689
+msgid "Add this publication"
+msgstr "Přidej tuto publikaci"
+
+#: ../../SessionManager/web/admin/checkup.php:207
+#: ../../SessionManager/web/admin/includes/page_template.php:300
+msgid "Checkup"
+msgstr "Kontrola"
+
+#: ../../SessionManager/web/admin/checkup.php:209
+msgid "PHP Modules"
+msgstr "PHP Moduly"
+
+#: ../../SessionManager/web/admin/checkup.php:237
+msgid "Liaisons"
+msgstr "Spolupráce"
+
+#: ../../SessionManager/web/admin/checkup.php:281
+msgid "Cleanup liaisons"
+msgstr "Vyčisti spolupráci"
+
+#. reset
+#. conf not valid
+#: ../../SessionManager/web/admin/checkup.php:286
+#: ../../SessionManager/web/admin/configuration-partial.php:53
+#: ../../SessionManager/web/admin/configuration-partial.php:60
+#: ../../SessionManager/web/admin/configuration.php:69
+#: ../../SessionManager/web/admin/configuration.php:81
+#: ../../SessionManager/web/admin/ha/configuration.php:469
+#: ../../SessionManager/web/admin/ha/menu.inc.php:32
+#: ../../SessionManager/web/admin/includes/page_template.php:62
+#: ../../SessionManager/web/admin/includes/page_template.php:294
+#: ../../SessionManager/web/admin/index.php:84
+#: ../../SessionManager/web/admin/servers.php:447
+#: ../../SessionManager/web/admin/sharedfolders.php:117
+msgid "Configuration"
+msgstr "Konfigurace"
+
+#: ../../SessionManager/web/admin/checkup.php:291
+msgid "Default usergroup"
+msgstr "Výchozí skupina uživatelů"
+
+#: ../../SessionManager/web/admin/checkup.php:311
+msgid "Cleanup configuration"
+msgstr "Vyčisti konfiguraci"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/microsoft.php:66
+msgid "Microsoft"
+msgstr "Microsoft"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:158
+msgid "Microsoft integration"
+msgstr "Integrace Microsoftu"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:163
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:225
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:261
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:318
+msgid "Domain:"
+msgstr "Doména:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:164
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:192
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:257
+msgid "Primary Host:"
+msgstr "Primární hostitel:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:165
+msgid ""
+"Optional: If the domain name is not registered in your DNS, fill in the "
+"Active Directory IP."
+msgstr ""
+"Volitelně: Pokud název domény není registrován v DNS, uveďte IP adresu "
+"Active Directory."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:167
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:193
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:258
+msgid "Secondary Host:"
+msgstr "Sekundární hostitel:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:168
+msgid "Optional"
+msgstr "Volitelný"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:174
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:218
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:271
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:276
+msgid "Administrator account"
+msgstr "Účet administrátora"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:176
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:278
+msgid "Login:"
+msgstr "Přihlašovací jméno:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:177
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:279
+msgid "Password:"
+msgstr "Heslo:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:183
+msgid "Usergroups"
+msgstr "Skupina uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:187
+msgid "Use <strong>Active Directory</strong> usergroups"
+msgstr "Použij uživatelské skupiny <strong>Active Directory</strong>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:192
+msgid "Use <strong>Internal</strong> usergroups"
+msgstr "Použij <strong>Interní</strong> skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:206
+msgid "Domain users"
+msgstr "Doménoví uživatelé"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:210
+msgid ""
+"Use <strong>Active Directory</strong> to handle users in OVD sessions <em>"
+"(not compatible with Linux applications)</em>"
+msgstr ""
+"Použij <strong>Active Directory</strong> pro zpracování uživatelů OVD relací "
+"<em>(není kompatibilní s Linuxovými aplikacemi)</em>"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:214
+msgid "Use <strong>Internal</strong> method to handle users in OVD sessions"
+msgstr "Použij <strong>Interní</strong> způsob pro zpracování relací OVD"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:227
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:320
+msgid "Administrator account:"
+msgstr "Administrátorský účet:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:229
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:274
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:322
+msgid "User Groups:"
+msgstr "Skupiny uživatelů:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:231
+msgid "Active Directory User Groups"
+msgstr "Skupiny uživatelů Active Directory"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ad.class.php:233
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:250
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:280
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:307
+msgid "Use Internal User Groups"
+msgstr "Použij interní skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:27
+#: ../../SessionManager/web/classes/Preferences.class.php:240
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:27
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:78
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:27
+#: ../../SessionManager/web/modules/UserGroupDBDynamicCached/internal.php:255
+#: ../../SessionManager/web/modules/UserGroupDBDynamic/internal.php:248
+msgid "Internal"
+msgstr "Interní"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "Interní databázové profily"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Toto je výchozí správce profilu. Tento správce profilu ukládá všechna data "
+"ve stejné SQL databázi, kterou jste uvedli v systémové konfiguraci."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_internal.class.php:93
+msgid "Use a dynamic internal User Group"
+msgstr "Použij dynamickou interní skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:187
+#: ../../SessionManager/web/modules/UserDB/ldap.php:344
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:194
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:259
+msgid "optional"
+msgstr "volitelně"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:196
+msgid "Server Port:"
+msgstr "Port serveru:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:197
+msgid "Base DN:"
+msgstr "Základní DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:202
+#: ../../SessionManager/web/admin/includes/page_template.php:50
+#: ../../SessionManager/web/admin/includes/page_template.php:115
+#: ../../SessionManager/web/admin/summary.php:57
+#: ../../SessionManager/web/admin/users.php:59
+msgid "Users"
+msgstr "Uživatelé"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:204
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:272
+msgid "User branch:"
+msgstr "Obor uživatele:"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:210
+msgid "Distinguished name field:"
+msgstr "Rozšiřující název pole:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:211
+msgid "Display name field:"
+msgstr "Zobraz název pole:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:212
+msgid "Locale field"
+msgstr "Pole národního prostředí"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:213
+msgid "Filter:"
+msgstr "Filtr:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:224
+msgid "Anonymous bind"
+msgstr "Anonýmní bind"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:226
+msgid "Bind DN (without suffix):"
+msgstr "Bind DN (bez přípony)"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:227
+msgid "Bind password:"
+msgstr "Bind heslo:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:232
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:298
+msgid "User Groups"
+msgstr "Skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:236
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:276
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "Použij LDAP skupiny uživatelů pro MemberOf pole"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:241
+msgid "Use LDAP User Groups using Posix groups"
+msgstr "Použij LDAP uživatelské skupiny používajíc Posix skupiny"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:243
+msgid "Group Branch DN:"
+msgstr "Skupina Branch DN:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:270
+msgid "Server:"
+msgstr "Server:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_ldap.class.php:278
+msgid "Use LDAP User Groups using Posix group"
+msgstr "Použij LDAP skupiny uživatelů použitím Posix skupiny"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:27
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:84
+msgid "Novell"
+msgstr "Novell"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:252
+msgid "Novell integration"
+msgstr "Integrace Novell"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:265
+msgid "DSFW:"
+msgstr "DSFW:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:269
+msgid "ZENworks:"
+msgstr "ZENworks:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:270
+msgid ""
+"If ZENworks is installed on your Applications Servers, it will manage the "
+"user by itself (DLU). OVD won't create user for the session. This behavior "
+"looks like the domain users from AD."
+msgstr ""
+"Pokud ZENworks  je nainstalován na aplikačním serveru, bude spravovat "
+"uživatele (DLU). OVD nebude vytvářet uživatele pro relaci. Bude se chovat "
+"jako doménoví uživatelé AD."
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:285
+msgid "Default user branch"
+msgstr "Výchozí branže uživatele"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:290
+msgid "Specific Organization Unit:"
+msgstr "Specifická organizační jednotka:"
+
+#: ../../SessionManager/web/admin/classes/Configuration_mode_novell.class.php:302
+msgid "Use Novell eDirectory's User Groups"
+msgstr "Použij Novell eDirectory's skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Prosím, nainstalujte CURL podporu pro PHP"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "Konfigurace SQL není validní(2)"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "Konfigurace SQL není validní"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Inicializace se nezdařila"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:119
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:129
+msgid "prefs is not valid for module"
+msgstr "předvolby nejsou validní pro modul"
+
+#: ../../SessionManager/web/admin/classes/Preferences_admin.class.php:141
+msgid "Modules configuration not valid"
+msgstr "Konfigurace modulů není validní"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Hledej skupiny uživatelů podle vzoru:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:70
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:71
+#: ../../SessionManager/web/admin/session-reporting.php:171
+msgid "Search"
+msgstr "Hledej"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:72
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:73
+msgid "Search in: "
+msgstr "Hledej v:"
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:87
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:88
+#: ../../SessionManager/web/admin/session-reporting.php:182
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+"<strong>Částečný obsah:</strong> Byl zobrazen pouze <strong>%d "
+"výsledek</strong> , ale našel jsem jich víc. Prosím určete přesněji vzor "
+"vyhledávání."
+msgstr[1] ""
+"<strong>Částečný obsah:</strong> Byly zobrazeny pouze <strong>%d "
+"výsledky</strong> , ale našel jsem jich víc. Prosím určete přesněji vzor "
+"vyhledávání."
+msgstr[2] ""
+
+#: ../../SessionManager/web/admin/classes/UsersGroupsList.class.php:91
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:92
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> výsledek pro \"%s\"."
+msgstr[1] "<strong>%d</strong> výsledky pro \"%s\"."
+msgstr[2] ""
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:69
+msgid "Search for user pattern: "
+msgstr "Hledej uživatele podle vzoru:"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:77
+#: ../../SessionManager/web/admin/login.php:138
+#: ../../SessionManager/web/admin/summary.php:63
+#: ../../SessionManager/web/admin/users.php:73
+#: ../../SessionManager/web/admin/users.php:241
+msgid "Login"
+msgstr "Přihlášení"
+
+#: ../../SessionManager/web/admin/classes/UsersList.class.php:81
+#: ../../SessionManager/web/admin/users.php:74
+#: ../../SessionManager/web/admin/users.php:286
+msgid "Display name"
+msgstr "Zobraz název"
+
+#. configuration saved
+#: ../../SessionManager/web/admin/configuration-partial.php:49
+#: ../../SessionManager/web/admin/configuration.php:65
+msgid "Configuration successfully saved"
+msgstr "Konfigurace byla úspěšně uložena"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:111
+#: ../../SessionManager/web/admin/configuration.php:109
+#: ../../SessionManager/web/admin/configuration-profile.php:243
+#: ../../SessionManager/web/admin/includes/functions.inc.php:205
+msgid "Save"
+msgstr "Ulož"
+
+#: ../../SessionManager/web/admin/configuration-partial.php:118
+#: ../../SessionManager/web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Předvolby nebyly nahrány"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:237
+msgid "Saved successfully"
+msgstr "Úspěšně uloženo"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:244
+msgid "Test"
+msgstr "Test"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:252
+msgid "OK"
+msgstr "OK"
+
+#: ../../SessionManager/web/admin/configuration-profile.php:258
+msgid "Success"
+msgstr "Úspěch"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Poslední uložení"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:50
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:30
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:31
+#: ../../SessionManager/web/admin/ha/classes/Cib.class.php:324
+#: ../../SessionManager/web/admin/sessions.php:81
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:56
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:66
+#: ../../SessionManager/web/classes/Server.class.php:494
+#: ../../SessionManager/web/classes/Server.class.php:503
+#: ../../SessionManager/web/classes/Server.class.php:510
+#: ../../SessionManager/web/classes/Session.class.php:350
+#: ../../SessionManager/web/classes/Session.class.php:384
+msgid "Unknown"
+msgstr "Neznámý"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:76
+#: ../../SessionManager/web/admin/ha/menu.inc.php:31
+#: ../../SessionManager/web/admin/includes/page_template.php:238
+#: ../../SessionManager/web/admin/logs.php:113
+#: ../../SessionManager/web/admin/logs.php:172
+#: ../../SessionManager/web/admin/logs.php:176
+msgid "Logs"
+msgstr "Logy"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:98
+msgid "Slave Server"
+msgstr "Podřízený server"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:103
+msgid "Authorized FQDN"
+msgstr "Autorizovaný FQDN"
+
+#: ../../SessionManager/web/admin/configuration-sumup.php:110
+msgid "FQDN check"
+msgstr "FQDN kontrola"
+
+#: ../../SessionManager/web/admin/ha/classes/GRNode.class.php:65
+msgid "Group"
+msgstr "Skupina"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:66
+msgid "Master/Slaves"
+msgstr "Hlavní/Podřízený"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:70
+msgid "Master"
+msgstr "Hlavní"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:71
+msgid "Slaves"
+msgstr "Podřízený"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:72
+msgid "Stopped"
+msgstr "Zastavený"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:73
+msgid "Failed"
+msgstr "Chybný"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:112
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:120
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:107
+msgid "Resources configured"
+msgstr "Zdroje jsou nakonfigurovány"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:114
+msgid "No master"
+msgstr "Žádný hlavní"
+
+#: ../../SessionManager/web/admin/ha/classes/MSNode.class.php:122
+msgid "No slaves"
+msgstr "Žádný podřízený"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:108
+msgid "Started on"
+msgstr "Spuštěno na"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:109
+msgid "Stopped on"
+msgstr "Zastaveno na"
+
+#: ../../SessionManager/web/admin/ha/classes/PRNode.class.php:110
+msgid "Failed on"
+msgstr "Chyba na"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:100
+#: ../../SessionManager/web/admin/ha/configuration.php:149
+msgid "An error occured while reading configuration file, no values found!"
+msgstr ""
+"Nastala chyba během čtení konfiguračního souboru, žádná hodnota nebyla "
+"nalezena!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:120
+msgid "Could not extract configuration values from file!"
+msgstr "Nemůžu vyextrahovat konfigurační hodnoty ze souboru !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:135
+#: ../../SessionManager/web/admin/ha/configuration.php:139
+msgid "An error occured when updating the virtual IP!"
+msgstr "Nastala chyba během aktualizace virtuální IP !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:173
+msgid "No host has been registered yet."
+msgstr "Žádný hostitel nebyl doposud registrován."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:189
+msgid "Delete unregistered servers"
+msgstr "Smaž neregistrované servery"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:196
+msgid ""
+"Your will have to change the virtual IP and then modify your url with the "
+"correct IP to reach the admin web interface!"
+msgstr ""
+"Musíte změnit virtuální IP a potom změnit URL se správnou IP abyste se mohli "
+"dostat na administrační web! "
+
+#: ../../SessionManager/web/admin/ha/configuration.php:198
+msgid "Apply new virtual IP"
+msgstr "Použij novou virtuální IP"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:208
+#, php-format
+msgid "%s server(s) has been successfully removed!"
+msgstr "%s server(y) byl úspěšně odstraněn!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:210
+msgid "An error occured, no unregistered server deleted!"
+msgstr "Nastala chyba, žádný neregistrovaný server nebyl odstraněn!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:219
+msgid "Cannot enable host because one is already enabled!"
+msgstr "Nemůžu povolit hostitele protože už je povolen!"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:230
+#: ../../SessionManager/web/admin/ha/configuration.php:253
+msgid "Cannot disable host because it is not enabled!"
+msgstr "Nemůžu zakázat hostitele protože není povolen !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:241
+msgid "Host has been enabled!"
+msgstr "Hostitel byl povolen !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:244
+msgid "An error occured during activation, can not enable host!"
+msgstr "Nastala chyba během aktivace, nemůžu povolit hostitele !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:259
+msgid "Host has been disabled!"
+msgstr "Hostitel byl zakázán !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:262
+msgid "An error occured during disabling host, cannot disable host!"
+msgstr "Během zakazování hostitele nastala chyba, nemůžu zakázat hostitele !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:269
+msgid ""
+"When enabling the slave server, the master server and slave server are going "
+"to restart their services to load the new configuration. It takes less than "
+"3 minutes. During this time the web interface will be disabled."
+msgstr ""
+"Během povolování podřízeného serveru, hlavní a podřízený server budou "
+"restartovat svoje služby aby nahrály nové konfigurace. Tento proces zabere "
+"méně než 3 minuty. Během tohoto procesu přístup k webu bude vypnut."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:275
+msgid "Unregistered Server"
+msgstr "Neregistrovaný server"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:279
+#: ../../SessionManager/web/admin/ha/configuration.php:316
+msgid "Hostname"
+msgstr "Název hostitele"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:284
+#: ../../SessionManager/web/admin/ha/configuration.php:321
+msgid "address"
+msgstr "adresa"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:289
+#: ../../SessionManager/web/admin/news.php:63
+#: ../../SessionManager/web/admin/session-reporting.php:270
+msgid "Date"
+msgstr "datum"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:306
+msgid ""
+"When enabling the slave server, the master server is going to restart their "
+"services to load the new configuration. It takes less than 3 minutes. During "
+"this time the web interface will be disabled."
+msgstr ""
+"Během povolování podřízeného serveru, hlavní server bude restartovat svoje "
+"služby aby nahrál novou konfiguraci. Tento proces bude trvat méně než 3 "
+"minuty. Během tohoto procesu bude webové rozhraní nedostupné."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:312
+msgid "Registered Server"
+msgstr "Registrovaný server"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:326
+msgid "Disable"
+msgstr "Zakázat"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Update HA configuration"
+msgstr "Aktualizuj HA konfiguraci"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:340
+msgid "Submit"
+msgstr "Potvrď"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:375
+msgid "The system is on maintenance mode! Cannot apply changes."
+msgstr "Systém je v módu údržby ! Nemůžu použít změny."
+
+#: ../../SessionManager/web/admin/ha/configuration.php:389
+msgid "Cannot enable host because no host found in DB!"
+msgstr ""
+"Nemůžu povolit hostitele protože žádný hostitel nebyl v databázi nalezen !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:399
+#, php-format
+msgid "Host %s at address %s has been notifyed succesfully!"
+msgstr "Hostitel %s na adrese %s byl úspěšně informován !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:402
+#: ../../SessionManager/web/admin/ha/configuration.php:428
+#, php-format
+msgid "Cannot query slave host at address %s"
+msgstr "Nemůžu se dotázat podřízeného hostitele na adrese %s"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:422
+#, php-format
+msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
+msgstr ""
+"Hostitel %s byl přepnut do pohotovostního režimu a hlavní %s restartuje "
+"Heartbeat !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:432
+msgid "An error occured during disabling, can not disable host!"
+msgstr "Během zakazování nastala chyba, nemůžu zakázat hostitele !"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:443
+msgid "Changing configuration... Please wait a few seconds"
+msgstr "Měním konfiguraci... Prosím, počkejte pár vteřin"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:446
+msgid ""
+"Changing configuration failded... Verify configuration at field HA::Virtual "
+"IP"
+msgstr "Změna konfigurace se nezdařila...Prověřte konfiguraci  HA::Virtual IP"
+
+#: ../../SessionManager/web/admin/ha/configuration.php:459
+#, php-format
+msgid "Virtual IP \"%s\" is not valid!"
+msgstr "Virtuální IP \"%s\" není validní"
+
+#: ../../SessionManager/web/admin/ha/logs.php:68
+msgid "High Availability logs"
+msgstr "Logy vysoké dostupnosti"
+
+#: ../../SessionManager/web/admin/ha/logs.php:74
+#: ../../SessionManager/web/admin/ha/logs.php:77
+msgid "Show alerts"
+msgstr "Ukaž výstrahy"
+
+#: ../../SessionManager/web/admin/ha/logs.php:80
+msgid "Show information"
+msgstr "Ukaž informaci"
+
+#: ../../SessionManager/web/admin/ha/logs.php:83
+msgid "Show informations"
+msgstr "Ukaž informace"
+
+#: ../../SessionManager/web/admin/ha/logs.php:89
+msgid "Cleanup logs"
+msgstr "Logy čištění"
+
+#: ../../SessionManager/web/admin/ha/logs.php:91
+#, php-format
+msgid "%s logs"
+msgstr "%s logy"
+
+#: ../../SessionManager/web/admin/ha/menu.inc.php:29
+msgid "High Availability"
+msgstr "Vysoká dostupnost"
+
+#: ../../SessionManager/web/admin/ha/registration.php:49
+msgid "Host has been already registered!"
+msgstr "Hostitel byl už registrován !"
+
+#: ../../SessionManager/web/admin/ha/registration.php:85
+msgid "Host activation has been done successfully!"
+msgstr "Aktivace hostitele proběhla úspěšně !"
+
+#: ../../SessionManager/web/admin/ha/registration.php:88
+msgid "An error occured in POST request activation!"
+msgstr "Nastala chyba v žádosti aktivace POST !"
+
+#: ../../SessionManager/web/admin/ha/registration.php:93
+msgid "Deleting host has been done successfully!"
+msgstr "Smazání hostitele proběhlo úspěšně !"
+
+#: ../../SessionManager/web/admin/ha/registration.php:96
+#: ../../SessionManager/web/admin/ha/registration.php:100
+msgid "Request is not well formatted!"
+msgstr "Formát požadavku není v pořádku !"
+
+#: ../../SessionManager/web/admin/ha/status.php:78
+msgid "General Status"
+msgstr "Obecný stav"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last time update of this page and included information"
+msgstr "Poslední časová aktualizace této strany a přiložená informace"
+
+#: ../../SessionManager/web/admin/ha/status.php:80
+msgid "Last update"
+msgstr "Poslední aktualizace"
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid ""
+"The DC (Designated Coordinator) has elected a node in the cluster. It is "
+"responsible for actions of each cluster element."
+msgstr ""
+"DC (Designated Coordinator) vybral uzel clusteru. Ten je zodpovědný za chod "
+"každé části clusteru."
+
+#: ../../SessionManager/web/admin/ha/status.php:85
+msgid "Current DC"
+msgstr "Současný DC"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Number of nodes provided and configured in the cluster"
+msgstr "Počet uzlů poskytovaných a nakonfigurovaných v clusteru"
+
+#: ../../SessionManager/web/admin/ha/status.php:90
+msgid "Nodes configured"
+msgstr "Nody byly nakonfigurovány"
+
+#: ../../SessionManager/web/admin/ha/status.php:95
+msgid "Number of resources configured for all nodes"
+msgstr "Počet zdrojů nakonfigurovaných pro všechny uzly"
+
+#: ../../SessionManager/web/admin/ha/status.php:105
+msgid "Ressources Status"
+msgstr "Stav zdrojů"
+
+#: ../../SessionManager/web/admin/ha/status.php:114
+msgid "Ressources errors"
+msgstr "Chyby zdrojů"
+
+#: ../../SessionManager/web/admin/ha/status.php:127
+#: ../../SessionManager/web/admin/ha/status.php:129
+#: ../../SessionManager/web/admin/ha/status.php:162
+#: ../../SessionManager/web/admin/ha/status.php:163
+msgid "Out of Network"
+msgstr "Bez sítě"
+
+#: ../../SessionManager/web/admin/ha/status.php:141
+#: ../../SessionManager/web/admin/ha/status.php:145
+#: ../../SessionManager/web/classes/Server.class.php:488
+msgid "Online"
+msgstr "Online"
+
+#: ../../SessionManager/web/admin/ha/status.php:142
+msgid "Production"
+msgstr "Produkce"
+
+#: ../../SessionManager/web/admin/ha/status.php:146
+#: ../../SessionManager/web/classes/Session.class.php:365
+msgid "Ready"
+msgstr "Připraven"
+
+#: ../../SessionManager/web/admin/ha/status.php:154
+msgid "Standby"
+msgstr "Pohotovostní režim"
+
+#: ../../SessionManager/web/admin/ha/status.php:172
+msgid "An error has occured, please call your administrator!"
+msgstr "Nastala chyba, prosím, volejte administrátora !"
+
+#: ../../SessionManager/web/admin/ha/status.php:176
+#: ../../SessionManager/web/admin/logs.php:117
+msgid "Session Manager"
+msgstr "Správce relací"
+
+#: ../../SessionManager/web/admin/ha/status.php:182
+msgid "Unpaused"
+msgstr "Spuštěn"
+
+#: ../../SessionManager/web/admin/ha/status.php:184
+msgid "Paused"
+msgstr "Pozastaven"
+
+#: ../../SessionManager/web/admin/ha/status.php:193
+msgid "Pause"
+msgstr "Pozastavit"
+
+#: ../../SessionManager/web/admin/ha/status.php:201
+msgid "Set it online"
+msgstr "Nastavit na online"
+
+#: ../../SessionManager/web/admin/ha/status.php:229
+msgid "High Availability Status"
+msgstr "Stav vysoké dostupnosti"
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid "Waiting for Heartbeat's CIB..."
+msgstr "Čekám na Heartbeat's CIB..."
+
+#: ../../SessionManager/web/admin/ha/status.php:256
+msgid ""
+"Please check permissions on ulteo-ovd.conf or if \"cibadmin -Q\" works fine! "
+"Apache could have been started by another user than www-data."
+msgstr ""
+"Prosím, prověřte oprávnění v ulteo-ovd.conf nebo zda \"cibadmin -Q\" pracuje "
+"korektně !  Apache mohl být spuštěn jiným uživatelem než www-data."
+
+#: ../../SessionManager/web/admin/includes/core.inc.php:59
+#: ../../SessionManager/web/admin/index.php:138
+#: ../../SessionManager/web/webservices/configuration.php:32
+msgid "The system is on maintenance mode"
+msgstr "Systém je v módu údržby."
+
+#: ../../SessionManager/web/admin/includes/functions.inc.php:366
+msgid "You are not allowed to perform this action"
+msgstr "Nejste oprávněn provést tuto akci."
+
+#: ../../SessionManager/web/admin/includes/page_template.php:37
+#: ../../SessionManager/web/admin/index.php:41
+msgid "Index"
+msgstr "Index"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:44
+#: ../../SessionManager/web/admin/includes/page_template.php:75
+#: ../../SessionManager/web/admin/index.php:65
+#: ../../SessionManager/web/admin/servers.php:65
+#: ../../SessionManager/web/admin/sessions.php:172
+#: ../../SessionManager/web/admin/tasks.php:69
+msgid "Servers"
+msgstr "Servery"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:81
+#: ../../SessionManager/web/admin/servers.php:227
+msgid "Unregistered servers"
+msgstr "Neregistrované servery"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:87
+#: ../../SessionManager/web/admin/tasks.php:132
+msgid "Tasks"
+msgstr "Úlohy"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:96
+#: ../../SessionManager/web/admin/sharedfolders.php:45
+#: ../../SessionManager/web/admin/usersgroup.php:762
+msgid "Shared folders"
+msgstr "Sdílené adresáře"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:106
+#: ../../SessionManager/web/admin/profiles.php:50
+msgid "Profiles"
+msgstr "Profily"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:122
+msgid "Users Groups"
+msgstr "Skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:136
+msgid "Applications Groups"
+msgstr "Skupiny aplikací"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:148
+msgid "Static applications"
+msgstr "Statické aplikace"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:156
+#: ../../SessionManager/web/admin/publications.php:82
+msgid "Publications"
+msgstr "Publikace"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:163
+#: ../../SessionManager/web/admin/index.php:116
+msgid "Publication wizard"
+msgstr "Publikační průvodce"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:170
+msgid "Sum up"
+msgstr "Sečíst"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:176
+msgid "Database settings"
+msgstr "Nastavení databáze"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:182
+msgid "System settings"
+msgstr "Nastavení systému"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:188
+msgid "Server settings"
+msgstr "Nastavení serveru"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:194
+msgid "Domain integration settings"
+msgstr "Nastavení integrace domény"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:200
+msgid "Authentication settings"
+msgstr "Nastavení autentizace"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:206
+msgid "Session settings"
+msgstr "Nastavení relací"
+
+#. Events settings
+#: ../../SessionManager/web/admin/includes/page_template.php:212
+#: ../../SessionManager/web/classes/Preferences.class.php:554
+msgid "Events settings"
+msgstr "Nastavení událostí"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:218
+#: ../../SessionManager/web/classes/Preferences.class.php:474
+msgid "Web interface settings"
+msgstr "Nastavení webového rozhraní"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:224
+#: ../../SessionManager/web/admin/password.php:37
+msgid "Change Administrator password"
+msgstr "Změň heslo administrátora"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:232
+msgid "Sessions"
+msgstr "Relace"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:244
+#: ../../SessionManager/web/admin/reporting.php:309
+#: ../../SessionManager/web/admin/reporting.php:464
+msgid "Reporting"
+msgstr "Podávání zpráv"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:252
+#: ../../SessionManager/web/admin/news.php:59
+msgid "News"
+msgstr "Novinky"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:259
+msgid "Summary"
+msgstr "Shrnutí"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:288
+msgid "Debug Tools"
+msgstr "Ladicí nástroje"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:307
+msgid "Logout"
+msgstr "Odhlásit"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:314
+#: ../../SessionManager/web/admin/login.php:106
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:69
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:113
+msgid "Administration"
+msgstr "Administrace"
+
+#: ../../SessionManager/web/admin/includes/page_template.php:440
+#: ../../SessionManager/web/includes/functions.inc.d/template.inc.php:135
+msgid "powered by"
+msgstr "poháněno"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:50
+msgid "Cannot list available applications"
+msgstr "Nemůžu vypsat dostupné aplikace"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:112
+#: ../../SessionManager/web/admin/servers.php:52
+#, php-format
+msgid "Server \"%s\": redirection name may be invalid!"
+msgstr "Server \"%s\": název přesměrování může být vadný !"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:114
+#: ../../SessionManager/web/admin/servers.php:54
+#, php-format
+msgid "Server \"%s\": redirection name cannot be empty!"
+msgstr "Server \"%s\": název přesměrování nemůže být prázdný !"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:216
+msgid "Number of available sessions on this server"
+msgstr "Počet dostupných relací na serveru"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:228
+msgid "default"
+msgstr "výchozí"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:229
+#: ../../SessionManager/web/admin/servers.php:461
+msgid "change"
+msgstr "změň"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:238
+msgid "Install an application"
+msgstr "Nainstaluj aplikaci"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:244
+msgid "Install from a package name"
+msgstr "Nainstaluj z balíču "
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:249
+msgid "more options"
+msgstr "více možností"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:261
+msgid "Category"
+msgstr "Kategorie"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:266
+msgid "Application"
+msgstr "Aplikace"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:268
+#: ../../SessionManager/web/admin/tasks.php:200
+msgid "Install"
+msgstr "Nainstaluji"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:277
+#: ../../SessionManager/web/admin/tasks.php:214
+msgid "Upgrade"
+msgstr "Aktualizuj"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:282
+#: ../../SessionManager/web/admin/tasks.php:203
+msgid "Upgrade the internal system and applications"
+msgstr "Aktualizuj interní systém a aplikace"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:291
+msgid "Applications available on this server"
+msgstr "Aplikace dostupné na serveru"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:333
+msgid "install in progress"
+msgstr "probíhá instalace"
+
+#. div replication
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:362
+msgid "Replication"
+msgstr "Replikace"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:374
+msgid "Replicate on those servers"
+msgstr "Replikuj na tyto servery"
+
+#. div tasks
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:383
+msgid "Active tasks on this server"
+msgstr "Aktivní úkoly na serveru"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:415
+#, php-format
+msgid "Active sessions (total: %s)"
+msgstr "Aktivní relace (celkem: %s)"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:425
+#: ../../SessionManager/web/admin/sessions.php:86
+#: ../../SessionManager/web/admin/users.php:387
+msgid "Not started yet"
+msgstr "Ještě nespuštěné"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:432
+#: ../../SessionManager/web/admin/users.php:394
+msgid "Information about this session"
+msgstr "Informace o této relaci"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:516
+msgid "User profiles on the server"
+msgstr "Uživatelské profily na serveru"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:522
+msgid "Shared folders on the server"
+msgstr "Sdílené adresáře na serveru"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:550
+msgid "Owner"
+msgstr "Vlastník"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:550
+#: ../../SessionManager/web/admin/profiles.php:101
+msgid "Used by"
+msgstr "Použito"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:599
+msgid "Are you sure you want to delete this user profile?"
+msgstr "Jste si jisti, že chcete smazat tento profil ?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:599
+msgid "Are you sure you want to delete this network folder?"
+msgstr "Jste si jisti, že chcete smazat tento síťový adresář ?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:620
+msgid "Are you sure you want to delete these user profiles?"
+msgstr "Jste si jisti, že chcete smazat tyto uživatelské profily ?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:620
+msgid "Are you sure you want to delete these network folders?"
+msgstr "Jste si jisti, že chcetesmazat tyto síťové složky ?"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:636
+#: ../../SessionManager/web/admin/usersgroup.php:819
+msgid "Action"
+msgstr "Činnost"
+
+#: ../../SessionManager/web/admin/includes/template_server.inc.php:643
+#: ../../SessionManager/web/admin/sharedfolders.php:69
+msgid "Create this shared folder"
+msgstr "Vytvoř tento stílený adresář"
+
+#: ../../SessionManager/web/admin/index.php:47
+msgid "Users and Users groups"
+msgstr "Uživatelé a skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/index.php:52
+msgid "Users list"
+msgstr "Seznam uživatelů"
+
+#: ../../SessionManager/web/admin/index.php:54
+msgid "Users groups list"
+msgstr "Seznam skupin uživatelů"
+
+#: ../../SessionManager/web/admin/index.php:70
+msgid "Servers list"
+msgstr "Seznam serverů"
+
+#: ../../SessionManager/web/admin/index.php:71
+msgid "Unregistered servers list"
+msgstr "Seznam neregistrovaných serverů"
+
+#: ../../SessionManager/web/admin/index.php:89
+#: ../../SessionManager/web/classes/Preferences.class.php:180
+msgid "General configuration"
+msgstr "Obecná konfigurace"
+
+#: ../../SessionManager/web/admin/index.php:106
+msgid "Applications and applications groups"
+msgstr "Aplikace a skupiny aplikací"
+
+#: ../../SessionManager/web/admin/index.php:111
+msgid "Applications list"
+msgstr "Seznam aplikací"
+
+#: ../../SessionManager/web/admin/index.php:113
+msgid "Applications groups list"
+msgstr "Seznam skupin aplikací"
+
+#: ../../SessionManager/web/admin/index.php:115
+msgid "Publications list"
+msgstr "Seznam publikací"
+
+#: ../../SessionManager/web/admin/index.php:128
+msgid "System"
+msgstr "Systém"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Are you sure you want to switch the system to production mode?"
+msgstr "Jste si jisti, že chcete přepnout systém do produkčního módu ?"
+
+#: ../../SessionManager/web/admin/index.php:141
+msgid "Switch the system to production mode"
+msgstr "Přepni systém do produkčního módu"
+
+#: ../../SessionManager/web/admin/index.php:143
+msgid "The system is on production mode"
+msgstr "Systém je v produkčním módu"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Are you sure you want to switch the system to maintenance mode?"
+msgstr "Jste si jisti, že chcete přepnout systém do údržbového módu ?"
+
+#: ../../SessionManager/web/admin/index.php:146
+msgid "Switch the system to maintenance mode"
+msgstr "Přepni systém do údržbového módu"
+
+#: ../../SessionManager/web/admin/index.php:175
+msgid "active sessions"
+msgstr "aktivní relace"
+
+#: ../../SessionManager/web/admin/index.php:177
+msgid "active session"
+msgstr "aktivní relace"
+
+#: ../../SessionManager/web/admin/index.php:185
+msgid "online servers"
+msgstr "servery online"
+
+#: ../../SessionManager/web/admin/index.php:187
+msgid "online server"
+msgstr "server online"
+
+#: ../../SessionManager/web/admin/index.php:195
+msgid "offline servers"
+msgstr "servery offline"
+
+#: ../../SessionManager/web/admin/index.php:197
+msgid "offline server"
+msgstr "server offline"
+
+#: ../../SessionManager/web/admin/index.php:205
+msgid "broken servers"
+msgstr "pokažené servery"
+
+#: ../../SessionManager/web/admin/index.php:207
+msgid "broken server"
+msgstr "pokažený server"
+
+#: ../../SessionManager/web/admin/login.php:36
+msgid "The system is not configured"
+msgstr "Systém není nakonfigurován"
+
+#: ../../SessionManager/web/admin/login.php:42
+msgid "The module UserDB is not enabled"
+msgstr "Modul UserDB není povolen"
+
+#. the user does not exist
+#: ../../SessionManager/web/admin/login.php:51
+#: ../../SessionManager/web/admin/login.php:58
+msgid "There was an error with your authentication"
+msgstr "Nastala chyba autentizace"
+
+#: ../../SessionManager/web/admin/login.php:70
+msgid "Unauthorized access"
+msgstr "Nepovolený přístup"
+
+#: ../../SessionManager/web/admin/login.php:114
+#: ../../SessionManager/web/admin/login.php:154
+msgid "Log in"
+msgstr "Přihlásit se"
+
+#: ../../SessionManager/web/admin/login.php:146
+msgid "Password"
+msgstr "Heslo"
+
+#: ../../SessionManager/web/admin/logs.php:121
+#: ../../SessionManager/web/admin/logs.php:139
+msgid "View full log file online"
+msgstr "Zobraz celý obsah log souboru online"
+
+#: ../../SessionManager/web/admin/logs.php:122
+#: ../../SessionManager/web/admin/logs.php:140
+#: ../../SessionManager/web/admin/logs.php:173
+#: ../../SessionManager/web/admin/logs.php:177
+msgid "Download full log file"
+msgstr "Stáhni celý log soubor"
+
+#: ../../SessionManager/web/admin/logs.php:131
+msgid "Slave Servers"
+msgstr "Podřízené servery"
+
+#: ../../SessionManager/web/admin/logs.php:138
+msgid "Log"
+msgstr "Log"
+
+#: ../../SessionManager/web/admin/mimetypes.php:68
+msgid "More information"
+msgstr "Více informací"
+
+#: ../../SessionManager/web/admin/mimetypes.php:92
+msgid "Mime-Type"
+msgstr "Mime-Type"
+
+#: ../../SessionManager/web/admin/mimetypes.php:96
+msgid "No application with this mime-type"
+msgstr "Žádná aplikace není přiřazena k Mime-Type"
+
+#: ../../SessionManager/web/admin/mimetypes.php:102
+msgid "OS"
+msgstr "OS"
+
+#: ../../SessionManager/web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Novinky byly úspěšně upraveny"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Title"
+msgstr "Název"
+
+#: ../../SessionManager/web/admin/news.php:63
+msgid "Content"
+msgstr "Obsah"
+
+#: ../../SessionManager/web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "Jste si jisti, že chcete smazat tuto novinku ?"
+
+#: ../../SessionManager/web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Smaž tuto novinku"
+
+#: ../../SessionManager/web/admin/news.php:90
+msgid "Add news"
+msgstr "Přidej novinku"
+
+#: ../../SessionManager/web/admin/news.php:101
+msgid "Add this news"
+msgstr "Přidej tuto novinku"
+
+#: ../../SessionManager/web/admin/password.php:26
+msgid "User not authorized to manage configuration"
+msgstr "Uživatel není oprávněn upravovat konfiguraci"
+
+#: ../../SessionManager/web/admin/password.php:31
+msgid "No action found"
+msgstr "Žádná akce nenalezena"
+
+#: ../../SessionManager/web/admin/password.php:44
+msgid "Current password"
+msgstr "Současné heslo"
+
+#: ../../SessionManager/web/admin/password.php:49
+#: ../../SessionManager/web/admin/users.php:293
+msgid "New password"
+msgstr "Nové heslo"
+
+#: ../../SessionManager/web/admin/password.php:54
+msgid "Retype password"
+msgstr "Znovu zadejte nové heslo"
+
+#: ../../SessionManager/web/admin/password.php:59
+msgid "Change"
+msgstr "Změň"
+
+#: ../../SessionManager/web/admin/profiles.php:59
+msgid "Are you sure you want to delete this profile?"
+msgstr "Jste si jisti, že chcete smazat tento profil ?"
+
+#: ../../SessionManager/web/admin/profiles.php:63
+msgid "Delete this profile"
+msgstr "Smaž tento profil"
+
+#: ../../SessionManager/web/admin/profiles.php:91
+#, php-format
+msgid "Profile: %s"
+msgstr "Profil: %s"
+
+#: ../../SessionManager/web/admin/publications.php:87
+msgid "Users group"
+msgstr "Skupina uživatelů"
+
+#: ../../SessionManager/web/admin/publications.php:88
+msgid "Applications group"
+msgstr "Skupina aplikací"
+
+#: ../../SessionManager/web/admin/publications.php:95
+msgid "No publication"
+msgstr "Žádné publikace"
+
+#: ../../SessionManager/web/admin/publications.php:150
+msgid "Please select an users group"
+msgstr "Prosím, vyberte skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/publications.php:150
+msgid "Please select an applications group"
+msgstr "Prosím, vyberte skupinu aplikací"
+
+#: ../../SessionManager/web/admin/reporting.php:106
+msgid "Day"
+msgstr "Den"
+
+#: ../../SessionManager/web/admin/reporting.php:135
+msgid "Hour"
+msgstr "Hodina"
+
+#: ../../SessionManager/web/admin/reporting.php:165
+msgid "Minute"
+msgstr "Minuta"
+
+#: ../../SessionManager/web/admin/reporting.php:292
+#: ../../SessionManager/web/admin/reporting.php:708
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Chyba: \"from\" datum je po \"to\" datu, přepínám"
+
+#: ../../SessionManager/web/admin/reporting.php:299
+msgid "Error: \"to\" field is in the future, switching to current time"
+msgstr "Chyba: \"to\" pole je v budoucnu, přepínám na aktuální čas"
+
+#: ../../SessionManager/web/admin/reporting.php:307
+#, php-format
+msgid "%s is not writable"
+msgstr "%s není pro zápis"
+
+#: ../../SessionManager/web/admin/reporting.php:332
+#: ../../SessionManager/web/admin/reporting.php:397
+msgid "Number of launched sessions"
+msgstr "Počet spuštěných relací"
+
+#: ../../SessionManager/web/admin/reporting.php:342
+msgid "unknown"
+msgstr "neznámý"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% session)"
+msgstr "%FQDN% (%TOTAL% relace)"
+
+#: ../../SessionManager/web/admin/reporting.php:349
+msgid "%FQDN% (%TOTAL% sessions)"
+msgstr "%FQDN% (%TOTAL% relací)"
+
+#: ../../SessionManager/web/admin/reporting.php:354
+msgid "Session repartition"
+msgstr "Rozdělení relace"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% session)"
+msgstr "%STATUS% (%TOTAL% relace)"
+
+#: ../../SessionManager/web/admin/reporting.php:363
+#: ../../SessionManager/web/admin/reporting.php:406
+msgid "%STATUS% (%TOTAL% sessions)"
+msgstr "%STATUS% (%TOTAL% relací)"
+
+#: ../../SessionManager/web/admin/reporting.php:368
+#: ../../SessionManager/web/admin/reporting.php:411
+msgid "Session end status"
+msgstr "Konečný stav relace"
+
+#: ../../SessionManager/web/admin/reporting.php:435
+#: ../../SessionManager/web/admin/servers.php:130
+#: ../../SessionManager/web/admin/servers.php:420
+msgid "CPU usage"
+msgstr "Využití CPU"
+
+#: ../../SessionManager/web/admin/reporting.php:456
+#: ../../SessionManager/web/admin/servers.php:132
+#: ../../SessionManager/web/admin/servers.php:422
+msgid "RAM usage"
+msgstr "Využití RAM"
+
+#: ../../SessionManager/web/admin/reporting.php:511
+#: ../../SessionManager/web/admin/session-reporting.php:150
+#: ../../SessionManager/web/classes/Preferences.class.php:296
+msgid "From"
+msgstr "Od"
+
+#: ../../SessionManager/web/admin/reporting.php:523
+msgid "to"
+msgstr "do"
+
+#: ../../SessionManager/web/admin/reporting.php:535
+msgid "step"
+msgstr "krok"
+
+#: ../../SessionManager/web/admin/reporting.php:551
+msgid "Refresh"
+msgstr "Obnov"
+
+#: ../../SessionManager/web/admin/reporting.php:559
+#: ../../SessionManager/web/admin/reporting.php:572
+#: ../../SessionManager/web/admin/reporting.php:608
+#: ../../SessionManager/web/admin/reporting.php:629
+#: ../../SessionManager/web/admin/reporting.php:644
+msgid "Abscissa: day of the month"
+msgstr "Abscissa: den v měsíci"
+
+#: ../../SessionManager/web/admin/reporting.php:561
+#: ../../SessionManager/web/admin/reporting.php:574
+#: ../../SessionManager/web/admin/reporting.php:610
+#: ../../SessionManager/web/admin/reporting.php:631
+#: ../../SessionManager/web/admin/reporting.php:646
+msgid "Abscissa: hour of the day"
+msgstr "Abscissa: hodina dne"
+
+#: ../../SessionManager/web/admin/reporting.php:563
+#: ../../SessionManager/web/admin/reporting.php:576
+#: ../../SessionManager/web/admin/reporting.php:612
+#: ../../SessionManager/web/admin/reporting.php:633
+#: ../../SessionManager/web/admin/reporting.php:648
+msgid "Abscissa: minute of the hour"
+msgstr "Abscissa: minuta hodiny"
+
+#: ../../SessionManager/web/admin/reporting.php:565
+#: ../../SessionManager/web/admin/reporting.php:578
+#: ../../SessionManager/web/admin/reporting.php:614
+msgid "Ordinate: number of sessions"
+msgstr "Ordinate: počet relací"
+
+#: ../../SessionManager/web/admin/reporting.php:595
+msgid "See archived sessions in this time range"
+msgstr "Podívat se na archivované relace v tomto časovém úseku"
+
+#: ../../SessionManager/web/admin/reporting.php:601
+#: ../../SessionManager/web/admin/tasks.php:144
+msgid "Server"
+msgstr "Server"
+
+#: ../../SessionManager/web/admin/reporting.php:635
+msgid "Ordinate: CPU usage in percent"
+msgstr "Ordinate: využití CPU v procentech"
+
+#: ../../SessionManager/web/admin/reporting.php:651
+msgid "Ordinate: RAM usage in percent"
+msgstr "Ordinate: využití RAM v procentech"
+
+#: ../../SessionManager/web/admin/reporting.php:682
+msgid "Number of active sessions"
+msgstr "Počet aktivních relací"
+
+#: ../../SessionManager/web/admin/reporting.php:715
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Chyba: \"to\" pole je v budoucnu, přepni na aktuální čas"
+
+#: ../../SessionManager/web/admin/servers.php:76
+#: ../../SessionManager/web/admin/servers.php:237
+#: ../../SessionManager/web/admin/sumup.php:218
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../../SessionManager/web/admin/servers.php:77
+#: ../../SessionManager/web/admin/servers.php:238
+#: ../../SessionManager/web/admin/sumup.php:220
+msgid "Roles"
+msgstr "Role"
+
+#: ../../SessionManager/web/admin/servers.php:81
+#: ../../SessionManager/web/admin/servers.php:399
+#: ../../SessionManager/web/admin/servers.php:406
+msgid "Monitoring"
+msgstr "Monitorování"
+
+#: ../../SessionManager/web/admin/servers.php:93
+#: ../../SessionManager/web/admin/servers.php:196
+#: ../../SessionManager/web/admin/servers.php:368
+msgid "Switch to production"
+msgstr "Přepni na produkční režim"
+
+#: ../../SessionManager/web/admin/servers.php:97
+#: ../../SessionManager/web/admin/servers.php:197
+#: ../../SessionManager/web/admin/servers.php:372
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+msgid "Switch to maintenance"
+msgstr "Přepni na režim údržby"
+
+#: ../../SessionManager/web/admin/servers.php:121
+#: ../../SessionManager/web/admin/servers.php:273
+#: ../../SessionManager/web/admin/servers.php:414
+msgid "CPU"
+msgstr "CPU"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:274
+#: ../../SessionManager/web/admin/servers.php:415
+msgid "cores"
+msgstr "jádra"
+
+#: ../../SessionManager/web/admin/servers.php:122
+#: ../../SessionManager/web/admin/servers.php:274
+#: ../../SessionManager/web/admin/servers.php:415
+msgid "core"
+msgstr "jádro"
+
+#: ../../SessionManager/web/admin/servers.php:124
+#: ../../SessionManager/web/admin/servers.php:276
+#: ../../SessionManager/web/admin/servers.php:416
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../SessionManager/web/admin/servers.php:124
+#: ../../SessionManager/web/admin/servers.php:416
+msgid "MB"
+msgstr "MB"
+
+#: ../../SessionManager/web/admin/servers.php:140
+#: ../../SessionManager/web/admin/servers.php:430
+msgid "Sessions usage"
+msgstr "Využití relací"
+
+#: ../../SessionManager/web/admin/servers.php:144
+#: ../../SessionManager/web/admin/servers.php:434
+msgid "Disk usage"
+msgstr "Využití disku"
+
+#: ../../SessionManager/web/admin/servers.php:206
+msgid "No server"
+msgstr "Žádný server"
+
+#: ../../SessionManager/web/admin/servers.php:286
+#: ../../SessionManager/web/admin/servers.php:318
+msgid "Register"
+msgstr "Zaregistrovat"
+
+#: ../../SessionManager/web/admin/servers.php:292
+#: ../../SessionManager/web/admin/servers.php:489
+msgid "Are you sure you want to delete this server?"
+msgstr "Jste si jisti, že chcete smazat tento server ?"
+
+#: ../../SessionManager/web/admin/servers.php:336
+msgid "No unregistered server"
+msgstr "Žádný neregistrovaný server"
+
+#: ../../SessionManager/web/admin/servers.php:356
+#, php-format
+msgid "Cannot get server monitoring for '%s'"
+msgstr "Nelze provést sledování serveru pro  '%s'"
+
+#: ../../SessionManager/web/admin/servers.php:362
+msgid "Warning: server is offline"
+msgstr "Upozornění: server je offline"
+
+#: ../../SessionManager/web/admin/servers.php:364
+msgid "Warning: server is broken"
+msgstr "Upozornění: server je pokažený"
+
+#: ../../SessionManager/web/admin/servers.php:403
+msgid "Version"
+msgstr "Verze"
+
+#: ../../SessionManager/web/admin/servers.php:451
+msgid "Redirection name for this server"
+msgstr "Název přesměrování pro tento server"
+
+#: ../../SessionManager/web/admin/servers.php:505
+#, php-format
+msgid "Role: %s"
+msgstr "Role: %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:132
+msgid "Sessions Reporting"
+msgstr "Výkaz relací"
+
+#: ../../SessionManager/web/admin/session-reporting.php:138
+msgid "Search for archived sessions :"
+msgstr "Hledej archivní relace:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:142
+msgid "By user"
+msgstr "Podle uživatele"
+
+#: ../../SessionManager/web/admin/session-reporting.php:144
+msgid "user login"
+msgstr "přihlašovací jméno"
+
+#: ../../SessionManager/web/admin/session-reporting.php:149
+msgid "By time"
+msgstr "Podle času"
+
+#: ../../SessionManager/web/admin/session-reporting.php:160
+msgid "To"
+msgstr "Pro"
+
+#: ../../SessionManager/web/admin/session-reporting.php:173
+#, php-format
+msgid "<strong>%d</strong> result."
+msgid_plural "<strong>%d</strong> results."
+msgstr[0] "<strong>%d</strong> výsledek."
+msgstr[1] "<strong>%d</strong> výsledků."
+msgstr[2] ""
+
+#: ../../SessionManager/web/admin/session-reporting.php:175
+msgid "No result found!"
+msgstr "Nenalezen žádný výsledek !"
+
+#: ../../SessionManager/web/admin/session-reporting.php:268
+msgid "Session id"
+msgstr "ID relace"
+
+#: ../../SessionManager/web/admin/session-reporting.php:269
+#: ../../SessionManager/web/admin/sessions.php:173
+msgid "User"
+msgstr "Uživatel"
+
+#: ../../SessionManager/web/admin/session-reporting.php:282
+msgid "Get more information"
+msgstr "Získat více informací"
+
+#: ../../SessionManager/web/admin/session-reporting.php:311
+#, php-format
+msgid "Unknown session %s"
+msgstr "Neznámá relace %s"
+
+#: ../../SessionManager/web/admin/session-reporting.php:348
+msgid "Archived session - %ID%"
+msgstr "Archivovaná relace - %ID%"
+
+#: ../../SessionManager/web/admin/session-reporting.php:351
+#: ../../SessionManager/web/admin/sessions.php:74
+msgid "User:"
+msgstr "Uživatel:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:355
+msgid "Not existing anymore"
+msgstr "Už neexistuje"
+
+#: ../../SessionManager/web/admin/session-reporting.php:358
+#: ../../SessionManager/web/admin/sessions.php:83
+msgid "Started:"
+msgstr "Začalo:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:361
+msgid "Stopped:"
+msgstr "Skončilo:"
+
+#: ../../SessionManager/web/admin/session-reporting.php:370
+msgid "Used applications"
+msgstr "Použité aplikace"
+
+#: ../../SessionManager/web/admin/session-reporting.php:379
+msgid "not existing anymore"
+msgstr "už neexistuje"
+
+#: ../../SessionManager/web/admin/sessions.php:52
+msgid "Session - %ID%"
+msgstr "Relace - %ID%"
+
+#: ../../SessionManager/web/admin/sessions.php:54
+msgid "Information"
+msgstr "Informace"
+
+#: ../../SessionManager/web/admin/sessions.php:57
+msgid "Servers:"
+msgstr "Servery:"
+
+#: ../../SessionManager/web/admin/sessions.php:75
+msgid "Type:"
+msgstr "Druh:"
+
+#: ../../SessionManager/web/admin/sessions.php:77
+#: ../../SessionManager/web/classes/Preferences.class.php:395
+msgid "Desktop"
+msgstr "Plocha"
+
+#: ../../SessionManager/web/admin/sessions.php:90
+msgid "Status:"
+msgstr "Stav:"
+
+#: ../../SessionManager/web/admin/sessions.php:94
+msgid "Running applications"
+msgstr "Běžící aplikace"
+
+#: ../../SessionManager/web/admin/sessions.php:98
+msgid "No running application"
+msgstr "Žádné běžící aplikace"
+
+#: ../../SessionManager/web/admin/sessions.php:124
+#: ../../SessionManager/web/admin/sessions.php:129
+msgid "Kill this session"
+msgstr "Odstraň tuto relaci"
+
+#: ../../SessionManager/web/admin/sessions.php:125
+#: ../../SessionManager/web/admin/sessions.php:204
+msgid "Are you sure you want to kill this session?"
+msgstr "Jste si jisti, že chcete odstranit tuto relaci ?"
+
+#: ../../SessionManager/web/admin/sessions.php:141
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Relace (celkem: %s)"
+
+#: ../../SessionManager/web/admin/sessions.php:171
+#: ../../SessionManager/web/admin/summary.php:60
+msgid "Session"
+msgstr "Relace"
+
+#: ../../SessionManager/web/admin/sessions.php:208
+#: ../../SessionManager/web/admin/sessions.php:223
+msgid "Kill"
+msgstr "Odstranit"
+
+#: ../../SessionManager/web/admin/sessions.php:220
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "Jste si jisti, že chcete odstranit vybrané relace ?"
+
+#: ../../SessionManager/web/admin/sessions.php:233
+msgid "Number of sessions"
+msgstr "Počet relací"
+
+#: ../../SessionManager/web/admin/sessions.php:255
+msgid "No active session"
+msgstr "Žádná aktivní relace"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:54
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "Jste si jisti, že chcete smazat tento sdílený adresář ?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:58
+msgid "Delete this shared folder"
+msgstr "Smaž tento sdílený adresář"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:88
+#, php-format
+msgid "Failed to import shared folder '%s'"
+msgstr "Import sdílené složky '%s' se nezdařil"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:132
+msgid "Rename"
+msgstr "Přejmenuj"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:143
+msgid "ACL"
+msgstr "ACL"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:151
+#: ../../SessionManager/web/admin/usersgroup.php:769
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "Jste si jisti, že chete smazat přístup ke sdílenému adresáři ?"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:156
+#: ../../SessionManager/web/admin/usersgroup.php:774
+msgid "Delete access to this shared folder"
+msgstr "Smaž přístup ke sdílenému adresáři"
+
+#: ../../SessionManager/web/admin/sharedfolders.php:171
+#: ../../SessionManager/web/admin/usersgroup.php:789
+msgid "Add access to this shared folder"
+msgstr "Přidat přístup ke sdílenému adresáři"
+
+#: ../../SessionManager/web/admin/summary.php:47
+#: ../../SessionManager/web/admin/sumup.php:44
+msgid "List of users"
+msgstr "Seznam uživatelů"
+
+#: ../../SessionManager/web/admin/summary.php:52
+#: ../../SessionManager/web/admin/users.php:66
+#: ../../SessionManager/web/admin/wizard.php:157
+#: ../../SessionManager/web/webservices/configuration.php:80
+msgid "No available user"
+msgstr "Žádný uživatel není dostupný"
+
+#: ../../SessionManager/web/admin/summary.php:59
+msgid "Folders"
+msgstr "Složky"
+
+#: ../../SessionManager/web/admin/summary.php:65
+msgid "In these users groups"
+msgstr "V této skupině uživatelů"
+
+#: ../../SessionManager/web/admin/summary.php:66
+msgid "Published applications groups"
+msgstr "Publikované skupiny aplikací"
+
+#: ../../SessionManager/web/admin/summary.php:67
+msgid "Access to these applications"
+msgstr "Přístup k těmto aplikacím"
+
+#: ../../SessionManager/web/admin/summary.php:68
+msgid "Access to these folders"
+msgstr "Přístup k těmto složkám"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "login"
+msgstr "přihlásit"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "name"
+msgstr "jméno"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this user group"
+msgstr "v této skupině uživatelů"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "in this application group"
+msgstr "v této skupině aplikací"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these applications"
+msgstr "přístup k těmto aplikacím"
+
+#: ../../SessionManager/web/admin/sumup.php:56
+msgid "access to these network folders"
+msgstr "přístup k těmto sdíleným složkám"
+
+#. <th>'._('Desktop File').'</th>
+#: ../../SessionManager/web/admin/sumup.php:58
+msgid "Available servers"
+msgstr "Dostupné servery"
+
+#: ../../SessionManager/web/admin/sumup.php:84
+#: ../../SessionManager/web/admin/sumup.php:108
+#: ../../SessionManager/web/admin/usersgroup.php:226
+#: ../../SessionManager/web/admin/users.php:173
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:207
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "Yes"
+msgstr "Ano"
+
+#. $seconds => $text
+#. $forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+#: ../../SessionManager/web/admin/sumup.php:86
+#: ../../SessionManager/web/admin/sumup.php:110
+#: ../../SessionManager/web/admin/usersgroup.php:224
+#: ../../SessionManager/web/admin/users.php:174
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:103
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:207
+#: ../../SessionManager/web/webservices/configuration.php:107
+#: ../../SessionManager/web/webservices/configuration.php:109
+#: ../../SessionManager/web/webservices/configuration.php:110
+#: ../../SessionManager/web/webservices/configuration.php:111
+msgid "No"
+msgstr "Ne"
+
+#: ../../SessionManager/web/admin/sumup.php:203
+msgid "List of servers"
+msgstr "Seznam serverů"
+
+#: ../../SessionManager/web/admin/sumup.php:207
+#: ../../SessionManager/web/admin/sumup.php:211
+msgid "No server available"
+msgstr "Žádný server není dostupný"
+
+#: ../../SessionManager/web/admin/tasks.php:63
+msgid "Tasks managment"
+msgstr "Správce úkolů"
+
+#: ../../SessionManager/web/admin/tasks.php:67
+#: ../../SessionManager/web/admin/tasks.php:142
+msgid "Creation time"
+msgstr "Čas vytvoření"
+
+#: ../../SessionManager/web/admin/tasks.php:72
+msgid "Job id"
+msgstr "ID úlohy"
+
+#: ../../SessionManager/web/admin/tasks.php:78
+#: ../../SessionManager/web/admin/tasks.php:156
+msgid "Finished"
+msgstr "Ukončeno"
+
+#: ../../SessionManager/web/admin/tasks.php:136
+msgid "List of tasks"
+msgstr "Seznam úkolů"
+
+#: ../../SessionManager/web/admin/tasks.php:160
+msgid "In progress"
+msgstr "Probíhá"
+
+#: ../../SessionManager/web/admin/tasks.php:189
+msgid "Install an application from a package name"
+msgstr "Nainstaluj aplikaci z balíčku s názve"
+
+#: ../../SessionManager/web/admin/usersgroup.php:32
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "1 hour"
+msgstr "1 hodina"
+
+#: ../../SessionManager/web/admin/usersgroup.php:33
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "1 day"
+msgstr "1 den"
+
+#: ../../SessionManager/web/admin/usersgroup.php:34
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "1 week"
+msgstr "1 týden"
+
+#: ../../SessionManager/web/admin/usersgroup.php:74
+msgid "User groups"
+msgstr "Skupiny uživatelů"
+
+#: ../../SessionManager/web/admin/usersgroup.php:81
+msgid "No available user group"
+msgstr "žádná skupina uživatelů není dostupná"
+
+#: ../../SessionManager/web/admin/usersgroup.php:168
+msgid "Static"
+msgstr "Statická"
+
+#: ../../SessionManager/web/admin/usersgroup.php:171
+msgid "Dynamic"
+msgstr "Dynamická"
+
+#: ../../SessionManager/web/admin/usersgroup.php:222
+msgid "Cached"
+msgstr "Uložená v mezipaměti"
+
+#: ../../SessionManager/web/admin/usersgroup.php:227
+msgid "Time between two updates:"
+msgstr "Čas mezi dvěmi aktualizacemi:"
+
+#: ../../SessionManager/web/admin/usersgroup.php:235
+#: ../../SessionManager/web/admin/usersgroup.php:525
+msgid "Validation type"
+msgstr "Druh validace"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:529
+msgid "All"
+msgstr "Vše"
+
+#: ../../SessionManager/web/admin/usersgroup.php:236
+#: ../../SessionManager/web/admin/usersgroup.php:532
+msgid "At least one"
+msgstr "Alespoň jeden"
+
+#: ../../SessionManager/web/admin/usersgroup.php:240
+#: ../../SessionManager/web/admin/usersgroup.php:536
+msgid "Filters"
+msgstr "Filtry"
+
+#: ../../SessionManager/web/admin/usersgroup.php:296
+msgid "Failed to load usergroup"
+msgstr "Nelze nahrát skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/usersgroup.php:418
+msgid "User groups management"
+msgstr "Správce skupin uživatelů"
+
+#: ../../SessionManager/web/admin/usersgroup.php:440
+msgid "Remove from default"
+msgstr "Zruš výchozí předvolbu"
+
+#: ../../SessionManager/web/admin/usersgroup.php:443
+msgid "Define as default"
+msgstr "Nastav jako výchozí"
+
+#: ../../SessionManager/web/admin/usersgroup.php:504
+msgid "Update the schedule"
+msgstr "Uprav harmonogram"
+
+#: ../../SessionManager/web/admin/usersgroup.php:515
+msgid "Rules"
+msgstr "Role"
+
+#: ../../SessionManager/web/admin/usersgroup.php:594
+msgid "Update rules"
+msgstr "Aktualizuj role"
+
+#: ../../SessionManager/web/admin/usersgroup.php:605
+msgid "List of users in this group"
+msgstr "Seznam uživatelů ve skupině"
+
+#: ../../SessionManager/web/admin/usersgroup.php:607
+msgid "All available users are in this group."
+msgstr "Všichni dostupní uživatelé jsou v této skupině."
+
+#: ../../SessionManager/web/admin/usersgroup.php:618
+#: ../../SessionManager/web/admin/users.php:98
+#: ../../SessionManager/web/admin/users.php:267
+msgid "Are you sure you want to delete this user?"
+msgstr "Jste si jisti, že chcete smazat tohoto uživatele ?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:699
+msgid "Policy of this group"
+msgstr "Politika této skupiny"
+
+#: ../../SessionManager/web/admin/usersgroup.php:707
+msgid "extend from default"
+msgstr "rozšířit výchozí"
+
+#: ../../SessionManager/web/admin/usersgroup.php:713
+msgid "Are you sure you want to delete this rule?"
+msgstr "Jste si jisti, že chcete smazat tuto roli ?"
+
+#: ../../SessionManager/web/admin/usersgroup.php:718
+msgid "Delete this rule"
+msgstr "Smaž tuto roli"
+
+#: ../../SessionManager/web/admin/usersgroup.php:738
+msgid "Add this rule"
+msgstr "Přidej tuto roli"
+
+#: ../../SessionManager/web/admin/usersgroup.php:800
+msgid "Session settings configuration"
+msgstr "Konfigurace nastavení relací"
+
+#: ../../SessionManager/web/admin/usersgroup.php:817
+msgid "Default value"
+msgstr "Výchozí hodnota"
+
+#: ../../SessionManager/web/admin/usersgroup.php:818
+msgid "Value"
+msgstr "Hodnota"
+
+#: ../../SessionManager/web/admin/usersgroup.php:841
+msgid "Remove this overriden setting"
+msgstr "Odstraň toto přepsané nastavení"
+
+#: ../../SessionManager/web/admin/usersgroup.php:856
+msgid "Save settings"
+msgstr "Ulož nastavení"
+
+#: ../../SessionManager/web/admin/usersgroup.php:877
+msgid "Add this setting"
+msgstr "Přidej toto nastavení"
+
+#: ../../SessionManager/web/admin/users.php:117
+msgid "Are you sure you want to delete selected users?"
+msgstr "Jste si jisti, že chcete odstranit vybrané uživatele ?"
+
+#: ../../SessionManager/web/admin/users.php:159
+#: ../../SessionManager/web/admin/users.php:189
+msgid "Populate"
+msgstr "Naplnit"
+
+#: ../../SessionManager/web/admin/users.php:162
+msgid ""
+"This feature is useful to create default accounts. It is mainly used when "
+"you want to test the system quickly. It is not recommended to use those "
+"default accounts on a production system because it is very easy to delete "
+"them by mistake using this \"populate\" feature."
+msgstr ""
+"Tato vlastnost je užitečná pro vytváření výchozích účtů.  Je využívaná "
+"především tehdy, když chcete rychle otestovat systém. Nedoporučujeme "
+"používání těchto účtů v produkčním prostředí, protože je velice jednoduché "
+"tyto účty omylem odstranit použitím funkce \"naplnit\"."
+
+#: ../../SessionManager/web/admin/users.php:171
+msgid "Overwrite existing: "
+msgstr "Přepsat existující:"
+
+#: ../../SessionManager/web/admin/users.php:177
+msgid "Password management:"
+msgstr "Správce hesel:"
+
+#: ../../SessionManager/web/admin/users.php:184
+msgid "Same as username"
+msgstr "Stejné jako uživatelské jméno"
+
+#: ../../SessionManager/web/admin/users.php:185
+msgid "Custom:"
+msgstr "Vlastní:"
+
+#: ../../SessionManager/web/admin/users.php:218
+msgid "Error while requesting usergroups"
+msgstr "Chyba při vyžádání uživatelských skupin "
+
+#: ../../SessionManager/web/admin/users.php:245
+msgid "Locale"
+msgstr "Národní prostředí"
+
+#: ../../SessionManager/web/admin/users.php:268
+msgid "Delete this user"
+msgstr "Smaž tohoto uživatele"
+
+#: ../../SessionManager/web/admin/users.php:312
+msgid "Save changes"
+msgstr "Ulož změny"
+
+#: ../../SessionManager/web/admin/users.php:324
+msgid "User groups with this user"
+msgstr "Skupiny uživatelů obsahující tohoto uživatele"
+
+#: ../../SessionManager/web/admin/users.php:337
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "Jste si jisti, že chcete smazat tohoto uživatele z této skupiny ?"
+
+#: ../../SessionManager/web/admin/users.php:367
+msgid "Published applications"
+msgstr "Publikované aplikace"
+
+#: ../../SessionManager/web/admin/users.php:380
+msgid "Active sessions"
+msgstr "Aktivní relace"
+
+#: ../../SessionManager/web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Nebyla vybrána žádná skupina uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "Žádný uživatel nebyl vybrán"
+
+#: ../../SessionManager/web/admin/wizard.php:63
+#: ../../SessionManager/web/admin/wizard.php:109
+msgid "No group name"
+msgstr "Žádný název skupiny"
+
+#: ../../SessionManager/web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Nebyla vybrána žádná skupina aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "Nebyla vybrána žádná aplikace"
+
+#: ../../SessionManager/web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Nelze zobrazit seznam uživatelů: příliš mnoho uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+#: ../../SessionManager/web/admin/wizard.php:253
+#: ../../SessionManager/web/admin/wizard.php:313
+#: ../../SessionManager/web/admin/wizard.php:403
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Publication Wizard"
+msgstr "Průvodce publikací"
+
+#: ../../SessionManager/web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Výběr uživatele / skupiny"
+
+#: ../../SessionManager/web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Vytvoř skupinu s uživateli"
+
+#: ../../SessionManager/web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Použij skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:237
+#: ../../SessionManager/web/admin/wizard.php:257
+#: ../../SessionManager/web/admin/wizard.php:278
+#: ../../SessionManager/web/admin/wizard.php:318
+#: ../../SessionManager/web/admin/wizard.php:388
+#: ../../SessionManager/web/admin/wizard.php:407
+#: ../../SessionManager/web/admin/wizard.php:428
+msgid "Next"
+msgstr "Další"
+
+#: ../../SessionManager/web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Vytvoř skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:275
+#: ../../SessionManager/web/admin/wizard.php:384
+#: ../../SessionManager/web/admin/wizard.php:425
+#: ../../SessionManager/web/admin/wizard.php:557
+msgid "Previous"
+msgstr "Předchozí"
+
+#: ../../SessionManager/web/admin/wizard.php:313
+msgid "Applications/groups selection"
+msgstr "Výběr aplikací / skupin"
+
+#: ../../SessionManager/web/admin/wizard.php:325
+msgid "Create a group with applications"
+msgstr "Vytvoř skupinu s aplikacemi"
+
+#: ../../SessionManager/web/admin/wizard.php:329
+msgid "Use an application group"
+msgstr "Použij skupinu aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:403
+msgid "Create application group"
+msgstr "Vytvoř skupinu aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:446
+msgid "Confirmation"
+msgstr "Potvrzení"
+
+#: ../../SessionManager/web/admin/wizard.php:448
+msgid "Are you sure that you want to create this publication?"
+msgstr "Jste si jisti, že chcete vytvořit tuto publikaci ?"
+
+#: ../../SessionManager/web/admin/wizard.php:459
+msgid "Between this users group"
+msgstr "Mezi toutu skupinou uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:461
+msgid "Between these users groups"
+msgstr "Mezi těmito skupinami uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:479
+msgid "Between this newly created users group"
+msgstr "Mezi touto nově vytvořenou skupinou uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:483
+#: ../../SessionManager/web/admin/wizard.php:529
+msgid "Name:"
+msgstr "Název:"
+
+#: ../../SessionManager/web/admin/wizard.php:484
+#: ../../SessionManager/web/admin/wizard.php:530
+msgid "Description: "
+msgstr "Popis:"
+
+#: ../../SessionManager/web/admin/wizard.php:485
+msgid "Users:"
+msgstr "Uživatelé:"
+
+#: ../../SessionManager/web/admin/wizard.php:509
+msgid "and this applications group"
+msgstr "a tato skupina aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:511
+msgid "and these applications groups"
+msgstr "a tyto skupiny aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:525
+msgid "and this newly created applications group"
+msgstr "a tato nově vytvořená skupina aplikací"
+
+#: ../../SessionManager/web/admin/wizard.php:531
+msgid "Applications:"
+msgstr "Aplikace:"
+
+#: ../../SessionManager/web/admin/wizard.php:560
+msgid "Confirm"
+msgstr "Potvrď"
+
+#: ../../SessionManager/web/admin/wizard.php:588
+msgid "Cannot create usergroup"
+msgstr "Nemůžu vytvořit skupinu uživatelů"
+
+#: ../../SessionManager/web/admin/wizard.php:609
+msgid "Cannot create application group"
+msgstr "Nemůžu vytvořit skupinu aplikací"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:38
+msgid "Factor impact"
+msgstr "Faktor dopadu"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "less"
+msgstr "méně"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:45
+msgid "more"
+msgstr "více"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid "Back to default"
+msgstr "Zpět na výchozí hodnotu"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:129
+msgid "Examples"
+msgstr "Příklady"
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:139
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr ""
+"Plné CPU: pouze využití CPU je použito jako kritérium pro výběr "
+"nejvhodnějšího\n"
+"serveru pro nově příchozího uživatele."
+
+#: ../../SessionManager/web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:153
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "Oba CPU a RAM jsou používány jako kritéria s malou randomizací"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:59
+msgid "Active"
+msgstr "Aktivní"
+
+#: ../../SessionManager/web/classes/NetworkFolder.class.php:62
+msgid "Inactive"
+msgstr "Neaktivní"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:182
+msgid "System on maintenance mode"
+msgstr "Systém se nachází v módu údržby"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:183
+#: ../../SessionManager/web/classes/Preferences.class.php:307
+#: ../../SessionManager/web/classes/Preferences.class.php:311
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+#: ../../SessionManager/web/classes/Preferences.class.php:340
+#: ../../SessionManager/web/classes/Preferences.class.php:343
+#: ../../SessionManager/web/classes/Preferences.class.php:363
+#: ../../SessionManager/web/classes/Preferences.class.php:366
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:374
+#: ../../SessionManager/web/classes/Preferences.class.php:389
+#: ../../SessionManager/web/classes/Preferences.class.php:428
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:435
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+#: ../../SessionManager/web/classes/Preferences.class.php:441
+#: ../../SessionManager/web/classes/Preferences.class.php:447
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+#: ../../SessionManager/web/classes/Preferences.class.php:454
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+#: ../../SessionManager/web/classes/Preferences.class.php:463
+#: ../../SessionManager/web/classes/Preferences.class.php:466
+#: ../../SessionManager/web/classes/Preferences.class.php:477
+#: ../../SessionManager/web/classes/Preferences.class.php:481
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:115
+msgid "no"
+msgstr "ne"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:183
+#: ../../SessionManager/web/classes/Preferences.class.php:307
+#: ../../SessionManager/web/classes/Preferences.class.php:311
+#: ../../SessionManager/web/classes/Preferences.class.php:325
+#: ../../SessionManager/web/classes/Preferences.class.php:331
+#: ../../SessionManager/web/classes/Preferences.class.php:334
+#: ../../SessionManager/web/classes/Preferences.class.php:337
+#: ../../SessionManager/web/classes/Preferences.class.php:340
+#: ../../SessionManager/web/classes/Preferences.class.php:343
+#: ../../SessionManager/web/classes/Preferences.class.php:363
+#: ../../SessionManager/web/classes/Preferences.class.php:366
+#: ../../SessionManager/web/classes/Preferences.class.php:370
+#: ../../SessionManager/web/classes/Preferences.class.php:374
+#: ../../SessionManager/web/classes/Preferences.class.php:389
+#: ../../SessionManager/web/classes/Preferences.class.php:428
+#: ../../SessionManager/web/classes/Preferences.class.php:431
+#: ../../SessionManager/web/classes/Preferences.class.php:435
+#: ../../SessionManager/web/classes/Preferences.class.php:441
+#: ../../SessionManager/web/classes/Preferences.class.php:447
+#: ../../SessionManager/web/classes/Preferences.class.php:451
+#: ../../SessionManager/web/classes/Preferences.class.php:454
+#: ../../SessionManager/web/classes/Preferences.class.php:458
+#: ../../SessionManager/web/classes/Preferences.class.php:463
+#: ../../SessionManager/web/classes/Preferences.class.php:466
+#: ../../SessionManager/web/classes/Preferences.class.php:477
+#: ../../SessionManager/web/classes/Preferences.class.php:481
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:73
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:115
+msgid "yes"
+msgstr "ano"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:186
+msgid "Administration console language"
+msgstr "Jazyk administrační konzole"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:188
+msgid "Autodetect"
+msgstr "Detekovat automaticky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:207
+msgid "Debug options list"
+msgstr "Seznam voleb debug"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:207
+msgid "Select debug options you want to enable."
+msgstr "Vyberte debug vlastnost, kterou chcete povolit."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:208
+msgid "debug"
+msgstr "debug"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:208
+msgid "info"
+msgstr "informace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:208
+msgid "warning"
+msgstr "výstraha"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:208
+msgid "error"
+msgstr "chyba"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:208
+msgid "critical"
+msgstr "kritická"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:210
+msgid "Cache logs update interval"
+msgstr "Interval aktualizací logů cache"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+msgid "30 seconds"
+msgstr "30 vteřin"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "1 minute"
+msgstr "1 minuta"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "5 minutes"
+msgstr "5 minut"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "15 minutes"
+msgstr "15 minut"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "30 minutes"
+msgstr "30 minut"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:211
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "2 hours"
+msgstr "2 hodiny"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:213
+msgid "Cache logs expiry time"
+msgstr "Čas vypršení logů cache"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "A day"
+msgstr "Den"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "A week"
+msgstr "Týden"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "A month"
+msgstr "Měsíc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:214
+msgid "A year"
+msgstr "Rok"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../../SessionManager/web/classes/Preferences.class.php:220
+msgid "Default user group"
+msgstr "Výchozí skupina uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:223
+msgid "Domain integration"
+msgstr "Integrace do domény"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+msgid "Maximum items per page"
+msgstr "Maximální počet položek na stránku"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:245
+msgid "The maximum number of items that can be displayed."
+msgstr "Maximální počet položek, které mohou být zobrazeny."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:248
+msgid "Default policy"
+msgstr "Výchozí politika"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:250
+msgid "use Admin panel"
+msgstr "Použij panel admina"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:251
+msgid "view Servers"
+msgstr "zobraz servery"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:252
+msgid "manage Servers"
+msgstr "spravuj servery"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:253
+msgid "view Shared folders"
+msgstr "zobraz sdílené složky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:254
+msgid "manage Shared folders"
+msgstr "spravuj sdílené složky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:255
+msgid "view Users"
+msgstr "zobraz uživatelé"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:256
+msgid "manage Users"
+msgstr "spravuj uživatelé"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:257
+msgid "view Usergroups"
+msgstr "zobraz skupiny uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:258
+msgid "manage Usergroups"
+msgstr "spravuj skupiny uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:259
+msgid "view Applications"
+msgstr "zobraz aplikace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:260
+msgid "manage Applications"
+msgstr "spravuj aplikace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:261
+msgid "view Application groups"
+msgstr "zobraz skupiny aplikací"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:262
+msgid "manage Application groups"
+msgstr "spravuj skupiny aplikací"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:263
+msgid "view Publications"
+msgstr "zobraz publikace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:264
+msgid "manage Publications"
+msgstr "spravuj publikace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:265
+msgid "view Configuration"
+msgstr "zobraz konfiguraci"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:266
+msgid "manage Configuration"
+msgstr "spravuj konfiguraci"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:267
+msgid "view Status"
+msgstr "zobraz stav"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:268
+msgid "view Summary"
+msgstr "zobraz shrnutí"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:269
+msgid "view News"
+msgstr "zobraz novinky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:270
+msgid "manage News"
+msgstr "spravuj novinky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:274
+msgid "Policy for administration delegation"
+msgstr "Politika delegování administrace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:276
+msgid "SQL configuration"
+msgstr "konfigurace SQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "Database type"
+msgstr "Typ databáze"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:277
+msgid "The type of your database."
+msgstr "Typ databáze."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:278
+#: ../../SessionManager/web/modules/ApplicationDB/sql.php:183
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:171
+#: ../../SessionManager/web/modules/UserDB/sql.php:228
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:164
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:280
+msgid "Database host address"
+msgstr "Adresa hostitele databáze"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:280
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"Adresa hostitele databáze. Tato databáze obsahuje údaje administrační "
+"konzoly. Příklad: localhost nebo db.mycorporate.com."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:282
+msgid "Database username"
+msgstr "Uživatelské jméno databáze"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:282
+msgid "The username that must be used to access the database."
+msgstr "Uživatelské jméno, které se musí použít pro připojení k databázi."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:282
+msgid "The user name that must be used to access the database."
+msgstr "Uživatelské jméno, které se musí použít pro připojení k databázi."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+msgid "Database password"
+msgstr "Heslo do databáze"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:284
+msgid "The user password that must be used to access the database."
+msgstr "Uživatelské heslo, které musí být použito pro přístup k databázi."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:203
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "Jméno databáze."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:286
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:203
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "Jméno databáze."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "Table prefix"
+msgstr "Prefix tabulky"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:288
+msgid "The table prefix for the database."
+msgstr "Prefix tabulky databáze."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:291
+msgid "Email settings"
+msgstr "Nastavení pošty"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:292
+msgid "Mail server type"
+msgstr "Druh poštovního serveru"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+msgid "Local"
+msgstr "Lokální"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:293
+msgid "SMTP server"
+msgstr "SMTP server"
+
+#. SMTP conf
+#: ../../SessionManager/web/classes/Preferences.class.php:300
+msgid "Host"
+msgstr "Hostitel"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:303
+msgid "Port"
+msgstr "Port"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:306
+msgid "Use SSL with SMTP"
+msgstr "Použij SSL pro SMTP"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:310
+msgid "Authentication"
+msgstr "Autentizace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:314
+msgid "SMTP username"
+msgstr "SMTP uživatelské jméno"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:317
+msgid "SMTP password"
+msgstr "SMTP heslo"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:321
+msgid "Slave Server settings"
+msgstr "Nastavení podřízeného serveru"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:322
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr ""
+"Oprávněná zařízení (FQDN nebo IP - používání zástupných znaků (*.) je "
+"povoleno)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:324
+msgid "Disable reverse FQDN checking"
+msgstr "Zakaž ověřování reverzních FQDN"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:324
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr ""
+"Povolte tuto vlastnost, když nebudete chtít ověřovat výsledky reverzních "
+"FQDN adres, které byly registrovány."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+msgid "Action when a server status is not ready anymore"
+msgstr "Postup při stavu, kdy server není připraven"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:327
+msgid "Action when an server status is not ready anymore"
+msgstr "Action when a server status is not ready anymore"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:328
+msgid "Do nothing"
+msgstr "Nedělej nic"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:330
+msgid "Auto-recover server"
+msgstr "Automatické zotavení serveru"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:330
+msgid ""
+"When a server status is down or broken, and it is sending monitoring, try to "
+"switch it back to ready ?"
+msgstr ""
+"Pokusit se o zapnutí, když server je ve vypnutém stavu nebo ve stavu "
+"poškození a přesto posílá monitorování ?"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:333
+msgid "Remove orphan applications when the application server is deleted"
+msgstr "Odstraň osiřelé aplikace, když aplikační server je smazán"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:336
+msgid "Auto register new servers"
+msgstr "Nové servery registruj automaticky "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:339
+msgid "Auto switch new servers to production mode"
+msgstr "Nové servery přepni automaticky do produkčního módu"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:342
+msgid ""
+"When an Application Server have reached its \"max sessions\" limit, disable "
+"session launch on it ?"
+msgstr ""
+"Vypnout start relací, pokud aplikační server dosáhl limitu \"maximální počet "
+"relací\" ?"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:346
+msgid "Load Balancing policy for Application Servers"
+msgstr "Politika vyvažování zátěže"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:346
+msgid "Load Balancing policy for File Servers"
+msgstr "Vyvažování zátěže pro souborové servery"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:360
+msgid "Remote Desktop settings"
+msgstr "Nastavení vzdálené plochy"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:362
+msgid "Enable Remote Desktop"
+msgstr "Povol vzdálenou plochu"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:365
+msgid "Sessions are persistent"
+msgstr "Relace jsou trvalé"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:369
+msgid "Show icons on user desktop"
+msgstr "Ukaž ikony na ploše uživatele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:373
+msgid "Allow external applications in Desktop"
+msgstr "Povol externí aplikace na ploše"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:377
+msgid "Desktop type"
+msgstr "Typ plochy"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:378
+msgid "Any"
+msgstr "Jakýkoli"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:378
+msgid "Linux"
+msgstr "Linux"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:378
+msgid "Windows"
+msgstr "Windows"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid "Server which are allowed to start desktop"
+msgstr "Server, na kterém je umožněno spustit plochu"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:382
+msgid ""
+"An empty list means all server can host a desktop (no restriction on desktop "
+"server choice)"
+msgstr ""
+"Prázdný seznam znamená, že všechny servery můžou poskytovat plochu (žádná "
+"omezení při volbě serveru plochy)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:386
+msgid "Remote Applications settings"
+msgstr "Nastavení vzdálených aplikací"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:388
+msgid "Enable Remote Applications"
+msgstr "Povol vzdálené aplikace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:392
+msgid "Sessions settings"
+msgstr "Nastavení relací"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:394
+msgid "Default mode for session"
+msgstr "Výchozí mód relace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:398
+msgid "Default language for session"
+msgstr "Výchozí jazyk relace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:422
+msgid "Default timeout for session"
+msgstr "Výchozí časový limit relace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "2 minutes"
+msgstr "2 minuty"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "10 minutes"
+msgstr "10 minut"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "5 hours"
+msgstr "5 hodin"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "12 hours"
+msgstr "12 hodin"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "2 days"
+msgstr "2 dny"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "1 month"
+msgstr "1 měsíc"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:423
+msgid "None"
+msgstr "Žádný"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:425
+msgid "Maximum number of running sessions"
+msgstr "Maximální počet spuštěných relací"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:425
+msgid ""
+"The maximum number of session that can be started on the farm (0 is "
+"unlimited)."
+msgstr ""
+"Maximální počet relací, které mohou být spuštěny na farmě (0 znamená "
+"neomezeně)."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:427
+msgid ""
+"User can launch a session even if some of his published applications are not "
+"available"
+msgstr ""
+"Uživatel může spustit relaci i když některé z jeho publikovaných aplikací "
+"nejsou dostupné."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:430
+msgid "User can use a console in the session"
+msgstr "Uživatel může použít konzoli v relaci"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:434
+msgid "Multimedia"
+msgstr "Multimédia"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:437
+msgid "Redirect client drives"
+msgstr "Přesměruj disky uživatele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:437
+msgid ""
+"- None: none of the client drives will be used in the OVD session<br />- "
+"Partial: Desktop and My Documents user directories will be available in the "
+"OVD session<br />- Full: all client drives (including Desktop and My "
+"Documents) will be available in the OVD session"
+msgstr ""
+"- Žádný: žádný z disků klienta nebude použit v OVD relaci<br />- Částečně: "
+"adresáře uživatele Plocha a Moje dokumenty budou dostupné v relaci OVD<br "
+"/>- Úplný: všechny disky uživatele (včetně adresářů Plocha a Moje dokumenty) "
+"budou dostupné v relaci OVD"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+msgid "partial"
+msgstr "částečně"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:438
+msgid "full"
+msgstr "plný"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:440
+msgid "Redirect client printers"
+msgstr "Přesměruj tiskárny uživatele"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+msgid "RDP bpp"
+msgstr "RDP bpp"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:443
+msgid "RDP color depth"
+msgstr "RDP hloubka barev"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+msgid "Enhance user experience"
+msgstr "Rozšíření uživatelského rozhraní"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:446
+msgid ""
+"Enhance user experience: graphic effects and optimizations (It decreases "
+"performances if used in a Wide Area Network)"
+msgstr ""
+"Rozšíření uživatelského rozhraní: grafické efekty a optimalizace (může "
+"zhoršit rychlost pokud bude použito v rozlehlé síti)"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:450
+msgid "Enable user profiles"
+msgstr "Povol profily uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:453
+msgid "Auto-create user profiles when non-existant"
+msgstr "Automatické vytvoření profilů uživatelů pokud neexistují"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:453
+msgid "Auto-create user profile when non-existant"
+msgstr "Automatické vytvoření profilu uživatele pokud neexistuje"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:453
+msgid "Auto-create user profile when nonexistant"
+msgstr "Automatické vytvoření profilu uživatele pokud neexistuje"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:457
+msgid "Launch a session without a valid profile"
+msgstr "Spusť relaci bez validního profilu"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:462
+msgid "Enable shared folders"
+msgstr "Povol sdílené adresáře"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:465
+msgid "Launch a session even when a shared folder's fileserver is missing"
+msgstr "Spusť relaci i když chybí souborový server sdílených adresářů "
+
+#: ../../SessionManager/web/classes/Preferences.class.php:470
+msgid "Forceable paramaters by users"
+msgstr "Vynutitelné parametry uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:470
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr ""
+"Vyberte Pokročilé možnosti nastavení, které chcete zpřístupnit uživatelům "
+"před tím, než zahájí relaci."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:471
+msgid "session mode"
+msgstr "mód relace"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:471
+msgid "language"
+msgstr "jazyk"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:471
+msgid "server"
+msgstr "server"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:471
+msgid "timeout"
+msgstr "časový limit"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:476
+msgid "Display users list"
+msgstr "Zobraz seznam uživatelů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:476
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must provide his login name."
+msgstr ""
+"Zobrazí seznam uživatelů z adresáře společnosti v přihlašovacím poli. Pokud "
+"se seznam nezobrazí, uživatel musí zadat svoje přihlašovací jméno."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:480
+msgid "Public Webservices access"
+msgstr "Veřejný přístup k webovým službám"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:480
+msgid ""
+"Authorize non authenticated requests to get information about users "
+"authorized applications or get applications icons."
+msgstr ""
+"Autorizuj neautentizované požadavky pro získání informací o uživatelem "
+"autorizovaných aplikacích nebo získání ikon aplikací."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:506
+msgid "Modules activation"
+msgstr "Aktivace modulů"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:506
+msgid "Choose the modules you want to enable."
+msgstr "Vyberte moduly, které chcete povolit."
+
+#: ../../SessionManager/web/classes/Preferences.class.php:556
+msgid "Email addresses to send alerts to"
+msgstr "Emailové adresy, na které budou posílána upozornění"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:556
+msgid "On system alerts, emails will be sent to these addresses"
+msgstr ""
+"V případě výskytu systémových upozornění, na tyto adresy budou posílány "
+"emaily"
+
+#: ../../SessionManager/web/classes/Preferences.class.php:581
+msgid "Activated callbacks"
+msgstr "Aktivovaná zpětná volání"
+
+#: ../../SessionManager/web/classes/Server.class.php:294
+msgid "is NOT online!"
+msgstr "Není online !"
+
+#: ../../SessionManager/web/classes/Server.class.php:482
+msgid "Under maintenance"
+msgstr "Provádí se údržba"
+
+#: ../../SessionManager/web/classes/Server.class.php:486
+msgid "Pending"
+msgstr "Až do"
+
+#: ../../SessionManager/web/classes/Server.class.php:490
+msgid "Offline"
+msgstr "Offline"
+
+#: ../../SessionManager/web/classes/Server.class.php:492
+msgid "Broken"
+msgstr "Poškozen"
+
+#: ../../SessionManager/web/classes/Session.class.php:356
+msgid "Creating"
+msgstr "Vytváření"
+
+#: ../../SessionManager/web/classes/Session.class.php:359
+msgid "Created"
+msgstr "Vytvořený"
+
+#: ../../SessionManager/web/classes/Session.class.php:362
+msgid "Initializing"
+msgstr "Inicializace"
+
+#: ../../SessionManager/web/classes/Session.class.php:368
+msgid "Logged"
+msgstr "Přihlášen"
+
+#: ../../SessionManager/web/classes/Session.class.php:371
+msgid "Disconnected"
+msgstr "Odpojen"
+
+#: ../../SessionManager/web/classes/Session.class.php:374
+msgid "To destroy"
+msgstr "Chcete-li zničit"
+
+#: ../../SessionManager/web/classes/Session.class.php:377
+msgid "Destroying"
+msgstr "Ničím"
+
+#: ../../SessionManager/web/classes/Session.class.php:380
+msgid "Destroyed"
+msgstr "Zničen"
+
+#: ../../SessionManager/web/classes/tasks/Task.class.php:68
+#, php-format
+msgid "Unable to submit Task to server '%s'"
+msgstr "Nelze potvrdit úkol pro server '%s'"
+
+#: ../../SessionManager/web/classes/User.class.php:340
+#, php-format
+msgid ""
+"User '%s' has at least two groups with the same overriden rule but with "
+"different values, the result will be unpredictable."
+msgstr ""
+"Uživatel '%s' je alespoň ve dvou skupinách s překrývajicími se pravidly s "
+"různými hodnotami, výsledek nelze odhadnou."
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "OVD upozornění: %s je offline"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD konec upozornění: %s je znovu v provozu"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send an email"
+msgstr "Pošli email"
+
+#: ../../SessionManager/web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Clean up tasks"
+msgstr "Vyčisti úlohy"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:49
+#, php-format
+msgid "OVD Session alert: %s couldn't log in"
+msgstr "Upozornění OVD relace: %s nemůže se přihlásit"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:53
+msgid "The following error happened:\n"
+msgstr "Nastala následující chyba:\n"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:55
+msgid "No error given"
+msgstr "Nebyly vráceny žádné chyby"
+
+#: ../../SessionManager/web/events/callbacks/SessionStart/Mail.class.php:64
+msgid "Send an email on login problem"
+msgstr "Pošli email pokud nastane problém s přihlášením"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "OVD upozornění: MySQL %s je offline"
+
+#: ../../SessionManager/web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD konec upozornění: MySQL %s je znovu v provozu"
+
+#: ../../SessionManager/web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "Stav serveru se změnil"
+
+#: ../../SessionManager/web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Spuštění relace"
+
+#: ../../SessionManager/web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "Stav relace se změnil"
+
+#: ../../SessionManager/web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Chyba SQL"
+
+#: ../../SessionManager/web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "Modul ApplicationDB musí být povolen"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB.php:32
+msgid "Module ApplicationsGroupDB must be enabled"
+msgstr "Modul ApplicationsGroupDB musí být povolen"
+
+#: ../../SessionManager/web/modules/ApplicationsGroupDB/sql.php:198
+msgid "Applications group already exists"
+msgstr "Skupina aplikací už existuje"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:67
+msgid "Auto authentication"
+msgstr "Automatická autentizace"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user"
+msgstr "Použij uvedené přihlašovací jméno pro vytvoření uživatele"
+
+#: ../../SessionManager/web/modules/AuthMethod/Auto.php:102
+msgid "Use the given login to generate user."
+msgstr "Použij uvedené přihlašovací jméno pro vytvoření uživatele."
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:72
+msgid "CAS authentication"
+msgstr "CAS autentizace"
+
+#: ../../SessionManager/web/modules/AuthMethod/CAS.php:86
+msgid "CAS server URL"
+msgstr "URL CAS serveru"
+
+#: ../../SessionManager/web/modules/AuthMethod/Password.php:48
+msgid "Login/Password authentication"
+msgstr "Autentizace Jméno/Heslo"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:47
+msgid "RemoteUser authentication"
+msgstr "RemoteUser autentizace"
+
+#: ../../SessionManager/web/modules/AuthMethod/RemoteUser.php:63
+msgid "SERVER variable for SSO"
+msgstr "Proměnná SERVER pro SSO"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Autentizace Tokenem"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Validační URL tokenu"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr ""
+"Pokud token argument je poslán do startovací relace, systém se pokusí získat "
+"uživatelské přihlášení požadavkem token validačním url.<br /><br />Vložte "
+"zde url požadavku pokud token argument je poslán do <i>startovací relace</i> "
+"místo jména/hesla.<br /><br />Speciální  řetězec <b>%TOKEN%</b> musí být "
+"nastaven, protože bude nahrazen token argumentem při požadavku URL."
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Token XML název nodu uživatele"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node that contains the user login"
+msgstr "ID XML uzlu, který obsahuje přihlášení uživatele"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Token XML název přihlašovacího atributu"
+
+#: ../../SessionManager/web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the "
+"previously defined XML node)"
+msgstr ""
+"Název XML atributu, který obsahuje přihlašovací údaje (v před tím "
+"nadefinovaném XML uzlu )"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:50
+msgid "Virtual IP"
+msgstr "Virtuální IP"
+
+#: ../../SessionManager/web/modules/HA/high_availability.php:60
+msgid "HA configuration"
+msgstr "Konfigurace HA"
+
+#: ../../SessionManager/web/modules/HA.php:31
+#: ../../SessionManager/web/modules/UserDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:119
+#: ../../SessionManager/web/webservices/configuration.php:65
+msgid "UserDB module must be enabled"
+msgstr "Modul UserDB musí být povolen"
+
+#: ../../SessionManager/web/modules/ProfileDB/internal.php:210
+#, php-format
+msgid "ProfileDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"ProfileDB::internal Nelze vytvořit sdílený adresář na souborovém serveru  '%"
+"s'"
+
+#: ../../SessionManager/web/modules/ProfileDB.php:32
+msgid "ProfileDB module must be enabled"
+msgstr "Modul ProfileDB musí být povolen"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:66
+msgid "Which login should be used for the ApplicationServer's generated user?"
+msgstr ""
+"Které přihlášení má být použito pro uživatele vytvářené aplikačním serverem "
+"?"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Use given login"
+msgstr "Použij zadané přihlášení"
+
+#: ../../SessionManager/web/modules/SessionManagement/internal.php:67
+msgid "Auto-generate"
+msgstr "Automatické vytváření"
+
+#: ../../SessionManager/web/modules/SessionManagement/novell.php:72
+msgid "Manage users by ZENworks DLU instead of native method"
+msgstr "Uživatelé budou spravování ZENworks DLU místo nativního způsobu."
+
+#: ../../SessionManager/web/modules/SessionManagement.php:294
+msgid "No available server"
+msgstr "Není dostupný žádný server"
+
+#: ../../SessionManager/web/modules/SharedFolderDB/internal.php:273
+#, php-format
+msgid ""
+"SharedFolderDB::internal Unable to create shared folder on file server '%s'"
+msgstr ""
+"SharedFolderDB::internal Nelze vytvořit sdílenou složku na souborovém "
+"serveru '%s'"
+
+#: ../../SessionManager/web/modules/SharedFolderDB.php:32
+msgid "SharedFolderDB module must be enabled"
+msgstr "Modul SharedFolderDB musí být povolen"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:104
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:197
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Hostitelská adresa serveru"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:104
+msgid "The address of your Active Directory server."
+msgstr "Adresa Active Directory serveru."
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:106
+msgid "Domain name"
+msgstr "Název domény"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:106
+msgid "Domain name used by Active Directory"
+msgstr "Název domény Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:108
+msgid "Administrator DN"
+msgstr "DN administrátora"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:108
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:199
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Přihlašovací jméno, které bude použito pro přístup k databázi (k seznamu "
+"uživatelských účtů)"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:110
+msgid "Administrator password"
+msgstr "Heslo administrátora"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:110
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:201
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"Heslo, které bude použito pro přístup k databázi (k seznamu uživatelských "
+"účtů)"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:112
+msgid "match"
+msgstr "souhlasí"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:114
+msgid "Accept expired password"
+msgstr "Potvrďte heslo, které vypršelo"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:114
+msgid ""
+"Authorize user connection even if password has expired in order to the "
+"Windows server perform the password renew process"
+msgstr ""
+"Autorizuj spojení uživatele i když heslo vypršelo, aby bylo možné umožnit "
+"proces obnovy hesla na Windows serveru"
+
+#: ../../SessionManager/web/modules/UserDB/activedirectory.php:162
+#: ../../SessionManager/web/modules/UserGroupDB/activedirectory.php:164
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:284
+msgid "The address of your LDAP server."
+msgstr "Adresa Vašeho LDAP serveru."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "Server port"
+msgstr "Port serveru"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port number used by your LDAP server."
+msgstr "Číslo portu, které používá Váš LDAP server."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:286
+msgid "The port use by your LDAP server."
+msgstr "Port, který používá Váš LDAP server."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:288
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:199
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "Jméno"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:290
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:201
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "Heslo"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object"
+msgstr "Předávané volby LDAP objektu"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:296
+msgid "Options given to ldap object."
+msgstr "Číslo portu, které používá Váš LDAP server."
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:298
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:207
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:204
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:253
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Odpovídající"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+msgid "Filter (optional)"
+msgstr "Filtr (volitelně)"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:301
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Filtr, vzor (&(distinguishedname=mike*)(uid=42*))"
+
+#: ../../SessionManager/web/modules/UserDB/ldap.php:304
+msgid "extra"
+msgstr "dodatečný"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:197
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "Adresa Vašeho MySQL serveru."
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:205
+msgid "Table of users"
+msgstr "Tabulka uživatelů"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:209
+msgid "Hash method"
+msgstr "Hash metoda"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:210
+msgid "MD5"
+msgstr "MD5"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:210
+msgid "Crypt"
+msgstr "Crypt"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:210
+msgid "Shadow"
+msgstr "Shadow"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:210
+msgid "Plain"
+msgstr "Plain"
+
+#: ../../SessionManager/web/modules/UserDB/sql_external.php:223
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "MySQL externě"
+
+#: ../../SessionManager/web/modules/UserDB/sql.php:246
+msgid "User already exists"
+msgstr "Uživatel už existuje"
+
+#: ../../SessionManager/web/modules/UserDB/unix.php:116
+#: ../../SessionManager/web/modules/UserGroupDB/unix.php:110
+msgid "Unix"
+msgstr "Unix"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:206
+msgid "Use child groups"
+msgstr "Použij child skupiny"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_memberof.php:218
+msgid "LDAP using memberOf"
+msgstr "LDAP používá memberOf"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Group Branch DN"
+msgstr "Skupina Branch DN"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:251
+msgid "Use LDAP users groups using Posix groups, Group Branch DN:"
+msgstr "Použij skupiny uživatelů LDAP pro Posix skupiny, Group Branch DN:"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:255
+#, php-format
+msgid "Filter (example: %s)"
+msgstr "Filtr (příklad: %s)"
+
+#: ../../SessionManager/web/modules/UserGroupDB/ldap_posix.php:261
+msgid "LDAP using Posix groups"
+msgstr "LDAP pomocí POSIX skupin"
+
+#: ../../SessionManager/web/modules/UserGroupDB.php:32
+#: ../../SessionManager/web/modules/UserGroupDB.php:167
+msgid "UserGroupDB module must be enabled"
+msgstr "Modul UserGroupDB musí být povolen"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"Musíte zadat uživatelské jméno pro přístup do databáze (pro seznam skupin "
+"uživatelů)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"groups)."
+msgstr ""
+"Musíte zadat heslo pro přístup do databáze (pro seznam skupin uživatelů)."
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "Database users groups table name"
+msgstr "Název tabulky databáze skupin uživatelů"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql_external.php:113
+msgid "The name of the database table which contains the users groups"
+msgstr "Název tabulky databáze, která obsahuje skupiny uživatelů"
+
+#: ../../SessionManager/web/modules/UserGroupDB/sql.php:183
+msgid "Users group already exists"
+msgstr "Skupina uživatelů už existuje"
+
+#: ../../SessionManager/web/webservices/configuration.php:26
+msgid "Internal error"
+msgstr "Interní chyba"
+
+#: ../../SessionManager/web/webservices/configuration.php:39
+msgid "Maximum"
+msgstr "Maximum"
+
+#: ../../SessionManager/web/webservices/configuration.php:78
+msgid "Getting userlist failed"
+msgstr "Získání seznamu uživatelů se nezdařilo"
