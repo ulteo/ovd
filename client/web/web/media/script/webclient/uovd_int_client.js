@@ -191,7 +191,7 @@ function validate_settings() {
 		 (settings.login || settings.use_local_credentials) ) {
 		jQuery('#connect_gettext').removeAttr('disabled');
 	} else {
-		jQuery('#connect_gettext').attr('disabled', 'true');
+		jQuery('#connect_gettext').prop('disabled', true);
 	}
 }
 
@@ -334,8 +334,8 @@ function initialize_ui() {
 	if(defaults.force_use_local_credentials) {
 		settings.login = ""; 
 		jQuery('#user_login').val("");
-		jQuery('#user_login').val("").attr("disabled", true);
-		jQuery('#user_password').val("").attr("disabled", true);
+		jQuery('#user_login').val("").prop("disabled", true);
+		jQuery('#user_password').val("").prop("disabled", true);
 	}
 
 	/* Translate text */
