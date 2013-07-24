@@ -92,26 +92,34 @@ function validate_settings() {
 		if(result != true) { /* false or null */
 			/* Test failed or in-progress */
 			/* Disable the option */
-			jQuery("#rdp_mode_"+i).attr("disabled", true).attr("selected", false);
-		} else {
-			/* Enable the option */
-			jQuery("#rdp_mode_"+i).attr("disabled", false);
+			jQuery("#rdp_mode_"+i).prop("disabled", true).prop("selected", false);
 		}
-	}
 
-	/* Select the default value or another one */
-	if(jQuery("#rdp_mode").val() == null) {
-		/* Select default if not disabled */
-		var default_rdp = jQuery("#rdp_mode_"+defaults.rdp_provider+"[disabled!='disabled']").prop("selected", "selected");
-		if(jQuery("#rdp_mode").val() == null) {
-			/* Select whatever else */
-			var remain_rdp = jQuery("#rdp_mode > option[disabled!='disabled']");
-			if(remain_rdp[0]) {
-				jQuery(remain_rdp[0]).prop("selected", "selected");
+		if(result == true) {
+			/* Test succeded */
+
+			/* If the option is disabled */
+			if(jQuery("#rdp_mode_"+i).prop('disabled')) {
+				/* Enable the option */
+				jQuery("#rdp_mode_"+i).prop("disabled", false);
+
+				/* Select it if it is the default value */
+				if(i == defaults.rdp_provider) {
+					jQuery("#rdp_mode_"+i).prop("selected", "selected");
+				}
 			}
 		}
 	}
 
+	/* Ensure that a value is selected */
+	if(jQuery("#rdp_mode").val() == null) {
+		var remain_rdp = jQuery("#rdp_mode > option[disabled!='disabled']");
+		if(remain_rdp[0]) {
+			jQuery(remain_rdp[0]).prop("selected", "selected");
+		}
+	}
+
+	/* Set the new value */
 	settings.rdp_provider = jQuery('#rdp_mode').val();
 
 	if(nb_rdp_providers == 0) {
