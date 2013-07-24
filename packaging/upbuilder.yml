@@ -1,0 +1,154 @@
+upbuilder:
+  deb: "packaging/debian/$(module)"
+  rpm: "packaging/rpm/$(module)"
+  win: "packaging/windows/$(module)"
+  packages:
+    sm:
+      src: "SessionManager"
+      module: "ovd-session-manager"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+      autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
+    ac:
+      src: "AdminConsole"
+      module: "ovd-administration-console"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+    wc:
+      src: "client/web"
+      module: "ovd-web-client"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+    shell:
+      src: "ApplicationServer/OvdShells"
+      module: "ovd-shells"
+      builder: python
+      archs: $(consts.ALL_ARCH)
+    slave:
+      src: "OvdServer"
+      module: "ovd-slaveserver"
+      builder: python
+      archs: $(consts.ALL_ARCH)
+    java:
+      src: "client/java"
+      module: "ovd-java-clients"
+      builder: ant
+      builder_args:
+        remote:
+          ovd-jni-pcsc:
+           files: {"libPCSC.dll": "required_libraries/libPCSC/32/libPCSC.dll"}
+          ovd-java-jni:
+           files: {"libWindowsPaths.dll": "required_libraries/libPCSC/32/libWindowsPaths.dll"}
+      archs: $(consts.ANY_ARCH)
+      env: $(consts.JAVA_ENV)
+    settings:
+      src: "ApplicationServer/desktop"
+      module: "ovd-desktop-settings"
+      builder: autotools
+      archs: $(consts.ANY_ARCH)
+    launcher:
+      src: "client/OVDIntegratedLauncher"
+      module: "ovd-integrated-launcher"
+      builder: autotools
+      archs: $(consts.ANY_ARCH)
+    l10n:
+      src: "i18n"
+      module: "ovd-l10n"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+    ubi:
+      src: "utils/ubiquity"
+      module: "ovd-ubiquity"
+      archs: $(consts.ALL_ARCH)
+      builder: tar
+    gnome:
+      src: "utils/gnome-theme"
+      module: "ulteo-gnome-theme"
+      archs: $(consts.ALL_ARCH)
+      builder: tar
+    sub:
+      src: "Subsystem"
+      module: "ovd-subsystem"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+    desktop:
+      module: "ovd-desktop"
+      archs: $(consts.ALL_ARCH)
+      builder: tar
+      meta: True
+    easy:
+      module: "ovd-easy-install"
+      archs: $(consts.ALL_ARCH)
+      builder: tar
+      meta: True
+    doc:
+      module: "documentation"
+      archs: $(consts.ALL_ARCH)
+      builder: doc
+      src: "docs"
+    rufs:
+      module: "ovd-regular-union-fs"
+      archs: $(consts.ANY_ARCH)
+      builder: tar
+      src: "ApplicationServer/linux/rufs"
+      
+    native:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "ovd-native-client"
+      builder_args:
+        sdist_source: ovd-native-client
+      builder: ant
+      archs: $(consts.ALL_ARCH)
+    ha:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "SessionManager"
+      module: "ovd-ha"
+      autogen_args: "-m ovd-ha --ha"
+      builder: autotools
+      archs: $(consts.ANY_ARCH)
+    gw:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "OvdServer"
+      module: "ovd-slaveserver-gateway"
+      autogen_args: "--gateway"
+      builder: python
+      archs: $(consts.ALL_ARCH)
+    hyp:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "OvdServer"
+      module: "ovd-slaveserver-hypervisor"
+      autogen_args: "--hypervisor"
+      builder: python
+      archs: $(consts.ALL_ARCH)
+    aps:
+      repo: "ovd/$(branch)"
+      src: "OvdServer"
+      module: "setup-aps"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+    webdavfs:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "ApplicationServer/windows/WebdavFS"
+      module: "setup-webdavfs"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+    nativew:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "setup-native-client"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+    nativews:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "setup-native-client-standalone"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
