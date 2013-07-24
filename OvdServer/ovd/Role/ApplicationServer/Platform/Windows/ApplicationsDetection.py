@@ -34,6 +34,7 @@ from ovd.Logger import Logger
 import LnkFile
 from MimeTypeInfos import MimeTypeInfos
 from Msi import Msi
+import Util
 
 
 class ApplicationsDetection:
@@ -113,12 +114,6 @@ class ApplicationsDetection:
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 			application["filename"] = filename
 			
-			try:
-				if len(shortcut.GetDescription())>0:
-					application["description"] = unicode(shortcut.GetDescription(), encoding)
-			except pywintypes.com_error:
-				Logger.debug("ApplicationsDetection::get unable to get description for %s"%(application["filename"]))
-				
 			if len(shortcut.GetIconLocation()[0])>0:
 				application["icon"]  = unicode(shortcut.GetIconLocation()[0], encoding)
 			
@@ -131,11 +126,20 @@ class ApplicationsDetection:
 			if not application["command"].lower().endswith(".exe") and ".exe " not in application["command"].lower():
 				continue
 			
+			if win32process.IsWow64Process() and not os.path.exists(application["command"]):
+				application["command"] = Util.clean_wow64_path(application["command"])
+			
 			if " " in application["command"]:
 				application["command"] = '"%s"'%(application["command"])
 			
 			if len(shortcut.GetArguments())>0:
 				application["command"]+= " "+unicode(shortcut.GetArguments(), encoding)
+			
+			try:
+				if len(shortcut.GetDescription())>0:
+					application["description"] = unicode(shortcut.GetDescription(), encoding)
+			except pywintypes.com_error:
+				Logger.debug("ApplicationsDetection::get unable to get description for %s"%(application["filename"]))
 			
 			application["mimetypes"] = self.mimetypes.get_mime_types_from_command(application["command"])
 			
@@ -163,19 +167,34 @@ class ApplicationsDetection:
 		
 		pythoncom.CoInitialize()
 		
+		if win32process.IsWow64Process():
+			wow64_value = Util.Wow64DisableWow64FsRedirection()
+		
 		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 		shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
 		
-		(iconLocation, iconId) = shortcut.GetIconLocation()
-		iconLocation = win32api.ExpandEnvironmentStrings(iconLocation)
+		(iconLocation_src, iconId) = shortcut.GetIconLocation()
+		iconLocation = win32api.ExpandEnvironmentStrings(iconLocation_src)
+		
+		if not os.path.exists(iconLocation) and win32process.IsWow64Process():
+			iconLocation = Util.clean_wow64_path(iconLocation)
 		
 		if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 			Logger.debug("ApplicationsDetection::getIcon No IconLocation, use shortcut target")
 			iconLocation = win32api.ExpandEnvironmentStrings(shortcut.GetPath(shell.SLGP_RAWPATH)[0])
 			
+			if not os.path.exists(iconLocation) and win32process.IsWow64Process():
+				iconLocation = Util.clean_wow64_path(iconLocation)
+			
 			if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 				Logger.warn("ApplicationsDetection::getIcon Neither IconLocation nor shortcut target on %s (%s)"%(filename, iconLocation))
+				if win32process.IsWow64Process():
+					Util.Revert64DisableWow64FsRedirection(wow64_value)
+				
 				return None
+		
+		if win32process.IsWow64Process():
+			Util.Revert64DisableWow64FsRedirection(wow64_value)
 		
 		path_tmp = tempfile.mktemp()
 		

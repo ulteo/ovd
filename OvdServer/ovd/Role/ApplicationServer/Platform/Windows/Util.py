@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import ctypes
 import os
 import win32file
 
@@ -94,3 +95,30 @@ def get_from_PATH(name):
 			return path
 	
 	return None
+
+
+def Wow64DisableWow64FsRedirection():
+	k32 = ctypes.windll.kernel32
+	wow64 = ctypes.c_long(0)
+	k32.Wow64DisableWow64FsRedirection(ctypes.byref(wow64))
+	
+	# The win32file package is supposed to have a Wow64DisableWow64FsRedirection function according 
+	# to the documentation http://docs.activestate.com/activepython/2.7/pywin32/win32file__Wow64DisableWow64FsRedirection_meth.html
+	# But when loading the package, the function does not exists
+	
+	return wow64
+
+
+def Revert64DisableWow64FsRedirection(value_):
+	k32 = ctypes.windll.kernel32
+	k32.Wow64RevertWow64FsRedirection(value_)
+
+
+def clean_wow64_path(path):
+	if os.environ.has_key("PROGRAMW6432") and path.startswith(os.environ["PROGRAMFILES"]):
+		return path.replace(os.environ["PROGRAMFILES"], os.environ["PROGRAMW6432"])
+	
+	if os.environ.has_key("COMMONPROGRAMW6432") and path.startswith(os.environ["COMMONPROGRAMFILES"]):
+		return path.replace(os.environ["COMMONPROGRAMFILES"], os.environ["COMMONPROGRAMW6432"])
+	
+	return path

@@ -18,10 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import pythoncom
 from win32com.shell import shell
+import win32process
 
 from Msi import Msi
+import Util
 from ovd.Logger import Logger
 
 def clone(srcFile, dstFile, path, args):
@@ -73,6 +76,10 @@ def getTarget(filename):
 			Logger.warn("LnkFile::getTarget: Unable to load file '%s': %s"%(filename, str(err)))
 			return None
 		
-		cmd = "%s %s"%(shortcut.GetPath(0)[0], shortcut.GetArguments())
+		command = shortcut.GetPath(0)[0]
+		if not os.path.exists(command) and win32process.IsWow64Process():
+			command = Util.clean_wow64_path(command)
+		
+		cmd = "%s %s"%(command, shortcut.GetArguments())
 	
 	return cmd
