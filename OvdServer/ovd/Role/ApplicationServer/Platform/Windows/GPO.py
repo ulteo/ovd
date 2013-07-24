@@ -44,7 +44,7 @@ class GPO:
 		self.iniScriptFile = os.path.join(sysDir, GPO.INI_SCRIPT_FILE)
 		self.gptFile = os.path.join(sysDir, GPO.GPT_FILE)
 		self.gpos = {}
-		self.useUTF16 = False
+		self.useUTF16 = True
 	
 	
 	def disableSysWow64(self, value):
@@ -63,9 +63,8 @@ class GPO:
 		parameter = None
 		
 		if not os.path.exists(self.iniScriptFile):
-			Logger.error("Failed to load configuration")
 			self.disableSysWow64(False)
-			return False
+			return True
 		
 		f = open(self.iniScriptFile, 'r')
 		data = f.read()
@@ -183,23 +182,21 @@ class GPO:
 				buffer += "%iParameters=%s\r\n"%(index, parameters)
 				index += 1
 		
-		if not os.path.exists(self.iniScriptFile):
-			Logger.error("Failed to load configuration")
-			self.disableSysWow64(False)
-			return False
-		
-		
-		f = open(self.iniScriptFile, 'rb+')
-		f.truncate()
-		
-                
-		if self.useUTF16:
-			buffer = "\r\n"+buffer
-                        buffer = buffer.encode("utf-16-le")
-			buffer = codecs.BOM_UTF16_LE+buffer
-
-		f.write(buffer)
-		f.close()
+		try:
+			print "mkdir ", os.path.dirname(self.iniScriptFile)
+			os.makedirs(os.path.dirname(self.iniScriptFile))
+			f = open(self.iniScriptFile, 'wb+')
+			f.truncate()
+			
+			if self.useUTF16:
+				buffer = "\r\n"+buffer
+				buffer = buffer.encode("utf-16-le")
+				buffer = codecs.BOM_UTF16_LE+buffer
+			
+			f.write(buffer)
+			f.close()
+		except Exception, e:
+			Logger.error("Failed to add a GPO: %s"%(str(e)))
 		
 		self.disableSysWow64(False)
 
