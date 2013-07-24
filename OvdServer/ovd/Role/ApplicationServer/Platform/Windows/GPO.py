@@ -142,13 +142,26 @@ class GPO:
 			self.gpos[GPOType].remove((command, parameter))
 	
 	
+	def createGPT(self):
+		try:
+			f = open(self.gptFile, 'w+')
+			f.write("[General]\r\n")
+			f.write("%s=%s\r\n"%(GPO.GPT_KEY, GPO.GUID))
+			f.write("version=65537\r\n")
+			f.close()
+		except Exception, e:
+			Logger.error("Failed to create new gpt file: %s", str(e))
+			return False
+		return True
+	
+	
 	def updateGPT(self):
 		# we need to disable syswow64 redirection
 		self.disableSysWow64(True)
 		if not os.path.exists(self.gptFile):
-			Logger.error("Failed to update gpt file")
+			res = self.createGPT()
 			self.disableSysWow64(False)
-			return False
+			return res
 		
 		f = open(self.gptFile, 'r')
 		data = f.read()
