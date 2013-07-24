@@ -1,0 +1,22 @@
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-path.c	2007-12-02 13:46:33.000000000 +0000
++++ thunar-0.9.0_new/thunar-vfs/thunar-vfs-path.c	2013-03-26 15:01:54.448645319 +0000
+@@ -541,6 +541,9 @@
+ guint
+ thunar_vfs_path_hash (gconstpointer path_ptr)
+ {
++  if (path_ptr == NULL)
++    return 0;
++
+   const gchar *p = thunar_vfs_path_get_name (path_ptr);
+   guint        h = *p + thunar_vfs_path_get_scheme (path_ptr);
+ 
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-path.h	2007-12-02 13:46:33.000000000 +0000
++++ thunar-0.9.0_new/thunar-vfs/thunar-vfs-path.h	2013-03-26 15:06:01.296642012 +0000
+@@ -234,6 +234,7 @@
+ G_INLINE_FUNC ThunarVfsPathScheme
+ thunar_vfs_path_get_scheme (const ThunarVfsPath *path)
+ {
++  if (path == NULL) return 0;
+   return (path->ref_count & THUNAR_VFS_PATH_SCHEME_MASK);
+ }
+ 
