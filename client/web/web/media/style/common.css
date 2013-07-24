@@ -46,11 +46,6 @@ h1, h2, h3, h4, h5, h6 {
 	color: #666;
 }
 
-div.spacer {
-	margin: 10px 0;
-	clear: both;
-}
-
 div.rounded {
 	border-radius : 10px 10px 10px 10px;
 	-moz-border-radius: 10px 10px 10px 10px;

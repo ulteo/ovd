@@ -541,9 +541,6 @@ function get_users_list() {
 
 		<div id="main">
 			<div id="header"></div>
-
-			<div class="spacer"></div>
-
 			<div id="page">
 				<div id="loginBox" class="rounded" style="display: none;">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
@@ -799,9 +796,6 @@ function get_users_list() {
 					</table>
 				</div>
 			</div>
-
-			<div class="spacer"></div>
-
 			<div id="footer"></div>
 		</div>
 	</body>
