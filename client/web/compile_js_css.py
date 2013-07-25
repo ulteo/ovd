@@ -171,7 +171,7 @@ if __name__ == "__main__":
 			processed_files.append(filename)
 			jscompress(framework_file, filename)
 		else:
-			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js", "ui.js"):
+			if os.path.basename(filename) in ("uovd_int_client.js", "uovd_ext_client.js"):
 				continue
 			
 			processed_files.append(filename)
