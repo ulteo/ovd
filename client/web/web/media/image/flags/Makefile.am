@@ -135,6 +135,7 @@ scripts_DATA = ad.png \
                km.png \
                kn.png \
                ko.png \
+               ko-kr.png \
                kp.png \
                kw.png \
                ky.png \

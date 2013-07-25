@@ -1,0 +1,525 @@
+# Korean translations for uovdclient package.
+# Copyright (C) 2013 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2011.
+# Author: Kim Won Ki <luke@roisystem.net>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: uovdclient\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-23 12:22+0100\n"
+"PO-Revision-Date: 2013-01-03 13:13+0200\n"
+"Last-Translator: Kim Won Ki\n"
+"Language-Team: Korean\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../client/web/web/login.php:295
+msgid "Profile"
+msgstr "요약정보"
+
+#: ../../client/web/web/translate.php:65
+msgid "Close"
+msgstr "닫기"
+
+#: ../../client/web/web/translate.php:67
+msgid "Session Manager"
+msgstr "세션 관리자"
+
+#: ../../client/web/web/translate.php:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
+msgid "Login"
+msgstr "로그인"
+
+#: ../../client/web/web/translate.php:69
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Password"
+msgstr "암호"
+
+#: ../../client/web/web/translate.php:70
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
+msgid "Use local credentials"
+msgstr "로컬 인증 사용"
+
+#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
+#: ../../client/web/web/translate.php:82
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "Yes"
+msgstr "예"
+
+#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
+#: ../../client/web/web/translate.php:83
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+msgid "No"
+msgstr "아니오"
+
+#: ../../client/web/web/translate.php:73
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Mode"
+msgstr "모드"
+
+#: ../../client/web/web/translate.php:74
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1032
+msgid "Desktop"
+msgstr "데스크탑"
+
+#: ../../client/web/web/translate.php:75
+msgid "Portal"
+msgstr "포탈"
+
+#: ../../client/web/web/translate.php:76
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:81
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1043
+msgid "Fullscreen"
+msgstr "전체화면"
+
+#: ../../client/web/web/translate.php:79
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
+msgid "Language"
+msgstr "언어"
+
+#: ../../client/web/web/translate.php:80
+msgid "Keyboard layout"
+msgstr "키보드 배열"
+
+#: ../../client/web/web/translate.php:81
+msgid "Debug"
+msgstr "디버그"
+
+#: ../../client/web/web/translate.php:86
+msgid "Advanced settings"
+msgstr "고급 설정"
+
+#: ../../client/web/web/translate.php:87
+msgid "Connect"
+msgstr "연결"
+
+#: ../../client/web/web/translate.php:89
+msgid "Checking for system compatibility"
+msgstr "시스템 호환성 체크중"
+
+#: ../../client/web/web/translate.php:90
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"have to accept it to use the service."
+msgstr "이곳에 처음으로 접속하시면 자바 보안 윈도우가 뜨게 되는데 그 때 서비스 사용에 동의하십시오."
+
+#: ../../client/web/web/translate.php:91
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr "\"이 제작자의 콘텐츠를 항상 신뢰함\" 에 체크할 경우 신중히 하십시오. "
+
+#: ../../client/web/web/translate.php:93
+msgid "System compatibility error"
+msgstr "시스템 호환성 에러"
+
+#: ../../client/web/web/translate.php:94
+msgid "Java is not available either on your system or in your web browser."
+msgstr "시스템 또는 웹브라우져에서 자바를 사용할 수 없습니다."
+
+#: ../../client/web/web/translate.php:95
+msgid ""
+"Please install Java extension for your web browser or contact your "
+"administrator."
+msgstr "웹브라우져에 자바 익스텐션을 설치하거나 관리자에게 문의하세요."
+
+#: ../../client/web/web/translate.php:96
+msgid "You have not accepted the Java security window."
+msgstr "윈도우 자바 보안에 동의하지 않았습니다. "
+
+#: ../../client/web/web/translate.php:97
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "이 서비스에 접근하실 수 없습니다."
+
+#: ../../client/web/web/translate.php:99
+msgid "Loading Open Virtual Desktop"
+msgstr "Open Virtual Desktop 로딩중.."
+
+#: ../../client/web/web/translate.php:100
+msgid "Welcome!"
+msgstr "환영합니다!"
+
+#: ../../client/web/web/translate.php:101
+msgid "Suspend"
+msgstr "멈춤"
+
+#: ../../client/web/web/translate.php:102
+msgid "Logout"
+msgstr "로그아웃"
+
+#: ../../client/web/web/translate.php:104
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+msgid "My applications"
+msgstr "나의 애플리케이션"
+
+#: ../../client/web/web/translate.php:105
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+msgid "Running applications"
+msgstr "실행중인 애플리케이션"
+
+#: ../../client/web/web/translate.php:106
+msgid "My files"
+msgstr "내 파일들"
+
+#: ../../client/web/web/translate.php:117
+msgid "Example: sm.ulteo.com"
+msgstr "예제 : sm.ulteo.com"
+
+#: ../../client/web/web/translate.php:119
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "사용법 : missing \"sessionmanager_host\" parameter"
+
+#: ../../client/web/web/translate.php:120
+msgid "Usage: missing \"login\" parameter"
+msgstr "사용법 : missing \"login\" parameter"
+
+#: ../../client/web/web/translate.php:121
+msgid "Usage: missing \"password\" parameter"
+msgstr "사용법 : missing \"password\" parameter"
+
+#: ../../client/web/web/translate.php:122
+msgid "Unable to reach the Session Manager"
+msgstr "Session Manager에 접근할 수 없습니다."
+
+#: ../../client/web/web/translate.php:124
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:467
+msgid "Authentication failed: please double-check your password and try again"
+msgstr "인증 실패 : 암호를 체크하시고 다시 시도해 보세요."
+
+#: ../../client/web/web/translate.php:125
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:469
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr "시스템이 유지보수 중 입니다. 문의하실 사항이 있으면 관리자에게 연락하십시오."
+
+#: ../../client/web/web/translate.php:126
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
+msgid "An internal error occured, please contact your administrator"
+msgstr "internal error 가 발생했습니다. 관리자에게 문의하세요."
+
+#: ../../client/web/web/translate.php:127
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:473
+msgid "You specified an invalid login, please double-check and try again"
+msgstr "틀린 로그인 정보이오니 체크하시고 다시 시도해 보세요."
+
+#: ../../client/web/web/translate.php:128
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:475
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr "서비스를 이용할 수 없습니다. 관리자에게 문의하세요."
+
+#: ../../client/web/web/translate.php:129
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:477
+msgid "You are not authorized to launch a session in this mode"
+msgstr "이 모드에서 세션을 실행할 권한이 없습니다."
+
+#: ../../client/web/web/translate.php:130
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:479
+msgid "You already have an active session"
+msgstr "이미 실행중인 세션이 있습니다."
+
+#: ../../client/web/web/translate.php:132
+msgid "You will be disconnected from your OVD session."
+msgstr "OVD 세션에서 끊어질 것입니다."
+
+#: ../../client/web/web/translate.php:134
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr "3분뒤에 세션이 끊기오니, 모든 자료를 저장해 주세요."
+
+#: ../../client/web/web/translate.php:136
+msgid "Server: session closed unexpectedly"
+msgstr "서버 : 세션이 비정상적으로 끊겼습니다."
+
+#: ../../client/web/web/translate.php:137
+msgid "Your session has ended, you can now close the window"
+msgstr "세션이 끊겼습니다. 윈도우를 닫아주세요."
+
+#: ../../client/web/web/translate.php:138
+msgid "Your session has ended unexpectedly"
+msgstr "세션이 비정상적으로 끊겼습니다."
+
+#: ../../client/web/web/translate.php:139
+msgid "error details"
+msgstr "자세한 에러"
+
+#: ../../client/web/web/translate.php:140
+msgid "Close this window"
+msgstr "이 윈도우를 닫아주세요."
+
+#: ../../client/web/web/translate.php:141
+msgid ""
+"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+"false;\">here</a> to start a new session"
+msgstr ""
+"새로운 세션을 열기 위해서  <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); "
+"return false;\">이곳</a> 을 클릭해 주세요."
+
+#: ../../client/web/web/translate.php:143
+msgid "suspend"
+msgstr "멈춤"
+
+#: ../../client/web/web/translate.php:144
+msgid "resume"
+msgstr "재시작"
+
+#: ../../client/web/web/external.php:237
+msgid "Do not close this Ulteo OVD window!"
+msgstr "Ulteo OVD 윈도우를 닫지 마세요!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
+msgid "OVD News"
+msgstr "OVD 뉴스"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "{user}님 환영합니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
+msgid "Display icons"
+msgstr "아이콘 표시"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
+msgid "Hide icons"
+msgstr "아이콘 감추기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+msgid "Disconnect"
+msgstr "연결끊기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
+msgid "An error occured, please contact your administrator"
+msgstr "에러가 발생했습니다. 관리자에게 문의하세요."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:38
+msgid "Warning!"
+msgstr "경고!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:650
+msgid "Unable to reach the Session Manager!"
+msgstr "Session Manager에 접근할 수 없습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:652
+msgid "Error!"
+msgstr "에러!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:740
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:744
+msgid "Invalid host field!"
+msgstr "잘못된 호스트 필드!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:774
+msgid "You must specify the host field!"
+msgstr "호스트 필드를 입력하셔야 합니다!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:779
+msgid "You must specify a username!"
+msgstr "사용자명을 입력하셔야 합니다!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:782
+msgid "You must specify a password!"
+msgstr "암호를 입력하셔야 합니다!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:831
+msgid "Internal error: Bad session mode return"
+msgstr "internal error : 잘못된 세션 모드 전달"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:843
+msgid "Session is going to end"
+msgstr "세션이 끊어질 것입니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:861
+msgid "Internal error: unsupported session mode"
+msgstr "internal error : 지원하지 않는 세션 모드"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "You have been disconnected"
+msgstr "연결이 끊어졌습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Your session has ended"
+msgstr "세션이 끝났습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+msgid "Protocol xml error: "
+msgstr "프로토콜 xml 에러"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:913
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:920
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:937
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:944
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "Error"
+msgstr "에러"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:39
+msgid "Do you really want to close the window?"
+msgstr "정말로 윈도우를 닫기 원하세요?"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:40
+#, fuzzy
+msgid "Go back to authentication"
+msgstr "인증으로 되돌아가 주세요."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+msgid "Now loading"
+msgstr "지금은 로딩중입니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
+msgid "Cancel"
+msgstr "취소"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+#, fuzzy
+msgid "Start loading session"
+msgstr "세션 로딩 시작하기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+#, fuzzy
+msgid "Connecting to the session manager"
+msgstr "Session Manager 연결하기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+#, fuzzy
+msgid "Get session information from session manager"
+msgstr "Session Manager에서 세션정보 보기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+#, fuzzy
+msgid "Get application data from session manager"
+msgstr "Session Manager에서 세션정보 보기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "클라이언트에 애플리케이션 설치하기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting server for session"
+msgstr "세션을 위해 서버를 기다리는 중.."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "잘못된 상태"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:80
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1042
+msgid "Maximized"
+msgstr "최대화"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:854
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1039
+msgid "Fewer options"
+msgstr "옵션 감추기"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:940
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1037
+msgid "More options..."
+msgstr "옵션 더보기.."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1021
+msgid "Start!"
+msgstr "시작!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
+msgid "Server"
+msgstr "서버"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Resolution"
+msgstr "해상도"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1028
+msgid "Keyboard"
+msgstr "키보드"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1030
+msgid "Auto"
+msgstr "자동"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Application"
+msgstr "애플리케이션"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1033
+msgid "Remember me"
+msgstr "저를 기억해주세요."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Auto-publish shortcuts"
+msgstr "자동-출판 단축키"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+msgid "Disconnecting!"
+msgstr "끊김!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "텍스트 파일(*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occured. Please try again."
+msgstr "에러가 발생했습니다. 다시 시도해 보세요."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "버그 리포트가 %s 저장되었습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "버그 리포트가 저장되었습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill description field."
+msgstr "설명 필드를 채워주세요."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "필드가 비었습니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Ulteo OVD 버그 리포트"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "유효합니다."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "날짜"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "버전"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "시스템"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+#, fuzzy
+msgid "Description and steps to reproduce:"
+msgstr "재생하기 위해 설명과 ????? "
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "버그 리포트하기"

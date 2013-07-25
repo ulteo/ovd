@@ -417,6 +417,7 @@ class Preferences {
 			'is_IS'=>'Icelandic',
 			'it_IT'=>'Italiano',
 			'ja_JP'=>'日本語',
+			'ko_KR'=>'한국어',
 			'nb_NO'=>'Norsk (bokmål)',
 			'nl_NL'=>'Nederlands',
 			'pl_PL'=>'Polski',

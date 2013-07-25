@@ -54,7 +54,7 @@ public class Language {
 			{"Indonesian", "Bahasa Indonesia", "id"},
 			{"Italian", "Italiano", "it"},
 			{"Japanese", "日本語", "ja"},
-//			{"Korean", "한국어", "ko"},
+			{"Korean", "한국어", "ko", "kr"},
 //			{"Latvian", "", "lv"},
 //			{"Lithuanian", "Lietuvių", "lt"},
 //			{"Maltese", "", "mt"},

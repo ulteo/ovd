@@ -120,7 +120,7 @@ function get_available_languages() {
 		array('id' => 'id', 'english_name' => 'Indonesian', 'local_name' => 'Bahasa Indonesia'),
 		array('id' => 'it', 'english_name' => 'Italian', 'local_name' => 'Italiano'),
 		array('id' => 'ja-jp', 'english_name' => 'Japanese', 'local_name' => '日本語'),
-// 		array('id' => 'ko', 'english_name' => 'Korean', 'local_name' => '한국어'),
+		array('id' => 'ko-kr', 'english_name' => 'Korean', 'local_name' => '한국어'),
 // 		array('id' => 'lv', 'english_name' => 'Latvian'),
 // 		array('id' => 'lt', 'english_name' => 'Lithuanian', 'local_name' => 'Lietuvių'),
 // 		array('id' => 'mt', 'english_name' => 'Maltese'),
