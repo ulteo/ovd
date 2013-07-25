@@ -17,5 +17,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Shortcuts():
+	def __init__(self, profilePath):
+		pass
+	
+	
 	def synchronize(self, path):
 		  raise NotImplementedError("must be redeclared")
