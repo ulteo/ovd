@@ -420,6 +420,7 @@ class Preferences {
 			'nb_NO'=>'Norsk (bokmål)',
 			'nl_NL'=>'Nederlands',
 			'pl_PL'=>'Polski',
+			'pt_PT'=>'Português',
 			'pt_BR'=>'Português (Brasil)',
 			'ro_RO'=>'Română',
 			'ru_RU'=>'Русский',

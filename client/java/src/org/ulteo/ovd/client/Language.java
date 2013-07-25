@@ -62,7 +62,7 @@ public class Language {
 //			{"Norwegian (Nynorsk)", "", "no"},
 			{"Persian", "فارسی", "fa", "ir"},
 			{"Polish", "Polski", "pl"},
-//			{"Portuguese", "Português", "pt"},
+			{"Portuguese", "Português", "pt"},
 			{"Portuguese (Brazil)", "Português (Brasil)", "pt", "br"},
 			{"Romanian", "Română", "ro"},
 			{"Russian", "Русский", "ru"},
