@@ -30,6 +30,7 @@ public class Language {
 			{"Bulgarian", "Български", "bg"}, 
 //			{"Belarusian", "", "be"},
 			{"Chinese", "中文", "zh", "cn"},
+			{"Catalan", "Català", "ca", "es"},
 //			{"Croatian", "", "hr"},
 			{"Czech", "Česky", "cs"},
 			{"Danish", "Dansk", "da"},
