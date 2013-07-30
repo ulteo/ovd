@@ -275,8 +275,15 @@ class Profile(AbstractProfile):
 					break
 			
 			if p.returncode != 0:
-				Logger.error("Profile umount failed")
+				Logger.warn("Profile umount failed, force the unmount")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
+				cmd = "umount -l %s"%(self.profile_mount_point)
+				cmd = self.transformToLocaleEncoding(cmd)
+				Logger.debug("Profile umount force command: '%s'"%(cmd))
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					Logger.error("Profile force umount failed")
+					Logger.debug("Profile force umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 			
 			try:
 				os.rmdir(self.profile_mount_point)
