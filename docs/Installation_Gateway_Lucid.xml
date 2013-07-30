@@ -130,7 +130,7 @@ deb http://LOGIN:PASSWORD@archive.ulteo.com/ovd/@VERSION@/gold/ubuntu lucid main
         <listitem id="repository_offline_step4">
           <para id="repository_offline_step4_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo-ovd-offline.list</emphasis>
             file and add these lines:
           </para>
           <screen>
