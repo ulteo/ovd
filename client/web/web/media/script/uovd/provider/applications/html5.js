@@ -124,7 +124,7 @@ uovd.provider.applications.Html5.prototype.handleOrders = function(server_id, op
 				application = this.applications[instance];
 			} else {
 				/* Application created from session recovery */
-				application = new uovd.ApplicationInstance(this, app_id, instance);
+				application = new uovd.provider.applications.ApplicationInstance(this, app_id, instance);
 				application.create = 0;
 			}
 
