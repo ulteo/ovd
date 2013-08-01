@@ -213,7 +213,7 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 		Rule* rule = (Rule*)list_get(config->rules, i);
 		List* reject;
 
-		if (!rule || !u || !reg) {
+		if (!rule) {
 			continue;
 		}
 
