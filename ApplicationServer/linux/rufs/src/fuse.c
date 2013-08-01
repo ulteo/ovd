@@ -223,7 +223,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 		if (isSymlink && !u->acceptSymlink)
 			continue;
 
-		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
 
 		reject = u->reject;
