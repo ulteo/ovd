@@ -6,12 +6,12 @@ SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.refreshTimer = null;
 
-	/* Do NOT remove ovd.session.started in destructor as it is used as a delayed initializer */
-	this.session_management.addCallback("ovd.session.started", this.handler);
+	/* Do NOT remove ovd.session.starting in destructor as it is used as a delayed initializer */
+	this.session_management.addCallback("ovd.session.starting", this.handler);
 }
 
 SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
-	if(type == "ovd.session.started") {
+	if(type == "ovd.session.starting") {
 		var session_mode = this.session_management.parameters["mode"];
 
 		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
@@ -139,7 +139,7 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 SeamlessWindowManager.prototype.end = function() {
 	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
-		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
+		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.rdpProvider.seamless.in.*",    this.handler);
 		this.session_management.removeCallback("ovd.session.destroying",           this.handler);
 
