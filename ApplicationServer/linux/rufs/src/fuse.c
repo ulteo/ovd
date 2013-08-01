@@ -211,7 +211,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	// The file do not exist
 	for(i = 0 ; i < config->rules->size ; i++) {
 		Rule* rule = (Rule*)list_get(config->rules, i);
-		List* accept;
 		List* reject;
 
 		if (!rule || !u || !reg) {
