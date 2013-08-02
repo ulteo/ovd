@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010, 2011, 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import hashlib
+import locale
 import os
 import tempfile
 
@@ -68,6 +70,10 @@ class ApplicationsDetection():
 		applications = {}
 		files = self.find_files()
 		
+		(_, encoding) = locale.getdefaultlocale()
+		if encoding is None:
+			encoding = "UTF8"
+		
 		for filename in files:
 			entrie = xdg.DesktopEntry.DesktopEntry(filename)
 			
@@ -100,6 +106,10 @@ class ApplicationsDetection():
 				application["description"] = entrie.getComment()
 			elif entrie.getGenericName() != u'':
 				application["description"] = entrie.getGenericName()
+			
+			for k in application:
+				if type(application[k]) is str:
+					application[k] = unicode(application[k], encoding)
 			
 			applications[application["local_id"]] = application
 		
