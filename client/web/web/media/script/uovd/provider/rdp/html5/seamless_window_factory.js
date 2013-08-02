@@ -64,7 +64,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 				context.rect(0,0,w,h);
 				context.stroke();
 
-				jQuery("#w_"+self.id).after(overlay);
+				jQuery("#w_"+self.id).parent().append(overlay);
 
 				var drag = function(e) {
 					var dx = parseInt(e.pageX) - parseInt(lastX);
