@@ -39,6 +39,7 @@ class Shortcuts(AbstractShortcuts):
 	
 	
 	def install(self, shortcut):
+		shortcut = Platform.toUnicode(shortcut)
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
 			os.remove(dstFile)
