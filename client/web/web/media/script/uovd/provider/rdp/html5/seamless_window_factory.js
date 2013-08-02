@@ -260,10 +260,12 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 		var w = x1-x0;
 		var h = y1-y0;
+		var dx = -1*Math.min(this.x, 0);
+		var dy = -1*Math.min(this.y, 0);
 
 		if( this.visible && x0 < x_max && y0 < y_max ) {
 			try {
-				window_context.drawImage(this.main_canvas[0],x0,y0,w,h,0,0,w,h);
+				window_context.drawImage(this.main_canvas[0],x0,y0,w,h,dx,dy,w,h);
 			} catch(e) {};
 		}
 	}
