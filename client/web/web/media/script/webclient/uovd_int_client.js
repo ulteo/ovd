@@ -277,6 +277,12 @@ function initialize_ui() {
 	var settings = window.ovd.settings;
 	var defaults = window.ovd.defaults;
 
+	/* Bind resize events */
+	jQuery(window).resize(function() {
+		settings.width  = jQuery(window).innerWidth();
+		settings.height = jQuery(window).innerHeight();
+	});
+
 	/* Bind UI events (not forms) */
 	jQuery('#logout_link').on('click', function() { confirmLogout(); });
 	jQuery('#iframeLink').on('click', function() { hideLock() ; hideIFrame(); });
