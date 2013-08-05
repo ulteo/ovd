@@ -79,6 +79,13 @@ function validate_settings() {
 			jQuery('#advanced_settings_desktop').hide();
 	}
 
+	/* Update InputMethod */
+	if(settings.rdp_input_method == "scancode") {
+		jQuery("#session_keymap").prop('disabled', false);
+	} else {
+		jQuery("#session_keymap").prop('disabled', true);
+	}
+
 	/* Update RDP providers */
 	var nb_rdp_providers = 0;
 	for(var i in framework.tests) {
@@ -212,6 +219,7 @@ function initialize_defaults() {
 	defaults.debug                 = jQuery("#debug_true").prop('checked');
 	defaults.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
 	defaults.rdp_provider          = jQuery('#rdp_mode').val();
+	defaults.rdp_input_method      = jQuery('#session_input_method').val();
 	defaults.http_provider         = "proxy";
 	defaults.webapps_provider			 = "jsonp";
 	defaults.wc_url                = getWebClientBaseURL();
@@ -301,6 +309,7 @@ function initialize_ui() {
 	jQuery('#desktop_fullscreen_true, #desktop_fullscreen_false').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#use_local_credentials_true, #use_local_credentials_false').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });
+	jQuery('#session_input_method').on('change keyup', function() { settings.rdp_input_method = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('keyup change', function() { settings.sessionmanager = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('focus blur', function(e) {
 		var example = i18n['sessionmanager_host_example'];
@@ -524,6 +533,7 @@ function synchronize() {
 	parameters["debug"]                 = settings.debug;
 	parameters["desktop_fullscreen"]    = settings.fullscreen;
 	parameters["use_local_credentials"] = settings.use_local_credentials;
+	parameters["input_method"]          = settings.rdp_input_method;
 
 	/* Dont' push the WC ip : replace it by "localhost" */
 	if(settings.sessionmanager == window.location.host) { parameters["sessionmanager_host"]   = "127.0.0.1"; }

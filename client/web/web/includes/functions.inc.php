@@ -183,6 +183,10 @@ function get_available_translations($lang) {
 		'debug_yes'						=>	_('Yes'),
 		'debug_no'						=>	_('No'),
 		
+		'keyboard_config' => _('Keyboard method'),
+		'keyboard_config_scancode' => _('Scancode'),
+		'keyboard_config_unicode' => _('Unicode'),
+		'keyboard_config_unicode_lime' => _('Unicode use local IME'),
 
 		'advanced_settings'				=>	_('Advanced settings'),
 		'connect'						=>	_('Connect'),

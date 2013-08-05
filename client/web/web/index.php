@@ -103,9 +103,19 @@ $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
-$rdp_input_unicode = null;
-if (defined('RDP_INPUT_METHOD'))
-	$rdp_input_unicode = RDP_INPUT_METHOD;
+$rdp_input_method = null;
+if (OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
+	$rdp_input_method = (string)$_COOKIE['ovd-client']['session_input_method'];
+else
+	$rdp_input_method = RDP_INPUT_METHOD;
+
+$show_input_method = false;
+if (defined('OPTION_SHOW_INPUT_METHOD'))
+	$show_input_method = OPTION_SHOW_INPUT_METHOD;
+
+$force_input_method = false;
+if (defined('OPTION_FORCE_INPUT_METHOD'))
+	$force_input_method = OPTION_FORCE_INPUT_METHOD;
 
 $use_proxy = false;
 if (defined('OPTION_USE_PROXY') && is_bool(OPTION_USE_PROXY)) {
@@ -247,7 +257,7 @@ function get_users_list() {
 			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
 			window.ovd.defaults.user_keymap                 = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
-			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_unicode !== null ? '\''.$rdp_input_unicode.'\'' : 'undefined'; ?>;
+			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_method !== null ? '\''.$rdp_input_method.'\'' : 'undefined'; ?>;
 			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.debug_mode                  = <?php echo isset($debug_mode) && $debug_mode === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.client_language             = <?php echo isset($user_language) ? "'".$user_language."'" : 'undefined'; ?>;
@@ -260,6 +270,7 @@ function get_users_list() {
 			window.ovd.defaults.force_fullscreen            = <?php echo defined('OPTION_FORCE_FULLSCREEN') && OPTION_FORCE_FULLSCREEN === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_session_mode          = <?php echo defined('OPTION_FORCE_SESSION_MODE') ? "'".OPTION_FORCE_SESSION_MODE."'" : 'undefined'; ?>;
 			window.ovd.defaults.force_language              = <?php echo defined('OPTION_FORCE_LANGUAGE') && OPTION_FORCE_LANGUAGE === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_input_method          = <?php echo defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_keymap                = <?php echo defined('OPTION_FORCE_KEYMAP') && OPTION_FORCE_KEYMAP === true ? 'true' : 'false'; ?>;
 
 			var i18n = {};
@@ -723,7 +734,7 @@ function get_users_list() {
 														</select>
 													</td>
 												</tr>
-												<tr<?php if ($rdp_input_unicode == 'unicode') echo ' style="display: none;"';?>>
+												<tr>
 													<td style="text-align: right; vertical-align: middle;">
 														<?php if (!$big_image_map) { ?>
 														<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
@@ -740,6 +751,19 @@ function get_users_list() {
 																foreach ($keymaps as $keymap)
 																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id']==$user_keymap)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
+														</select>
+													</td>
+												</tr>
+												<tr <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
+													<td style="text-align: right; vertical-align: middle;"></td>
+													<td style="text-align: left; vertical-align: middle;">
+														<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
+													</td>
+													<td style="text-align: right; vertical-align: middle;">
+														<select id="session_input_method"<?php if (OPTION_FORCE_INPUT_METHOD === true) echo ' disabled="disabled"';?>>
+															<option id="keyboard_config_scancode_gettext" value="scancode"<?php if ($rdp_input_method == 'scancode') echo ' selected="selected"';?>></option>
+															<option id="keyboard_config_unicode_gettext" value="unicode"<?php if ($rdp_input_method == 'unicode') echo ' selected="selected"';?>></option>
+															<option id="keyboard_config_unicode_lime_gettext" value="unicode_local_ime"<?php if ($rdp_input_method == 'unicode_local_ime') echo ' selected="selected"';?>></option>
 														</select>
 													</td>
 												</tr>
