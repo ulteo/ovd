@@ -159,9 +159,7 @@ function generateEnd_internal(error) {
 
 			var end_message_details_link = jQuery(document.createElement('a'))
 			end_message_details_link.prop("href", "javascript:;");
-			end_message_details_link.css({
-				"padding":"10px",
-			});
+			end_message_details_link.css("padding", "10px");
 			end_message_details_link.html(i18n['error_details']);
 			end_message_details.append(end_message_details_link);
 
@@ -218,9 +216,7 @@ function generateEnd_external(error) {
 
 			var end_message_details_link = jQuery(document.createElement('a'))
 			end_message_details_link.prop("href", "javascript:;");
-			end_message_details_link.css({
-				"padding":"10px",
-			});
+			end_message_details_link.css("padding", "10px");
 			end_message_details_link.html(i18n['error_details']);
 			end_message_details.append(end_message_details_link);
 
