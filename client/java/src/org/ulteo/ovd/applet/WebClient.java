@@ -210,6 +210,11 @@ public class WebClient extends Applet implements FocusListener {
 			return;
 		}
 		
+		if (! this.load_others_jni()) {
+			System.err.println("Failed to load additionnal jni");
+			return;
+		}
+		
 		try {
 			this.spooler = new SpoolOrder(this);
 			this.serverApps = Collections.synchronizedMap(new HashMap<Integer, ArrayList<Application>>());
