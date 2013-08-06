@@ -54,7 +54,7 @@ function show_default() {
 		$groups_users = array();
 		popup_error(_("Failed to get users groups list"));
 	}
-	usort($groups_users, "usergroup_cmp");
+	uasort($groups_users, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
 
   foreach($groups_users as $i => $group_users) {

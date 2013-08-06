@@ -44,7 +44,7 @@ function show_default() {
 		$a_servs = array();
 	}
   
-  usort($a_servs, "server_cmp");
+  uasort($a_servs, "server_cmp");
   if (! is_array($a_servs))
     $a_servs = array();
 
@@ -200,7 +200,7 @@ function show_unregistered() {
 	if (is_null($u_servs)) {
 		$u_servs = array();
 	}
-  usort($u_servs, "server_cmp");
+  uasort($u_servs, "server_cmp");
 
 	$can_do_action = isAuthorized('manageServers');
 

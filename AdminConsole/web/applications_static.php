@@ -52,6 +52,7 @@ function show_default() {
 			$applications[$k] = $v;
 	}
 	$is_empty = (is_null($applications) or count($applications)==0);
+	uasort($applications, "application_cmp");
 
 	$is_rw = applicationdb_is_writable();
 	$can_manage_applications = isAuthorized('manageApplications');

@@ -47,6 +47,7 @@ if ($_GET['view'] == 'all')
 
 function show_default() {
 	$applications = $_SESSION['service']->applications_list();
+	uasort($applications, "application_cmp");
   
   $is_empty = (is_null($applications) or count($applications)==0);
 

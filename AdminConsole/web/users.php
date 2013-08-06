@@ -226,6 +226,7 @@ function show_manage($login) {
 			}
 		}
 	}
+	uasort($groups_available, 'usergroup_cmp');
 
 	$can_manage_users = isAuthorized('manageUsers');
 	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
@@ -265,6 +266,13 @@ function show_manage($login) {
 			}
 		}
 	}
+	
+	$applications = array();
+	if ($u->hasAttribute('applications')) {
+		$applications = $u->getAttribute('applications');
+		uasort($applications, 'application_cmp');
+	}
+	
 
   page_header();
 
@@ -375,11 +383,11 @@ function show_manage($login) {
   }
 
   $apps_s = array();
-  if ($u->hasAttribute('applications') && count($u->getAttribute('applications')) > 0) {
+  if (count($applications) > 0) {
     echo '<br />';
     echo '<h2>'._('Published applications').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
-    foreach ($u->getAttribute('applications') as $application_id => $application_name) {
+    foreach ($applications as $application_id => $application_name) {
       echo '<tr>';
       echo '<td><img class="icon32" src="media/image/cache.php?id='.$application_id.'" alt="" title="" /></td>';
       echo '<td><a href="applications.php?action=manage&id='.$application_id.'">'.$application_name.'</a></td>';

@@ -54,6 +54,8 @@ class UsersList {
 			$users[]= $user;
 		}
 		
+		uasort($users, "user_cmp");
+		
 		$this->partial_result = $res['partial'];
 		$this->result = $users;
 		
