@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -192,13 +192,6 @@ public class WebClient extends Applet implements FocusListener {
 				libpcsc_dll = null;
 			}
 			
-		}
-		else {
-			try {
-				libpcsc_dll = FilesOp.exportJarResource("LinuxLibs/"+arch+"/"+LibraryLoader.LIB_PCSC_UNIX);
-			} catch (FileNotFoundException e) {
-				libpcsc_dll = null;
-			}
 		}
 		return true;
 	}
