@@ -288,7 +288,6 @@ function initialize_ui() {
 	jQuery('#iframeLink').on('click', function() { hideLock() ; hideIFrame(); });
 	jQuery('#newsHideLink').on('click', function() { hideLock() ; hideNews(); });
 	jQuery('#suspend_link').on('click', function() { framework.session_management.suspend(); });
-	jQuery('#user_login, #user_password').on('keydown', function(event) { if (event.keyCode == 13) { jQuery('#startsession').submit(); } });
 	jQuery('#advanced_settings_gettext').on('click', function () {
 		if(jQuery('#advanced_settings').filter(":visible")[0]) {
 			jQuery('#advanced_settings').slideUp(400);
