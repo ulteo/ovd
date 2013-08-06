@@ -66,7 +66,7 @@ class UserGroupDB_sql_external {
 		return true;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','USERGROUPDB::MYSQL_external::getList');
 		$groups = array();
 		
@@ -92,9 +92,6 @@ class UserGroupDB_sql_external {
 			else {
 				Logger::info('main', 'USERGROUPDB::MYSQL_external::getList group \''.$row[$this->config['match']['id']].'\' not ok');
 			}
-		}
-		if ($sort_) {
-			usort($groups, "usergroup_cmp");
 		}
 		
 		return $groups;
@@ -177,7 +174,7 @@ class UserGroupDB_sql_external {
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
-		$list = $this->getList(true);
+		$list = $this->getList();
 		foreach ($list as $a_group) {
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {

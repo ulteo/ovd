@@ -78,7 +78,7 @@ class UserGroupDB_sql {
 		}
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','UserGroupDB_sql::getList');
 		
 		$sql2 = SQL::getInstance();
@@ -93,9 +93,6 @@ class UserGroupDB_sql {
 				else {
 					Logger::info('main', 'USERGROUPDB::MYSQL::getList group \''.$row['id'].'\' not ok');
 				}
-			}
-			if ($sort_) {
-				usort($result, "usergroup_cmp");
 			}
 			
 			return $result;
@@ -255,7 +252,7 @@ class UserGroupDB_sql {
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
-		$list = $this->getList(true);
+		$list = $this->getList();
 		foreach ($list as $a_group) {
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {

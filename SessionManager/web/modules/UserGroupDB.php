@@ -69,7 +69,7 @@ class UserGroupDB extends Module {
 		}
 		return NULL; // not found
 	}
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main', 'UserGroupDB::getList');
 		$result = array();
 		foreach ($this->instance_type as $key => $value) {
@@ -82,10 +82,6 @@ class UserGroupDB extends Module {
 			$result = array_merge($result, $buffer);
 		}
 		$unique = array_unique($result);
-		
-		if ($sort_) {
-			usort($unique, "usergroup_cmp");
-		}
 		return $unique;
 	}
 	public function isWriteable() {

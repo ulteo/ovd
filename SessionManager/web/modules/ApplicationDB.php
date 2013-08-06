@@ -43,7 +43,7 @@ abstract class ApplicationDB extends Module {
 	public function search($app_name, $app_description, $app_type, $app_path_exe) {
 		return false;
 	}
-	public function getList($sort_=false, $type_=NULL) {
+	public function getList($type_=NULL) {
 		return false;
 	}
 	public function isWriteable() {

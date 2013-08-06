@@ -76,7 +76,7 @@ class UserDB_sql_external extends UserDB {
 		return true;
 	}
 
-	public function getList($sort_=false){
+	public function getList(){
 		Logger::debug('main','USERDB::MYSQL_external::getList');
 		$users = array();
 		
@@ -113,10 +113,7 @@ class UserDB_sql_external extends UserDB {
 			if ($this->isOK($u))
 				$users[] = $u;
 		}
-		//do we need to sort alphabetically ?
-		if ($sort_) {
-			usort($users, "user_cmp");
-		}
+		
 		return $users;
 	}
 	

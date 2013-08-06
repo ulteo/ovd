@@ -74,8 +74,8 @@ class ApplicationDB_sql extends ApplicationDB {
 		return NULL;
 	}
 
-	public function getList($sort_=false, $type_=NULL){
-		Logger::debug('main', "ApplicationDB_sql::getList(sort=$sort_, type=$type_)");
+	public function getList($type_=NULL){
+		Logger::debug('main', "ApplicationDB_sql::getList(type=$type_)");
 		$sql2 = SQL::getInstance();
 		if (is_null($type_))
 			$res = $sql2->DoQuery('SELECT * FROM #1', self::table);
@@ -90,10 +90,7 @@ class ApplicationDB_sql extends ApplicationDB {
 				if ($this->isOK($a))
 					$result [$a->getAttribute('id')]= $a;
 			}
-			// do we need to sort alphabetically ?
-			if ($sort_) {
-				usort($result, "application_cmp");
-			}
+			
 			return $result;
 		}
 		else {
@@ -162,7 +159,7 @@ class ApplicationDB_sql extends ApplicationDB {
 					$mimetypes = array();
 					foreach($liaisons as $group => $liaison)
 						$mimetypes []= $group;
-					sort($mimetypes);
+					
 					$r->setMimeTypes($mimetypes);
 				}
 			}
@@ -370,7 +367,6 @@ class ApplicationDB_sql extends ApplicationDB {
 			}
 		}
 		
-		sort($mimes);
 		return $mimes;
 	}
 }

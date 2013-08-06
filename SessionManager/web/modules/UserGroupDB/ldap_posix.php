@@ -183,7 +183,7 @@ class UserGroupDB_ldap_posix {
 		$info = $infos[$dn];
 		return $this->generateUsersGroupFromRow($info, $dn, $configLDAP['match']);
 	}
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','UserGroupDB::ldap_posix::getList');
 		
 		if (is_array($this->cache_list)) {
@@ -192,10 +192,6 @@ class UserGroupDB_ldap_posix {
 		else {
 			$groups = $this->getList_nocache();
 			$this->cache_list = $groups;
-		}
-		
-		if ($sort_) {
-			usort($groups, "usergroup_cmp");
 		}
 		
 		return $groups;

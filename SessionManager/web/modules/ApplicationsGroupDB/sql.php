@@ -83,7 +83,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		return NULL;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','ApplicationsGroupDB::sql::getList');
 		if (is_null(self::table)) {
 			Logger::error('main', 'ApplicationsGroupDB::sql::getList table is null');
@@ -102,9 +102,6 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 				else {
 					Logger::info('main', 'ApplicationsGroupDB::sql::getList group \''.$row['id'].'\' not ok');
 				}
-			}
-			if ($sort_) {
-				usort($result, "appsgroup_cmp");
 			}
 			
 			return $result;

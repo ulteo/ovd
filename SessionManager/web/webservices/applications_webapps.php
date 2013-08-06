@@ -40,7 +40,7 @@ $node = $dom->createElement('webapps');
 $applicationDB = ApplicationDB::getInstance();
 $webapp_application_DB = WebAppConfDB::getInstance();
 
-$applications = $applicationDB->getList(false, 'webapp');
+$applications = $applicationDB->getList('webapp');
 
 if (is_array($applications)) {
 	foreach ($applications as $app) {

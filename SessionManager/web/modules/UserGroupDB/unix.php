@@ -75,7 +75,7 @@ class UserGroupDB_unix  extends UserGroupDB {
 		return NULL;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','UserGroupDB::unix::getList');
 		$groups = array();
 		$content = file_get_contents('/etc/group');
@@ -87,10 +87,7 @@ class UserGroupDB_unix  extends UserGroupDB {
 				$groups[$g->id] = $g;
 			}
 		}
-		// do we need to sort alphabetically ?
-		if ($sort_) {
-			usort($groups, "usergroup_cmp");
-		}
+		
 		return $groups;
 		
 	}
@@ -139,7 +136,7 @@ class UserGroupDB_unix  extends UserGroupDB {
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
-		$list = $this->getList(true);
+		$list = $this->getList();
 		foreach ($list as $a_group) {
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {

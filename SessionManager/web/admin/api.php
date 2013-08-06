@@ -571,7 +571,7 @@ class OvdAdminSoap {
 			}
 			else {
 				$applicationDB = ApplicationDB::getInstance();
-				
+				$applications = array();
 				foreach ($ls as $l) {
 					$app = $applicationDB->import($l->element);
 					if (! $app) {
@@ -1186,7 +1186,7 @@ class OvdAdminSoap {
 		$this->check_authorized('viewApplications');
 	
 		$applicationDB = ApplicationDB::getInstance();
-		$applications = $applicationDB->getList(false, $type_);
+		$applications = $applicationDB->getList($type_);
 	
 		$ret = array();
 		foreach($applications as $application) {
@@ -1966,7 +1966,7 @@ class OvdAdminSoap {
 		$this->check_authorized('viewApplicationsGroups');
 		
 		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
-		$groups = $applicationsGroupDB->getList(true);
+		$groups = $applicationsGroupDB->getList();
 		
 		$ret = array();
 		foreach($groups as $item) {
@@ -3837,7 +3837,6 @@ class OvdAdminSoap {
 		);
 		
 		$liaisons_types = self::get_liaisons_types();
-		ksort($liaisons_types);
 		
 		$ret['liaisons'] = array();
 		foreach ($liaisons_types as $liaisons_type) {
