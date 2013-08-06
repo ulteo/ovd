@@ -363,8 +363,8 @@ public class WebClient extends Applet implements FocusListener {
 				
 				if (desktop_container == null) {
 					System.err.println("Unable to find another applet to host desktop session");
-					// maybe usefull to throw an exception ...
-					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "Unable to find applet '"+container+"' Desktop session canno't be started");
+					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "Unable to find the canvas applet");
+					return;
 				}
 				
 				client.setApplet(desktop_container);
@@ -569,7 +569,7 @@ public class WebClient extends Applet implements FocusListener {
 	}
 	
 	public void forwardSessionError(int code, String msg) {
-		Object[] args = {};
+		Object[] args = {code, msg};
 		this.forwardToJS(JS_API_F_SESSION_ERROR, args);
 	}
 	

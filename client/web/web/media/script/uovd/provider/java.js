@@ -311,6 +311,11 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 				self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"serverConnect failed"});
 			}
 		};
+
+		/* Handle startSession error */
+		self.applet_sessionError = function(code, message) {
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:message});
+		};
 	};
 
 	if(this.main_applet == null) {
@@ -484,6 +489,11 @@ uovd.provider.Java.prototype.connectApplications = function() {
 					return;
 				}
 			}
+		};
+
+		/* Handle startSession error */
+		self.applet_sessionError = function(code, message) {
+			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:message});
 		};
 
 		/* Start the session */
