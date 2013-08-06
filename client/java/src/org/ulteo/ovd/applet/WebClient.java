@@ -33,6 +33,7 @@ import java.awt.event.FocusListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -488,7 +489,7 @@ public class WebClient extends Applet implements FocusListener {
 	public void serverPrepare(int JSId, String xml) {
 		try {
 			DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+			Document doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 			serverApps.put(JSId, SessionManagerCommunication.parseApplications(doc.getDocumentElement()));
 		} catch (Exception e) {
 			Logger.warn("Error during 'serverPrepare' parsing: " + e.getMessage());
