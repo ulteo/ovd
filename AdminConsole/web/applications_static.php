@@ -301,7 +301,7 @@ function show_manage($id) {
 	$servers = array();
 	$servers_available = array();
 	foreach($servers_all as $server) {
-		if (in_array($server->id, $servers_id))
+		if (array_key_exists($server->id, $servers_id))
 			$servers[]= $server;
 		elseif (! $server->isOnline())
 			continue;
