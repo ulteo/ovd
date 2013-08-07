@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
@@ -226,6 +226,13 @@ public class RdpConnectionOvd extends RdpConnection {
 		
 	}
 	
+	
+	public void cleanOVDApp() {
+		if (this.ovdAppChannel != null)
+			this.ovdAppChannel = null;
+	}
+	
+	
 	/**
 	 * Mount local printers
 	 *	- Add rdpdr channel
@@ -301,9 +308,6 @@ public class RdpConnectionOvd extends RdpConnection {
 			RdpConnectionOvd.printerManager.stop();
 			RdpConnectionOvd.printerManager = null;
 		}
-		
-		if (this.ovdAppChannel != null)
-			this.ovdAppChannel = null;
 	}
 
 	/**
