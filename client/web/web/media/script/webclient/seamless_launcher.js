@@ -30,11 +30,18 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				}
 			}
 
+			/* Sort the list by name */
+			var applications_sorted = new Array();
+			for(var id in this.applications) { applications_sorted.push(this.applications[id]); }
+			applications_sorted.sort(function(a, b) { var n1=a.name.toLowerCase(); var n2=b.name.toLowerCase(); return (n1>n2 ? 1 : (n1<n2 ? -1 : 0)); })
+
 			/* Create launchers */
 			var table = jQuery(document.createElement("table"));
 			var tbody = jQuery(document.createElement("tbody"));
 
-			for(var id in this.applications) {
+			for(var i=0 ; i<applications_sorted.length ; ++i) {
+				var id = applications_sorted[i].id;
+
 				var tr = jQuery(document.createElement("tr"));
 				tr.prop("id", "application_"+id);
 				tr.prop("className", "applicationLauncherDisabled");
