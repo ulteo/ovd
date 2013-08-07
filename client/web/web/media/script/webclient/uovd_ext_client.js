@@ -80,13 +80,18 @@ function initialize_framework() {
 		}, 2000);
 	});
 
-	framework.session_management.addCallback("ovd.session.started", function(type, source, params) {
-		var mode = framework.session_management.session.mode;
-		hideOk();
-		hideInfo();
-		hideError();
-		configureUI(mode);
-		pullMainContainer();
+	framework.session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
+		var from = params["from"];
+		var to = params["to"];
+
+		if(to == uovd.SESSION_STATUS_READY) {
+			var mode = framework.session_management.session.mode;
+			hideOk();
+			hideInfo();
+			hideError();
+			configureUI(mode);
+			pullMainContainer();
+		}
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
