@@ -62,8 +62,14 @@ if (isset($_GET['info'])) {
 		foreach ($servers as $server_id => $data) {
 			echo '<li>';
 			echo '<a href="servers.php?action=manage&id='.$server_id.'">'.$servers_cache[$server_id]->getDisplayName().'</a>';
-			if ($role == Server::SERVER_ROLE_APS)
+			if ($role == Server::SERVER_ROLE_APS) {
 				echo ' (<span class="msg_'.Session::colorStatus($data['status']).'">'.Session::textStatus($data['status']).'</span>)';
+				if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->hasAttribute('desktop_server')) {
+					if ($server_id == $session->getAttribute('desktop_server')) {
+						echo ' ('._('Desktop server').')';
+					}
+				}
+			}
 			echo '</li>';
 		}
 		echo '</ul>';

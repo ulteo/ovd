@@ -3441,6 +3441,10 @@ class OvdAdminSoap {
 			$s['start_time'] = $session_->getAttribute('start_time');
 		}
 		
+		if ($session_->mode == Session::MODE_DESKTOP) {
+			$s['desktop_server'] = $session_->server;
+		}
+		
 		return $s;
 	}
 	
