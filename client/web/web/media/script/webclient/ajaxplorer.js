@@ -9,7 +9,7 @@ Ajaxplorer = function(session_management, node) {
 
 Ajaxplorer.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.started") {
-		var session_mode = this.session_management.parameters["mode"];
+		var session_mode = this.session_management.session.mode;
 		var self = this; /* closure */
 
 		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
@@ -59,7 +59,7 @@ Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
 }
 
 Ajaxplorer.prototype.end = function() {
-	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
+	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.destroying", this.handler);

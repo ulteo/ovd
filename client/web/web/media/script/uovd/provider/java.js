@@ -376,7 +376,7 @@ uovd.provider.Java.prototype.connectDesktop_embeeded = function(server, settings
 		clearTimeout(error_timeout);
 
 		/* Start the session */
-		if(! self.main_applet[0].startSession(parameters["mode"], settings)) {
+		if(! self.main_applet[0].startSession(self.session_management.session.mode, settings)) {
 			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 		}
 	};
@@ -403,7 +403,7 @@ uovd.provider.Java.prototype.connectDesktop_fullscreen = function(server, settin
 	};
 
 	/* Start the session */
-	if(! this.main_applet[0].startSession(parameters["mode"], settings)) {
+	if(! this.main_applet[0].startSession(self.session_management.session.mode, settings)) {
 		self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 	}
 }
@@ -497,7 +497,7 @@ uovd.provider.Java.prototype.connectApplications = function() {
 		};
 
 		/* Start the session */
-		if(! self.main_applet[0].startSession(parameters["mode"], settings)) {;
+		if(! self.main_applet[0].startSession(self.session_management.session.mode, settings)) {;
 			self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"startSession failed"});
 		}
 	};

@@ -81,7 +81,7 @@ function initialize_framework() {
 	});
 
 	framework.session_management.addCallback("ovd.session.started", function(type, source, params) {
-		var mode = framework.session_management.parameters["mode"];
+		var mode = framework.session_management.session.mode;
 		hideOk();
 		hideInfo();
 		hideError();

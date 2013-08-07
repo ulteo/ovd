@@ -11,7 +11,7 @@ SeamlessLauncher = function(session_management, node) {
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.starting") {
-		var session_mode = this.session_management.parameters["mode"];
+		var session_mode = this.session_management.session.mode;
 		var session = this.session_management.session;
 
 		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
@@ -141,7 +141,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 }
 
 SeamlessLauncher.prototype.end = function() {
-	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
+	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);
