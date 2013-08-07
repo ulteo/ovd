@@ -111,6 +111,7 @@ uovd.provider.applications.Html5.prototype.handleOrders = function(server_id, op
 		var bin =    parameters[0].slice(2);
 		if(opcode == "00") {         /* ORDER_INIT */
 			/* channel connected */
+			this.rdp_provider.serverStatus(server_id, uovd.SERVER_STATUS_READY);
 		} else if (opcode == "02") { /* ORDER_STARTED */
 			/* Format :
 					uint32 = app id

@@ -77,7 +77,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var to = params["to"];
 		var server = source;
 
-		if(to == uovd.SERVER_STATUS_CONNECTED || to == uovd.SERVER_STATUS_READY) {
+		if(to == uovd.SERVER_STATUS_READY) {
 			/* Activate launchers */
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
