@@ -1,8 +1,8 @@
 <?php
 /**
-* Copyright (C) 2010-2012 Ulteo SAS
+* Copyright (C) 2010-2013 Ulteo SAS
 * http://www.ulteo.com
-* Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
+* Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
 * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 *
 * This program is free software; you can redistribute it and/or
@@ -321,6 +321,7 @@ function show_manage($id_) {
 	$servers = array();
 	$published_applications = array();
 	$applications_instances = array();
+	$storages = array();
 	
 	$dom = new DomDocument('1.0', 'utf-8');
 	$ret = @$dom->loadXML($session->getData());
@@ -367,6 +368,11 @@ function show_manage($id_) {
 				$server['obj'] = $server_obj;
 			
 			$servers[]= $server; // can be the same server twice with different role ... ToDO: fix that on backend side
+		}
+		
+		foreach ($dom->getElementsByTagName('storage') as $node) {
+			$s = nodeattrs2array($node);
+			$storages[$s['rid']] = $s;
 		}
 		
 		foreach ($dom->getElementsByTagName('application') as $node) {
@@ -562,6 +568,34 @@ function show_manage($id_) {
 	}
 	
 	echo '</div>';
+	
+	echo '<div>';
+	echo '<h2>'._('Storages').'</h2>';
+	if (count($storages) == 0)
+		echo _('No information about it in the report');
+	else {
+		echo '<ul>';
+		foreach ($storages as $storage_id => $storage) {
+			if ($storage['type'] != 'profile') {
+				continue;
+			}
+				
+			echo '<li>'._('User profile').' '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')'.'</li>';
+		}
+			
+		foreach ($storages as $storage_id => $storage) {
+			if ($storage['type'] == 'profile') {
+				continue;
+			}
+			
+			echo '<li>'._('Shared foler').' - '.$storage['name'].' <em>('.$storage['mode'].')</em> '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')</li>';
+		}
+		
+		echo '</ul>';
+	}
+	
+	echo '</div>';
+	
 	page_footer();
 	die();
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,4 +186,13 @@ function str2num($str_) {
 		$num += ($i+1)*ord($str[$i]);
 	
 	return $num;
+}
+
+function nodeattrs2array($node_) {
+	$ret = array();
+	foreach($node_->attributes as $attr) {
+		$ret[$attr->nodeName] = $attr->nodeValue;
+	}
+	
+	return $ret;
 }

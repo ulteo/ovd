@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,6 +70,25 @@ if (isset($_GET['info'])) {
 					}
 				}
 			}
+			else if ($role == Server::SERVER_ROLE_FS) {
+				echo '<ul>';
+				foreach($data as $i => $info) {
+					if ($info['type'] != 'profile') {
+						continue;
+					}
+					
+					echo '<li>'._('User profile').'</li>';
+				}
+				
+				foreach($data as $i => $info) {
+					if ($info['type'] == 'profile') {
+						continue;
+					}
+					
+					echo '<li>'._('Shared foler').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
+				}
+			}
+			
 			echo '</li>';
 		}
 		echo '</ul>';

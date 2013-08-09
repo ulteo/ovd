@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -104,6 +104,7 @@ class SessionReportItem {
 		$servers_node = $dom->createElement('servers');
 		$session_node->appendChild($servers_node);
 		
+		$storage_resources = array();
 		foreach ($session_->servers as $role => $servers) {
 			foreach ($servers as $server_id => $data) {
 				$server_node = $dom->createElement('server');
@@ -131,9 +132,40 @@ class SessionReportItem {
 				
 				$server_node->setAttribute('fqdn', $server->fqdn);
 				$server_node->setAttribute('type', $server->type);
+				
+				if ($role == Server::SERVER_ROLE_FS) {
+					foreach($data as $i => $info) {
+						$storage_resource = array(
+							'rid' =>	$info['rid'],
+							'type'=>	$info['type'],
+							'server_id' => $server_id,
+							'server_name' => $server->getDisplayName(),
+						);
+						
+						if ($info['type'] == 'sharedfolder') {
+							$storage_resource['name'] = $info['name'];
+							$storage_resource['mode'] = $info['mode'];
+						}
+						
+						$storage_resources[$storage_resource['rid']] = $storage_resource;
+					}
+				}
 			}
 		}
 		// Finish session servers part
+		
+		// Start storage part
+		$storages_node = $dom->createElement('storages');
+		$session_node->appendChild($storages_node);
+		foreach ($storage_resources as $storage_rid => $storage) {
+
+			$node = $dom->createElement('storage');
+			$storages_node->appendChild($node);
+			foreach($storage as $k => $v) {
+				$node->setAttribute($k, $v);
+			}
+		}
+		// Finish storage part
 		
 		$applications = $dom->createElement('published_applications');
 		$session_node->appendChild($applications);
