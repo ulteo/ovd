@@ -48,13 +48,16 @@ class Shortcuts(AbstractShortcuts):
 				print "Failed to copy file: ", str(e)
 			
 			threading.Thread(target=self.server2012Integration, args=(path,)).start()
+			for p in glob.glob(os.path.join(path, "*")):
+				self.installToDesktop(os.path.join(path, p))
 			return
 
 		for p in glob.glob(os.path.join(path, "*")):
-			self.install(os.path.join(path, p))
-			
+			self.installToDesktop(os.path.join(path, p))
+			self.installToStartMenu(os.path.join(path, p))
 	
-	def install(self, shortcut):
+	
+	def installToStartMenu(self, shortcut):
 		shortcut = Platform.toUnicode(shortcut)
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
@@ -69,7 +72,10 @@ class Shortcuts(AbstractShortcuts):
 			else:
 				# other error
 				print "Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0])
-		
+	
+	
+	def installToDesktop(self, shortcut):
+		shortcut = Platform.toUnicode(shortcut)
 		if not os.path.exists(self.windowsDesktopDir):
 			os.makedirs(self.windowsDesktopDir)
 			
