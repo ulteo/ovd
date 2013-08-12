@@ -26,6 +26,7 @@ import threading
 import time
 import pywintypes
 import os
+from SessionEndHandler import SessionEndHandler
 
 from ovd_shells.Shortcuts import Shortcuts as AbstractShortcuts
 import _platform as Platform
@@ -34,6 +35,7 @@ class Shortcuts(AbstractShortcuts):
 	def __init__(self):
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, 0, 0)
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, 0, 0)
+		self.installedShortcut = []
 	
 	
 	def synchronize(self, path):
@@ -49,7 +51,12 @@ class Shortcuts(AbstractShortcuts):
 			
 			threading.Thread(target=self.server2012Integration, args=(path,)).start()
 			for p in glob.glob(os.path.join(path, "*")):
+				self.installedShortcut.append(p)
 				self.installToDesktop(os.path.join(path, p))
+			
+			self.handler = SessionEndHandler()
+			self.handler.register(self.cleanup)
+			self.handler.start()
 			return
 
 		for p in glob.glob(os.path.join(path, "*")):
@@ -106,3 +113,11 @@ class Shortcuts(AbstractShortcuts):
 		sh = win32com.client.Dispatch('Shell.Application')
 		sh.ShellExecute(lnkPath, None, None, "pintostartscreen", 10)
 	
+	def cleanup(self):
+		for s in self.installedShortcut:
+			dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(s))
+			if os.path.exists(dstFile):
+				try:
+					os.remove(dstFile)
+				except Exception, e:
+					print "Failed to remote %s: %s"%(dstFile, str(e))
