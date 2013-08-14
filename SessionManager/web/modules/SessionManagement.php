@@ -7,6 +7,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -708,7 +709,7 @@ abstract class SessionManagement extends Module {
 			$event->setAttribute('error', _('No available application'));
 			$event->emit();
 
-			Logger::error('main', 'SessionManagement::choose_webapp_servers - No webapp published for User "'.$this->user->getAttribute('login').'", aborting');
+			Logger::info('main', 'No webapp published for User "'.$this->user->getAttribute('login').'"');
 			return false;
 		} else {
 			Logger::debug('main', 'SessionManagement::chooseWebAppServers - found '.count($applications).' webapp(s)');
