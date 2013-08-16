@@ -520,7 +520,7 @@ function initialize_tests() {
 			var failure  = jQuery.proxy(function(i) { nok(i) }, this, i);
 			var test     = jQuery.proxy(provider.testCapabilities, provider, success, failure);
 			framework.tests[i] = null;
-			setTimeout(test, 1);
+			setTimeout(test, 500);
 			//provider.testCapabilities(success, failure);
 		})(i);
 	}

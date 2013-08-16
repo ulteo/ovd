@@ -293,13 +293,7 @@ public class WebClient extends Applet implements FocusListener {
 	
 	@Override
 	public final void destroy() {
-		this.ovd = null;
-		this.focusManager = null;
-		this.sm_host = null;
-		this.spooler = null;
-		this.serverApps = null;
-		this.aps = null;
-		System.gc();
+		System.exit(0);
 	}
 	
 	protected void createOvdSession(int mode_, Map<String, String> settings_) {
