@@ -69,7 +69,7 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtCreateFile");
+		log_debug(L"myNtCreateFile");
 
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
@@ -103,7 +103,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtOpenFile");
+		log_debug(L"myNtOpenFile");
 
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
@@ -130,7 +130,7 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtQueryAttributesFile");
+		log_debug(L"myNtQueryAttributesFile");
 
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
@@ -161,7 +161,7 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
-		Logger::getSingleton().debug(L"myNtSetInformationFile");
+		log_debug(L"myNtSetInformationFile");
 
 		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
 		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength>>1);
@@ -272,13 +272,11 @@ void setupHooks() {
 
 	// Get the environment variable which contain profile source
 	if (! reg.exist()) {
-		Logger::getSingleton().debug(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
 		log_error(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
 		return;
 	}
 
 	if (! reg.get(L"ProfileSrc", src)) {
-		Logger::getSingleton().debug(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
 		log_error(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
 		return;
 	}
@@ -330,8 +328,7 @@ void setupHooks() {
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
 	}
 
-	log_error(L"Hooked success");
-	Logger::getSingleton().debug(L"Hooked success");
+	log_debug(L"Hooked success");
 }
 
 void releaseHooks() {
@@ -345,5 +342,5 @@ void releaseHooks() {
 	Mhook_Unhook((PVOID*)&OriginNtCreateKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
 	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
-	log_error(L"Un-Hooked program");
+	log_debug(L"Un-Hooked program");
 }

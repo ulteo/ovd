@@ -230,19 +230,19 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 			szRemainPath = szPathRef.substr(szSrcRef.length() + 1);
 
 		// Check if szRemainPath is in black list
-		Logger::getSingleton().debug(L"check path %s", szRemainPath.c_str());
+		log_debug(L"check path %s", szRemainPath.c_str());
 		for (it = this->fsRules.begin() ; it != this->fsRules.end() ; it++) {
-			Logger::getSingleton().debug(L"   => test rules %s", (*it)->getRule().c_str());
+			log_debug(L"   => test rules %s", (*it)->getRule().c_str());
 
 			if ((*it)->match(szRemainPath)) {
-				Logger::getSingleton().debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination());
+				log_debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination());
 				std::wstring remain = szRemainPath;
 
 				if ((*it)->needTranslate())
 					remain = trans.translate(szRemainPath, true);
 
 				pszSubstitutedPath = (*it)->getDestination() + SEPERATOR + remain;
-				Logger::getSingleton().debug(L"   => replace by is %s %s", pszSubstitutedPath.c_str(), pszSubstitutedPath.c_str());
+				log_debug(L"   => replace by is %s %s", pszSubstitutedPath.c_str(), pszSubstitutedPath.c_str());
 				bSubstituted = true;
 
 				break;

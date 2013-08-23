@@ -5,6 +5,7 @@
 #define _Logger_H
 
 #include <string>
+#include <common/fs/File.h>
 #include <common/UException.h>
 
 #define MAX_DBG_MSG_LEN (4096)
