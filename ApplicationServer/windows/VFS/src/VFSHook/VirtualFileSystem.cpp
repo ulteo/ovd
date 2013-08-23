@@ -205,6 +205,35 @@ std::wstring VirtualFileSystem::_getParent( const std::wstring& szPathRef, const
 	return szPathParent;
 }
 
+
+void VirtualFileSystem::getSubstitutedRepositoriesPath(	const std::wstring& szPathRef, std::list<std::wstring>& res)
+{
+	std::wstring szPathParent = _getParent( szPathRef, this->m_szDeviceUserProfilePath );
+
+	// Path contains target folder
+	if( _isFilePathEqual( szPathParent, this->m_szDeviceUserProfilePath))
+	{
+		// Path is target path
+		std::list<Union>::iterator it;
+		std::wstring remainPath;
+		std::wstring resPath;
+		std::list<Union> unions = Configuration::getInstance().getUnions();
+
+		// check if it is the homedir root
+		if ( _isFilePathEqual( szPathRef, this->m_szDeviceUserProfilePath))
+			resPath = SEPERATOR;
+		else
+			remainPath = szPathRef.substr(this->m_szDeviceUserProfilePath.length() + 1);
+
+		// Check if szRemainPath is in black list
+		for (it = unions.begin() ; it != unions.end() ; it++) {
+			resPath = DEVICE_PREFIX + (*it).getPath() + SEPERATOR + remainPath;
+			res.push_back(resPath);
+		}
+	}
+}
+
+
 bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef, 
 										const std::wstring& szSrcRef, 
 										const std::wstring& szDstRef, 
