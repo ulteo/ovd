@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2011 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011 
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $client_headers = getallheaders();
 foreach ($client_headers as $k => $v) {
-	if (in_array($k, array('Forward-Cookie')) || in_array($k, array('forward-cookie'))) {
+	if (in_array($k, array('Forward-Cookie', 'forward-cookie'))) {
 		$ret = $k.': '.$v;
 		preg_match('@Forward-Cookie: (.*)=(.*);@i', $ret, $matches);
 		if (count($matches) == 3) {
