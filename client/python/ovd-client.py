@@ -56,6 +56,8 @@ def usage():
 
 
 conf = {}
+conf["compress"] = False
+conf["title"] = ""
 conf["fullscreen"] = False
 conf["geometry"] = "800x600"
 conf["login"] = os.environ["USER"]
