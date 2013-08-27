@@ -123,7 +123,7 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
             Uncompress the archive:
           </para>
           <screen>
-<![CDATA[# for f in ovd-@VERSION@-*ubuntu-lucid.tar.gz; do tar xzf $f; done]]>
+<![CDATA[# for f in ovd-@VERSION@-*-lucid.tar.gz; do tar xzf $f; done]]>
           </screen>
         </listitem>
 
