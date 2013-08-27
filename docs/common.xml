@@ -5,13 +5,13 @@
   <important id="gold">
     <para>
       The Ulteo OVD @gold_product_name@ is a <emphasis
-      role="strong">GOLD module</emphasis>. GOLD modules are
+      role="strong">@GOLD_NAME@ module</emphasis>. @GOLD_NAME@ modules are
       commercial Open-Source modules that are not available in the
-      free download section. To access executable GOLD modules, you
+      free download section. To access executable @GOLD_NAME@ modules, you
       need a dedicated login and password.
     </para>
     <para>
-      In order to get access to GOLD modules, contact us at <ulink
+      In order to get access to @GOLD_NAME@ modules, contact us at <ulink
       url="http://www.ulteo.com/home/contact-us" />.
     </para>
   </important>

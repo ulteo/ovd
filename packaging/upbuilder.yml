@@ -86,6 +86,8 @@ upbuilder:
       archs: $(consts.ALL_ARCH)
       builder: doc
       src: "docs"
+      env:
+        BASE_URI: "$(publish_uri)"
     rufs:
       module: "ovd-regular-union-fs"
       archs: $(consts.ANY_ARCH)

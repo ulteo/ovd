@@ -25,6 +25,7 @@ import os
 import sys
 import time
 from xml.dom import minidom
+import urlparse
 
 
 def perform_transform(content):
@@ -37,6 +38,25 @@ def perform_transform(content):
 		version = file("VERSION", "r").readline().strip()
 		version += "~dev"
 	transform_vars["VERSION"] = version
+	
+	if os.environ.has_key("BASE_URI"):
+		base_uri = os.environ["BASE_URI"]
+		
+	else:
+		base_uri = "http://archive.ulteo.com/ovd/" + version
+	
+	if os.environ.has_key("GOLD_NAME"):
+		gold_name = os.environ["GOLD_NAME"]
+	else:
+		gold_name = "gold"
+	
+	base_uri_gold = list(urlparse.urlsplit(base_uri + "/" + gold_name))
+	base_uri_gold[1] = "LOGIN:PASSWORD@" + base_uri_gold[1]
+	base_uri_gold = urlparse.urlunsplit(base_uri_gold)
+	
+	transform_vars["BASE_URI"] = base_uri
+	transform_vars["GOLD_NAME"] = gold_name
+	transform_vars["BASE_URI_GOLD"] = base_uri_gold
 	
 	try:
 		document = minidom.parseString(content)

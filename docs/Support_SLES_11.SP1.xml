@@ -87,7 +87,7 @@ SELinux status:              disabled]]>
             Add the ovd repository:
           </para>
           <screen>
-<![CDATA[# zypper ar http://archive.ulteo.com/ovd/@VERSION@/@distrib_name@/@distrib_version@ ovd]]>
+<![CDATA[# zypper ar @BASE_URI@/@distrib_name@/@distrib_version@ ovd]]>
           </screen>
         </listitem>
 
@@ -97,7 +97,7 @@ SELinux status:              disabled]]>
             using gpg:
           </para>
           <screen>
-<![CDATA[# rpm --import http://archive.ulteo.com/ovd/keyring]]>
+<![CDATA[# rpm --import @BASE_URI@/@distrib_name@/@distrib_version@/keyring]]>
           </screen>
         </listitem>
       </itemizedlist>
