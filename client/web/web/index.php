@@ -104,10 +104,11 @@ if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
 $rdp_input_method = null;
-if (OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
+if (defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
 	$rdp_input_method = (string)$_COOKIE['ovd-client']['session_input_method'];
 else
-	$rdp_input_method = RDP_INPUT_METHOD;
+	if(defined('RDP_INPUT_METHOD'))
+		$rdp_input_method = RDP_INPUT_METHOD;
 
 $show_input_method = false;
 if (defined('OPTION_SHOW_INPUT_METHOD'))
@@ -760,7 +761,7 @@ function get_users_list() {
 														<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_input_method"<?php if (OPTION_FORCE_INPUT_METHOD === true) echo ' disabled="disabled"';?>>
+														<select id="session_input_method"<?php if ($force_input_method === true) echo ' disabled="disabled"';?>>
 															<option id="keyboard_config_scancode_gettext" value="scancode"<?php if ($rdp_input_method == 'scancode') echo ' selected="selected"';?>></option>
 															<option id="keyboard_config_unicode_gettext" value="unicode"<?php if ($rdp_input_method == 'unicode') echo ' selected="selected"';?>></option>
 															<option id="keyboard_config_unicode_lime_gettext" value="unicode_local_ime"<?php if ($rdp_input_method == 'unicode_local_ime') echo ' selected="selected"';?>></option>
