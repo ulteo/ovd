@@ -24,6 +24,8 @@ upbuilder:
       module: "ovd-administration-console"
       builder: autotools
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { orig: "/ulteo/tcpdf", dest: "includes/tcpdf", branch: "master"}
     wc:
       src: "client/web"
       module: "ovd-web-client"
