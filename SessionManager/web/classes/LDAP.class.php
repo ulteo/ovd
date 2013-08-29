@@ -181,7 +181,7 @@ class LDAP {
 		if (! is_null($attribs_)) {
 			$attribs_ = array_unique($attribs_);
 		}
-		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$this->suffix.'\')');
+		Logger::debug('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
@@ -200,7 +200,7 @@ class LDAP {
 			$attribs_ = array_unique($attribs_);
 		}
 		
-		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\',\''.$attribs_.'\',\''.$this->suffix.'\')');
+		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
@@ -293,5 +293,16 @@ class LDAP {
 			default:
 				return '('.$rule.implode('', $res).')';
 		}
+	}
+	
+	protected static function log_attribs($attribs_) {
+		if (is_null($attribs_)) {
+			return 'null';
+		}
+		elseif (is_array($attribs_)) {
+			return '['.implode(', ', $attribs_).']';
+		}
+		
+		return $attribs_;
 	}
 }
