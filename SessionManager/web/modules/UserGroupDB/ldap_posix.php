@@ -238,8 +238,13 @@ class UserGroupDB_ldap_posix {
 	}
 	
 	public static function join_filters($filters) {
+		// rule can be & or |
 		$res = array();
 		foreach($filters as $filter) {
+			if (is_null($filter)) {
+				continue;
+			}
+			
 			$filter = trim($filter);
 			if (strlen($filter) == 0) {
 				continue;
@@ -252,11 +257,14 @@ class UserGroupDB_ldap_posix {
 			array_push($res, $filter);
 		}
 		
-		if (count($res) == 0) {
-			return null;
+		switch(count($res)) {
+			case 0:
+				return null;
+			case 1:
+				return $res[0];
+			default:
+				return '('.$rule.implode('', $res).')';
 		}
-		
-		return implode('', $res);
 	}
 
 	public function get_by_user_members($user_login_) {
