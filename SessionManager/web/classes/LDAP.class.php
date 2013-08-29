@@ -37,7 +37,6 @@ class LDAP {
 	private $login;
 	private $password;
 	private $suffix;
-	private $userbranch;
 	private $options = array();
 	private $attribs = array();
 
@@ -53,8 +52,6 @@ class LDAP {
 			$this->password = $config_['password'];
 		if (isset($config_['suffix']))
 			$this->suffix = $config_['suffix'];
-		if (isset($config_['userbranch']))
-			$this->userbranch = $config_['userbranch'];
 		if (isset($config_['options']))
 			$this->options = $config_['options'];
 
@@ -137,19 +134,10 @@ class LDAP {
 		if (!$buf) {
 			Logger::error('main', "LDAP::bind bind with user '$dn_' failed : (error:".$this->errno().')');
 			
-			$searchbase_array = array();
-			if ($this->userbranch != '') {
-				$searchbase_array []= $this->userbranch;
-			}
-			if ($this->suffix != '') {
-				$searchbase_array []= $this->suffix;
-			}
-			$searchbase = implode(',', $searchbase_array);
-			
 			$protocol_version = '';
 			if (array_key_exists('LDAP_OPT_PROTOCOL_VERSION', $this->options))
 				$protocol_version = '-P '.$this->options['LDAP_OPT_PROTOCOL_VERSION'];
-			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.' '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
+			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.' '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$this->suffix.'"';
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
@@ -190,18 +178,15 @@ class LDAP {
 	
 	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
-		if ($this->userbranch == '' or is_null($this->userbranch)) {
-			$searchbase = $this->suffix;
+		if (! is_null($attribs_)) {
+			$attribs_ = array_unique($attribs_);
 		}
-		else {
-			$searchbase = $this->userbranch.','.$this->suffix;
-		}
-		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
+		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$this->suffix.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
 
-		$ret = @ldap_search($this->link, $searchbase, $filter_, $attribs_, 0, $limit_);
+		$ret = @ldap_search($this->link, $this->suffix, $filter_, $attribs_, 0, $limit_);
 
 		if (is_resource($ret))
 			return $ret;
@@ -211,12 +196,11 @@ class LDAP {
 
 	public function searchDN($filter_, $attribs_=NULL) {
 		$this->check_link();
-		if ($this->suffix != '')
-			$searchbase =$this->userbranch.','.$this->suffix;
-		else
-			$searchbase =$this->userbranch;
+		if (! is_null($attribs_)) {
+			$attribs_ = array_unique($attribs_);
+		}
 		
-		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
+		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\',\''.$attribs_.'\',\''.$this->suffix.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
@@ -279,5 +263,35 @@ class LDAP {
 		if (is_resource($ret))
 			return true;
 		return false;
+	}
+	
+	public static function join_filters($filters, $rule) {
+		// rule can be & or |
+		$res = array();
+		foreach($filters as $filter) {
+			if (is_null($filter)) {
+				continue;
+			}
+			
+			$filter = trim($filter);
+			if (strlen($filter) == 0) {
+				continue;
+			}
+			
+			if (! (str_startswith($filter, '(') and str_endswith($filter, ')'))) {
+				$filter = '('.$filter.')';
+			}
+			
+			array_push($res, $filter);
+		}
+		
+		switch(count($res)) {
+			case 0:
+				return null;
+			case 1:
+				return $res[0];
+			default:
+				return '('.$rule.implode('', $res).')';
+		}
 	}
 }

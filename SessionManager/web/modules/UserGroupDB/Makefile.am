@@ -1,6 +1,5 @@
 scripts_DATA = activedirectory.php \
-               ldap_memberof.php \
-               ldap_posix.php \
+               ldap.php \
 			   sql.php \
 			   sql_external.php
 
