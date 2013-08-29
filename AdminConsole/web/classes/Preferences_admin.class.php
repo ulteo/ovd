@@ -391,9 +391,12 @@ class Preferences_admin {
 			'UserGroupDBDynamic_enable' => 'UserGroupDBDynamic',
 			'UserGroupDBDynamicCached_enable' => 'UserGroupDBDynamicCached',
 			
+			'UserGroupDB_activedirectory_match' => _('Matching'),
+			'UserGroupDB_activedirectory_use_child_group' => _('Use child groups'),
+			
 			'UserGroupDB_ldap_memberof' => _('LDAP using memberOf'),
 			'UserGroupDB_ldap_memberof_match' => _('Matching'),
-			'UserGroupDB_ldap_memberof_use_child_group' => _('Use child groups'),
+			'UserGroupDB_ldap_posix_filter' => _('Filter'),
 			
 			'UserGroupDB_ldap_posix' => _('LDAP using Posix groups'),
 			'UserGroupDB_ldap_posix_group_dn' => _('Group Branch DN'),
@@ -479,8 +482,12 @@ class Preferences_admin {
 			
 			'module_enable' => _('Choose the modules you want to enable.'),
 			
+			'UserGroupDB_activedirectory_use_child_group' => _('Use child groups (works with AD up to 2008r2)'),
+			
 			'UserGroupDB_ldap_posix_group_dn' => _('Use LDAP users groups using Posix groups, Group Branch DN:'),
 			'UserGroupDB_ldap_posix_filter' => sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'),
+			
+			'UserGroupDB_ldap_memberof_filter' => sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'),
 			
 			'UserGroupDB_sql_external_host' => _('The address of your MySQL server.'),
 			'UserGroupDB_sql_external_user' => _('The user login that must be used to access the database (to list users groups).'),

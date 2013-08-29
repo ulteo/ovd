@@ -22,10 +22,12 @@
 class UserGroupDB_ldap_posix {
 	protected $cache_import;
 	protected $cache_list;
+	protected $cache_user_members;
 	protected $preferences;
 	
 	public function __construct() {
 		$this->cache_import = array();
+		$this->cache_user_members = array();
 		$this->cache_list = NULL;
 		
 		$prefs = Preferences::getInstance();
@@ -183,6 +185,127 @@ class UserGroupDB_ldap_posix {
 		$info = $infos[$dn];
 		return $this->generateUsersGroupFromRow($info, $dn, $configLDAP['match']);
 	}
+
+	public function imports($ids_) {
+		Logger::debug('main','UserGroupDB::ldap_posix::imports (['.implode('', $ids_).'])');
+		
+		$result = array();
+		$ids_filter = array();
+		foreach($ids_ as $dn) {
+			if (array_key_exists($dn, $this->cache_import)) {
+				$g = $this->cache_import[$dn];
+				$result[$g->getUniqueID()] = $g;
+			}
+			elseif (is_array($this->cache_list) && array_key_exists($dn, $this->cache_list)) {
+				$g = $this->cache_list[$dn];
+				$result[$g->getUniqueID()] = $g;
+			}
+			else {
+				list($rdn, $subpath) = explode(',', $dn, 2);
+				array_push($ids_filter, '('.$rdn.')');
+			}
+		}
+		
+		if (count($ids_filter) == 0) {
+			return $result;
+		}
+		
+		$configLDAP = $this->makeLDAPconfig();
+		$ldap = new LDAP($configLDAP);
+
+		$filter= '(&'.$this->join_filters(array($configLDAP['filter'], '(|'.implode('', $ids_filter).')')).')';
+		$sr = $ldap->search($filter, array_values($configLDAP['match']));
+		$infos = $ldap->get_entries($sr);
+		
+		if (! is_array($infos))
+			return $result;
+		
+		foreach ($infos as $dn => $info) {
+			if (! in_array($dn, $ids_)) {
+				continue;
+			}
+			
+			$g = $this->generateUsersGroupFromRow($info, $dn, $configLDAP['match']);
+			if (! is_object($g)) {
+				continue;
+			}
+			
+			$this->cache_import[$dn] = $g;
+			$result[$dn] = $g;
+		}
+		
+		return $result;
+	}
+	
+	public static function join_filters($filters) {
+		$res = array();
+		foreach($filters as $filter) {
+			$filter = trim($filter);
+			if (strlen($filter) == 0) {
+				continue;
+			}
+			
+			if (! (str_startswith($filter, '(') and str_endswith($filter, ')'))) {
+				$filter = '('.$filter.')';
+			}
+			
+			array_push($res, $filter);
+		}
+		
+		if (count($res) == 0) {
+			return null;
+		}
+		
+		return implode('', $res);
+	}
+
+	public function get_by_user_members($user_login_) {
+		Logger::debug('main', "UserGroupDB::ldap_posix::get_by_user_members ($user_login_)");
+		if (array_key_exists($user_login_, $this->cache_user_members)) {
+			return $this->cache_user_members[$user_login_];
+		}
+		
+		$config_ldap = $this->makeLDAPconfig();
+		$filter= '(&'.$this->join_filters(array($config_ldap['filter'], $config_ldap['match']['member'].'='.$user_login_)).')';
+		$ldap = new LDAP($config_ldap);
+		$sr = $ldap->search($filter, array_keys($config_ldap['match']));
+		if ($sr === false) {
+			Logger::error('main',"UserGroupDB::ldap_posix::get_by_user_members search failed for ($user_login_)");
+			return NULL;
+		}
+		
+		$infos = $ldap->get_entries($sr);
+		if ($infos === array()) {
+			return array();
+		}
+		
+		$groups = array();
+		foreach ($infos as $dn => $info) {
+			$g = $this->generateUsersGroupFromRow($info, $dn, $config_ldap['match']);
+			if (! is_object($g))
+				continue;
+			
+			$this->cache_import[$dn] = $g;
+			$groups[$g->getUniqueID()] = $g;
+		}
+		
+		$this->cache_user_members[$user_login_] = $groups;
+		return $groups;
+	}
+	
+	public function get_users_by_group_membership($group_id_) {
+		Logger::debug('main', "UserGroupDB::ldap_posix::get_users_by_group_membership ($group_id_)");
+		
+		$group = $this->import($group_id_);
+		if (isset($group->extras) === false || ! is_array($group->extras) || !array_key_exists('member', $group->extras)) {
+			// ???
+			return array();
+		}
+		
+		$userDB = UserDB::getInstance();
+		return $userDB->imports($group->extras['member']);
+	}
+
 	public function getList() {
 		Logger::debug('main','UserGroupDB::ldap_posix::getList');
 		

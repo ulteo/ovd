@@ -44,10 +44,19 @@ class UserGroupDB extends Module {
 			$this->instance_type['dynamiccached'] = UserGroupDBDynamicCached::getInstance();
 		}
 	}
-	public static function getInstance() {
+	public static function getInstance($sub_=null) {
 		if (is_null(self::$instance)) {
 			self::$instance = new self();
 		}
+		
+		if (! is_null($sub_)) {
+			if (! array_key_exists($sub_, self::$instance->instance_type)) {
+				return null;
+			}
+			
+			return self::$instance->instance_type[$sub_];
+		}
+		
 		return self::$instance;
 	}
 	public function __toString() {
@@ -69,6 +78,33 @@ class UserGroupDB extends Module {
 		}
 		return NULL; // not found
 	}
+	
+	public function imports($ids_) {
+		Logger::debug('main', 'UserGroupDB::imports(['.implode('', $ids_).'])');
+		$result = array();
+		foreach ($this->instance_type as $key => $value) {
+			$ids2 = array();
+			foreach($ids_ as $id) {
+				if (str_startswith($id, $key.'_')) {
+					array_push($ids2, substr($id, strlen($key)+1));
+				}
+			}
+			
+			if (count($ids2) == 0) {
+				continue;
+			}
+			
+			$ret = $value->imports($ids2);
+			if (! is_array($ret)) {
+				continue;
+			}
+			
+			$result = array_merge($result, $ret);
+		}
+		
+		return $result;
+	}
+	
 	public function getList() {
 		Logger::debug('main', 'UserGroupDB::getList');
 		$result = array();

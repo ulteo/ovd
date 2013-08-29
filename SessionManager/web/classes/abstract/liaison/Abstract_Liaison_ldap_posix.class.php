@@ -57,55 +57,30 @@ class Abstract_Liaison_ldap_posix {
 	public static function loadElements($type_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)");
 		
-		$userGroupDB = UserGroupDB::getInstance();
-		$userDB = UserDB::getInstance();
-		
-		
-		$ug = $userGroupDB->import('static_'.$group_);
-		if (isset($ug->extras) === false) {
-			// ???
-			return array();
-		}
-		elseif (is_array($ug->extras) && array_key_exists('member', $ug->extras)) {
-			$members = $ug->extras['member'];
-			$elements = array();
-			
-			foreach ($members as $memberuid) {
-				$u = $userDB->importFromDN($memberuid);
-				if (is_object($u) == false) {
-					$u = $userDB->import($memberuid);
-				}
-				if (is_object($u)) {
-					$l = new Liaison($u->getAttribute('login'), $group_);
-					$elements[$l->element] = $l;
-				}
+		$userGroupDB = UserGroupDB::getInstance('static');
+		$users = $userGroupDB->get_users_by_group_membership($group_);
+		foreach($users as $login => $u) {
+			if (is_object($u)) {
+				$l = new Liaison($u->getAttribute('login'), $group_);
+				$elements[$l->element] = $l;
 			}
-			return $elements;
 		}
-		else {
-			return array();
-		}
+		
+		return $elements;
 	}
 	
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('main', "Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)");
 		
-		$userGroupDB = UserGroupDB::getInstance();
-		$userDB = UserDB::getInstance();
+		$userGroupDB = UserGroupDB::getInstance('static');
+		$groups2 = $userGroupDB->get_by_user_members($element_);
+		$liaisons = array();
+		foreach ($groups2 as $group_id => $group) {
+			$l = new Liaison($element_, $group_id);
+			$liaisons[$l->group] = $l;
+		}
 		
-		$groups = array();
-		$groups_all = $userGroupDB->getList();
-		if (! is_array($groups_all)) {
-			Logger::error('main', 'Abstract_Liaison_ldap::loadGroups userGroupDB->getList failed');
-			return NULL;
-		}
-		foreach ($groups_all as $a_group) {
-			if (in_array($element_, $a_group->usersLogin())) {
-				$l = new Liaison($element_,$a_group->getUniqueID());
-				$groups[$l->group] = $l;
-			}
-		}
-		return $groups;
+		return $liaisons;
 	}
 	
 	public static function loadAll($type_) {

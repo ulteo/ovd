@@ -121,10 +121,6 @@ class Configuration_mode_ad extends Configuration_mode {
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', $form['user_group']);
     
-    if ($form['user_group'] == 'activedirectory') { // ugly hack
-      $prefs->set('UserGroupDB', 'ldap_memberof', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
-    }
-    
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', $form['sessionmanagement']);
 

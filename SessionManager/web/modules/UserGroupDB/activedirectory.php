@@ -20,6 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
+	protected $cache_user_members = null;
+	
 	public function __construct() {
 		parent::__construct();
 		
@@ -33,6 +35,8 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 				$this->preferences[$k] = $v;
 			}
 		}
+
+		$this->cache_user_members = array();
 	}
 	
 	public function import($id_) {
@@ -182,6 +186,46 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		return $groups;
 	}
 	
+	public function get_by_user_members($dn_) {
+		Logger::debug('main', "UserGroupDB::activedirectory::get_by_user_members ($dn_)");
+		if (array_key_exists($dn_, $this->cache_user_members)) {
+			return $this->cache_user_members[$dn_];
+		}
+		
+		$userDBAD = UserDB::getInstance();
+		$config_ldap = $userDBAD->makeLDAPconfig();
+		$config_ldap['match'] = array();
+		if (array_key_exists('match', $this->preferences)) {
+			$config_ldap['match'] = $this->preferences['match'];
+		}
+		
+		$filter = '(&(objectClass=group)('.$this->customize_field('member').'='.$dn_.'))';
+		$ldap = new LDAP($config_ldap);
+		$sr = $ldap->search($filter, array_values($config_ldap['match']));
+		if ($sr === false) {
+			Logger::error('main',"UserGroupDB::activedirectory::get_by_user_members search failed for ($dn_)");
+			return NULL;
+		}
+		
+		$infos = $ldap->get_entries($sr);
+		if ($infos === array()) {
+			return array();
+		}
+		
+		$groups = array();
+		foreach ($infos as $dn => $info) {
+			$g = $this->generateUsersGroupFromRow($info, $dn, $config_ldap['match']);
+			if (! is_object($g))
+				continue;
+			
+			$this->cache[$dn] = $g;
+			$groups[$g->getUniqueID()] = $g;
+		}
+		
+		$this->cache_user_members[$dn_] = $groups;
+		return $groups;
+	}
+	
 	public static function isDefault() {
 		return false;
 	}
@@ -214,5 +258,29 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 	
 	public static function enable() {
 		return true;
+	}
+
+	public static function configuration() {
+		$ret = parent::configuration();
+
+		$c = new ConfigElement_dictionary('match', array('description' => 'description','name' => 'sAMAccountName'));
+		$ret []= $c;
+
+		$c = new ConfigElement_select('use_child_group', 0);
+		$c->setContentAvailable(array(0, 1));
+		$ret []= $c;
+		
+		return $ret;
+	}
+	
+	public function customize_field($field_) {
+		$pref = $this->preferences;
+		if (array_key_exists('use_child_group', $pref)) {
+			if (in_array($pref['use_child_group'], array(1, '1'))) {
+				$field_.= ':1.2.840.113556.1.4.1941:';
+			}
+		}
+		
+		return $field_;
 	}
 }

@@ -120,6 +120,51 @@ class UserGroupDB_ldap_memberof {
 		return $ug;
 	}
 	
+	public function imports($ids_) {
+		Logger::debug('main','UserGroupDB::ldap_posix::imports (['.implode(', ', $ids_).'])');
+		
+		$result = array();
+		$ids_filter = array();
+		foreach($ids_ as $dn) {
+			if (array_key_exists($dn, $this->cache)) {
+				$g = $this->cache[$dn];
+				$result[$g->getUniqueID()] = $g;
+			}
+			else {
+				list($rdn, $subpath) = explode(',', $dn, 2);
+				array_push($ids_filter, '('.$rdn.')');
+			}
+		}
+		
+		if (count($ids_filter) == 0) {
+			return $result;
+		}
+		
+		$userDBAD = UserDB::getInstance();
+		$configLDAP = $userDBAD->makeLDAPconfig();
+		$configLDAP['match'] = array();
+		if (array_key_exists('match', $this->preferences)) {
+			$configLDAP['match'] = $this->preferences['match'];
+		}
+		
+		$ldap = new LDAP($configLDAP);
+		$filter = '(&(objectClass=group)(|'.implode('', $ids_filter).'))';
+		$sr = $ldap->search($filter, NULL);
+		if ($sr === false) {
+			Logger::error('main',"UserGroupDB::ldap_memberof::imports search failed");
+			return NULL;
+		}
+		
+		$infos = $ldap->get_entries($sr);
+		foreach ($infos as $dn => $info) {
+			$g = $this->generateUsersGroupFromRow($info, $dn, $configLDAP['match']);
+			if (is_object($g))
+				$result[$dn] = $g;
+		}
+		
+		return $result;
+	}
+	
 	public function isWriteable(){
 		return false;
 	}
@@ -226,14 +271,42 @@ class UserGroupDB_ldap_memberof {
 		}
 		return array($groups, $sizelimit_exceeded);
 	}
+
+	protected function generateUsersGroupFromRow($info, $dn, $match) {
+		$buf = array();
+		foreach ($match as $attribut => $match_ldap) {
+			if (isset($info[$match_ldap][0])) {
+				$buf[$attribut] = $info[$match_ldap][0];
+			}
+			if (isset($info[$match_ldap]) && is_array($info[$match_ldap])) {
+				if (isset($info[$match_ldap]['count']))
+					unset($info[$match_ldap]['count']);
+				$extras[$attribut] = $info[$match_ldap];
+			}
+			else {
+				$extras[$attribut] = array();
+			}
+		}
+		if (!isset($buf['description']))
+			$buf['description'] = '';
+		
+		if (!isset($buf['name']))
+			$buf['name'] = $dn;
+		
+		$g = new UsersGroup($dn, $buf['name'], $buf['description'], true);
+		$g->extras = $extras;
+		$this->cache[$dn] = $g;
+		return $g;
+	}
 	
 	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_dictionary('match', array('description' => 'description','name' => 'name', 'member' => 'member'));
 		$ret []= $c;
-		$c = new ConfigElement_select('use_child_group', 0);
-		$c->setContentAvailable(array(0, 1));
+
+		$c = new ConfigElement_input('filter', '(objectClass=posixGroup)');
 		$ret []= $c;
+		
 		return $ret;
 	}
 	

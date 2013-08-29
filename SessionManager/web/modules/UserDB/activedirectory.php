@@ -120,10 +120,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$match_minimal  = array(
 					'login'	=> 'sAMAccountName',
 					'displayname'	=> 'displayName',
-					'real_login'    => 'sAMAccountName',
 					'principal' => 'userPrincipalName',
-					'countrycode' => 'c', // in ISO-3166 see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-					'objectclass' => 'objectClass'
 		);
 
 		$config_ldap = array(

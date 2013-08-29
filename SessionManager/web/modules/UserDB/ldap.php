@@ -81,6 +81,65 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 	}
 
+	public function imports($logins_){
+		Logger::debug('main','UserDB::ldap::imports(['.implode(', ', $logins_).'])');
+		
+		$result = array();
+		$users_filter = array();
+		foreach($logins_ as $login) {
+			if (is_array($this->cache_userlist) && isset($this->cache_userlist[$login])) {
+				if ($this->isOK($this->cache_userlist[$login])) {
+					$result[$login] = $this->cache_userlist[$login];
+				}
+			}
+			else if (is_array($this->cache_users) && isset($this->cache_users[$login])) {
+				if ($this->isOK($this->cache_users[$login])) {
+					$result[$login] = $this->cache_users[$login];
+				}
+			}
+			else {
+				array_push($users_filter, '('.$this->config['match']['login'].'='.$login.')');
+			}
+		}
+		
+		if (count($users_filter) == 0) {
+			return $result;
+		}
+		
+		$res2 = $this->import_from_filter('(|'.implode('', $users_filter).')');
+		return array_merge($result, $res2);
+	}
+
+	public function import_from_filter($filter_) {
+		$ldap = new LDAP($this->config);
+		$filter = '(&'.$this->generateFilter().$filter_.')';
+		
+		$sr = $ldap->search($filter, array_values($this->config['match']));
+		if ($sr === false) {
+			Logger::error('main', 'UserDB::ldap::imports search failed');
+			return NULL;
+		}
+		
+		$infos = $ldap->get_entries($sr);
+		$result = array();
+		foreach ($infos as $dn => $info) {
+			$u = $this->generateUserFromRow($info);
+			$u->setAttribute('dn',  $dn);
+			
+			$u = $this->cleanupUser($u);
+			$this->cache_users[$u->getAttribute('login')] = $u;
+			if ($this->isOK($u))
+				$result[$u->getAttribute('login')]= $u;
+			else {
+				if ($u->hasAttribute('login'))
+					Logger::info('main', 'UserDB::ldap::imports user \''.$u->getAttribute('login').'\' not ok');
+				else
+					Logger::info('main', 'UserDB::ldap::imports user does not have login');
+			}
+		}
+		return $result;
+	}
+
 	public function importFromDN($dn_) {
 		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
 		
@@ -99,6 +158,11 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
+		if (count($infos) == 0) {
+			Logger::error('main','UserDB_ldap::fromDN ldap returned empty result');
+			return NULL;
+		}
+
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
@@ -168,7 +232,7 @@ class UserDB_ldap  extends UserDB {
 			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
 		}
 		$filter .= '))'; 
-		$sr = $ldap->search($filter, NULL, $limit_);
+		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
 			return NULL;

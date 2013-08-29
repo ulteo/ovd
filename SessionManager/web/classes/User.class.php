@@ -93,14 +93,11 @@ class User {
 				$result[$user_default_group]= $g;
 		}
 
+		$groups_id = array();
 		foreach ($rows as $lug){
-			$g = $userGroupDB->import($lug->group);
-			if (is_object($g))
-				$result[$lug->group]= $g;
-			else {
-				Logger::error('main', 'USER::usersGroups user group (\''.$lug->group.'\') not ok');
-			}
+			array_push($groups_id, $lug->group);
 		}
+		$result = $userGroupDB->imports($groups_id);
 		return $result;
 	}
 
