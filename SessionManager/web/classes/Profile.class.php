@@ -36,13 +36,10 @@ class Profile extends NetworkFolder {
 		
 		$users = array();
 		foreach ($liaisons as $liaison) {
-			$user = $userDB->import($liaison->element);
-			if (! is_object($user))
-				continue;
-			
-			$users[$user->getAttribute('login')] = $user;
+			array_merge($users, $liaison->element);
 		}
-		return $users;
+		
+		return $userDB->imports($users);
 	}
 	
 	public function addUser($user_) {

@@ -2011,14 +2011,19 @@ class OvdAdminSoap {
 		
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $id_);
 		if (count($liaisons)) {
-			$g['usersgroups'] = array();
+			$group_ids = array();
 			foreach ($liaisons as $liaison) {
-				$obj = $userGroupDB->import($liaison->element);
-				if (! $obj) {
-					continue;
-				}
-				
-				$g['usersgroups'][$liaison->element] = $obj->name;
+				array_push($group_ids, $liaison->element);
+			}
+			
+			$groups = $userGroupDB->imports($group_ids);
+			$exported_groups = array();
+			foreach($groups as $group_id => $group) {
+				$exported_groups[$group_id] = $group->name;
+			}
+			
+			if (count($exported_groups) > 0) {
+				$g['usersgroups'] = $exported_groups;
 			}
 		}
 		
@@ -2555,13 +2560,10 @@ class OvdAdminSoap {
 		$users = $group->usersLogin();
 		if (count($users) > 0) {
 			$userDB = UserDB::getInstance();
+			$users2 = $userDB->imports($users);
 			
 			$s['users'] = array();
-			foreach($users as $user_id) {
-				$user = $userDB->import($user_id);
-				if (! $user)
-					continue;
-				
+			foreach($users2 as $user) {
 				$g['users'][$user->getAttribute('login')] = $user->getAttribute('displayname');
 			}
 		}

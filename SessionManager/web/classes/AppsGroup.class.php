@@ -46,11 +46,10 @@ class AppsGroup {
 		if (is_array($groups)) {
 			$result = array();
 			foreach ($groups as $UGAG_liaison){
-				$g = $UserGroupDB->import($UGAG_liaison->element);
-				if (is_object($g))
-					$result[$UGAG_liaison->element]= $g;
+				array_push($result, $UGAG_liaison->element);
 			}
-			return $result;
+			
+			return $UserGroupDB->imports($result);
 		}
 		else {
 			Logger::error('main', 'APPSGROUPS::userGroups (for id='.$this->id.') load liaison liaison failed');
