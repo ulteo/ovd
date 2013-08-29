@@ -181,7 +181,7 @@ class LDAP {
 		if (! is_null($attribs_)) {
 			$attribs_ = array_unique($attribs_);
 		}
-		Logger::debug('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\')');
+		Logger::debug('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\','.$limit_.')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
