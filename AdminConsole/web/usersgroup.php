@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -321,7 +321,7 @@ function show_manage($id) {
   if ($usergroupdb_rw) {
     $usersList = new UsersList($_REQUEST);
     $users_all = $usersList->search();
-    $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
+    $search_form = $usersList->getForm();
     if (is_null($users_all))
       $users_all = array();
       $users_available = array();

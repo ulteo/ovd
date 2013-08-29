@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,11 @@ class UsersList {
 	protected $result;
 	protected $partial_result;
 	
+	protected $org_request_arg = array();
+	
 	
 	public function __construct($array_env) {
+		$this->org_request_arg = $array_env;
 		$this->search_item = '';
 		$this->search_fields = array('login');
 		
@@ -63,11 +66,13 @@ class UsersList {
 	}
 	
 	
-	function getForm($form_params_ = array('action' => 'search')) {
+	function getForm() {
 		$str = '';
 		$str.= '<div style="margin-bottom: 15px;">';
 		$str.= '<form action="" method="GET">';
-		foreach ($form_params_ as $k => $v) {
+		// Add all others args of this page to avoid to lost a non relative parameter
+		$args = args2formargs($this->org_request_arg, array('search_item', 'search_fields'));
+		foreach ($args as $k => $v) {
 			$str.= '<input type="hidden" name="'.$k.'" value="'.$v.'"/>';
 		}
 		$str.= '<table><tr>';

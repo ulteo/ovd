@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David LECHEVALIER <david@ulteo.com> 2012
@@ -412,4 +412,28 @@ function secure_html($data_) {
 		$data_ = htmlspecialchars($data_, ENT_NOQUOTES);
 
 	return $data_;
+}
+
+
+function args2formargs($args, $blacklist = array(), $prev_parrtern = '') {
+	$ret = array();
+
+	foreach ($args as $k => $v) {
+		if (in_array($k, $blacklist))
+			continue;
+		
+		if (strlen($prev_parrtern) == 0)
+			$key = $k;
+		else
+			$key = $prev_parrtern.'['.$k.']';
+		
+		if (is_array($v)) {
+			$ret2 = args2formargs($v, array(), $key);
+			$ret = array_merge($ret, $ret2);
+		}
+		else
+			$ret[$key] = $v;
+	}
+	
+	return $ret;
 }
