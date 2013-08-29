@@ -223,7 +223,7 @@ class LDAP {
 
 		$buf = explode_with_escape(',', $filter_, 2);
 
-		$ret = @ldap_search($this->link, $buf[1], $buf[0], $attribs_);
+		$ret = @ldap_search($this->link, $buf[1], $buf[0], $attribs_, 0, 1);
 
 		if (is_resource($ret))
 			return $ret;
