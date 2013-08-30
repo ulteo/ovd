@@ -301,6 +301,10 @@ function get_classes_startwith_admin($start_name) {
 
 function getProfileMode($prefs) {
   $domain_integration = $prefs->get('general', 'domain_integration');
+	if ($domain_integration == 'microsoft') {
+		$domain_integration = 'ad';
+	}
+	
   if (class_exists('Configuration_mode_'.$domain_integration)) {
     return 'Configuration_mode_'.$domain_integration;
   }

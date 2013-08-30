@@ -92,7 +92,12 @@ if (isset($_POST['config'])) {
       $preview = do_preview($prefs, $name);
     }
     else {
-      $prefs->set('general', 'domain_integration', substr($name, strlen('Configuration_mode_')));
+		$d = substr($name, strlen('Configuration_mode_'));
+		if ($d == 'ad') {
+			$d = 'microsoft';
+		}
+		
+		$prefs->set('general', 'domain_integration', $d);
       if (do_save($prefs, $name) === True) {
 	$_SESSION['config_profile_saved'] = true;
 	unset($_SESSION['config_profile']);
