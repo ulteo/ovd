@@ -445,6 +445,8 @@ class Preferences_admin {
 			'SessionManagement_internal_generate_aps_login' => _("Which login should be used for the ApplicationServer's generated user?"), 
 			
 			'SessionManagement_novell_dlu' => _('Manage users by ZENworks DLU instead of native method'),
+			
+			'SessionManagement_localusers' => _('Override password'),
 		);
 		
 		$this->descriptions = array(

@@ -68,8 +68,8 @@ class SessionManagement_localusers extends SessionManagement_internal {
 	public static function configuration() {
 		$ret = array();
 		
-		$c = new ConfigElement_select('override_password', _("Override password"), _("Override password"), _("Override password"), 0);
-		$c->setContentAvailable(array(0=>_('no'), 1=>_('yes')));
+		$c = new ConfigElement_select('override_password', 0);
+		$c->setContentAvailable(array(0, 1));
 		$ret []= $c;
 		
 		return $ret;
