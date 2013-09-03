@@ -329,6 +329,7 @@
 		</operation>
 		
 		<operation name="administrator_password_set">
+			<documentation>Changes the administrator password for the session manager</documentation>
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -964,6 +965,7 @@
 		</operation>
 		
 		<operation name="news_remove">
+			<documentation>Remove the news identified by its ID and returns true if the operation is done</documentation>
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -2283,6 +2285,7 @@
 	</binding>
 	
 	<service name="OvdAdminService">
+		<documentation>Ovd Session Manager administration console API</documentation>
 		<port name="OvdAdminPort" binding="OvdAdminBinding">
 			<soap:address location="localhost"/>
 		</port>

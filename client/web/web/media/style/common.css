@@ -46,11 +46,6 @@ h1, h2, h3, h4, h5, h6 {
 	color: #666;
 }
 
-div.spacer {
-	margin: 10px 0;
-	clear: both;
-}
-
 div.rounded {
 	border-radius : 10px 10px 10px 10px;
 	-moz-border-radius: 10px 10px 10px 10px;
@@ -99,6 +94,16 @@ div#image_ulteo-small_png {
 	margin-left: auto;
 	margin-right: 0px;
 	background: #eee;
+}
+
+#loginError {
+	height: 1em;
+	margin: 20px 7px 0px 0px;
+	overflow: hidden;
+	color: #a30505;
+	text-align: right;
+	font-weight: bold;
+	word-wrap: break-word;
 }
 
 /* ---------------------------------------- Loading screen
@@ -179,6 +184,7 @@ div#progressBarContent {
 	width: 100%;
 	height: 100%;
 	margin: 0 0;
+	background: #ddd;
 }
 
 #desktopContainer {
@@ -284,6 +290,7 @@ div#overlay {
 	left: 0;
 	width: 100%;
 	height: 100%;
+	z-index: 50;
 }
 
 div#lock {

@@ -7,9 +7,9 @@ uovd.provider.webapps.Base.prototype.initialize = function() {
 };
 
 uovd.provider.webapps.Base.prototype.connect = function() {
-	if (this.session_management.parameters["mode"] == uovd.SESSION_MODE_DESKTOP) {
+	if (this.session_management.session.mode == uovd.SESSION_MODE_DESKTOP) {
 		this.connectDesktop();
-	} else if (this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
+	} else if (this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		this.connectApplications();
 	}
 };

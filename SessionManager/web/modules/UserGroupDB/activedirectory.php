@@ -126,7 +126,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		return $ug;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','UserGroupDB::activedirectory::getList');
 		$userDBAD = UserDB::getInstance();
 		
@@ -177,9 +177,6 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
 			$ug->extras = $extras;
 			$groups[$dn] = $ug;
-		}
-		if ($sort_) {
-			usort($groups, "usergroup_cmp");
 		}
 		
 		return $groups;

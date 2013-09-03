@@ -58,7 +58,7 @@ function show_default() {
   $usersgroupsList = new UsersGroupsList($_REQUEST);
   $groups = $usersgroupsList->search();
   if (is_array($groups)) {
-    usort($groups, "usergroup_cmp");
+    uasort($groups, "usergroup_cmp");
   }
   $searchDiv = $usersgroupsList->getForm();
 
@@ -333,7 +333,7 @@ function show_manage($id) {
     else {
       $users_available = array();
       $users_all = $users;
-      usort($users_all, "user_cmp");
+      uasort($users_all, "user_cmp");
     }
   }
   else {

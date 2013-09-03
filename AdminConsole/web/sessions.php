@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,8 +62,33 @@ if (isset($_GET['info'])) {
 		foreach ($servers as $server_id => $data) {
 			echo '<li>';
 			echo '<a href="servers.php?action=manage&id='.$server_id.'">'.$servers_cache[$server_id]->getDisplayName().'</a>';
-			if ($role == Server::SERVER_ROLE_APS)
+			if ($role == Server::SERVER_ROLE_APS) {
 				echo ' (<span class="msg_'.Session::colorStatus($data['status']).'">'.Session::textStatus($data['status']).'</span>)';
+				if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->hasAttribute('desktop_server')) {
+					if ($server_id == $session->getAttribute('desktop_server')) {
+						echo ' ('._('Desktop server').')';
+					}
+				}
+			}
+			else if ($role == Server::SERVER_ROLE_FS) {
+				echo '<ul>';
+				foreach($data as $i => $info) {
+					if ($info['type'] != 'profile') {
+						continue;
+					}
+					
+					echo '<li>'._('User profile').'</li>';
+				}
+				
+				foreach($data as $i => $info) {
+					if ($info['type'] == 'profile') {
+						continue;
+					}
+					
+					echo '<li>'._('Shared foler').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
+				}
+			}
+			
 			echo '</li>';
 		}
 		echo '</ul>';

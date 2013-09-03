@@ -246,7 +246,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
-		$list = $this->getList(false);
+		$list = $this->getList();
 		foreach ($list as $a_group) {
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {

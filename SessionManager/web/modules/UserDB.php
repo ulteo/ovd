@@ -80,7 +80,7 @@ abstract class UserDB extends Module  {
 		$users = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
-		$list = $this->getList(true);
+		$list = $this->getList();
 		foreach ($list as $a_user) {
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or is_string(strstr($a_user->getAttribute($an_attribute), $contains_))) {

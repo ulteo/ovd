@@ -47,6 +47,7 @@ if ($_GET['view'] == 'all')
 
 function show_default() {
 	$applications = $_SESSION['service']->applications_list();
+	uasort($applications, "application_cmp");
   
   $is_empty = (is_null($applications) or count($applications)==0);
 
@@ -211,7 +212,7 @@ function show_manage($id) {
   
   $servers_available = array();
   foreach($servers_all as $server) {
-    if (in_array($server->id, $servers_id))
+    if (array_key_exists($server->id, $servers_id))
       $servers[]= $server;
     elseif(in_array($server->id, $servers_in_install))
       continue;

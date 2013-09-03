@@ -113,7 +113,7 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','USERDB::ldap::getList');
 		if (!is_array($this->cache_userlist)) {
 			$users = $this->getList_nocache();
@@ -122,10 +122,7 @@ class UserDB_ldap  extends UserDB {
 		else {
 			$users = $this->cache_userlist;
 		}
-		// do we need to sort alphabetically ?
-		if ($sort_ && is_array($users)) {
-			usort($users, "user_cmp");
-		}
+		
 		return $users;
 	}
 
@@ -193,7 +190,7 @@ class UserDB_ldap  extends UserDB {
 					Logger::info('main', 'UserDB::ldap::getUsersContaint user does not have login');
 			}
 		}
-		usort($users, "user_cmp");
+		
 		return array($users, $sizelimit_exceeded);
 	}
 	

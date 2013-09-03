@@ -9,7 +9,7 @@ StartApp = function(session_management) {
 
 StartApp.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.started") {
-		var session_mode = this.session_management.parameters["mode"];
+		var session_mode = this.session_management.session.mode;
 
 		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
 			/* register events listeners */
@@ -54,7 +54,7 @@ StartApp.prototype._parse_start_app = function(xml) {
 
 
 StartApp.prototype.end = function() {
-	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
+	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.destroying", this.handler);
 

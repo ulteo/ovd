@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -70,6 +71,7 @@ import org.ulteo.ovd.client.Language;
 import org.ulteo.ovd.client.Language.JFrame;
 import org.ulteo.ovd.client.bugreport.gui.BugReportButton;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
+import org.ulteo.utils.jni.WorkArea;
 
 public class AuthFrame extends JFrame implements ActionListener, Runnable {
 
@@ -703,6 +705,8 @@ public class AuthFrame extends JFrame implements ActionListener, Runnable {
 			return DesktopFrame.FULLSCREEN;
 		}
 		if (this.resolutionStrings[position].equals(RESOLUTION_MAXIMIZED)) {
+			DesktopFrame.workarea_rect = WorkArea.getWorkAreaSize();
+			DesktopFrame.MAXIMISED = new Dimension(DesktopFrame.workarea_rect.width, DesktopFrame.workarea_rect.height);
 			return DesktopFrame.MAXIMISED;
 		}
 

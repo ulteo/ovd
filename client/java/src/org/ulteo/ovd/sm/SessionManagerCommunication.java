@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
@@ -586,6 +587,9 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 			else if (r == HttpURLConnection.HTTP_NOT_FOUND) {
 				for (Callback c : this.callbacks)
 					c.reportNotFoundHTTPResponse(http_infos);
+			}
+			else if (r == HttpURLConnection.HTTP_SERVER_ERROR) {
+				Logger.warn("Http Error " + r);
 			}
 			else {
 				for (Callback c : this.callbacks)

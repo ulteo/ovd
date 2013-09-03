@@ -38,8 +38,12 @@ $sm_host = '';
 $sessionmanager = NULL;
 $sessionmanager_url = '';
 
-/* Get service type */
 $headers = apache_request_headers();
+
+/* Gateway used ? */
+$gateway = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
+
+/* Get service type */
 if (is_array($headers) && array_key_exists($SERVICE_HEADER, $headers)) {
 	$service = $headers[$SERVICE_HEADER];
 	if ( ! in_array($service, $ALLOWED_SERVICES)) {
@@ -53,10 +57,15 @@ if (is_array($headers) && array_key_exists($SERVICE_HEADER, $headers)) {
 }
 
 /* Get sm_host */
-if (is_array($headers) && array_key_exists($SM_HEADER, $headers)) {
-	$sm_host = $headers[$SM_HEADER];
+/* Do NOT use the SESSIONMANAGER_HOST when using a gateway since the XML needs to be modified (token) */
+if (defined('SESSIONMANAGER_HOST') && ! $gateway) {
+	$sm_host = SESSIONMANAGER_HOST;
 } else {
-	$sm_host = @SESSIONMANAGER_HOST;
+	if (is_array($headers) && array_key_exists($SM_HEADER, $headers)) {
+		$sm_host = $headers[$SM_HEADER];
+	} else {
+		$sm_host = @SESSIONMANAGER_HOST;
+	}
 }
 
 $sessionmanager_url = 'https://'.$sm_host.'/ovd/client';

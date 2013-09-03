@@ -213,46 +213,6 @@ class Profile(AbstractProfile):
 					self.folderRedirection.append(dst)
 					self.addGTKBookmark(dst)
 		
-		if self.profile is not None and self.profileMounted:
-			for d in [self.DesktopDir, self.DocumentsDir]:
-				src = os.path.join(self.profile_mount_point, d)
-				dst = os.path.join(self.homeDir, d)
-				
-				trial = 5
-				while not System.mount_point_exist(src):
-					try:
-						os.makedirs(src)
-					except OSError, err:
-						if self.isNetworkError(err[0]):
-							Logger.warn("Unable to access profile: %s"%(str(err)))
-							return False
-						
-						trial -= 1
-						if trial == 0:
-							Logger.error("Failed to create directory %s: %s"%(src, str(err)))
-							return False
-						
-						time.sleep(random.randint(1,10)/100.0)
-						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
-						continue
-				
-				if not System.mount_point_exist(dst):
-					os.makedirs(dst)
-				
-				cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
-				cmd = self.transformToLocaleEncoding(cmd)
-				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				p = System.execute(cmd)
-				if p.returncode != 0:
-					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-					return False
-				else:
-					self.folderRedirection.append(dst)
-			
-			
-			self.copySessionStart()
-		
 		return True
 	
 	
@@ -315,8 +275,15 @@ class Profile(AbstractProfile):
 					break
 			
 			if p.returncode != 0:
-				Logger.error("Profile umount failed")
+				Logger.warn("Profile umount failed, force the unmount")
 				Logger.debug("Profile umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
+				cmd = "umount -l %s"%(self.profile_mount_point)
+				cmd = self.transformToLocaleEncoding(cmd)
+				Logger.debug("Profile umount force command: '%s'"%(cmd))
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					Logger.error("Profile force umount failed")
+					Logger.debug("Profile force umount failed (status: %d) => %s"%(p.returncode, p.stdout.read()))
 			
 			try:
 				os.rmdir(self.profile_mount_point)

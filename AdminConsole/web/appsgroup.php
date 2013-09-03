@@ -180,11 +180,14 @@ function show_manage($id) {
     else
       $applications[]= $application;
   }
+	uasort($applications, "application_cmp");
+	uasort($applications_available, "application_cmp");
 
   // Publications
   $groups_users = array();
 	if ($group->hasAttribute('usersgroups')) {
 		$groups_users = $group->getAttribute('usersgroups');
+		uasort($groups_users, "usergroup_cmp");
 	}
 
 	$usersgroupsList = new UsersGroupsList($_REQUEST);
@@ -193,7 +196,7 @@ function show_manage($id) {
 		$groups_users_all = array();
 		popup_error(_("Failed to get users groups list"));
 	}
-	usort($groups_users_all, "usergroup_cmp");
+	uasort($groups_users_all, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $id));
 
   $groups_users_available = array();

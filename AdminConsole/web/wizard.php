@@ -140,7 +140,7 @@ function show_step1() {
 		$usergroups = array();
 		popup_error(_("Failed to get users groups list"));
 	}
-	usort($usergroups, "usergroup_cmp");
+	uasort($usergroups, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
   
   $has_usergroups = (count($usergroups) > 0);
@@ -164,6 +164,7 @@ function show_step1() {
 			$users[]= $user;
 		}
 		
+		uasort($users, "user_cmp");
 		$sizelimit_exceeded = $res['partial'];
 	}
 
@@ -318,6 +319,7 @@ function show_step3() {
     $appgroup_selected = true;
 
   $applications = $_SESSION['service']->applications_list();
+	uasort($applications, "application_cmp");
   $has_applications  = $applications !== array() && !is_null($applications);
 
   if (!$has_applications) {

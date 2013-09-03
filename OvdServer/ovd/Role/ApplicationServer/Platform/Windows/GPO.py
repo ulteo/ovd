@@ -44,7 +44,7 @@ class GPO:
 		self.iniScriptFile = os.path.join(sysDir, GPO.INI_SCRIPT_FILE)
 		self.gptFile = os.path.join(sysDir, GPO.GPT_FILE)
 		self.gpos = {}
-		self.useUTF16 = False
+		self.useUTF16 = True
 	
 	
 	def disableSysWow64(self, value):
@@ -63,9 +63,8 @@ class GPO:
 		parameter = None
 		
 		if not os.path.exists(self.iniScriptFile):
-			Logger.error("Failed to load configuration")
 			self.disableSysWow64(False)
-			return False
+			return True
 		
 		f = open(self.iniScriptFile, 'r')
 		data = f.read()
@@ -109,7 +108,7 @@ class GPO:
 	
 	def contain(self, GPOType, command, parameter):
 		if GPOType not in [GPO.LOGON, GPO.LOGOFF]:
-			Logger.error("GPO of type %s is not supported")
+			Logger.error("GPO of type %s is not supported"%(GPOType))
 			return False
 		
 		if not self.gpos.has_key(GPOType):
@@ -120,7 +119,7 @@ class GPO:
 	
 	def add(self, GPOType, command, parameter):
 		if GPOType not in [GPO.LOGON, GPO.LOGOFF]:
-			Logger.error("GPO of type %s is not supported")
+			Logger.error("GPO of type %s is not supported"%(GPOType))
 			return False
 		
 		if not self.gpos.has_key(GPOType):
@@ -143,13 +142,26 @@ class GPO:
 			self.gpos[GPOType].remove((command, parameter))
 	
 	
+	def createGPT(self):
+		try:
+			f = open(self.gptFile, 'w+')
+			f.write("[General]\r\n")
+			f.write("%s=%s\r\n"%(GPO.GPT_KEY, GPO.GUID))
+			f.write("version=65537\r\n")
+			f.close()
+		except Exception, e:
+			Logger.error("Failed to create new gpt file: %s", str(e))
+			return False
+		return True
+	
+	
 	def updateGPT(self):
 		# we need to disable syswow64 redirection
 		self.disableSysWow64(True)
 		if not os.path.exists(self.gptFile):
-			Logger.error("Failed to update gpt file")
+			res = self.createGPT()
 			self.disableSysWow64(False)
-			return False
+			return res
 		
 		f = open(self.gptFile, 'r')
 		data = f.read()
@@ -183,23 +195,20 @@ class GPO:
 				buffer += "%iParameters=%s\r\n"%(index, parameters)
 				index += 1
 		
-		if not os.path.exists(self.iniScriptFile):
-			Logger.error("Failed to load configuration")
-			self.disableSysWow64(False)
-			return False
-		
-		
-		f = open(self.iniScriptFile, 'rb+')
-		f.truncate()
-		
-                
-		if self.useUTF16:
-			buffer = "\r\n"+buffer
-                        buffer = buffer.encode("utf-16-le")
-			buffer = codecs.BOM_UTF16_LE+buffer
-
-		f.write(buffer)
-		f.close()
+		try:
+			os.makedirs(os.path.dirname(self.iniScriptFile))
+			f = open(self.iniScriptFile, 'wb+')
+			f.truncate()
+			
+			if self.useUTF16:
+				buffer = "\r\n"+buffer
+				buffer = buffer.encode("utf-16-le")
+				buffer = codecs.BOM_UTF16_LE+buffer
+			
+			f.write(buffer)
+			f.close()
+		except Exception, e:
+			Logger.error("Failed to add a GPO: %s"%(str(e)))
 		
 		self.disableSysWow64(False)
 

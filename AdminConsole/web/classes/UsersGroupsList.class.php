@@ -53,6 +53,8 @@ class UsersGroupsList {
 			$groups[]= $group;
 		}
 		
+		uasort($groups, "usergroup_cmp");
+		
 		$this->partial_result = $res['partial'];
 		$this->result = $groups;
 

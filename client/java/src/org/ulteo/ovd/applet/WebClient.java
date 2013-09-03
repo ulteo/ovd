@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@ import java.awt.event.FocusListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -193,13 +194,6 @@ public class WebClient extends Applet implements FocusListener {
 			}
 			
 		}
-		else {
-			try {
-				libpcsc_dll = FilesOp.exportJarResource("LinuxLibs/"+arch+"/"+LibraryLoader.LIB_PCSC_UNIX);
-			} catch (FileNotFoundException e) {
-				libpcsc_dll = null;
-			}
-		}
 		return true;
 	}
 	
@@ -214,6 +208,11 @@ public class WebClient extends Applet implements FocusListener {
 			System.getProperty("user.home");
 		} catch(java.security.AccessControlException e) {
 			System.err.println("AccessControl issue");
+			return;
+		}
+		
+		if (! this.load_others_jni()) {
+			System.err.println("Failed to load additionnal jni");
 			return;
 		}
 		
@@ -294,13 +293,7 @@ public class WebClient extends Applet implements FocusListener {
 	
 	@Override
 	public final void destroy() {
-		this.ovd = null;
-		this.focusManager = null;
-		this.sm_host = null;
-		this.spooler = null;
-		this.serverApps = null;
-		this.aps = null;
-		System.gc();
+		System.exit(0);
 	}
 	
 	protected void createOvdSession(int mode_, Map<String, String> settings_) {
@@ -363,8 +356,8 @@ public class WebClient extends Applet implements FocusListener {
 				
 				if (desktop_container == null) {
 					System.err.println("Unable to find another applet to host desktop session");
-					// maybe usefull to throw an exception ...
-					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "Unable to find applet '"+container+"' Desktop session canno't be started");
+					this.forwardSessionError(this.JS_API_ERROR_CODE_CONTAINER, "Unable to find the canvas applet");
+					return;
 				}
 				
 				client.setApplet(desktop_container);
@@ -490,7 +483,7 @@ public class WebClient extends Applet implements FocusListener {
 	public void serverPrepare(int JSId, String xml) {
 		try {
 			DocumentBuilder domBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+			Document doc = domBuilder.parse(new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
 			serverApps.put(JSId, SessionManagerCommunication.parseApplications(doc.getDocumentElement()));
 		} catch (Exception e) {
 			Logger.warn("Error during 'serverPrepare' parsing: " + e.getMessage());
@@ -569,7 +562,7 @@ public class WebClient extends Applet implements FocusListener {
 	}
 	
 	public void forwardSessionError(int code, String msg) {
-		Object[] args = {};
+		Object[] args = {code, msg};
 		this.forwardToJS(JS_API_F_SESSION_ERROR, args);
 	}
 	

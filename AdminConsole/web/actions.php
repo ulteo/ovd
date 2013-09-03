@@ -1243,7 +1243,7 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 			if (isset($formarray['general'][$container])) {
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
-					$ret = $_SESSION['service']->users_group_settings_set($unique_id, $container, $element_id, null);
+					$ret = $_SESSION['service']->users_group_settings_set($unique_id, $container, $element_id, $value);
 					if ( $ret !== true) {
 						break;
 					}

@@ -4,7 +4,7 @@
 
 FSCACHEDIR=/var/lib/ulteo/ovd/slaveserver/fs
 
-[ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer
+[ "$1" != "upgrade" ] && ovd-slaveserver-role del FileServer || true
 
 if [ "$1" = "purge" ] ; then
     # delete fs user

@@ -211,10 +211,9 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	// The file do not exist
 	for(i = 0 ; i < config->rules->size ; i++) {
 		Rule* rule = (Rule*)list_get(config->rules, i);
-		List* accept;
 		List* reject;
 
-		if (!rule || !u || !reg) {
+		if (!rule) {
 			continue;
 		}
 
@@ -224,7 +223,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 		if (isSymlink && !u->acceptSymlink)
 			continue;
 
-		// if the file exist in a union, we return it
 		str_sprintf(to, "%s%s", u->path, trpath);
 
 		reject = u->reject;

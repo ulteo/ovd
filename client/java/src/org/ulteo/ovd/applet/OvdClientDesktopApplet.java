@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -96,15 +97,6 @@ private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 		return true;
 	}
 
-
-	@Override
-	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
-		RdpConnectionOvd rc = super.createRDPConnection(server);
-		this.customizeConnection(rc);
-		rc.addRdpListener(this);
-		return rc;
-	};
-	
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
 		co.setShell("OvdDesktop");

@@ -79,6 +79,13 @@ function validate_settings() {
 			jQuery('#advanced_settings_desktop').hide();
 	}
 
+	/* Update InputMethod */
+	if(settings.rdp_input_method == "scancode") {
+		jQuery("#session_keymap").prop('disabled', false);
+	} else {
+		jQuery("#session_keymap").prop('disabled', true);
+	}
+
 	/* Update RDP providers */
 	var nb_rdp_providers = 0;
 	for(var i in framework.tests) {
@@ -92,26 +99,34 @@ function validate_settings() {
 		if(result != true) { /* false or null */
 			/* Test failed or in-progress */
 			/* Disable the option */
-			jQuery("#rdp_mode_"+i).attr("disabled", true).attr("selected", false);
-		} else {
-			/* Enable the option */
-			jQuery("#rdp_mode_"+i).attr("disabled", false);
+			jQuery("#rdp_mode_"+i).prop("disabled", true).prop("selected", false);
 		}
-	}
 
-	/* Select the default value or another one */
-	if(jQuery("#rdp_mode").val() == null) {
-		/* Select default if not disabled */
-		var default_rdp = jQuery("#rdp_mode_"+defaults.rdp_provider+"[disabled!='disabled']").prop("selected", "selected");
-		if(jQuery("#rdp_mode").val() == null) {
-			/* Select whatever else */
-			var remain_rdp = jQuery("#rdp_mode > option[disabled!='disabled']");
-			if(remain_rdp[0]) {
-				jQuery(remain_rdp[0]).prop("selected", "selected");
+		if(result == true) {
+			/* Test succeded */
+
+			/* If the option is disabled */
+			if(jQuery("#rdp_mode_"+i).prop('disabled')) {
+				/* Enable the option */
+				jQuery("#rdp_mode_"+i).prop("disabled", false);
+
+				/* Select it if it is the default value */
+				if(i == defaults.rdp_provider) {
+					jQuery("#rdp_mode_"+i).prop("selected", "selected");
+				}
 			}
 		}
 	}
 
+	/* Ensure that a value is selected */
+	if(jQuery("#rdp_mode").val() == null) {
+		var remain_rdp = jQuery("#rdp_mode > option[disabled!='disabled']");
+		if(remain_rdp[0]) {
+			jQuery(remain_rdp[0]).prop("selected", "selected");
+		}
+	}
+
+	/* Set the new value */
 	settings.rdp_provider = jQuery('#rdp_mode').val();
 
 	if(nb_rdp_providers == 0) {
@@ -128,7 +143,7 @@ function validate_settings() {
 
 	if(defaults.force_use_local_credentials || settings.use_local_credentials) {
 		if(! framework.rdp_providers.java || ! framework.tests.java) {
-			showError("Use local credentials : Java support required");
+			showLoginError("Use local credentials : Java support required");
 			settings.use_local_credentials = false;
 			jQuery("#use_local_credentials_true").removeAttr('checked');
 			jQuery("#use_local_credentials_false").prop("checked", "checked")
@@ -183,7 +198,7 @@ function validate_settings() {
 		 (settings.login || settings.use_local_credentials) ) {
 		jQuery('#connect_gettext').removeAttr('disabled');
 	} else {
-		jQuery('#connect_gettext').attr('disabled', 'true');
+		jQuery('#connect_gettext').prop('disabled', true);
 	}
 }
 
@@ -204,6 +219,7 @@ function initialize_defaults() {
 	defaults.debug                 = jQuery("#debug_true").prop('checked');
 	defaults.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
 	defaults.rdp_provider          = jQuery('#rdp_mode').val();
+	defaults.rdp_input_method      = jQuery('#session_input_method').val();
 	defaults.http_provider         = "proxy";
 	defaults.webapps_provider			 = "jsonp";
 	defaults.wc_url                = getWebClientBaseURL();
@@ -261,12 +277,17 @@ function initialize_ui() {
 	var settings = window.ovd.settings;
 	var defaults = window.ovd.defaults;
 
+	/* Bind resize events */
+	jQuery(window).resize(function() {
+		settings.width  = jQuery(window).innerWidth();
+		settings.height = jQuery(window).innerHeight();
+	});
+
 	/* Bind UI events (not forms) */
 	jQuery('#logout_link').on('click', function() { confirmLogout(); });
 	jQuery('#iframeLink').on('click', function() { hideLock() ; hideIFrame(); });
 	jQuery('#newsHideLink').on('click', function() { hideLock() ; hideNews(); });
 	jQuery('#suspend_link').on('click', function() { framework.session_management.suspend(); });
-	jQuery('#user_login, #user_password').on('keydown', function(event) { if (event.keyCode == 13) { jQuery('#startsession').submit(); } });
 	jQuery('#advanced_settings_gettext').on('click', function () {
 		if(jQuery('#advanced_settings').filter(":visible")[0]) {
 			jQuery('#advanced_settings').slideUp(400);
@@ -279,11 +300,7 @@ function initialize_ui() {
 		}
 	});
 	jQuery('#startsession').on('submit', function() {
-		if (jQuery('#error').filter(":visible")[0]) {
-			hideError();
-			return false;
-		}
-
+		hideLoginError();
 		disableLogin();
 		startSession();
 	});
@@ -297,6 +314,7 @@ function initialize_ui() {
 	jQuery('#desktop_fullscreen_true, #desktop_fullscreen_false').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#use_local_credentials_true, #use_local_credentials_false').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });
+	jQuery('#session_input_method').on('change keyup', function() { settings.rdp_input_method = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('keyup change', function() { settings.sessionmanager = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('focus blur', function(e) {
 		var example = i18n['sessionmanager_host_example'];
@@ -330,8 +348,8 @@ function initialize_ui() {
 	if(defaults.force_use_local_credentials) {
 		settings.login = ""; 
 		jQuery('#user_login').val("");
-		jQuery('#user_login').val("").attr("disabled", true);
-		jQuery('#user_password').val("").attr("disabled", true);
+		jQuery('#user_login').val("").prop("disabled", true);
+		jQuery('#user_password').val("").prop("disabled", true);
 	}
 
 	/* Translate text */
@@ -389,10 +407,15 @@ function initialize_framework() {
 		}, 2000);
 	});
 
-	framework.session_management.addCallback("ovd.session.started", function(type, source, params) {
-		var mode = framework.session_management.parameters["mode"];
-		configureUI(mode);
-		pullMainContainer();
+	framework.session_management.addCallback("ovd.session.statusChanged", function(type, source, params) {
+		var from = params["from"];
+		var to = params["to"];
+
+		if(to == uovd.SESSION_STATUS_READY) {
+			var mode = framework.session_management.session.mode;
+			configureUI(mode);
+			pullMainContainer();
+		}
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
@@ -412,14 +435,14 @@ function initialize_framework() {
 		var message = params["message"];
 
 		if(code == "bad_xml") {
-			showError(i18n['internal_error']);
+			showLoginError(i18n['internal_error']);
 			enableLogin();
 			return;
 		}
 
 		if(from == "start" || from == "session_status") { /* = xml 'response' || 'error' */
 			var message = i18n[code] || i18n['internal_error'];
-			showError(message);
+			showLoginError(message);
 			enableLogin();
 			return;
 		}
@@ -472,9 +495,6 @@ function initialize_tests() {
 		delete framework.rdp_providers.html5;
 	}
 
-	/* !!! */
-	if(defaults.gateway) { delete framework.rdp_providers.html5; }
-
   /* 2 : Test RDP providers */
 	var nb_rdp_providers = 0;
 	framework.tests = {};
@@ -500,7 +520,7 @@ function initialize_tests() {
 			var failure  = jQuery.proxy(function(i) { nok(i) }, this, i);
 			var test     = jQuery.proxy(provider.testCapabilities, provider, success, failure);
 			framework.tests[i] = null;
-			setTimeout(test, 1);
+			setTimeout(test, 500);
 			//provider.testCapabilities(success, failure);
 		})(i);
 	}
@@ -523,6 +543,7 @@ function synchronize() {
 	parameters["debug"]                 = settings.debug;
 	parameters["desktop_fullscreen"]    = settings.fullscreen;
 	parameters["use_local_credentials"] = settings.use_local_credentials;
+	parameters["input_method"]          = settings.rdp_input_method;
 
 	/* Dont' push the WC ip : replace it by "localhost" */
 	if(settings.sessionmanager == window.location.host) { parameters["sessionmanager_host"]   = "127.0.0.1"; }

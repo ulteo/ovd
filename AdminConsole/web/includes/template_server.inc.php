@@ -53,7 +53,7 @@ function server_display_role_preparation_aps($server) {
 			$applications[]= $applications_all[$application_id];
 	}
 	
-	usort($applications, 'application_cmp');
+	uasort($applications, 'application_cmp');
 	
 	$applications_available = array();
 	$static_applications_available = array();

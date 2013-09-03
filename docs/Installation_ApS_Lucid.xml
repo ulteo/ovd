@@ -100,7 +100,7 @@
 	  file and add these lines:
         </para>
         <screen>
-<![CDATA[deb http://archive.ulteo.com/ovd/@VERSION@/ubuntu lucid main
+<![CDATA[deb @BASE_URI@/ubuntu lucid main
 deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
         </screen>
       </listitem>

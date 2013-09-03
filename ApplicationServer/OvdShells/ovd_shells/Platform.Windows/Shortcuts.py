@@ -26,9 +26,11 @@ from ovd_shells.Shortcuts import Shortcuts as AbstractShortcuts
 import _platform as Platform
 
 class Shortcuts(AbstractShortcuts):
-	def __init__(self):
+	def __init__(self, profile):
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, 0, 0)
 		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, 0, 0)
+		if profile is not None and profile.has_key("local_path"):
+			self.windowsDesktopDir = os.path.join(profile["local_path"], "Data", "Desktop")
 	
 	
 	def synchronize(self, path):
@@ -37,6 +39,7 @@ class Shortcuts(AbstractShortcuts):
 	
 	
 	def install(self, shortcut):
+		shortcut = Platform.toUnicode(shortcut)
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
 			os.remove(dstFile)

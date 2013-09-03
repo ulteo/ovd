@@ -63,7 +63,7 @@ class UserDB_sql extends UserDB  {
 		return true;
 	}
 	
-	public function getList($sort_=false) {
+	public function getList() {
 		Logger::debug('main','USERDB::MYSQL::getList');
 		if (!is_array($this->cache_userlist)) {
 			$users = $this->getList_nocache();
@@ -72,10 +72,7 @@ class UserDB_sql extends UserDB  {
 		else {
 			$users = $this->cache_userlist;
 		}
-		// do we need to sort alphabetically ?
-		if ($sort_ && is_array($users)) {
-			usort($users, "user_cmp");
-		}
+		
 		return $users;
 	}
 	
@@ -151,7 +148,7 @@ class UserDB_sql extends UserDB  {
 					Logger::info('main', 'USERDB::MYSQL::getUsersContains user does not have login');
 			}
 		}
-		usort($users, "user_cmp");
+		
 		return array($users, $sizelimit_exceeded);
 	}
 	

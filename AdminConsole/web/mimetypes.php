@@ -85,6 +85,7 @@ function show_default() {
 function show_manage($id_) {
 	$mime = $_SESSION['service']->mime_type_info($id_);
 	$applications = $mime['applications'];
+	uasort($applications, "application_cmp");
 	
 	page_header();
 	

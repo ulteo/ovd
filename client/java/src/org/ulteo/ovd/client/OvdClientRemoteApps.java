@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -140,8 +140,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			((SystemLinux) this.system).clearSystemMenu();
 
 		for (RdpConnectionOvd co : this.connections) {
+			if (co.getOvdAppChannel() == null)
+				continue;
+			
 			for (Application app : co.getOvdAppChannel().getApplicationsList())
 				this.system.clean(app);
+			
+			co.cleanOVDApp();
 		}
 		this.system.refresh();
 	}

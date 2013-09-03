@@ -23,17 +23,17 @@ ProgressBar.prototype.handleEvents = function(type, source, params) {
 	}
 
 	if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_INITED) {
-		step(40);
+		step(45);
 		return;
 	}
 
 	if(type == 'ovd.session.statusChanged' && params['to'] == uovd.SESSION_STATUS_READY) {
-		step(65);
+		step(90);
 		return;
 	}
 
 	if(type == 'ovd.session.server.statusChanged' && params['to'] == uovd.SERVER_STATUS_CONNECTED) {
-		step(90);
+		step(100);
 		return;
 	}
 

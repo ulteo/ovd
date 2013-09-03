@@ -82,6 +82,14 @@ function hideSystemTestError(message) {
 	jQuery('#systemTestError').hide();
 }
 
+function showLoginError(message) {
+	jQuery('#loginError').html(message);
+}
+
+function hideLoginError() {
+	jQuery('#loginError').html("");
+}
+
 function showError(errormsg) {
 	var message = '<div style="width: 16px; height: 16px; float: right; margin-right: 20px;">'+
 	              	'<a href="javascript:;" onclick="hideError(); return false;">'+
@@ -137,31 +145,49 @@ function hideInfo() {
 
 function generateEnd_internal(error) {
 	if( ! jQuery('#endContent > *')[0]) {
-		var buf = jQuery(document.createElement('span')).css({'font-size' : '1.1em', 'font-weight' : 'bold', 'color' : '#686868'});
+		var buf = jQuery(document.createElement('div')).css({'font-size' : '1.1em', 'font-weight' : 'bold', 'color' : '#686868'});
 		var end_message = null;
 
 		if(error) {
-			var end_message = jQuery(document.createElement('span')).prop('id', 'endMessage').html(''+
-				'<span class="msg_error">'+
-					i18n['session_end_unexpected']+
-				'</span>'+
-				'<br/>'+
-				'<span class="msg_error">'+
-					'Cause : '+error+
-				'</span>');
+			var end_message = jQuery(document.createElement('div')).prop('id', 'endMessage');
+
+			var end_message_title = jQuery(document.createElement('div'));
+			end_message_title.addClass("msg_error");
+			end_message_title.html(i18n['session_end_unexpected']);
+
+			var end_message_details = jQuery(document.createElement('div'));
+
+			var end_message_details_link = jQuery(document.createElement('a'))
+			end_message_details_link.prop("href", "javascript:;");
+			end_message_details_link.css("padding", "10px");
+			end_message_details_link.html(i18n['error_details']);
+			end_message_details.append(end_message_details_link);
+
+			var end_message_text = jQuery(document.createElement('div'));
+			end_message_text.html(error);
+			end_message_text.hide();
+
+			end_message.append(end_message_title);
+			end_message.append(end_message_details);
+			end_message.append(end_message_text);
+
+			end_message_details_link.on("click", function() {
+				end_message_text.slideToggle();
+			});
 		} else {
 			var end_message = jQuery(document.createElement('span')).prop('id', 'endMessage').html(i18n['session_end_ok']);
 		}
 
 		var close_container = jQuery(document.createElement('div')).css('margin-top', '10px');
 		var close_text = jQuery(document.createElement('span')).html(i18n['start_another_session']);
+		close_text.prop("id", "close_text");
 		close_container.append(close_text);
 
 		buf.append(end_message);
 		buf.append(close_container);
 		jQuery('#endContent').append(buf);
 
-		jQuery("#endContent a").click( function() {
+		jQuery("#close_text a").click( function() {
 			hideEnd();
 			showLogin();
 			pullLogin();
@@ -176,18 +202,35 @@ function generateEnd_internal(error) {
 
 function generateEnd_external(error) {
 	if( ! jQuery('#endContent > *')[0]) {
-		var buf = jQuery(document.createElement('span')).css({'font-size' : '1.1em', 'font-weight' : 'bold', 'color' : '#686868'});
+		var buf = jQuery(document.createElement('div')).css({'font-size' : '1.1em', 'font-weight' : 'bold', 'color' : '#686868'});
 		var end_message = null;
 
 		if(error) {
-			var end_message = jQuery(document.createElement('span')).prop('id', 'endMessage').html(''+
-				'<span class="msg_error">'+
-					i18n['session_end_unexpected']+
-				'</span>'+
-				'<br/>'+
-				'<span class="msg_error">'+
-					error+
-				'</span>');
+			var end_message = jQuery(document.createElement('div')).prop('id', 'endMessage');
+
+			var end_message_title = jQuery(document.createElement('div'));
+			end_message_title.addClass("msg_error");
+			end_message_title.html(i18n['session_end_unexpected']);
+
+			var end_message_details = jQuery(document.createElement('div'));
+
+			var end_message_details_link = jQuery(document.createElement('a'))
+			end_message_details_link.prop("href", "javascript:;");
+			end_message_details_link.css("padding", "10px");
+			end_message_details_link.html(i18n['error_details']);
+			end_message_details.append(end_message_details_link);
+
+			var end_message_text = jQuery(document.createElement('div'));
+			end_message_text.html(error);
+			end_message_text.hide();
+
+			end_message.append(end_message_title);
+			end_message.append(end_message_details);
+			end_message.append(end_message_text);
+
+			end_message_details_link.on("click", function() {
+				end_message_text.slideToggle();
+			});
 		} else {
 			var end_message = jQuery(document.createElement('span')).prop('id', 'endMessage').html(i18n['session_end_ok']);
 		}

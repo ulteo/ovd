@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -283,14 +283,26 @@ class User(AbstractUser):
 		
 		success = True
 		for d in mount_points:
-			Logger.warn("Remaining mount point '%s'"%(d))
-			cmd = 'umount "%s"'%(System.local_encode(d))
+			path = System.local_encode(d)
+			Logger.warn("Remaining mount point '%s'"%(path))
+			cmd = 'umount "%s"'%(path)
 			
 			p = System.execute(cmd)
+			if p.returncode == 0:
+				continue
+			
+			Logger.warn("Unable to unmount remaining mount point %s: force the unmount"%(path))
+			Logger.debug('umount command "%s" return: %s'%(cmd,  p.stdout.read()))
+			cmd = 'umount -l "%s"'%(path)
+			p = System.execute(cmd)
 			if p.returncode != 0:
-				Logger.error("Unable to unmount remaining mount point, home dir %s won't be purged"%(user.pw_dir))
+				Logger.error("Unable to force the unmount remaining mount point %s"%(path))
 				Logger.debug('umount command "%s" return: %s'%(cmd,  p.stdout.read()))
-				success = False
+			
+			success = False
+		
+		if success == False:
+			Logger.error("Unable to unmount remaining mount point, home dir %s won't be purged"%(user.pw_dir))
 		
 		return success
 	

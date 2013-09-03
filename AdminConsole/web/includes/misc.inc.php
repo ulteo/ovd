@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,35 +66,40 @@ function popup_info($msg_) {
 
 function user_cmp($o1, $o2) {
 	if (!is_object($o1) || !is_object($o2))
-		return 0;
+		return strcmp($o1, $o2);
 	
 	return strcmp($o1->getAttribute('login'), $o2->getAttribute('login'));
 }
 
 function usergroup_cmp($o1, $o2) {
 	if (!is_object($o1) || !is_object($o2))
-		return 0;
+		return strcmp($o1, $o2);
 	
 	return strcmp($o1->name, $o2->name);
 }
 
 function application_cmp($o1, $o2) {
-	if (!is_object($o1) || !is_object($o2))
-		return 0;
+	if (is_object($o1) && is_object($o2)) {
+		return strcasecmp($o1->getAttribute('name'), $o2->getAttribute('name'));
+	}
 	
-	return strcasecmp($o1->getAttribute('name'), $o2->getAttribute('name'));
+	if (is_array($o1) && is_array($o2)) {
+		return strcasecmp($o1['name'], $o2['name']);
+	}
+	
+	return strcasecmp($o1, $o2);
 }
 
 function appsgroup_cmp($o1, $o2) {
 	if (!is_object($o1) || !is_object($o2))
-		return 0;
+		return strcmp($o1, $o2);
 	
 	return strcmp($o1->name, $o2->name);
 }
 
 function server_cmp($o1, $o2) {
 	if (!is_object($o1) || !is_object($o2))
-		return 0;
+		return strcmp($o1, $o2);
 	
 	return ip2long($o1->getAttribute('fqdn')) > ip2long($o2->getAttribute('fqdn'));
 }
@@ -181,4 +186,13 @@ function str2num($str_) {
 		$num += ($i+1)*ord($str[$i]);
 	
 	return $num;
+}
+
+function nodeattrs2array($node_) {
+	$ret = array();
+	foreach($node_->attributes as $attr) {
+		$ret[$attr->nodeName] = $attr->nodeValue;
+	}
+	
+	return $ret;
 }

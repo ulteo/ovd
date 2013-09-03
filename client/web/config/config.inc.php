@@ -63,7 +63,16 @@
 // Select RDP input method
 // define('RDP_INPUT_METHOD', 'scancode'); // default
 // define('RDP_INPUT_METHOD', 'unicode');  // alternative method
+// define('RDP_INPUT_METHOD', 'unicode_local_ime');  // alternative method with client integration
 
+// RDP input method : show option
+// define('OPTION_SHOW_INPUT_METHOD', false); // default
+// define('OPTION_SHOW_INPUT_METHOD', true);
+
+// RDP input method : force option
+// Must be used in conjunction of RDP_INPUT_METHOD
+// define('OPTION_FORCE_INPUT_METHOD', false); // default
+// define('OPTION_FORCE_INPUT_METHOD', true);
 
 // Perform desktop integration in portal sessions
 //   publish destkop and start menu icons, mime type association, ...

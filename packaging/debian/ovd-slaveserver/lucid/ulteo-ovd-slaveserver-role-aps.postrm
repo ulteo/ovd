@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 if [ "$1" != "upgrade" ]; then
-	ovd-slaveserver-role del ApplicationServer
+	ovd-slaveserver-role del ApplicationServer || true
 	
 	for i in icons pixmaps mime themes; do
 		[ -L /usr/share/ovd/$i ] && rm /usr/share/ovd/$i

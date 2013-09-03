@@ -148,7 +148,7 @@
             file and add these lines:
           </para>
           <screen>
-<![CDATA[deb http://archive.ulteo.com/ovd/@VERSION@/@distrib_name@ @distrib_version@ main]]>
+<![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -178,7 +178,7 @@
            Get this
            <emphasis>ovd-@VERSION@-@distrib_name@-@distrib_version@.tar.gz</emphasis>
            archive from <ulink
-           url="http://archive.ulteo.com/ovd/@VERSION@/offline/">the Ulteo
+           url="@BASE_URI@/offline/">the Ulteo
            website</ulink> or from the Ulteo OVD DVD and copy it in
            the <emphasis>/root</emphasis> of your machine.
          </para>

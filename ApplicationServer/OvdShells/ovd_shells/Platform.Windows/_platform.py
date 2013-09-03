@@ -238,3 +238,10 @@ def deleteOnclose(path):
 	except Exception, e:
 		print "Failed to mark file '%s'as to delete: %s"%(path, str(e))
 
+def toUnicode(str):
+	try:
+		encoding = locale.getpreferredencoding()
+	except locale.Error:
+		encoding = "UTF-8"
+	
+	return unicode(str, encoding)

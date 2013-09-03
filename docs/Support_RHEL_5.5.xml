@@ -43,10 +43,10 @@
        <screen>
 <![CDATA[[ovd-@VERSION@]
 name=Ulteo OVD @VERSION@
-baseurl=http://archive.ulteo.com/ovd/@VERSION@/rhel/@distrib_version@/
+baseurl=@BASE_URI@/rhel/@distrib_version@/
 enabled=1
 gpgcheck=1
-gpgkey=http://archive.ulteo.com/ovd/keyring]]>
+gpgkey=@BASE_URI@/rhel/@distrib_version@/keyring]]>
         </screen>
     </section>
 

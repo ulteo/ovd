@@ -11,7 +11,7 @@ SeamlessLauncher = function(session_management, node) {
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.starting") {
-		var session_mode = this.session_management.parameters["mode"];
+		var session_mode = this.session_management.session.mode;
 		var session = this.session_management.session;
 
 		if(session_mode == uovd.SESSION_MODE_APPLICATIONS) {
@@ -30,11 +30,18 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				}
 			}
 
+			/* Sort the list by name */
+			var applications_sorted = new Array();
+			for(var id in this.applications) { applications_sorted.push(this.applications[id]); }
+			applications_sorted.sort(function(a, b) { var n1=a.name.toLowerCase(); var n2=b.name.toLowerCase(); return (n1>n2 ? 1 : (n1<n2 ? -1 : 0)); })
+
 			/* Create launchers */
 			var table = jQuery(document.createElement("table"));
 			var tbody = jQuery(document.createElement("tbody"));
 
-			for(var id in this.applications) {
+			for(var i=0 ; i<applications_sorted.length ; ++i) {
+				var id = applications_sorted[i].id;
+
 				var tr = jQuery(document.createElement("tr"));
 				tr.prop("id", "application_"+id);
 				tr.prop("className", "applicationLauncherDisabled");
@@ -70,7 +77,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 		var to = params["to"];
 		var server = source;
 
-		if(to == uovd.SERVER_STATUS_CONNECTED || to == uovd.SERVER_STATUS_READY) {
+		if(to == uovd.SERVER_STATUS_READY) {
 			/* Activate launchers */
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
@@ -141,7 +148,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 }
 
 SeamlessLauncher.prototype.end = function() {
-	if(this.session_management.parameters["mode"] == uovd.SESSION_MODE_APPLICATIONS) {
+	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);
