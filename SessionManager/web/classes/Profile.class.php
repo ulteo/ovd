@@ -34,10 +34,9 @@ class Profile extends NetworkFolder {
 		}
 		
 		$userDB = UserDB::getInstance();
-		
 		$users = array();
 		foreach ($liaisons as $liaison) {
-			array_merge($users, $liaison->element);
+			array_push($users, $liaison->element);
 		}
 		
 		return $userDB->imports($users);
