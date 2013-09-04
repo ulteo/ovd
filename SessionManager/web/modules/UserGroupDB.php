@@ -80,7 +80,7 @@ class UserGroupDB extends Module {
 	}
 	
 	public function imports($ids_) {
-		Logger::debug('main', 'UserGroupDB::imports(['.implode('', $ids_).'])');
+		Logger::debug('main', 'UserGroupDB::imports(['.implode(', ', $ids_).'])');
 		$result = array();
 		foreach ($this->instance_type as $key => $value) {
 			$ids2 = array();

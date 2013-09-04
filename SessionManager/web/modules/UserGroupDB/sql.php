@@ -79,7 +79,7 @@ class UserGroupDB_sql {
 	}
 	
 	public function imports($ids_) {
-		Logger::debug('main', 'USERGROUPDB::sql::imports (['.implode('', $ids_).'])');
+		Logger::debug('main', 'USERGROUPDB::sql::imports (['.implode(', ', $ids_).'])');
 		$sql2 = SQL::getInstance();
 		
 		$result = array();

@@ -211,7 +211,7 @@ class UserGroupDB_ldap {
 	}
 
 	public function imports($ids_) {
-		Logger::debug('main','UserGroupDB::ldap::imports (['.implode('', $ids_).'])');
+		Logger::debug('main','UserGroupDB::ldap::imports (['.implode(', ', $ids_).'])');
 		
 		$result = array();
 		$ids_filter = array();
