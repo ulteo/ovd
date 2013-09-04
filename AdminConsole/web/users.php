@@ -340,7 +340,7 @@ function show_manage($login) {
   }
 
   // User groups part
-  if (count($groups_mine)>0 or count($groups_all)>0) {
+  if (count($groups_mine)>0 or ($usergroupdb_rw and count($groups_all)>0)) {
     echo '<div>';
     echo '<h2>'._('User groups with this user').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
