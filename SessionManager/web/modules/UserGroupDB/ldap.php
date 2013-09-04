@@ -98,7 +98,7 @@ class UserGroupDB_ldap {
 		$filter = LDAP::join_filters(array($this->preferences['filter'], $filter_attr), '&');
 		$sr = $ldap->search($filter, array_values($this->preferences['match']), $limit_);
 		if ($sr === false) {
-			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
+			Logger::error('main', 'UsersGroupDB::ldap::getUsersContaint search failed');
 			return NULL;
 		}
 		$sizelimit_exceeded = $ldap->errno() === 4; // LDAP_SIZELIMIT_EXCEEDED => 0x04 
