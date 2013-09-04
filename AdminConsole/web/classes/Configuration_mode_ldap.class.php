@@ -128,10 +128,10 @@ class Configuration_mode_ldap extends Configuration_mode {
 			),
 			
 			'group_match_user' => $form['group_match_using'],
-			'user_member_field' => $form['group_match_using_user_value'],
-			'user_member_type' => $form['group_match_using_user_type'],
-			'group_membership_field' => $form['group_match_using_group_value'],
-			'group_membership_type' => $form['group_match_using_group_type'],
+			'user_field' => $form['group_match_using_user_value'],
+			'user_field_type' => $form['group_match_using_user_type'],
+			'group_field' => $form['group_match_using_group_value'],
+			'group_field_type' => $form['group_match_using_group_type'],
 		);
 		
 		$prefs->set('UserGroupDB', 'ldap', $settings);
@@ -200,10 +200,10 @@ class Configuration_mode_ldap extends Configuration_mode {
 	$form['group_field_name'] = $buf['match']['name'];
 	$form['group_field_desc'] = $buf['match']['description'];
 	$form['group_match_using'] = $buf['group_match_user'];
-	$form['group_match_using_group_value'] = $buf['group_membership_field'];
-	$form['group_match_using_group_type'] = $buf['group_membership_type'];
-	$form['group_match_using_user_value'] = $buf['user_member_field'];
-	$form['group_match_using_user_type'] = $buf['user_member_type'];
+	$form['group_match_using_group_value'] = $buf['group_field'];
+	$form['group_match_using_group_type'] = $buf['group_field_type'];
+	$form['group_match_using_user_value'] = $buf['user_field'];
+	$form['group_match_using_user_type'] = $buf['user_field_type'];
 
     return $form;
   }
@@ -276,39 +276,39 @@ class Configuration_mode_ldap extends Configuration_mode {
 	$str.= '<tr><td>'._('Specific OU (optionnal):').'</td><td><input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/></td></tr>';
 	$str.= '<tr><td>'._('Name field:').'</td><td><input type="text" name="group_field_name" value="'.$form['group_field_name'].'" /></td></tr>';
 	$str.= '<tr><td>'._('Description field (Optionnal):').'</td><td><input type="text" name="group_field_desc" value="'.$form['group_field_desc'].'" /></td></tr>';
-	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="group_membership"';
-	if (in_array('group_membership', $form['group_match_using'])) {
+	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="user_field"';
+	if (in_array('user_field', $form['group_match_using'])) {
 	    $str.= ' checked="checked"';
 	}
 	$str.='/>'._('Use the following field from the user entry').'</td></tr>';
-	$str.= '<tr><td></td><td><input type="text" name="group_match_using_group_value" value="'.$form['group_match_using_group_value'].'" />';
-	$str.=' '._('which is').' ';
-	$str.='<select name="group_match_using_group_type">';
-	$str.='<option value="dn"';
-	if ($form['group_match_using_group_type'] == 'dn') {
-	    $str.= ' selected="selected"';
-	}
-	$str.='>'._('Group DN').'</option>';
-	$str.='<option value="name"';
-	if ($form['group_match_using_group_type'] == 'name') {
-	    $str.= ' selected="selected"';
-	}
-	$str.='>'._('Group name').'</option</select></td></tr>';
-	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="user_member"';
-	if (in_array('user_member', $form['group_match_using'])) {
-	    $str.= ' checked="checked"';
-	}
-	$str.=' />'._('Use the following field from the group entry').'</td></tr>';
 	$str.= '<tr><td></td><td><input type="text" name="group_match_using_user_value" value="'.$form['group_match_using_user_value'].'" />';
 	$str.=' '._('which is').' ';
 	$str.='<select name="group_match_using_user_type">';
-	$str.='<option value="dn"';
-	if ($form['group_match_using_user_type'] == 'dn') {
+	$str.='<option value="group_dn"';
+	if ($form['group_match_using_group_type'] == 'group_dn') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('Group DN').'</option>';
+	$str.='<option value="group_name"';
+	if ($form['group_match_using_group_type'] == 'group_name') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('Group name').'</option</select></td></tr>';
+	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="group_field"';
+	if (in_array('group_field', $form['group_match_using'])) {
+	    $str.= ' checked="checked"';
+	}
+	$str.=' />'._('Use the following field from the group entry').'</td></tr>';
+	$str.= '<tr><td></td><td><input type="text" name="group_match_using_group_value" value="'.$form['group_match_using_group_value'].'" />';
+	$str.=' '._('which is').' ';
+	$str.='<select name="group_match_using_group_type">';
+	$str.='<option value="user_dn"';
+	if ($form['group_match_using_group_type'] == 'user_dn') {
 	    $str.= ' selected="selected"';
 	}
 	$str.='>'._('User DN').'</option>';
-	$str.='<option value="login"';
-	if ($form['group_match_using_user_type'] == 'login') {
+	$str.='<option value="user_login"';
+	if ($form['group_match_using_group_type'] == 'user_login') {
 	    $str.= ' selected="selected"';
 	}
 	$str.='>'._('User login').'</option</select></td></tr>';

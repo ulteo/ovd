@@ -41,16 +41,16 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap {
 			'description' => 'description',
 		);
 		
-		$this->preferences['group_match_user'] = array('user_member', 'group_membership');
-		$this->preferences['user_member_field'] = 'member';
-		$this->preferences['user_member_type'] = 'dn';
-		$this->preferences['group_membership_field'] = 'memberOf';
-		$this->preferences['group_membership_type'] = 'dn';
+		$this->preferences['group_match_user'] = array('user_field', 'group_field');
+		$this->preferences['user_field'] = 'memberOf';
+		$this->preferences['user_field_type'] = 'group_dn';
+		$this->preferences['group_field'] = 'member';
+		$this->preferences['group_field_type'] = 'user_dn';
 		$this->preferences['ou'] = '';
 		if (array_key_exists('use_child_group', $this->preferences)) {
 			if (in_array($this->preferences['use_child_group'], array(1, '1'))) {
-				$this->preferences['user_member_field'].= ':1.2.840.113556.1.4.1941:';
-				$this->preferences['group_membership_field'].= ':1.2.840.113556.1.4.1941:';
+				$this->preferences['user_field'].= ':1.2.840.113556.1.4.1941:';
+				$this->preferences['group_field'].= ':1.2.840.113556.1.4.1941:';
 			}
 		}
 	}

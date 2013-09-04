@@ -133,16 +133,16 @@ class UserGroupDB_ldap {
 		$log['LDAP usersgroup match'] = true;
 		
 		$group_match_user_enabled_count = 0;
-		if (in_array('user_member', $prefs2['group_match_user'])) {
-			if (strlen($prefs2['user_member_field']) == 0) {
+		if (in_array('user_field', $prefs2['group_match_user'])) {
+			if (strlen($prefs2['user_field']) == 0) {
 				$log['LDAP group_match_user user_member'] = false;
 				return false;
 			}
 			
 			$group_match_user_enabled_count++;
 		}
-		if (in_array('group_membership', $prefs2['group_match_user'])) {
-			if (strlen($prefs2['group_membership_field']) == 0) {
+		if (in_array('group_field', $prefs2['group_match_user'])) {
+			if (strlen($prefs2['group_field']) == 0) {
 				$log['LDAP group_match_user group_membership'] = false;
 				return false;
 			}
@@ -399,30 +399,30 @@ class UserGroupDB_ldap {
 		$c = new ConfigElement_input('filter', '(objectClass=posixGroup)');
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', array(
-			'name' => 'name',
+			'name' => 'cn',
 			'description' => 'description',
 		));
 		$ret []= $c;
 		
-		$c = new ConfigElement_multiselect('group_match_user', array('group_membership'));
-		$c->setContentAvailable(array('user_member', 'group_membership'));
+		$c = new ConfigElement_multiselect('group_match_user', array('group_field'));
+		$c->setContentAvailable(array('user_field', 'group_field'));
 		$ret []= $c;
 		
-		$c = new ConfigElement_input('user_member_field', 'member');
+		$c = new ConfigElement_input('user_field', 'member');
 		$ret []= $c;
-		$c = new ConfigElement_select('user_member_type', 'dn');
+		$c = new ConfigElement_select('user_field_type', 'group_dn');
 		$c->setContentAvailable(array(
-			'dn',
-			'login',
+			'group_dn',
+			'group_name',
 		));
 		$ret []= $c;
 		
-		$c = new ConfigElement_input('group_membership_field', 'memberUid');
+		$c = new ConfigElement_input('group_field', 'memberUid');
 		$ret []= $c;
-		$c = new ConfigElement_select('group_membership_type', 'name');
+		$c = new ConfigElement_select('group_field_type', 'user_login');
 		$c->setContentAvailable(array(
-			'dn',
-			'name',
+			'user_dn',
+			'user_login',
 		));
 		$ret []= $c;
 		

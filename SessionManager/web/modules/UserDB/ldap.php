@@ -368,7 +368,7 @@ class UserDB_ldap  extends UserDB {
 		$c = new ConfigElement_dictionary('options', array('LDAP_OPT_PROTOCOL_VERSION' => '3', 'LDAP_OPT_REFERRALS' => 0));
 		$ret []= $c;
 		
-		$c = new ConfigElement_input('filter', '');
+		$c = new ConfigElement_input('filter', '(objectClass=posixAccount)');
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayName', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;

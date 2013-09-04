@@ -66,19 +66,19 @@ class Abstract_Liaison_ldap {
 		
 		$userDB = UserDB::getInstance();
 		$prefs = $userGroupDB->get_prefs();
-		if (in_array('group_membership', $prefs['group_match_user'])) {
-			if ($prefs['group_membership_type'] == 'dn') {
+		if (in_array('user_field', $prefs['group_match_user'])) {
+			if ($prefs['user_field_type'] == 'group_dn') {
 				$value = $group_;
 			}
 			else {
 				$value = $group->name;
 			}
 			
-			$filter = $prefs['group_membership_field'].'='.$value;
+			$filter = $prefs['user_field'].'='.$value;
 			$users = $userDB->import_from_filter($filter);
 		}
 		else {
-			$field = $prefs['user_member_field'];
+			$field = $prefs['group_field'];
 			$configLDAP = $userGroupDB->makeLDAPconfig();
 			$ldap = new LDAP($configLDAP);
 			$sr = $ldap->searchDN($group_, array($field));
@@ -109,7 +109,7 @@ class Abstract_Liaison_ldap {
 				$members = array($info[$field]);
 			}
 			
-			if ($prefs['user_member_type'] == 'dn') {
+			if ($prefs['group_field_type'] == 'user_dn') {
 				$filter = array();
 				foreach($members as $dn) {
 					$expl = explode_with_escape(',', $dn, 2);
@@ -149,19 +149,19 @@ class Abstract_Liaison_ldap {
 		
 		$userGroupDB = UserGroupDB::getInstance('static');
 		$prefs = $userGroupDB->get_prefs();
-		if (in_array('user_member', $prefs['group_match_user'])) {
-			if ($prefs['user_member_type'] == 'dn') {
+		if (in_array('group_field', $prefs['group_match_user'])) {
+			if ($prefs['group_field_type'] == 'user_dn') {
 				$value = $user->getAttribute('dn');
 			}
 			else {
 				$value = $user->getAttribute('login');
 			}
 			
-			$filter = $prefs['user_member_field'].'='.$value;
+			$filter = $prefs['group_field'].'='.$value;
 			$groups = $userGroupDB->import_from_filter($filter);
 		}
 		else {
-			$field = $prefs['group_membership_field'];
+			$field = $prefs['user_field'];
 			
 			$configLDAP = $userDB->config;
 			$ldap = new LDAP($configLDAP);
@@ -189,7 +189,7 @@ class Abstract_Liaison_ldap {
 				$memberof = array($info[$field]);
 			}
 			
-			if ($prefs['group_membership_type'] == 'dn') {
+			if ($prefs['user_field_type'] == 'group_dn') {
 				$groups = $userGroupDB->imports($memberof);
 			}
 			else {
