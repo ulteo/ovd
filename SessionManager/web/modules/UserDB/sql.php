@@ -52,6 +52,10 @@ class UserDB_sql extends UserDB  {
 	}
 	
 	public function imports($logins_) {
+		if (count($logins_) == 0) {
+			return array();
+		}
+		
 		$sql2 = SQL::getInstance();
 		
 		$logins2 = array();

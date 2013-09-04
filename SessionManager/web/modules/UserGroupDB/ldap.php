@@ -212,6 +212,9 @@ class UserGroupDB_ldap {
 
 	public function imports($ids_) {
 		Logger::debug('main','UserGroupDB::ldap::imports (['.implode(', ', $ids_).'])');
+		if (count($ids_) == 0) {
+			return array();
+		}
 		
 		$result = array();
 		$ids_filter = array();

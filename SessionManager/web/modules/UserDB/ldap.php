@@ -83,6 +83,9 @@ class UserDB_ldap  extends UserDB {
 
 	public function imports($logins_){
 		Logger::debug('main','UserDB::ldap::imports(['.implode(', ', $logins_).'])');
+		if (count($logins_) == 0) {
+			return array();
+		}
 		
 		$result = array();
 		$users_filter = array();

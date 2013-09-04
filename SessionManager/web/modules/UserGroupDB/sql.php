@@ -80,6 +80,10 @@ class UserGroupDB_sql {
 	
 	public function imports($ids_) {
 		Logger::debug('main', 'USERGROUPDB::sql::imports (['.implode(', ', $ids_).'])');
+		if (count($ids_) == 0) {
+			return array();
+		}
+		
 		$sql2 = SQL::getInstance();
 		
 		$result = array();
