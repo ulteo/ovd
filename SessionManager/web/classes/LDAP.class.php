@@ -83,6 +83,10 @@ class LDAP {
 
 		$this->link = $buf;
 		foreach ($this->options as $an_option => $an_value) {
+			if (! defined($an_option)) {
+				continue;
+			}
+			
 			@ldap_set_option($this->link, constant($an_option), $an_value);
 		}
 
@@ -182,6 +186,9 @@ class LDAP {
 			$attribs_ = array_unique($attribs_);
 		}
 		Logger::debug('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\','.$limit_.')');
+		if (array_key_exists('debug', $this->options)) {
+			Logger::info('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\','.$limit_.')');
+		}
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
