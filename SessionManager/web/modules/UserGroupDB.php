@@ -99,7 +99,9 @@ class UserGroupDB extends Module {
 				continue;
 			}
 			
-			$result = array_merge($result, $ret);
+			foreach($ret as $group_id => $group) {
+				$result[$group->getUniqueID()] = $group;
+			}
 		}
 		
 		return $result;
