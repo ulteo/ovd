@@ -2011,14 +2011,19 @@ class OvdAdminSoap {
 		
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $id_);
 		if (count($liaisons)) {
-			$g['usersgroups'] = array();
+			$group_ids = array();
 			foreach ($liaisons as $liaison) {
-				$obj = $userGroupDB->import($liaison->element);
-				if (! $obj) {
-					continue;
-				}
-				
-				$g['usersgroups'][$liaison->element] = $obj->name;
+				array_push($group_ids, $liaison->element);
+			}
+			
+			$groups = $userGroupDB->imports($group_ids);
+			$exported_groups = array();
+			foreach($groups as $group_id => $group) {
+				$exported_groups[$group_id] = $group->name;
+			}
+			
+			if (count($exported_groups) > 0) {
+				$g['usersgroups'] = $exported_groups;
 			}
 		}
 		
@@ -2254,13 +2259,7 @@ class OvdAdminSoap {
 		
 		$search_limit = $this->prefs->get('general', 'max_items_per_page');
 		
-		list($result, $nb) = $userDB->getUsersContains($search_item_, $search_fields_, $search_limit+1);
-		
-		$partial = false;
-		if (count($result) > $search_limit) {
-			array_pop($result);
-			$partial = true;
-		}
+		list($result, $partial) = $userDB->getUsersContains($search_item_, $search_fields_, $search_limit);
 		
 		$ret = array();
 		foreach($result as $user) {
@@ -2526,21 +2525,6 @@ class OvdAdminSoap {
 		);
 	}
 	
-	public function users_groups_list() {
-		$this->check_authorized('viewUsersGroups');
-		
-		$userGroupDB = UserGroupDB::getInstance();
-		$groups = $userGroupDB->getList();
-		
-		$ret = array();
-		foreach($groups as $group) {
-			$g = self::generate_usersgroup_array($group);
-			$ret[$g['id']] = $g;
-		}
-		
-		return $ret;
-	}
-	
 	public function users_groups_list_partial($search_item_, $search_fields_) {
 		$this->check_authorized('viewUsersGroups');
 		
@@ -2552,13 +2536,7 @@ class OvdAdminSoap {
 		
 		$search_limit = $this->prefs->get('general', 'max_items_per_page');
 		
-		list($result, $nb) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit+1);
-		
-		$partial = false;
-		if (count($result) > $search_limit) {
-			array_pop($result);
-			$partial = true;
-		}
+		list($result, $partial) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit);
 		
 		$ret = array();
 		foreach($result as $group) {
@@ -2582,13 +2560,10 @@ class OvdAdminSoap {
 		$users = $group->usersLogin();
 		if (count($users) > 0) {
 			$userDB = UserDB::getInstance();
+			$users2 = $userDB->imports($users);
 			
 			$s['users'] = array();
-			foreach($users as $user_id) {
-				$user = $userDB->import($user_id);
-				if (! $user)
-					continue;
-				
+			foreach($users2 as $user) {
 				$g['users'][$user->getAttribute('login')] = $user->getAttribute('displayname');
 			}
 		}

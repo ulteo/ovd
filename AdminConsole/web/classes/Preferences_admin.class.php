@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -391,14 +391,11 @@ class Preferences_admin {
 			'UserGroupDBDynamic_enable' => 'UserGroupDBDynamic',
 			'UserGroupDBDynamicCached_enable' => 'UserGroupDBDynamicCached',
 			
-			'UserGroupDB_ldap_memberof' => _('LDAP using memberOf'),
-			'UserGroupDB_ldap_memberof_match' => _('Matching'),
-			'UserGroupDB_ldap_memberof_use_child_group' => _('Use child groups'),
+			'UserGroupDB_activedirectory_match' => _('Matching'),
+			'UserGroupDB_activedirectory_use_child_group' => _('Use child groups'),
 			
-			'UserGroupDB_ldap_posix' => _('LDAP using Posix groups'),
-			'UserGroupDB_ldap_posix_group_dn' => _('Group Branch DN'),
-			'UserGroupDB_ldap_posix_match' => _('Matching'),
-			'UserGroupDB_ldap_posix_filter' => _('Filter (optional)'),
+			'UserGroupDB_ldap_match' => _('Matching'),
+			'UserGroupDB_ldap_filter' => _('Filter'),
 			
 			'UserGroupDB_sql_external_host' => _('Server host address'),
 			'UserGroupDB_sql_external_user' => _('User login'),
@@ -448,6 +445,8 @@ class Preferences_admin {
 			'SessionManagement_internal_generate_aps_login' => _("Which login should be used for the ApplicationServer's generated user?"), 
 			
 			'SessionManagement_novell_dlu' => _('Manage users by ZENworks DLU instead of native method'),
+			
+			'SessionManagement_localusers' => _('Override password'),
 		);
 		
 		$this->descriptions = array(
@@ -479,8 +478,9 @@ class Preferences_admin {
 			
 			'module_enable' => _('Choose the modules you want to enable.'),
 			
-			'UserGroupDB_ldap_posix_group_dn' => _('Use LDAP users groups using Posix groups, Group Branch DN:'),
-			'UserGroupDB_ldap_posix_filter' => sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'),
+			'UserGroupDB_activedirectory_use_child_group' => _('Use child groups (works with AD up to 2008r2)'),
+			
+			'UserGroupDB_ldap_filter' => sprintf(_('Filter (example: %s)'), '<em>(objectClass=posixGroup)</em>'),
 			
 			'UserGroupDB_sql_external_host' => _('The address of your MySQL server.'),
 			'UserGroupDB_sql_external_user' => _('The user login that must be used to access the database (to list users groups).'),

@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -93,14 +93,11 @@ class User {
 				$result[$user_default_group]= $g;
 		}
 
+		$groups_id = array();
 		foreach ($rows as $lug){
-			$g = $userGroupDB->import($lug->group);
-			if (is_object($g))
-				$result[$lug->group]= $g;
-			else {
-				Logger::error('main', 'USER::usersGroups user group (\''.$lug->group.'\') not ok');
-			}
+			array_push($groups_id, $lug->group);
 		}
+		$result = $userGroupDB->imports($groups_id);
 		return $result;
 	}
 

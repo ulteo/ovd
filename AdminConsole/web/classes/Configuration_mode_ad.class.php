@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2011 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2013
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -120,10 +120,6 @@ class Configuration_mode_ad extends Configuration_mode {
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', $form['user_group']);
-    
-    if ($form['user_group'] == 'activedirectory') { // ugly hack
-      $prefs->set('UserGroupDB', 'ldap_memberof', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
-    }
     
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', $form['sessionmanagement']);

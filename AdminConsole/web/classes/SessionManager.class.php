@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -299,26 +299,6 @@ class SessionManager {
 			$user->setAttribute('groups', array());
 		
 		return $user;
-	}
-	
-	public function users_groups_list() {
-		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
-		$res = $this->__call('users_groups_list', $args);
-		if ($res === null) {
-			return null;
-		}
-		
-		$groups = array();
-		foreach($res as $item) {
-			$group = new UsersGroup($item);
-			if (! $group->is_valid()) {
-				continue;
-			}
-			
-			$groups[]= $group;
-		}
-		
-		return $groups;
 	}
 	
 	public function users_groups_list_partial($search_item_, $search_fields_) {

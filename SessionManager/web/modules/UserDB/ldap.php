@@ -53,8 +53,8 @@ class UserDB_ldap  extends UserDB {
 				return NULL;
 		}
 		
-		$ldap = new LDAP($this->config);
-		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL);
+		$ldap = new LDAP($this->makeLDAPconfig());
+		$sr = $ldap->search($this->config['match']['login'].'='.$login_, array_values($this->config['match']), 1);
 		if ($sr === false) {
 			Logger::error('main', "UserDB_ldap::import($login_) ldap failed (usually timeout on server)");
 			return NULL;
@@ -81,6 +81,68 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 	}
 
+	public function imports($logins_){
+		Logger::debug('main','UserDB::ldap::imports(['.implode(', ', $logins_).'])');
+		if (count($logins_) == 0) {
+			return array();
+		}
+		
+		$result = array();
+		$users_filter = array();
+		foreach($logins_ as $login) {
+			if (is_array($this->cache_userlist) && isset($this->cache_userlist[$login])) {
+				if ($this->isOK($this->cache_userlist[$login])) {
+					$result[$login] = $this->cache_userlist[$login];
+				}
+			}
+			else if (is_array($this->cache_users) && isset($this->cache_users[$login])) {
+				if ($this->isOK($this->cache_users[$login])) {
+					$result[$login] = $this->cache_users[$login];
+				}
+			}
+			else {
+				array_push($users_filter, '('.$this->config['match']['login'].'='.$login.')');
+			}
+		}
+		
+		if (count($users_filter) == 0) {
+			return $result;
+		}
+		
+		$res2 = $this->import_from_filter('(|'.implode('', $users_filter).')');
+		return array_merge($result, $res2);
+	}
+
+	public function import_from_filter($filter_) {
+		$filter = LDAP::join_filters(array($this->generateFilter(), $filter_), '&');
+		
+		$ldap = new LDAP($this->makeLDAPconfig());
+		$sr = $ldap->search($filter, array_values($this->config['match']));
+		if ($sr === false) {
+			Logger::error('main', 'UserDB::ldap::imports search failed');
+			return NULL;
+		}
+		
+		$infos = $ldap->get_entries($sr);
+		$result = array();
+		foreach ($infos as $dn => $info) {
+			$u = $this->generateUserFromRow($info);
+			$u->setAttribute('dn',  $dn);
+			
+			$u = $this->cleanupUser($u);
+			$this->cache_users[$u->getAttribute('login')] = $u;
+			if ($this->isOK($u))
+				$result[$u->getAttribute('login')]= $u;
+			else {
+				if ($u->hasAttribute('login'))
+					Logger::info('main', 'UserDB::ldap::imports user \''.$u->getAttribute('login').'\' not ok');
+				else
+					Logger::info('main', 'UserDB::ldap::imports user does not have login');
+			}
+		}
+		return $result;
+	}
+
 	public function importFromDN($dn_) {
 		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
 		
@@ -93,12 +155,17 @@ class UserDB_ldap  extends UserDB {
 
 		$config = $this->config;
 		$ldap = new LDAP($config);
-		$sr = $ldap->searchDN($dn_, NULL);
+		$sr = $ldap->searchDN($dn_, array_values($this->config['match']), 1);
 		if ($sr === false) {
 			Logger::error('main','UserDB_ldap::fromDN ldap failed (mostly timeout on server)');
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
+		if (count($infos) == 0) {
+			Logger::error('main','UserDB_ldap::fromDN ldap returned empty result');
+			return NULL;
+		}
+
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
@@ -130,9 +197,9 @@ class UserDB_ldap  extends UserDB {
 		Logger::debug('main','UserDB::ldap::getList_nocache');
 		$users = array();
 
-		$ldap = new LDAP($this->config);
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$filter = $this->generateFilter();
-		$sr = $ldap->search($filter, NULL);
+		$sr = $ldap->search($filter, array_values($this->config['match']));
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getList_nocache search failed');
 			return NULL;
@@ -157,7 +224,7 @@ class UserDB_ldap  extends UserDB {
 	
 	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
 		$users = array();
-		$ldap = new LDAP($this->config);
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$contains = '*';
 		if ( $contains_ != '')
 			$contains .= $contains_.'*';
@@ -168,10 +235,10 @@ class UserDB_ldap  extends UserDB {
 			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
 		}
 		$filter .= '))'; 
-		$sr = $ldap->search($filter, NULL, $limit_);
+		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
-			return NULL;
+			return array(array(), false);
 		}
 		$sizelimit_exceeded = $ldap->errno() === 4; // LDAP_SIZELIMIT_EXCEEDED => 0x04 
 		
@@ -298,16 +365,17 @@ class UserDB_ldap  extends UserDB {
 		$ret []= $c;
 		$c = new ConfigElement_input('suffix', 'dc=servldap,dc=example,dc=com');
 		$ret []= $c;
-		$c = new ConfigElement_input('userbranch', 'ou=People');
-		$ret []= $c;
 		$c = new ConfigElement_dictionary('options', array('LDAP_OPT_PROTOCOL_VERSION' => '3', 'LDAP_OPT_REFERRALS' => 0));
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match', array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
+		
+		$c = new ConfigElement_input('filter', '(objectClass=posixAccount)');
+		$ret []= $c;
+		$c = new ConfigElement_dictionary('match', array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayName', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;
 		
-		$c = new ConfigElement_input('filter', '');
+		$c = new ConfigElement_input('ou', ''); // optionnal
 		$ret []= $c;
-
+		
 		$c = new ConfigElement_dictionary('extra', array());
 		$ret []= $c;
 
@@ -318,19 +386,23 @@ class UserDB_ldap  extends UserDB {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect($log);
+		$LDAP2->disconnect();
 		if ($ret === false) {
 			return false;
 		}
-		$ret = $LDAP2->branch_exists($config_ldap['userbranch']);
-		if ( $ret == false) {
-			$log['LDAP user branch'] = false;
-			$LDAP2->disconnect();
+		
+		if (is_null(LDAP::join_filters(array($config_ldap['filter']), '|'))) {
+			$log['LDAP user filter'] = false;
 			return false;
 		}
-		else {
-			$log['LDAP user branch'] = true;
-
+		
+		$log['LDAP user filter'] = true;
+		if (! array_keys_exists_not_empty(array('login', 'displayname'), $config_ldap['match'])) {
+			$log['LDAP users match'] = false;
+			return false;
 		}
+		
+		$log['LDAP users match'] = true;
 		return true;
 	}
 	
@@ -338,7 +410,13 @@ class UserDB_ldap  extends UserDB {
 		if (is_null($config_) === false) {
 			return $config_;
 		}
-		return $this->config;
+		
+		$configLDAP = array_merge(array(), $this->config);
+		if (array_keys_exists_not_empty(array('ou'), $configLDAP)) {
+			$configLDAP['suffix'] = $configLDAP['ou'].','.$configLDAP['suffix'];
+		}
+		
+		return $configLDAP;
 	}
 
 	public static function isValidDN($dn_) {

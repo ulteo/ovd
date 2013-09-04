@@ -78,6 +78,55 @@ class UserGroupDB_sql {
 		}
 	}
 	
+	public function imports($ids_) {
+		Logger::debug('main', 'USERGROUPDB::sql::imports (['.implode(', ', $ids_).'])');
+		if (count($ids_) == 0) {
+			return array();
+		}
+		
+		$sql2 = SQL::getInstance();
+		
+		$result = array();
+		$ids_filter = array();
+		foreach($ids_ as $id) {
+			if (array_key_exists($id, $this->cache)) {
+				$g = $this->cache[$id];
+				if (! $this->isOK($g)) {
+					continue;
+				}
+				
+				$result[$g->getUniqueID()] = $g;
+			}
+			else {
+				array_push($ids_filter, '"'.$sql2->CleanValue($id).'"');
+			}
+		}
+		
+		if (count($ids_filter) == 0) {
+			return $result;
+		}
+		
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM #5 WHERE @1 IN ('.implode(',', $ids_filter).')', 'id', 'name', 'description', 'published', self::table);
+		if ($res === false) {
+			Logger::error('main', 'USERGROUPDB::MYSQL::imports failed (sql query failed)');
+			return $result;
+		}
+		
+		$rows = $sql2->FetchAllResults($res);
+		foreach ($rows as $row){
+			$g = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+			$this->cache[$g->id] = $g;
+			if (! $this->isOK($g)) {
+				Logger::info('main', 'USERGROUPDB::MYSQL::imports group \''.$row['id'].'\' not ok');
+				continue;
+			}
+			
+			$result[$g->getUniqueID()]= $g;
+		}
+		
+		return $result;
+	}
+	
 	public function getList() {
 		Logger::debug('main','UserGroupDB_sql::getList');
 		

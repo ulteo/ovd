@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009-2011, 2013
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,7 +64,7 @@ class Configuration_mode_ldap extends Configuration_mode {
       }
     }
 
-    if (! in_array($form['user_group'], array('ldap_memberof', 'ldap_posix', 'sql')))
+    if (! in_array($form['user_group'], array('ldap', 'sql')))
       return False;
 
     return True;
@@ -89,16 +89,13 @@ class Configuration_mode_ldap extends Configuration_mode {
       $config['login'].= ','.$config['suffix'];
     }
 
-    $config['userbranch'] = $form['user_branch'];
+    $config['ou'] = $form['user_branch'];
     $config['filter'] = $form['field_filter'];
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
     if ( $form['field_countrycode'] != '')
       $config['match']['countrycode'] = $form['field_countrycode'];
-
-    if ($form['user_group'] == 'ldap_memberof')
-      $config['match']['memberof'] = 'memberOf';
 
     // Enable modules
     $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
@@ -114,10 +111,31 @@ class Configuration_mode_ldap extends Configuration_mode {
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable', $form['user_group']);
 
-    if ($form['user_group'] == 'ldap_posix') {
-      $prefs->set('UserGroupDB', 'ldap_posix',
-		  array('group_dn' => $form['group_branch_dn']));
-    }
+	if ($form['user_group'] == 'ldap') {
+		if (! array_key_exists('group_match_using', $form)) {
+			$form['group_match_using'] = array();
+		}
+		elseif(! is_array($form['group_match_using'])) {
+			$form['group_match_using'] = array($form['group_match_using']);
+		}
+		
+		$settings = array(
+			'ou' => $form['group_branch_dn'],
+			'filter' => $form['group_filter'],
+			'match' => array(
+				'name' => $form['group_field_name'],
+				'description' => $form['group_field_desc'],
+			),
+			
+			'group_match_user' => $form['group_match_using'],
+			'user_field' => $form['group_match_using_user_value'],
+			'user_field_type' => $form['group_match_using_user_type'],
+			'group_field' => $form['group_match_using_group_value'],
+			'group_field_type' => $form['group_match_using_group_type'],
+		);
+		
+		$prefs->set('UserGroupDB', 'ldap', $settings);
+	}
     
     // Set the Session Management module
     $prefs->set('SessionManagement', 'enable', 'internal');
@@ -146,7 +164,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     if (str_endswith($form['bind_dn'], $buf))
       $form['bind_dn'] = substr($form['bind_dn'], 0, strlen($form['bind_dn']) - strlen($buf));
 
-    $form['user_branch'] = $config['userbranch'];
+    $form['user_branch'] = $config['ou'];
     //$form['user_branch_recursive'] = No Yet Implementd
 
 
@@ -168,22 +186,37 @@ class Configuration_mode_ldap extends Configuration_mode {
     
 
     $config2 = $prefs->get('UserGroupDB', 'enable');
-    if ($config2 == 'ldap_memberof')
-      $form['user_group'] = 'ldap_memberof';
-     elseif($config2 == 'ldap_posix')
-       $form['user_group'] = 'ldap_posix';
+    if ($config2 == 'ldap')
+      $form['user_group'] = 'ldap';
     else
       $form['user_group'] = 'sql';
 
     $form['group_branch_dn'] = '';
-    $buf = $prefs->get('UserGroupDB', 'ldap_posix');
+    $buf = $prefs->get('UserGroupDB', 'ldap');
     if (isset($buf['group_dn']))
-      $form['group_branch_dn'] = $buf['group_dn'];
+      $form['group_branch_dn'] = $buf['ou'];
+
+	$form['group_filter'] = $buf['filter'];
+	$form['group_field_name'] = $buf['match']['name'];
+	$form['group_field_desc'] = $buf['match']['description'];
+	$form['group_match_using'] = $buf['group_match_user'];
+	$form['group_match_using_group_value'] = $buf['group_field'];
+	$form['group_match_using_group_type'] = $buf['group_field_type'];
+	$form['group_match_using_user_value'] = $buf['user_field'];
+	$form['group_match_using_user_type'] = $buf['user_field_type'];
 
     return $form;
   }
 
   public function display($form) {
+		if (! array_key_exists('group_match_using', $form)) {
+			$form['group_match_using'] = array();
+		}
+		elseif(! is_array($form['group_match_using'])) {
+			$form['group_match_using'] = array($form['group_match_using']);
+		}
+
+
     $str= '<h1>'._('Lightweight Directory Access Protocol (LDAP)').'</h1>';
 
     $str.= '<div class="section">';
@@ -199,23 +232,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '</div>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>'._('Users').'</h3>';
-    $str.= '<table>';
-    $str.= '<tr><td>'._('User branch:').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
-
-    // Not yet Implemented
-    // $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
-    // $str.= '<td>'._('Recursive Mode').'</td></tr>';
-
-    $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="field_filter" value="'.$form['field_filter'].'" /></td></tr>';
-    $str.= '</table>';
-    $str.= '</div>';
-
-    $str.= '<div class="section">';
-    $str.= '<h3>'._('Administrator account').'</h3>';
+    $str.= '<h3>'._('Authentication (require a user with read right on the tree)').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td style="text-align: left;" colspan="2">';
     $str.= '<input class="input_checkbox" type="checkbox" name="bind_anonymous"';
@@ -229,25 +246,73 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '</div>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_memberof"';
-    if ($form['user_group'] == 'ldap_memberof')
-      $str.= ' checked="checked"';
-    $str.= ' />'._('Use LDAP User Groups using the MemberOf field');
-    $str.= '<br/>';
-        $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_posix"';
-    if ($form['user_group'] == 'ldap_posix')
-      $str.= ' checked="checked"';
-    $str.= ' />'._('Use LDAP User Groups using Posix groups');
-    $str.= '<br/><div style="padding-left: 3%;">';
-    $str.= _('Group Branch DN:').' <input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/>';
+    $str.= '<h3>'._('Users').'</h3>';
+    $str.= '<table>';
+    $str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="field_filter" value="'.$form['field_filter'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Specific OU (optionnal):').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
+
+    $str.= '</table>';
     $str.= '</div>';
 
     $str.= '<div class="section">';
+    $str.= '<h3>'._('User Groups').'</h3>';
+
     $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
     $str.= '/>'._('Use Internal User Groups');
+    $str.= '<br/>';
+
+	$str.= '<input class="input_radio" type="radio" name="user_group" value="ldap"';
+	if ($form['user_group'] == 'ldap')
+	  $str.= ' checked="checked"';
+	$str.= ' />'._('Use LDAP User Groups');
+	$str.= '<br/>';
+	$str.= '<table style="padding-left: 3%;">';
+	$str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="group_filter" value="'.$form['group_filter'].'" /></td></tr>';
+	$str.= '<tr><td>'._('Specific OU (optionnal):').'</td><td><input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/></td></tr>';
+	$str.= '<tr><td>'._('Name field:').'</td><td><input type="text" name="group_field_name" value="'.$form['group_field_name'].'" /></td></tr>';
+	$str.= '<tr><td>'._('Description field (Optionnal):').'</td><td><input type="text" name="group_field_desc" value="'.$form['group_field_desc'].'" /></td></tr>';
+	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="user_field"';
+	if (in_array('user_field', $form['group_match_using'])) {
+	    $str.= ' checked="checked"';
+	}
+	$str.='/>'._('Use the following field from the user entry').'</td></tr>';
+	$str.= '<tr><td></td><td><input type="text" name="group_match_using_user_value" value="'.$form['group_match_using_user_value'].'" />';
+	$str.=' '._('which is').' ';
+	$str.='<select name="group_match_using_user_type">';
+	$str.='<option value="group_dn"';
+	if ($form['group_match_using_group_type'] == 'group_dn') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('Group DN').'</option>';
+	$str.='<option value="group_name"';
+	if ($form['group_match_using_group_type'] == 'group_name') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('Group name').'</option</select></td></tr>';
+	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="group_field"';
+	if (in_array('group_field', $form['group_match_using'])) {
+	    $str.= ' checked="checked"';
+	}
+	$str.=' />'._('Use the following field from the group entry').'</td></tr>';
+	$str.= '<tr><td></td><td><input type="text" name="group_match_using_group_value" value="'.$form['group_match_using_group_value'].'" />';
+	$str.=' '._('which is').' ';
+	$str.='<select name="group_match_using_group_type">';
+	$str.='<option value="user_dn"';
+	if ($form['group_match_using_group_type'] == 'user_dn') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('User DN').'</option>';
+	$str.='<option value="user_login"';
+	if ($form['group_match_using_group_type'] == 'user_login') {
+	    $str.= ' selected="selected"';
+	}
+	$str.='>'._('User login').'</option</select></td></tr>';
+	$str.= '</table>';
     $str.= '</div>';
 
     return $str;
@@ -272,10 +337,8 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<li><strong>'._('User branch:').'</strong> '.$form['user_branch'].'</li>';;
 
     $str.= '<li><strong>'._('User Groups:').'</strong> ';
-    if ($form['user_group'] == 'ldap_memberof')
-      $str.= _('Use LDAP User Groups using the MemberOf field');
-    elseif ($form['user_group'] == 'ldap_posix')
-      $str.= _('Use LDAP User Groups using Posix group');
+    if ($form['user_group'] == 'ldap')
+      $str.= _('Use LDAP User Groups');
     elseif ($form['user_group'] == 'sql')
       $str.= _('Use Internal User Groups');
     $str.= '</li>';

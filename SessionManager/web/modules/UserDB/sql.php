@@ -51,6 +51,43 @@ class UserDB_sql extends UserDB  {
 		return NULL;
 	}
 	
+	public function imports($logins_) {
+		if (count($logins_) == 0) {
+			return array();
+		}
+		
+		$sql2 = SQL::getInstance();
+		
+		$logins2 = array();
+		foreach($logins_ as $login) {
+			array_push($logins2, '"'.$sql2->CleanValue($login).'"');
+		}
+		
+		$request = 'SELECT * FROM #1 WHERE @2 IN ('.implode(', ',$logins2).')';
+		$res = $sql2->DoQuery($request, self::table, 'login');
+		if ($res === false){
+			Logger::error('main', 'USERDB::MYSQL::getList_nocache failed (sql query failed)');
+			// not the right argument
+			return NULL;
+		}
+		
+		$result = array();
+		$rows = $sql2->FetchAllResults($res);
+		foreach ($rows as $row){
+			$u = $this->generateUserFromRow($row);
+			if ($this->isOK($u))
+				$result []= $u;
+			else {
+				if (isset($row['login']))
+					Logger::info('main', 'USERDB::MYSQL::imports user \''.$row['login'].'\' not ok');
+				else
+					Logger::info('main', 'USERDB::MYSQL::imports user does not have login');
+			}
+		}
+		
+		return $result;
+	}
+	
 	public function isWriteable(){
 		return true;
 	}
@@ -132,14 +169,15 @@ class UserDB_sql extends UserDB  {
 		}
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row){
+			if ($limit_ > 0 && $count >= $limit_) {
+					$sizelimit_exceeded = true;
+					break;
+			}
+			
 			$a_user = $this->generateUserFromRow($row);
 			if ($this->isOK($a_user)) {
 				$users []= $a_user;
 				$count++;
-				if ($limit_ > 0 && $count >= $limit_) {
-					$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
-					return array($users, $sizelimit_exceeded);
-				}
 			}
 			else {
 				if (isset($row['login']))

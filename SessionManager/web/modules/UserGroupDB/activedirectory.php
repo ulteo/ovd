@@ -19,7 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
+class UserGroupDB_activedirectory extends UserGroupDB_ldap {
 	public function __construct() {
 		parent::__construct();
 		
@@ -33,186 +33,46 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 				$this->preferences[$k] = $v;
 			}
 		}
+		
+		// Generate parent (ldap) settings
+		$this->preferences['filter'] = '(objectClass=group)';
+		$this->preferences['match'] = array(
+			'name' => 'name',
+			'description' => 'description',
+		);
+		
+		$this->preferences['group_match_user'] = array('user_field', 'group_field');
+		$this->preferences['user_field'] = 'memberOf';
+		$this->preferences['user_field_type'] = 'group_dn';
+		$this->preferences['group_field'] = 'member';
+		$this->preferences['group_field_type'] = 'user_dn';
+		$this->preferences['ou'] = '';
+		if (array_key_exists('use_child_group', $this->preferences)) {
+			if (in_array($this->preferences['use_child_group'], array(1, '1'))) {
+				$this->preferences['user_field'].= ':1.2.840.113556.1.4.1941:';
+				$this->preferences['group_field'].= ':1.2.840.113556.1.4.1941:';
+			}
+		}
 	}
 	
-	public function import($id_) {
-		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
-		// cache 
-		if (isset($this->cache[$id_])) {
-			return $this->cache[$id_];
-		}
-		// cache end
+	public static function configuration() {
+		$ret = array();
 		
-		$userGroupDB = UserGroupDB::getInstance();
+		$c = new ConfigElement_select('use_child_group', 0);
+		$c->setContentAvailable(array(0, 1));
+		$ret []= $c;
 		
-		$userDBAD2 = new UserDB_activedirectory();
-		$userDBAD = UserDB::getInstance();
-		if ( get_class($userDBAD) == get_class($userDBAD2)) {
-			$userDBAD = $userDBAD2; // for cache
-		}
-		$config_ldap = $userDBAD->makeLDAPconfig();
-		
-		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
-		if (array_key_exists('match', $this->preferences)) {
-			$overright_match = $this->preferences['match'];
-			foreach ($overright_match as $key => $value) {
-				$config_ldap['match'][$key] = $value;
+		return $ret;
+	}
+	
+	public function customize_field($field_) {
+		$pref = $this->preferences;
+		if (array_key_exists('use_child_group', $pref)) {
+			if (in_array($pref['use_child_group'], array(1, '1'))) {
+				$field_.= ':1.2.840.113556.1.4.1941:';
 			}
 		}
 		
-		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
-			$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
-		}
-		else
-		{
-			$id2 = $id_;
-		}
-		$expl = explode(',',$id2,2);
-		if (count($expl) == 1) {
-			$expl = array($id2, '');
-		}
-		$config_ldap['userbranch'] = $expl[1];
-
-		$buf = array();
-		$extras = array();
-		$buf = $config_ldap['match'];
-		$buf['id'] = $id_;
-		$buf['name'] = '';
-		$buf['description'] = '';
-		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search($expl[0], array_values($config_ldap['match']));
-		if ($sr === false) {
-			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_)");
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		if (count($infos) == 0) {
-			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_), no data found on the directory");
-			return NULL;
-		}
-		$keys = array_keys($infos);
-		$dn = $keys[0];
-		$info = $infos[$dn];
-		foreach ($config_ldap['match'] as $attribut => $match_ldap){
-			if (isset($info[$match_ldap][0])) {
-				$buf[$attribut] = $info[$match_ldap][0];
-			}
-			if (array_key_exists($match_ldap, $info) && is_array($info[$match_ldap])) {
-				if (isset($info[$match_ldap]['count']))
-					unset($info[$match_ldap]['count']);
-				$extras[$attribut] = $info[$match_ldap];
-			}
-		}
-		if ($buf['name'] == '') {
-			Logger::error('main', "UserGroupDB::activedirectory::import($id_) error group name is empty");
-			return NULL;
-		}
-		
-		if (is_array($buf['id'])) {
-			$buf['id'] = array_pop($buf['id']);
-		}
-		
-		if (is_array($buf['name'])) {
-			$buf['name'] = array_pop($buf['name']);
-		}
-		
-		if (is_array($buf['description'])) {
-			$buf['description'] = array_pop($buf['description']);
-		}
-		
-		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
-		$ug->extras = $extras;
-		$this->cache[$buf['id']] = $ug;
-		return $ug;
-	}
-	
-	public function getList() {
-		Logger::debug('main','UserGroupDB::activedirectory::getList');
-		$userDBAD = UserDB::getInstance();
-		
-		$config_ldap = $userDBAD->makeLDAPconfig();
-		$config_ldap['match'] = array();
-		if (array_key_exists('match', $this->preferences)) {
-			$config_ldap['match'] = $this->preferences['match'];
-		}
-
-		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search('(objectClass=group)', array_values($config_ldap['match']));
-		if ($sr === false) {
-			Logger::error('main',"UserGroupDB::activedirectory::getList search failed");
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		
-		$groups = array();
-		
-		foreach ($infos as $dn => $info) {
-			$buf = array();
-			$extras = array();
-			foreach ($config_ldap['match'] as $attribut => $match_ldap) {
-				if (isset($info[$match_ldap][0])) {
-					$buf[$attribut] = $info[$match_ldap][0];
-				}
-				if (isset($info[$match_ldap]) && is_array($info[$match_ldap])) {
-					if (isset($info[$match_ldap]['count']))
-						unset($info[$match_ldap]['count']);
-					$extras[$attribut] = $info[$match_ldap];
-				}
-				else {
-					$extras[$attribut] = array();
-				}
-			}
-			if (!isset($buf['description']))
-				$buf['description'] = '';
-			else if (is_array($buf['description'])) {
-				$buf['description'] = array_pop($buf['description']);
-			}
-			
-			if (!isset($buf['name']))
-				$buf['name'] = $dn;
-			else if (is_array($buf['name'])) {
-				$buf['name'] = array_pop($buf['name']);
-			}
-			
-			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
-			$ug->extras = $extras;
-			$groups[$dn] = $ug;
-		}
-		
-		return $groups;
-	}
-	
-	public static function isDefault() {
-		return false;
-	}
-	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'activedirectory'));
-	}
-	
-	public function add($usergroup_){
-		return false;
-	}
-	
-	public function remove($usergroup_){
-		if ($usergroup_->isDefault()) {
-			// unset the default usergroup
-			$prefs = new Preferences_admin();
-			$mods_enable = $prefs->set('general', 'user_default_group', '');
-			$prefs->backup();
-		}
-		return true;
-	}
-	
-	public function update($usergroup_){
-		return true;
-	}
-	
-	public static function init($prefs_) {
-		return true;
-	}
-	
-	public static function enable() {
-		return true;
+		return $field_;
 	}
 }

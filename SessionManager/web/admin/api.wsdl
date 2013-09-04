@@ -709,11 +709,6 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="users_groups_list">
-			<input message="urn:voidRequest"/>
-			<output message="urn:Any"/>
-		</operation>
-		
 		<operation name="users_groups_list_partial">
 			<input message="urn:UsersPartialListRequest"/>
 			<output message="urn:UsersPartialListResponse"/>
@@ -1735,16 +1730,6 @@
 		
 		<operation name="user_settings_remove">
 			<soap:operation soapAction="urn:OvdAdmin#user_settings_remove"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="users_groups_list">
-			<soap:operation soapAction="urn:OvdAdmin#users_groups_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

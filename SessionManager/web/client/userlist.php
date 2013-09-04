@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,19 +34,15 @@ if (! array_key_exists('show_list_users', $web_interface_settings) || $web_inter
 	die();
 }
 
-$userDB = UserDB::getInstance();
-
-$users = array();
-if ($userDB->canShowList()) {
-	$users = $userDB->getList();
-	
-	if (! is_array($users))
-		$users = array();
-}
+$search_limit = $prefs->get('general', 'max_items_per_page');
+list($users, $partial) = $userDB->getUsersContains('', array('login'), $search_limit);
 
 $dom = new DomDocument('1.0', 'utf-8');
 
 $users_node = $dom->createElement('users');
+if ($partial) {
+	$users_node->setAttribute('partial', 'true');
+}
 foreach ($users as $user) {
 	$user_node = $dom->createElement('user');
 	$user_node->setAttribute('login', $user->getAttribute('login'));

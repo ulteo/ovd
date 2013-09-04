@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -103,7 +103,7 @@ function show_manage($sharedfolder_id_) {
 		popup_error(_("Failed to get users groups list"));
 	}
 	uasort($all_groups, "usergroup_cmp");
-	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $sharedfolder_id_));
+	$searchDiv = $usersgroupsList->getForm();
 
 	$available_groups = array();
 	$used_groups = array();

@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -212,10 +212,10 @@ function show_manage($login) {
   $groups_available = array();
 	$default_group_id = null;
 	if ($usergroupdb_rw) {
-		$groups_all = $_SESSION['service']->users_groups_list();
-		if (is_null($groups_all)) {
-			$groups_all = array();
-		}
+		$usersgroupsList = new UsersGroupsList($_REQUEST);
+		$groups_all = $usersgroupsList->search();
+		usort($groups_all, "usergroup_cmp");
+		$searchDiv = $usersgroupsList->getForm();
 		
 		foreach($groups_all as $group) {
 			if (! array_key_exists($group->id, $groups_mine))
@@ -340,7 +340,7 @@ function show_manage($login) {
   }
 
   // User groups part
-  if (count($groups_mine)>0 or count($groups_all)>0) {
+  if (count($groups_mine)>0 or ($usergroupdb_rw and count($groups_all)>0)) {
     echo '<div>';
     echo '<h2>'._('User groups with this user').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
