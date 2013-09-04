@@ -224,7 +224,7 @@ class UserGroupDB_ldap {
 				$g = $this->cache_list[$dn];
 				$result[$g->getUniqueID()] = $g;
 			}
-			else {
+			else if (strstr($dn, ',') !== false) {
 				list($rdn, $subpath) = explode(',', $dn, 2);
 				array_push($ids_filter, '('.$rdn.')');
 			}
