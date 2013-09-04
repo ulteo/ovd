@@ -289,7 +289,7 @@ class UserGroupDB_ldap {
 		$config_ldap = $this->makeLDAPconfig();
 		$filter= LDAP::join_filters(array($config_ldap['filter'], $config_ldap['match']['member'].'='.$user_login_), '&');
 		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search($filter, array_keys($config_ldap['match']));
+		$sr = $ldap->search($filter, array_values($this->preferences['match']));
 		if ($sr === false) {
 			Logger::error('main',"UserGroupDB::ldap::get_by_user_members search failed for ($user_login_)");
 			return NULL;
@@ -345,7 +345,7 @@ class UserGroupDB_ldap {
 		
 		$configLDAP = $this->makeLDAPconfig();
 		$ldap = new LDAP($configLDAP);
-		$sr = $ldap->search('cn=*', NULL);
+		$sr = $ldap->search('cn=*', array_values($this->preferences['match']));
 		$infos = $ldap->get_entries($sr);
 		$groups = array();
 		if (! is_array($infos))
