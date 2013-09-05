@@ -1,6 +1,7 @@
 SUBDIRS = liaison
 
-scripts_DATA = Abstract_News.class.php \
+scripts_DATA = Abstract_AdminAction.class.php\
+               Abstract_News.class.php \
                Abstract_ReportServer.class.php \
                Abstract_ReportSession.class.php \
                Abstract_Server.class.php \

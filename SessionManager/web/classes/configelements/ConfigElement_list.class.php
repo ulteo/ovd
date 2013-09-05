@@ -21,4 +21,24 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ConfigElement_list extends ConfigElement {}
+class ConfigElement_list extends ConfigElement {
+	public function contentEqualsTo($content_) {
+		if (count($this->content) != count($content_)) {
+			return false;
+		}
+		
+		foreach($this->content as $k) {
+			if (! in_array($k, $content_)) {
+				return false;
+			}
+		}
+		
+		foreach($content_ as $k) {
+			if (! in_array($k, $this->content)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+}

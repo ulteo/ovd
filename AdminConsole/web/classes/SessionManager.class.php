@@ -27,11 +27,24 @@ class SessionManager {
 			ini_set('soap.wsdl_cache_enabled', 0);
 		}
 		
+		$xff = $_SERVER['REMOTE_ADDR'];
+		$headers = apache_request_headers();
+		foreach($headers as $k => $v) {
+			// Internet explorer send http headers in lower cases...
+			$k = strtolower($k);
+			if ($k == 'x-forwarded-for') {
+				$xff = $v.', '.$_SERVER['REMOTE_ADDR'];
+			}
+		}
+		
 		try {
 			$this->service = new SoapClient(ADMIN_ROOT.'/includes/ovd-admin.wsdl', array(
 				'login' => $login_,
 				'password' => $password_,
 				'location' => (($ssl_)?'https':'http').'://'.SESSIONMANAGER_HOST.'/ovd/service/admin',
+				'stream_context' => stream_context_create(array(
+					'http' => array('header' => 'X-Forwarded-For: '.$xff)
+				)),
 				// 'classmap' =>  ... ToDo: check if we can create the basics object using that
 			));
 		} catch (Exception $e) {

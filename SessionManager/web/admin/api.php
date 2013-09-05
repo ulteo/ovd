@@ -190,6 +190,23 @@ class OvdAdminSoap {
 		return $c;
 	}
 	
+	private function log_action($name_, $info_ = array()) {
+		$where = $_SERVER['REMOTE_ADDR'];
+		
+		$headers = apache_request_headers();
+		foreach($headers as $k => $v) {
+			// Internet explorer send http headers in lower cases...
+			$k = strtolower($k);
+			if ($k == 'x-forwarded-for') {
+				$where = $v;
+			}
+		}
+		
+		$a = new AdminAction(null, $this->user_login, $name_, $where);
+		$a->infos = $info_;
+		Abstract_AdminAction::save($a);
+	}
+
 	public function system_switch_maintenance($value_) {
 		$this->check_authorized('manageServers');
 		
@@ -200,6 +217,7 @@ class OvdAdminSoap {
 		
 		$prefs->set('general', 'system_in_maintenance', (($value_ === false)?1:0));
 		$prefs->backup();
+		$this->log_action('system_switch_maintenance', array('value' => $value_));
 		
 		return true;
 	}
@@ -221,8 +239,12 @@ class OvdAdminSoap {
 		
 		$implode = implode("\n", $contents);
 		$ret = file_put_contents(SESSIONMANAGER_CONF_FILE, $implode, LOCK_EX);
+		if ($ret === false) {
+			return $ret;
+		}
 		
-		return ($ret!==false);
+		$this->log_action('administrator_password_set');
+		return true;
 	}
 	
 	private static function get_pref_element_type($element_) {
@@ -275,22 +297,37 @@ class OvdAdminSoap {
 	}
 	
 	private static function import_elements_content_from_dict($elements_, $settings_) {
+		$diff = array();
 		foreach ($elements_ as $container => $elements) {
 			if (! array_key_exists($container, $settings_)) {
 				continue;
 			}
 			
 			if (is_array($elements)) {
-				self::import_elements_content_from_dict($elements, $settings_[$container]);
+				$diff_sub = self::import_elements_content_from_dict($elements, $settings_[$container]);
+				foreach($diff_sub as $k => $v) {
+					$diff[$container.'.'.$k] = $v;
+				}
 			}
 			else {
-				if ($settings_[$container] == $elements->content) {
+				if ($elements->contentEqualsTo($settings_[$container])) {
 					continue;
 				}
+				
+				$c_old = $elements->content;
+				$c_new = $settings_[$container];
+				if (self::get_pref_element_type($elements) == 'password') {
+					$c_old = '*****';
+					$c_new = '*******';
+				}
+				
+				$diff[$container] = array('old' => $c_old, 'new' => $c_new);
 				
 				$elements->content = $settings_[$container];
 			}
 		}
+		
+		return $diff;
 	}
 	
 	public function settings_get() {
@@ -314,13 +351,18 @@ class OvdAdminSoap {
 		// saving preferences
 		$prefs = new Preferences_admin();
 		
+		$diff = array();
+		
 		$keys = $prefs->getKeys();
 		foreach ($keys as $key_name) {
 			if (! array_key_exists($key_name, $settings_)) {
 				continue;
 			}
 			
-			$this->import_elements_content_from_dict($prefs->elements[$key_name], $settings_[$key_name]);
+			$diff_sub = $this->import_elements_content_from_dict($prefs->elements[$key_name], $settings_[$key_name]);
+			foreach($diff_sub as $k => $v) {
+				$diff[$key_name.'.'.$k] = $v;
+			}
 		}
 		
 		$ret = $prefs->isValid();
@@ -334,6 +376,9 @@ class OvdAdminSoap {
 		}
 		
 		// configuration saved
+		if (count($diff) > 0) {
+			$this->log_action('settings_set', $diff);
+		}
 		return true;
 	}
 	
@@ -454,6 +499,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('settings_domain_integration_set', $diff);
 		return true;
 	}
 	
@@ -676,6 +722,7 @@ class OvdAdminSoap {
 		
 		$server->orderDeletion();
 		Abstract_Server::delete($server->id);
+		$this->log_action('server_remove', array('id' => $server->id, 'name' => $server->getDisplayName()));
 		return true;
 	}
 	
@@ -695,6 +742,7 @@ class OvdAdminSoap {
 		}
 		
 		Abstract_Server::save($server);
+		$this->log_action('server_register', array('id' => $server->id, 'name' => $server->getDisplayName()));
 		return true;
 	}
 	
@@ -712,8 +760,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$maintenance_old = $server->getAttribute('locked');
+		if ($maintenance_old === $maintenance_) {
+			return true;
+		}
+		
 		$server->setAttribute('locked', ($maintenance_ === true));
 		Abstract_Server::save($server);
+		$this->log_action('server_switch_maintenance', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $maintenance_old,
+			'new' => ($maintenance_ === true)
+		)));
 		return true;
 	}
 	
@@ -726,8 +783,18 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$nb_session_old = $server->getAttribute('max_sessions');
+		if ($nb_session_old == $nb_session_) {
+			return true;
+		}
+		
 		$server->setAttribute('max_sessions', $nb_session_);
+		
 		Abstract_Server::save($server);
+		$this->log_action('server_set_available_sessions', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $nb_session_old,
+			'new' => $nb_session_,
+		)));
 		return true;
 	}
 	
@@ -740,8 +807,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$display_name_old = $server->getAttribute('display_name');
+		if ($display_name_old == $display_name_) {
+			return true;
+		}
+		
 		$server->setAttribute('display_name', $display_name_);
 		Abstract_Server::save($server);
+		$this->log_action('server_set_display_name', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $display_name_old,
+			'new' => $display_name_,
+		)));
 		return true;
 	}
 	
@@ -754,8 +830,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$display_name_old = $server->getAttribute('display_name');
+		if (is_null($display_name_old)) {
+			return true;
+		}
+		
 		$server->setAttribute('display_name', null);
 		Abstract_Server::save($server);
+		$this->log_action('server_unset_display_name', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $display_name_old,
+			'new' => null,
+		)));
 		return true;
 	}
 	
@@ -773,6 +858,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$fqdn_old = $server->fqdn;
+		if ($fqdn_old == $fqdn_) {
+			return true;
+		}
+		
 		$server2 = Abstract_Server::load_by_fqdn($fqdn_);
 		if ($server2 != null && $server->id != $server_id_) {
 			Logger::error('api', sprintf('Internal name "%s" is already used for another server', $fqdn_));
@@ -781,6 +871,10 @@ class OvdAdminSoap {
 		
 		$server->fqdn = $fqdn_;
 		Abstract_Server::save($server);
+		$this->log_action('server_set_fqdn', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $fqdn_old,
+			'new' => $fqdn_,
+		)));
 		return true;
 	}
 	
@@ -798,8 +892,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$external_name_old = $server->getAttribute('external_name');
+		if ($external_name_ == $external_name_old) {
+			return true;
+		}
+		
 		$server->setAttribute('external_name', $external_name_);
 		Abstract_Server::save($server);
+		$this->log_action('server_set_external_name', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $external_name_old,
+			'new' => $external_name_,
+		)));
 		return true;
 	}
 	
@@ -812,8 +915,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$external_name_old = $server->getAttribute('external_name');
+		if (is_null($external_name_old )) {
+			return true;
+		}
+
 		$server->setAttribute('external_name', null);
 		Abstract_Server::save($server);
+		$this->log_action('server_unset_external_name', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $external_name_old,
+			'new' => null,
+		)));
 		return true;
 	}
 	
@@ -826,8 +938,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$rdp_port_old = $server->getAttribute('rdp_port');
+		if ($rdp_port_ == $rdp_port_old) {
+			return true;
+		}
+		
 		$server->setAttribute('rdp_port', $rdp_port_);
 		Abstract_Server::save($server);
+		$this->log_action('server_set_rdp_port', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $rdp_port_old,
+			'new' => $rdp_port_,
+		)));
 		return true;
 	}
 	
@@ -840,8 +961,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$rdp_port_old = $server->getAttribute('rdp_port');
+		if (is_null($rdp_port_old)) {
+			return true;
+		}
+		
 		$server->setAttribute('rdp_port', null);
 		Abstract_Server::save($server);
+		$this->log_action('server_unset_rdp_port', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => array(
+			'old' => $rdp_port_old,
+			'new' => null,
+		)));
 		return true;
 	}
 	
@@ -866,6 +996,7 @@ class OvdAdminSoap {
 		
 		unset($server->roles_disabled[$role_]);
 		Abstract_Server::save($server);
+		$this->log_action('server_role_enable', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => $role_));
 		return true;
 	}
 	
@@ -890,6 +1021,8 @@ class OvdAdminSoap {
 		
 		$server->roles_disabled[$role_] = true;
 		Abstract_Server::save($server);
+		
+		$this->log_action('server_role_disable', array('id' => $server->id, 'name' => $server->getDisplayName(), 'value' => $role_));
 		return true;
 	}
 	
@@ -914,6 +1047,10 @@ class OvdAdminSoap {
 		Abstract_Liaison::save('ApplicationServer', $application_id_, $server_id_);
 		$server->syncStaticApplications();
 		
+		$this->log_action('server_add_static_application', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+			'application_id' => $application_id_, 'application_name' => $app->getAttribute('name')
+		));
 		return true;
 	}
 	
@@ -930,8 +1067,17 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$server = Abstract_Server::load($server_id_);
+		if (! is_object($server)) {
+			return false;
+		}
+		
 		Abstract_Liaison::delete('ApplicationServer', $application_id_, $server_id_);
 		
+		$this->log_action('server_add_static_application', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+			'application_id' => $application_id_, 'application_name' => $app->getAttribute('name')
+		));
 		return true;
 	}
 	
@@ -1021,6 +1167,7 @@ class OvdAdminSoap {
 		}
 		
 		$tm->remove($task_id_);
+		$this->log_action('task_remove', array('id' => $task_id_));
 		return true;
 	}
 	
@@ -1039,6 +1186,11 @@ class OvdAdminSoap {
 		
 		$t = new Task_install_from_line(0, $server_id_, $line_);
 		$tm->add($t);
+		
+		$this->log_action('task_debian_install_packages', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+			'packages' => $line_
+		));
 		return $t->id;
 	}
 	
@@ -1055,6 +1207,9 @@ class OvdAdminSoap {
 		$manager = new Tasks_Manager();
 		$manager->add($task);
 		
+		$this->log_action('task_debian_installable_application', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+		));
 		return $task->id;
 	}
 	
@@ -1075,6 +1230,10 @@ class OvdAdminSoap {
 		$t = new Task_upgrade(0, $server_id_);
 		
 		$tm->add($t);
+		
+		$this->log_action('task_debian_upgrade', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+		));
 		return $t->id;
 	}
 	
@@ -1125,6 +1284,12 @@ class OvdAdminSoap {
 			$t = new Task_install(0, $server_id, $to_install);
 			$tm->add($t);
 		}
+		
+		$this->log_action('task_debian_server_replicate', array(
+			'server_master_id' => $server_from->id, 'server_master_name' => $server_from->getDisplayName(),
+			'server_id' => $server_to->id, 'server_name' => $server_to->getDisplayName(),
+			'delete' => $to_delete, 'install' => $to_install,
+		));
 		return true;
 	}
 	
@@ -1141,10 +1306,20 @@ class OvdAdminSoap {
 			return null;
 		}
 		
+		$server = Abstract_Server::load($server_id_);
+		if (! is_object($server)) {
+			Logger::error('api', sprintf('Unknown server "%s"', $server_id_));
+			return null;
+		}
+		
 		$tm = new Tasks_Manager();
 		$t = new Task_install(0, $server_id_, array($app));
 		$tm->add($t);
 		
+		$this->log_action('task_debian_application_install', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+			'application_id' => $application_id_, 'application_name' => $app->getAttribute('name'),
+		));
 		return $t->id;
 	}
 	
@@ -1161,10 +1336,20 @@ class OvdAdminSoap {
 			return null;
 		}
 		
+		$server = Abstract_Server::load($server_id_);
+		if (! is_object($server)) {
+			Logger::error('api', sprintf('Unknown server "%s"', $server_id_));
+			return null;
+		}
+		
 		$tm = new Tasks_Manager();
 		$t = new Task_remove(0, $server_id_, array($app));
 		$tm->add($t);
 		
+		$this->log_action('task_debian_application_remove', array(
+			'server_id' => $server->id, 'server_name' => $server->getDisplayName(),
+			'application_id' => $application_id_, 'application_name' => $app->getAttribute('name'),
+		));
 		return $t->id;
 	}
 	
@@ -1275,6 +1460,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('application_remove', array('id' => $id_, 'name' => $app->getAttribute('name')));
 		return true;
 	}
 	
@@ -1293,6 +1479,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$publish_old = $app->getAttribute('published');
+		if ($publish_ == $publish_old) {
+			return true;
+		}
+		
 		$app->setAttribute('published', (($publish_===true)?1:0)); // to check !
 		
 		$res = $applicationDB->update($app);
@@ -1300,6 +1491,13 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('application_publish', array(
+			'application_id' => $application_id_, 'application_name' => $app->getAttribute('name'),
+			'value' => array(
+				'old' => $publish_old,
+				'new' => (($publish_===true)?1:0),
+			)
+		));
 		return true;
 	}
 	
@@ -1319,6 +1517,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$orphan_apps = array();
 		foreach ($apps as $app) {
 			if ($app->isOrphan()) {
 				$ret = $applicationsDB->remove($app);
@@ -1326,9 +1525,12 @@ class OvdAdminSoap {
 					$success = false;
 					break;
 				}
+				
+				array_push($orphan_apps, $app->getAttribute('name'));
 			}
 		}
 		
+		$this->log_action('applications_remove_orphans', $orphan_apps);
 		return $success;
 	}
 	
@@ -1377,6 +1579,7 @@ class OvdAdminSoap {
 				$buf_server->syncStaticApplications();
 		}
 		
+		$this->log_action('application_clone', array('application_id' => $id_, 'application_name' => $app->getAttribute('name')));
 		return true;
 	}
 	
@@ -1439,6 +1642,7 @@ class OvdAdminSoap {
 			$applicationDB->update($app);
 		}
 		
+		$this->log_action('application_icon_set', array('application_id' => $app->getAttribute('id'), 'application_name' => $app->getAttribute('name')));
 		return true;
 	}
 	
@@ -1505,6 +1709,12 @@ class OvdAdminSoap {
 		}
 		
 		$server->getApplicationIcon($app->getAttribute('id'));
+		$this->log_action('application_icon_setFromServer', array(
+			'application_id' => $app->getAttribute('id'),
+			'application_name' => $app->getAttribute('name'),
+			'server_id' => $server->id,
+			'server_name' => $server->getDisplayName(),
+		));
 		return true;
 	}
 	
@@ -1542,6 +1752,12 @@ class OvdAdminSoap {
 			$server->syncStaticApplications();
 		}
 		
+		$this->log_action('application_static_add', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+			'type' => $type_,
+			'command' => $command_,
+		));
 		return $app->getAttribute('id');
 	}
 	
@@ -1572,6 +1788,10 @@ class OvdAdminSoap {
 			$server->syncStaticApplications();
 		}
 		
+		$this->log_action('application_static_add', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
 		return true;
 	}
 	
@@ -1600,6 +1820,10 @@ class OvdAdminSoap {
 			$server->syncStaticApplications();
 		}
 		
+		$this->log_action('application_static_removeIcon', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
 		return true;
 	}
 	
@@ -1619,17 +1843,21 @@ class OvdAdminSoap {
 		}
 		
 		$modify = false;
+		$changes = array();
 		if ($name_ != null && $name_ != $app->getAttribute('name')) {
+			$changes['name'] = array('old' => $app->getAttribute('name'), 'new' => $name_);
 			$app->setAttribute('name', $name_);
 			$modify = true;
 		}
 		
 		if ($description_ != null && $description_ != $app->getAttribute('description')) {
+			$changes['description'] = array('old' => $app->getAttribute('description'), 'new' => $description_);
 			$app->setAttribute('description', $description_);
 			$modify = true;
 		}
 		
 		if ($command_ != null && $command_ != $app->getAttribute('executable_path')) {
+			$changes['command'] = array('old' => $app->getAttribute('executable_path'), 'new' => $command_);
 			$app->setAttribute('executable_path', $command_);
 			$modify = true;
 		}
@@ -1650,6 +1878,10 @@ class OvdAdminSoap {
 			$server->syncStaticApplications();
 		}
 		
+		$this->log_action('application_static_modify', array_merge($changes, array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		)));
 		return true;
 	}
 	
@@ -1683,6 +1915,10 @@ class OvdAdminSoap {
 			$app->delIcon();
 		}
 		
+		$this->log_action('application_weblink_add', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
 		return $app->getAttribute('id');
 	}
 	
@@ -1760,6 +1996,10 @@ class OvdAdminSoap {
 			$server->syncWebApplications();
 		}
         
+		$this->log_action('application_webapp_add', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
 		return $application_id;
 	}
    
@@ -1871,6 +2111,10 @@ class OvdAdminSoap {
 			$server->syncWebApplications();
 		}
         
+		$this->log_action('application_webapp_clone', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
         return true;
     }
     
@@ -1910,6 +2154,10 @@ class OvdAdminSoap {
 			$server->syncWebApplications();
 		}
 		
+		$this->log_action('application_webapp_clone', array(
+			'id' => $app->getAttribute('id'),
+			'name' => $app->getAttribute('name'),
+		));
 		return true;
 	}
 	
@@ -1937,10 +2185,16 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$browsers_old = $prefs->get('general', 'default_browser');
 		$browsers = $prefs->get('general', 'default_browser');
 		$browsers[$type_] = $app->getAttribute('id');
 		$prefs->set('general', 'default_browser', $browsers);
 		$prefs->backup();
+		
+		$this->log_action('default_browser_set', array('value' => array(
+			'old' => $browsers_old,
+			'new' => $browsers,
+		)));
 		return true;
 	}
 	
@@ -1955,10 +2209,16 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$browsers_old = $prefs->get('general', 'default_browser');
 		$browsers = $prefs->get('general', 'default_browser');
 		$browsers[$type_] = null;
 		$prefs->set('general', 'default_browser', $browsers);
 		$prefs->backup();
+		
+		$this->log_action('default_browser_unset', array('value' => array(
+			'old' => $browsers_old,
+			'new' => $browsers,
+		)));
 		return true;
 	}
 	
@@ -2046,6 +2306,7 @@ class OvdAdminSoap {
 			return null;
 		}
 		
+		$this->log_action('applications_group_add', array('name' => $name_));
 		return $g->id;
 	}
 	
@@ -2069,6 +2330,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('applications_group_remove', array('name' => $group->name));
 		return true;
 	}
 	
@@ -2088,18 +2350,23 @@ class OvdAdminSoap {
 		}
 		
 		$has_change = false;
+		$changes = array();
 		
 		if ($name_ != null && $name_ != $group->name) {
+			$changes['name'] = array('old' => $group->name, 'new' => $name_);
 			$group->name = $name_;
+			
 			$has_change = true;
 		}
 		
 		if ($description_ != null && $description_ != $group->description) {
+			$changes['description'] = array('old' => $group->description, 'new' => $description_);
 			$group->description = $description_;
 			$has_change = true;
 		}
 		
 		if ($published_ !== null && $published_ !== $group->published) {
+			$changes['published'] = array('old' => $group->published, 'new' => (bool)$published_);
 			$group->published = (bool)$published_;
 			$has_change = true;
 		}
@@ -2109,35 +2376,52 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $applicationsGroupDB->update($group);
+		
+		$changes['name'] = $group->name;
+		$this->log_action('applications_group_modify', array_merge($changes, array('name' => $group->name)));
 		return $ret;
 	}
 	
 	public function applications_group_add_application($application_id, $group_id_) {
 		$this->check_authorized('manageApplicationsGroups');
 		
-		$ret = Abstract_Liaison::save('AppsGroup', $application_id, $group_id_);
-		if ($ret === true) {
-			$applicationsGroupDB = ApplicationsGroupDB::getInstance();
-			$group = $applicationsGroupDB->import($group_id_);
-			if (is_object($group))
-				return true;
+		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$group = $applicationsGroupDB->import($group_id_);
+		if (! is_object($group)) {
+			return false;
 		}
 		
-		return false;
+		$ret = Abstract_Liaison::save('AppsGroup', $application_id, $group_id_);
+		if ($ret !== true) {
+			return false;
+		}
+		
+		$this->log_action('applications_group_add_application', array(
+			'application_id' => $application_id,
+			'group' => $group->name,
+		));
+		return true;
 	}
 	
 	public function applications_group_remove_application($application_id, $group_id_) {
 		$this->check_authorized('manageApplicationsGroups');
 		
-		$ret = Abstract_Liaison::delete('AppsGroup', $application_id, $group_id_);
-		if ($ret === true) {
-			$applicationsGroupDB = ApplicationsGroupDB::getInstance();
-			$group = $applicationsGroupDB->import($group_id_);
-			if (is_object($group))
-				return true;
+		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$group = $applicationsGroupDB->import($group_id_);
+		if (! is_object($group)) {
+			return true;
 		}
 		
-		return false;
+		$ret = Abstract_Liaison::delete('AppsGroup', $application_id, $group_id_);
+		if ($ret !== true) {
+			return false;
+		}
+		
+		$this->log_action('applications_group_remove_application', array(
+			'application_id' => $application_id,
+			'group' => $group->name,
+		));
+		return true;
 	}
 	
 	public function mime_types_list() {
@@ -2192,6 +2476,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('application_add_mime_type', array(
+			'application_id' => $app->getAttribute('id'),
+			'application_name' => $app->getAttribute('name'),
+			'mime_type' => $mime_type_,
+		));
 		return true;
 	}
 	
@@ -2225,6 +2514,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('applications_remove_mime_type', array(
+			'application_id' => $app->getAttribute('id'),
+			'application_name' => $app->getAttribute('name'),
+			'mime_type' => $mime_type_,
+		));
 		return true;
 	}
 	
@@ -2381,6 +2675,10 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('user_add', array(
+			'login' => $login_,
+			'displayname' => $displayname_,
+		));
 		return true;
 	}
 	
@@ -2419,7 +2717,12 @@ class OvdAdminSoap {
 		}
 		
 		$res = $userDB->remove($user);
-		return $res;
+		if (! $res) {
+			return false;
+		}
+		
+		$this->log_action('user_remove', array('login' => $login_));
+		return true;
 	}
 	
 	public function user_modify($login_, $displayname_, $password_) {
@@ -2438,13 +2741,16 @@ class OvdAdminSoap {
 		}
 		
 		$has_change = false;
+		$changes = array();
 		
 		if ($displayname_ != null && $displayname_ != $user->getAttribute('displayname')) {
+			$changes['displayname'] = array('old' => $user->getAttribute('displayname'), 'new' => $displayname_);
 			$user->setAttribute('displayname', $displayname_);
 			$has_change = true;
 		}
 		
 		if ($password_ != null && $password_ != $user->getAttribute('password')) {
+			$changes['password'] = array('old' => '****', 'new' => '********');
 			$user->setAttribute('password', $password_);
 			$has_change = true;
 		}
@@ -2454,6 +2760,8 @@ class OvdAdminSoap {
 		}
 		
 		$res = $userDB->update($user);
+		
+		$this->log_action('user_modify', array_merge(array('login' => $login_), $changes));
 		return true;
 	}
 	
@@ -2467,6 +2775,11 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $userDB->populate($override_, $password_);
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('users_populate');
 		return $ret;
 	}
 	
@@ -2492,7 +2805,15 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_User_Preferences::save($ugp);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('user_settings_set', array('login' => $user->getAttribute('login'), $container_.'_'.$setting_ => array(
+			'old' => $session_settings_defaults[$setting_]->content,
+			'new' => $config_element->content,
+		)));
+		return true;
 	}
 	
 	public function user_settings_remove($user_id_, $container_, $setting_) {
@@ -2511,7 +2832,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container_, $setting_);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('user_settings_remove', array('login' => $user->getAttribute('login'), $container_.'_'.$setting_ => null));
+		return true;
 	}
 	
 	private static function generate_usersgroup_array($group_) {
@@ -2636,6 +2962,7 @@ class OvdAdminSoap {
 			return null;
 		}
 		
+		$this->log_action('user_addsGroup', array('name' => $name_));
 		return $g->getUniqueID();
 	}
 	
@@ -2657,7 +2984,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $userGroupDB->remove($group);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('user_removesGroup', array('name' => $group->name));
+		return true;
 	}
 	
 	public function user_modifysGroup($id_, $name_, $description_, $published_) {
@@ -2678,18 +3010,21 @@ class OvdAdminSoap {
 		}
 		
 		$has_change = false;
-		
+		$changes = array();
 		if ($name_ != null && $name_ != $group->name) {
+			$changes['name'] = array('old' => $group->name, 'new' => $name_);
 			$group->name = $name_;
 			$has_change = true;
 		}
 		
 		if ($description_ != null && $description_ != $group->description) {
+			$changes['description'] = array('old' => $group->description, 'new' => $description_);
 			$group->description = $description_;
 			$has_change = true;
 		}
 		
 		if ($published_ !== null && $published_ !== $group->published) {
+			$changes['published'] = array('old' => $group->published, 'new' => (bool)$published_);
 			$group->published = (bool)$published_;
 			$has_change = true;
 		}
@@ -2698,7 +3033,12 @@ class OvdAdminSoap {
 			return false;
 		
 		$res = $userGroupDB->update($group);
-		return $res;
+		if (! $res) {
+			return false;
+		}
+		
+		$this->log_action('user_modifysGroup', array_merge(array('name' => $group->name), $changes));
+		return true;
 	}
 	
 	public function system_set_default_users_group($id_) {
@@ -2719,12 +3059,21 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$user_default_group_old = $prefs->get('general', 'user_default_group');
+		if ($user_default_group_old == $group->getUniqueID()) {
+			return true;
+		}
+		
 		$mods_enable = $prefs->set('general', 'user_default_group', $group->getUniqueID());
 		if (! $prefs->backup()) {
 			Logger::error('api', 'Unable to save prefs');
 			return false;
 		}
 		
+		$this->log_action('system_set_default_users_group', array('value' => array(
+			'old' => $user_default_group_old,
+			'new' => $group->getUniqueID(),
+		)));
 		return true;
 	}
 	
@@ -2739,12 +3088,21 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$user_default_group_old = $prefs->get('general', 'user_default_group');
+		if (is_null($user_default_group_old)) {
+			return true;
+		}
+		
 		$mods_enable = $prefs->set('general', 'user_default_group', null);
 		if (! $prefs->backup()) {
 			Logger::error('api', 'Unable to save prefs');
 			return false;
 		}
 		
+		$this->log_action('system_unset_default_users_group', array('value' => array(
+			'old' => $user_default_group_old,
+			'new' => null,
+		)));
 		return true;
 	}
 	
@@ -2764,6 +3122,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('users_group_dynamic_add', array('name' => $name_));
 		return $g->getUniqueID();
 	}
 	
@@ -2800,6 +3159,7 @@ class OvdAdminSoap {
 		$group->validation_type = $validation_type_;
 		
 		$res = $userGroupDB->update($group);
+		$this->log_action('users_group_dynamic_modify', array('name' => $name_));
 		return $res;
 	}
 	
@@ -2819,6 +3179,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('users_group_dynamic_cached_add', array('name' => $name_));
 		return $g->getUniqueID();
 	}
 	
@@ -2839,6 +3200,7 @@ class OvdAdminSoap {
 		$group->schedule = $schedule_;
 		
 		$res = $userGroupDB->update($group);
+		$this->log_action('users_group_dynamic_cached_set_schedule', array('name' => $name_, 'schedule' => $schedule_));
 		return $res;
 	}
 	
@@ -2865,7 +3227,15 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_UserGroup_Preferences::save($ugp);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('users_group_settings_set', array('group' => $group->name, $container_.'_'.$setting_ => array(
+			'old' => $session_settings_defaults[$setting_]->content,
+			'new' => $config_element->content,
+		)));
+		return true;
 	}
 	
 	public function users_group_settings_remove($group_id_, $container_, $setting_) {
@@ -2884,7 +3254,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container_, $setting_);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('users_group_settings_remove', array('group' => $group->name, $container_.'_'.$setting_ => null));
+		return true;
 	}
 	
 	public function user_addsGroup_policy($group_id_, $rule_) {
@@ -2897,10 +3272,15 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$policy_old = $group->getPolicy(false);
 		$policy = $group->getPolicy(false);
 		$policy[$rule_] = true;
 		
 		$group->updatePolicy($policy);
+		$this->log_action('user_addsGroup_policy', array('group' => $group->name, 'value' => array(
+			'old' => $policy_old,
+			'new' => $policy,
+		)));
 		return true;
 	}
 	
@@ -2914,10 +3294,15 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$policy_old = $group->getPolicy(false);
 		$policy = $group->getPolicy(false);
 		$policy[$rule_] = false;
 		
 		$group->updatePolicy($policy);
+		$this->log_action('user_removesGroup_policy', array('group' => $group->name, 'value' => array(
+			'old' => $policy_old,
+			'new' => $policy,
+		)));
 		return true;
 	}
 	
@@ -2942,6 +3327,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('user_addToGroup', array('group' => $group->name, 'login' => $user_id_));
 		return true;
 	}
 	
@@ -2966,6 +3352,7 @@ class OvdAdminSoap {
 		}
 
 		Abstract_Liaison::delete('UsersGroup', $user_id_, $group_id_);
+		$this->log_action('user_removeToGroup', array('group' => $group->name, 'login' => $user_id_));
 		return true;
 	}
 	
@@ -2993,6 +3380,11 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_Liaison::save('UsersGroupApplicationsGroup', $users_group_, $applications_group_);
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('publication_add', array('users_group' => $usergroup->name, 'applications_group' => $applicationsgroup->name));
 		return $ret;
 	}
 	
@@ -3020,6 +3412,11 @@ class OvdAdminSoap {
 		}
 		
 		$ret = Abstract_Liaison::delete('UsersGroupApplicationsGroup', $users_group_, $applications_group_);
+		if (! $ret) {
+			return true;
+		}
+		
+		$this->log_action('publication_remove', array('users_group' => $usergroup->name, 'applications_group' => $applicationsgroup->name));
 		return $ret;
 	}
 	
@@ -3123,6 +3520,7 @@ class OvdAdminSoap {
 			return null;
 		}
 		
+		$this->log_action('shared_folder_add', array('name' => $name_, 'server_id' => $a_server->id, 'server_name' => $a_server->getDisplayName()));
 		return $sharedfolder->id;
 	}
 	
@@ -3153,6 +3551,7 @@ class OvdAdminSoap {
 			$server->deleteNetworkFolder($sharedfolder->id, true);
 		}
 		
+		$this->log_action('shared_folder_remove', array('name' => $sharedfolder->name, 'server_id' => $server->id, 'server_name' => $server->getDisplayName()));
 		return true;
 	}
 	
@@ -3181,9 +3580,22 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$name_old = $sharedfolder->name;
+		if ($name_ == $name_old) {
+			return true;
+		}
+		
 		$sharedfolder->name = $name_;
 		$ret = $sharedfolderdb->update($sharedfolder);
-		return ($ret === true);
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('shared_folder_rename', array('name' => array(
+			'old' => $name_old,
+			'new' => $name_
+		)));
+		return true;
 	}
 	
 	public function shared_folder_add_group($group_id_, $share_id_, $mode_) {
@@ -3214,7 +3626,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $sharedfolder->addUserGroup($group, $mode_);
-		return ($ret === true);
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('shared_folder_add_group', array('share_name' => $sharedfolder->name, 'group_name' => $group->name));
+		return true;
 	}
 	
 	public function shared_folder_remove_group($group_id_, $share_id_) {
@@ -3240,7 +3657,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $sharedfolder->delUserGroup($group);
-		return ($ret === true);
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('shared_folder_remove_group', array('share_name' => $sharedfolder->name, 'group_name' => $group->name));
+		return true;
 	}
 	
 	public function users_profiles_list() {
@@ -3336,7 +3758,12 @@ class OvdAdminSoap {
 		}
 		
 		$ret = $profile->addUser($user);
-		return $ret;
+		if (! $ret) {
+			return false;
+		}
+		
+		$this->log_action('user_addProfile', array('user_login' => $user_login_, 'server_id' => $fileserver->id, 'server_name' => $fileserver->getDisplayName()));
+		return true;
 	}
 	
 	public function user_removeProfile($id_) {
@@ -3364,7 +3791,12 @@ class OvdAdminSoap {
 		if ($profiledb->isInternal())
 			$server->deleteNetworkFolder($network_folder->id, true);
 		
-		return ($res == true);
+		if (! $res) {
+			return false;
+		}
+		
+		$this->log_action('user_removeProfile', array('id' => $id_, 'server_id' => $server->id, 'server_name' => $server->getDisplayName()));
+		return true;
 	}
 	
 	public function network_folder_remove($id_) {
@@ -3382,6 +3814,7 @@ class OvdAdminSoap {
 		}
 		
 		Abstract_Network_Folder::delete($network_folder->id);
+		$this->log_action('network_folder_remove', array('id' => $id_));
 		return true;
 	}
 	
@@ -3517,6 +3950,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('session_kill', array('id' => $id_, 'user' => $user_login));
 		return true;
 	}
 	
@@ -3664,6 +4098,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('session_report_remove', array('id' => $id_));
 		return true;
 	}
 	
@@ -3882,6 +4317,7 @@ class OvdAdminSoap {
 			}
 		}
 		
+		$this->log_action('cleanup_liaisons');
 		return true;
 	}
 
@@ -3901,6 +4337,7 @@ class OvdAdminSoap {
 			}
 		}
 		
+		$this->log_action('cleanup_preferences');
 		return true;
 	}
 	
@@ -3950,6 +4387,8 @@ class OvdAdminSoap {
 		$news->title = $title_;
 		$news->content = $content_;
 		Abstract_News::save($news);
+		
+		$this->log_action('news_modify', array('id' => $id_, 'title' => $title_, 'content' => $content_));
 		return true;
 	}
 	
@@ -3965,6 +4404,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$this->log_action('news_add', array('id' => $news->id, 'title' => $title_, 'content' => $content_));
 		return $news->id;
 	}
 	
@@ -3972,7 +4412,12 @@ class OvdAdminSoap {
 		$this->check_authorized('manageNews');
 		
 		$buf = Abstract_News::delete($id_);
-		return ($buf === true);
+		if (! $buf) {
+			return false;
+		}
+		
+		$this->log_action('news_remove', array('id' => $id_));
+		return true;
 	}
 	
 	public function session_simulate($user_login_) {
@@ -4074,6 +4519,31 @@ class OvdAdminSoap {
 		}
 		
 		return $info;
+	}
+	
+	private static function generate_admin_action_array($action_) {
+		return array(
+			'when' => $action_->when,
+			'who' => $action_->who,
+			'what' => $action_->what,
+			'where' => $action_->where,
+			'infos' => $action_->infos,
+		);
+	}
+	
+	public function admin_actions_list($offset_=0) {
+		$this->check_authorized('viewStatus');
+		
+		$reports = Abstract_AdminAction::load_limited($this->prefs->get('general', 'max_items_per_page'), $offset_);
+		
+		$ret = array();
+		foreach($reports as $report) {
+			$n = self::generate_admin_action_array($report);
+			
+			$ret[]= $n;
+		}
+		
+		return $ret;
 	}
 }
 

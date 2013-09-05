@@ -66,6 +66,7 @@ function init_db($prefs_) {
 	Abstract_UserGroup_Rule::init($prefs_);
 	Abstract_VDI::init($prefs_);
 	Abstract_Network_Folder::init($prefs_);
+	Abstract_AdminAction::init($prefs_);
 	
 	return true;
 }

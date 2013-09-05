@@ -964,6 +964,11 @@
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
+		
+		<operation name="admin_actions_list">
+			<input message="urn:Integer"/>
+			<output message="urn:Any"/>
+		</operation>
 	</portType>
 	
 	<binding name="OvdAdminBinding" type="urn:OvdAdminPortType">
@@ -2260,6 +2265,16 @@
 		
 		<operation name="news_remove">
 			<soap:operation soapAction="urn:OvdAdmin#news_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="admin_actions_list">
+			<soap:operation soapAction="urn:OvdAdmin#admin_actions_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

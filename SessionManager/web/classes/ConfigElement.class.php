@@ -57,6 +57,10 @@ abstract class ConfigElement{
 	public function setContentAvailable($content_available_) {
 		$this->content_available = $content_available_;
 	}
+	
+	public function contentEqualsTo($content_) {
+		return ($this->content == $content_);
+	}
 }
 
 
