@@ -179,6 +179,20 @@ class SQL {
 		return $res;
 	}
 
+	public function FetchArrayAll() {
+		$this->CheckLink();
+
+		if (! $this->result)
+			return false;
+
+		$res = array();
+
+		while ($r = @mysql_fetch_array($this->result))
+			$res[] = $r;
+
+		return $res;
+	}
+
 	public function NumRows() {
 		$this->CheckLink();
 

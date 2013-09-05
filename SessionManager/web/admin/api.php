@@ -375,6 +375,8 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$ret = $this->hooks_system_integration_changes($prefs, $diff);
+		
 		// configuration saved
 		if (count($diff) > 0) {
 			$this->log_action('settings_set', $diff);
@@ -412,95 +414,190 @@ class OvdAdminSoap {
 		return $log;
 	}
 	
-	public function settings_domain_integration_set($settings_) {
-		$this->check_authorized('manageConfiguration');
-		
-		try {
-			$prefs = new Preferences_admin();
-			$new_prefs = new Preferences_admin();
-		}
-		catch (Exception $e) {
-			return false;
-		}
-		
-		$keys = $new_prefs->getKeys();
-		foreach ($keys as $key_name) {
-			if (! array_key_exists($key_name, $settings_)) {
-				continue;
+	private static function check_pref_change($diff_, $pattern_) {
+		foreach($diff_ as $k => $v) {
+			if (str_startswith($k, $pattern_)) {
+				return true;
 			}
-			
-			$this->import_elements_content_from_dict($new_prefs->elements[$key_name], $settings_[$key_name]);
 		}
 		
-		$ret = $new_prefs->isValid();
-		if ( $ret !== true) {
-			// todo log + return more info
-			return false;
-		}
+		return false;
+	}
+	
+	private function hooks_system_integration_changes($prefs_, $diff_) {
+		$userdb_changed_enable = (array_key_exists('UserDB.enable', $diff_));
+		$usersgroupdb_changed_enable = (array_key_exists('UserGroupDB.enable', $diff_));
+		$has_changed_u = self::check_pref_change($diff_, 'UserDB.'.$prefs_->get('UserDB', 'enable'));
+		$has_changed_ug = self::check_pref_change($diff_, 'UserGroupDB.'.$prefs_->get('UserGroupDB', 'enable'));
 		
-		$old_profile = getProfileMode($prefs);
-		$new_profile = getProfileMode($new_prefs);
-		
-		$old_u = $prefs->get('UserDB', 'enable');
-		$new_u = $new_prefs->get('UserDB', 'enable');
-		
-		$old_ugrp = $prefs->get('UserGroupDB', 'enable');
-		$new_ugrp = $new_prefs->get('UserGroupDB', 'enable');
-		
-		$has_changed_u = False;
-		$has_changed_ug = False;
-		
+		$userDB = UserDB::getInstance();
 		$userGroupDB = UserGroupDB::getInstance();
 		
-		if ($old_profile == $new_profile) {
-			$p = new $new_profile();
-			list($has_changed_u, $has_changed_ug) = $p->has_change($prefs, $new_prefs);
+		// Clean orphan user settings
+		if ($userdb_changed_enable) {
+			Abstract_User_Preferences::delete_all();
+		}
+		else if ($has_changed_u) {
+			$users = Abstract_User_Preferences::get_users();
+			$users_to_remove = array();
+			foreach($users as $login) {
+				$user = $userDB->import($login);
+				if ($user) {
+					continue;
+				}
+				
+				array_push($users_to_remove, $login);
+			}
+			
+			if (count($users_to_remove) > 0) {
+				Abstract_User_Preferences::deleteByUserLogins($users_to_remove);
+			}
 		}
 		
-		// If UserDB module change
-		if (($old_u != $new_u || $has_changed_u) && $userGroupDB->isWriteable()) {
+		// Clean orphan users group settings
+		if ($usersgroupdb_changed_enable) {
+			Abstract_UserGroup_Preferences::delete_all();
+		}
+		else if ($has_changed_ug) {
+			$groups = Abstract_UserGroup_Preferences::get_usersgroups();
+			$groups_to_remove = array();
+			foreach($users as $group_id) {
+				$group = $userGroupDB->import($group_id);
+				if ($group) {
+					continue;
+				}
+				
+				array_push($groups_to_remove, $group);
+			}
+			
+			if (count($groups_to_remove) > 0) {
+				Abstract_UserGroup_Preferences::deleteByUserGroupIds($groups_to_remove);
+			}
+		}
+		
+		// Users groups rules
+		if ($usersgroupdb_changed_enable) {
+			Abstract_UserGroup_Rule::delete_all();
+		}
+		else if ($has_changed_ug) {
+			$groups = Abstract_UserGroup_Rule::get_usersgroups();
+			$groups_to_remove = array();
+			foreach($users as $group_id) {
+				$group = $userGroupDB->import($group_id);
+				if ($group) {
+					continue;
+				}
+				
+				array_push($groups_to_remove, $group);
+			}
+			
+			if (count($groups_to_remove) > 0) {
+				Abstract_UserGroup_Rule::deleteByUserGroupIds($groups_to_remove);
+			}
+		}
+		
+		// Unset default usersgroup
+		if ($usersgroupdb_changed_enable) {
+			$prefs_->set('general', 'user_default_group', NULL);
+			$prefs_->backup();
+		}
+		else if ($has_changed_ug) {
+			$v = $prefs_->get('general', 'user_default_group');
+			if (! is_null($v)) {
+				$group = $userGroupDB->import($v);
+				if (! $group) {
+					$prefs_->set('general', 'user_default_group', NULL);
+					$prefs_->backup();
+				}
+			}
+		}
+		
+		// Clean users - usersgroup liaisons
+		if ($userdb_changed_enable) {
 			// Remove Users from user groups
 			$ret = Abstract_Liaison::delete('UsersGroup', NULL, NULL);
 			if (! $ret) {
 				Logger::error('api', 'Unable to remove Users from UserGroups');
 			}
-			
-			// check if profile must become orphan
-			$mods_enable = $prefs->get('general', 'module_enable');
-			$new_mods_enable = $new_prefs->get('general', 'module_enable');
-			if (in_array('ProfileDB', $mods_enable) || in_array('ProfileDB', $new_mods_enable)) {
-				Abstract_Liaison::delete('UserProfile', NULL, NULL);
+		}
+		else if ($userGroupDB->isWriteable() && ($has_changed_u && $has_changed_ug)) {
+			$liaisons = Abstract_Liaison::load('UsersGroup', NULL, NULL);
+			foreach ($liaisons as $liaison) {
+				$must_remove_liaisons = false;
+				$user = $userDB->import($liaison->element);
+				if (! $user) {
+					$must_remove_liaisons = true;
+				}
+				
+				if (! $must_remove_liaisons) {
+					$group = $userGroupDB->import($liaison->group);
+					if (! $group) {
+						$must_remove_liaisons = true;
+					}
+				}
+				
+				if (! $must_remove_liaisons) {
+					continue;
+				}
+				
+				// Delete this liaison
+				$liaisons = Abstract_Liaison::load('UsersGroup', $liaison->element, $liaison->group);
 			}
 		}
 		
-		// If UserGroupDB module change
-		if ($old_ugrp != $new_ugrp || $has_changed_ug) {
+		// Clean users - profile liaisons
+		if ($userdb_changed_enable) {
+			$ret = Abstract_Liaison::delete('UserProfile', NULL, NULL);
+			if (! $ret) {
+				Logger::error('api', 'Unable to remove Users - Profiles matches');
+			}
+		}
+		else if ($has_changed_u) {
+			$liaisons = Abstract_Liaison::load('UserProfile', NULL, NULL);
+			foreach ($liaisons as $liaison) {
+				// check if profile must become orphan
+				$user = $userDB->import($liaison->element);
+				if ($user) {
+					continue;
+				}
+				
+				// Delete this liaison
+				$liaisons = Abstract_Liaison::load('UserProfile', $liaison->element, $liaison->group);
+			}
+		}
+		
+		// Clean publication liaisons
+		if ($usersgroupdb_changed_enable) {
 			// Remove Publications
 			$ret = Abstract_Liaison::delete('UsersGroupApplicationsGroup', NULL, NULL);
 			if (! $ret) {
 				Logger::error('api', 'Unable to remove Publications');
 			}
-			
-			// Unset default usersgroup
-			$new_prefs->set('general', 'user_default_group', NULL);
-			
-			// check if sharedfolder must become orphan
-			$mods_enable = $prefs->get('general', 'module_enable');
-			$new_mods_enable = $new_prefs->get('general', 'module_enable');
-			if (in_array('SharedFolderDB', $mods_enable) || in_array('SharedFolderDB', $new_mods_enable)) {
-				$sharedfolderdb = SharedFolderDB::getInstance();
-				$sharedfolderdb->clear_publications();
+		}
+		else if ($has_changed_ug) {
+			$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, NULL);
+			foreach ($liaisons as $liaison) {
+				$group = $userGroupDB->import($liaison->element);
+				if ($group) {
+					continue;
+				}
+				
+				// Delete this liaison
+				$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
 			}
 		}
 		
-		
-		$ret = $new_prefs->backup();
-		if ($ret <= 0) {
-			return false;
+		if (in_array('SharedFolderDB', $prefs_->get('general', 'module_enable'))) {
+			$sharedfolderdb = SharedFolderDB::getInstance();
+			
+			// Clean usersgroup - profile liaisons
+			if ($usersgroupdb_changed_enable) {
+				$sharedfolderdb->clear_publications();
+			}
+			else if ($has_changed_ug) {
+				// TODO:check in each publication if users group still exists. If not: delete the publication
+			}
 		}
-		
-		$this->log_action('settings_domain_integration_set', $diff);
-		return true;
 	}
 	
 	public function servers_list($filter = null) {

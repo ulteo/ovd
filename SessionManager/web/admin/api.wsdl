@@ -349,11 +349,6 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="settings_domain_integration_set">
-			<input message="urn:Any"/>
-			<output message="urn:Any"/>
-		</operation>
-		
 		<operation name="servers_list">
 			<input message="urn:String"/>
 			<output message="urn:Any"/>
@@ -1035,16 +1030,6 @@
 		
 		<operation name="settings_domain_integration_preview">
 			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_preview"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="settings_domain_integration_set">
-			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_set"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
