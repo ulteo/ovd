@@ -280,53 +280,6 @@ class UserGroupDB_ldap {
 		return $result;
 	}
 	
-	public function get_by_user_members($user_login_) {
-		Logger::debug('main', "UserGroupDB::ldap::get_by_user_members ($user_login_)");
-		if (array_key_exists($user_login_, $this->cache_user_members)) {
-			return $this->cache_user_members[$user_login_];
-		}
-		
-		$config_ldap = $this->makeLDAPconfig();
-		$filter= LDAP::join_filters(array($config_ldap['filter'], $config_ldap['match']['member'].'='.$user_login_), '&');
-		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search($filter, array_values($this->preferences['match']));
-		if ($sr === false) {
-			Logger::error('main',"UserGroupDB::ldap::get_by_user_members search failed for ($user_login_)");
-			return NULL;
-		}
-		
-		$infos = $ldap->get_entries($sr);
-		if ($infos === array()) {
-			return array();
-		}
-		
-		$groups = array();
-		foreach ($infos as $dn => $info) {
-			$g = $this->generateUsersGroupFromRow($info, $dn, $config_ldap['match']);
-			if (! is_object($g))
-				continue;
-			
-			$this->cache_import[$dn] = $g;
-			$groups[$g->getUniqueID()] = $g;
-		}
-		
-		$this->cache_user_members[$user_login_] = $groups;
-		return $groups;
-	}
-	
-	public function get_users_by_group_membership($group_id_) {
-		Logger::debug('main', "UserGroupDB::ldap::get_users_by_group_membership ($group_id_)");
-		
-		$group = $this->import($group_id_);
-		if (isset($group->extras) === false || ! is_array($group->extras) || !array_key_exists('member', $group->extras)) {
-			// ???
-			return array();
-		}
-		
-		$userDB = UserDB::getInstance();
-		return $userDB->imports($group->extras['member']);
-	}
-
 	public function getList() {
 		Logger::debug('main','UserGroupDB::ldap::getList');
 		

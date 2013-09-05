@@ -142,43 +142,6 @@ class UserDB_ldap  extends UserDB {
 		}
 		return $result;
 	}
-
-	public function importFromDN($dn_) {
-		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
-		
-		if (is_array($this->cache_userlist_dn) && isset($this->cache_userlist_dn[$dn_])) {
-			if ($this->isOK($this->cache_userlist_dn[$dn_]))
-				return $this->cache_userlist_dn[$dn_];
-			else
-				return NULL;
-		}
-
-		$config = $this->config;
-		$ldap = new LDAP($config);
-		$sr = $ldap->searchDN($dn_, array_values($this->config['match']), 1);
-		if ($sr === false) {
-			Logger::error('main','UserDB_ldap::fromDN ldap failed (mostly timeout on server)');
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		if (count($infos) == 0) {
-			Logger::error('main','UserDB_ldap::fromDN ldap returned empty result');
-			return NULL;
-		}
-
-		$keys = array_keys($infos);
-		$dn = $keys[0];
-		$info = $infos[$dn];
-		$u = $this->generateUserFromRow($info);
-		$u->setAttribute('dn',  $dn);
-		$u = $this->cleanupUser($u);
-		$this->cache_userlist_dn[$dn_] = $u;
-		if ($this->isOK($u)) {
-			return $u;
-		}
-		else
-			return NULL;
-	}
 	
 	public function getList() {
 		Logger::debug('main','USERDB::ldap::getList');
