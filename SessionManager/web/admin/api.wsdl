@@ -208,12 +208,12 @@
 		<part name="setting" type="xsd:string"/>
 	</message>
 	
-	<message name="user_addsGroupMessage">
+	<message name="users_group_addMessage">
 		<part name="name" type="xsd:string"/>
 		<part name="description" type="xsd:string"/>
 	</message>
 	
-	<message name="user_modifysGroupMessage">
+	<message name="users_group_modifyMessage">
 		<part name="id" type="xsd:string"/>
 		<part name="name" type="xsd:string"/>
 		<part name="description" type="xsd:string"/>
@@ -694,12 +694,12 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_addsGroup_policy">
+		<operation name="users_group_add_policy">
 			<input message="urn:UsersGroup_policyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removesGroup_policy">
+		<operation name="users_group_remove_policy">
 			<input message="urn:UsersGroup_policyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -714,18 +714,18 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="user_addsGroup">
-			<input message="urn:user_addsGroupMessage"/>
+		<operation name="users_group_add">
+			<input message="urn:users_group_addMessage"/>
 			<output message="urn:String"/>
 		</operation>
 		
-		<operation name="user_removesGroup">
+		<operation name="users_group_remove">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_modifysGroup">
-			<input message="urn:user_modifysGroupMessage"/>
+		<operation name="users_group_modify">
+			<input message="urn:users_group_modifyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -769,12 +769,12 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_addToGroup">
+		<operation name="users_group_add_user">
 			<input message="urn:UserToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removeToGroup">
+		<operation name="users_group_remove_user">
 			<input message="urn:UserToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -834,12 +834,12 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="user_addProfile">
+		<operation name="user_profile_add">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removeProfile">
+		<operation name="user_profile_remove">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -1748,8 +1748,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addsGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup"/>
+		<operation name="users_group_add">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1758,8 +1758,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removesGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup"/>
+		<operation name="users_group_remove">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1768,8 +1768,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_modifysGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_modifysGroup"/>
+		<operation name="users_group_modify">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_modify"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1858,8 +1858,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addsGroup_policy">
-			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup_policy"/>
+		<operation name="users_group_add_policy">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add_policy"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1868,8 +1868,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removesGroup_policy">
-			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup_policy"/>
+		<operation name="users_group_remove_policy">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove_policy"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1878,8 +1878,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addToGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_addToGroup"/>
+		<operation name="users_group_add_user">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add_user"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1888,8 +1888,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removeToGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_removeToGroup"/>
+		<operation name="users_group_remove_user">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove_user"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2008,8 +2008,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addProfile">
-			<soap:operation soapAction="urn:OvdAdmin#user_addProfile"/>
+		<operation name="user_profile_add">
+			<soap:operation soapAction="urn:OvdAdmin#user_profile_add"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2018,8 +2018,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removeProfile">
-			<soap:operation soapAction="urn:OvdAdmin#user_removeProfile"/>
+		<operation name="user_profile_remove">
+			<soap:operation soapAction="urn:OvdAdmin#user_profile_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

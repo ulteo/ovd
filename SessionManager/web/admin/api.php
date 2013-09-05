@@ -3042,7 +3042,7 @@ class OvdAdminSoap {
 		return $g;
 	}
 	
-	public function user_addsGroup($name_, $description_) {
+	public function users_group_add($name_, $description_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3059,11 +3059,11 @@ class OvdAdminSoap {
 			return null;
 		}
 		
-		$this->log_action('user_addsGroup', array('name' => $name_));
+		$this->log_action('users_group_add', array('name' => $name_));
 		return $g->getUniqueID();
 	}
 	
-	public function user_removesGroup($id_) {
+	public function users_group_remove($id_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3085,11 +3085,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('user_removesGroup', array('name' => $group->name));
+		$this->log_action('users_group_remove', array('name' => $group->name));
 		return true;
 	}
 	
-	public function user_modifysGroup($id_, $name_, $description_, $published_) {
+	public function users_group_modify($id_, $name_, $description_, $published_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3134,7 +3134,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('user_modifysGroup', array_merge(array('name' => $group->name), $changes));
+		$this->log_action('users_group_modify', array_merge(array('name' => $group->name), $changes));
 		return true;
 	}
 	
@@ -3359,7 +3359,7 @@ class OvdAdminSoap {
 		return true;
 	}
 	
-	public function user_addsGroup_policy($group_id_, $rule_) {
+	public function users_group_add_policy($group_id_, $rule_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3374,14 +3374,14 @@ class OvdAdminSoap {
 		$policy[$rule_] = true;
 		
 		$group->updatePolicy($policy);
-		$this->log_action('user_addsGroup_policy', array('group' => $group->name, 'value' => array(
+		$this->log_action('users_group_add_policy', array('group' => $group->name, 'value' => array(
 			'old' => $policy_old,
 			'new' => $policy,
 		)));
 		return true;
 	}
 	
-	public function user_removesGroup_policy($group_id_, $rule_) {
+	public function users_group_remove_policy($group_id_, $rule_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3396,14 +3396,14 @@ class OvdAdminSoap {
 		$policy[$rule_] = false;
 		
 		$group->updatePolicy($policy);
-		$this->log_action('user_removesGroup_policy', array('group' => $group->name, 'value' => array(
+		$this->log_action('users_group_remove_policy', array('group' => $group->name, 'value' => array(
 			'old' => $policy_old,
 			'new' => $policy,
 		)));
 		return true;
 	}
 	
-	public function user_addToGroup($user_id_, $group_id_) {
+	public function users_group_add_user($user_id_, $group_id_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3424,11 +3424,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('user_addToGroup', array('group' => $group->name, 'login' => $user_id_));
+		$this->log_action('users_group_add_user', array('group' => $group->name, 'login' => $user_id_));
 		return true;
 	}
 	
-	public function user_removeToGroup($user_id_, $group_id_) {
+	public function users_group_remove_user($user_id_, $group_id_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3449,7 +3449,7 @@ class OvdAdminSoap {
 		}
 
 		Abstract_Liaison::delete('UsersGroup', $user_id_, $group_id_);
-		$this->log_action('user_removeToGroup', array('group' => $group->name, 'login' => $user_id_));
+		$this->log_action('users_group_remove_user', array('group' => $group->name, 'login' => $user_id_));
 		return true;
 	}
 	
@@ -3827,7 +3827,7 @@ class OvdAdminSoap {
 		return $s;
 	}
 	
-	public function user_addProfile($user_login_) {
+	public function user_profile_add($user_login_) {
 		$this->check_authorized('manageServers');
 		
 		if (! Preferences::moduleIsEnabled('ProfileDB')) {
@@ -3859,11 +3859,11 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('user_addProfile', array('user_login' => $user_login_, 'server_id' => $fileserver->id, 'server_name' => $fileserver->getDisplayName()));
+		$this->log_action('user_profile_add', array('user_login' => $user_login_, 'server_id' => $fileserver->id, 'server_name' => $fileserver->getDisplayName()));
 		return true;
 	}
 	
-	public function user_removeProfile($id_) {
+	public function user_profile_remove($id_) {
 		$this->check_authorized('manageServers');
 		
 		if (! Preferences::moduleIsEnabled('ProfileDB')) {
@@ -3892,7 +3892,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('user_removeProfile', array('id' => $id_, 'server_id' => $server->id, 'server_name' => $server->getDisplayName()));
+		$this->log_action('user_profile_remove', array('id' => $id_, 'server_id' => $server->id, 'server_name' => $server->getDisplayName()));
 		return true;
 	}
 	

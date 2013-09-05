@@ -593,7 +593,7 @@ function do_validate() {
 			'published' => 1)
 		);
 		
-		$res = $_SESSION['service']->user_addsGroup($g->getAttribute('name'), $g->getAttribute('description'));
+		$res = $_SESSION['service']->users_group_add($g->getAttribute('name'), $g->getAttribute('description'));
 		if (is_null($res))
 			popup_error(_('Cannot create usergroup'));
 
@@ -603,7 +603,7 @@ function do_validate() {
 		$users = $_SESSION['wizard']['users'];
 
 		foreach ($users as $user) {
-			$_SESSION['service']->user_addToGroup($user, $g->id);
+			$_SESSION['service']->users_group_add_user($user, $g->id);
 		}
 
 		$usergroups = array($g->id);
