@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -80,5 +80,42 @@ class Abstract_User_Preferences {
 	public static function delete($userlogin_, $key_, $container_, $element_id_) {
 		$sql = SQL::getInstance();
 		return $sql->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5 AND @6 = %7 AND @8 = %9', self::$table, 'login', $userlogin_, 'key', $key_, 'container', $container_, 'element_id', $element_id_);
+	}
+	
+	public static function deleteByUserLogins($userlogins_) {
+		if (! is_array($userlogins_) || count($userlogins_) == 0) {
+			return false;
+		}
+		
+		$sql = SQL::getInstance();
+		
+		$logins2 = array();
+		foreach($userlogins_ as $login) {
+			array_push($logins2, '"'.$sql->CleanValue($login).'"');
+		}
+		
+		return $sql->DoQuery('DELETE FROM #1 WHERE @2 IN ('.implode(', ',$logins2).')', self::$table, 'login');
+	}
+
+	public static function delete_all() {
+		$sql = SQL::getInstance();
+		return $sql->DoQuery('DELETE FROM #1', self::$table);
+	}
+	
+	public static function get_users() {
+		$sql = SQL::getInstance();
+		$res = $sql->DoQuery('SELECT COUNT(*) FROM #1 GROUP BY @2', self::$table, 'login');
+		if ($res !== true) {
+			Logger::error('main', "Abstract_User_Preferences::get_users sql request failed");
+			return array();
+		}
+		
+		$users = array();
+		$rows = $sql->FetchArrayAll();
+		foreach ($rows as $row) {
+			array_push($users, $row['login']);
+		}
+		
+		return $users;
 	}
 }

@@ -349,11 +349,6 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="settings_domain_integration_set">
-			<input message="urn:Any"/>
-			<output message="urn:Any"/>
-		</operation>
-		
 		<operation name="servers_list">
 			<input message="urn:String"/>
 			<output message="urn:Any"/>
@@ -964,6 +959,11 @@
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
+		
+		<operation name="admin_actions_list">
+			<input message="urn:Integer"/>
+			<output message="urn:Any"/>
+		</operation>
 	</portType>
 	
 	<binding name="OvdAdminBinding" type="urn:OvdAdminPortType">
@@ -1030,16 +1030,6 @@
 		
 		<operation name="settings_domain_integration_preview">
 			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_preview"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="settings_domain_integration_set">
-			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_set"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2260,6 +2250,16 @@
 		
 		<operation name="news_remove">
 			<soap:operation soapAction="urn:OvdAdmin#news_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="admin_actions_list">
+			<soap:operation soapAction="urn:OvdAdmin#admin_actions_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

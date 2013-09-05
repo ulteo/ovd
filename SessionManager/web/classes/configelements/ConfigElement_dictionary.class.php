@@ -21,4 +21,32 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ConfigElement_dictionary extends ConfigElement {}
+class ConfigElement_dictionary extends ConfigElement {
+	public function contentEqualsTo($content_) {
+		if (count($this->content) != count($content_)) {
+			return false;
+		}
+		
+		foreach($this->content as $k => $v) {
+			if (! array_key_exists($k, $content_)) {
+				return false;
+			}
+			
+			if ($v != $content_[$k]) {
+				return false;
+			}
+		}
+		
+		foreach($content_ as $k => $v) {
+			if (! array_key_exists($k, $this->content)) {
+				return false;
+			}
+			
+			if ($v != $this->content[$k]) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+}

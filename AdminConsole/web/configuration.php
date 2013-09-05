@@ -54,7 +54,12 @@ if (isset($_POST['submit'])) {
 	if ($ret > 0){
 		// configuration saved
 		popup_info(_('Configuration successfully saved'));
-		redirect('index.php');
+		if (defined('EXPERT_MODE') && EXPERT_MODE === true && ! isset($_SESSION['admin_ovd_user'])) {
+			redirect();
+		}
+		else {
+			redirect('index.php');
+		}
 	}
 	else {
 		require_once(dirname(__FILE__).'/includes/page_template_static.php');

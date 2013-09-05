@@ -2,7 +2,8 @@ SUBDIRS = abstract \
           events \
           tasks configelements
 
-scripts_DATA = Application.class.php \
+scripts_DATA = AdminAction.class.php \
+               Application.class.php \
                Application_weblink.class.php \
                Application_webapp.class.php \
                Application_webapp_configuration.class.php \

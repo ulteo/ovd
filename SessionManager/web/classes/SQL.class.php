@@ -179,6 +179,20 @@ class SQL {
 		return $res;
 	}
 
+	public function FetchArrayAll() {
+		$this->CheckLink();
+
+		if (! $this->result)
+			return false;
+
+		$res = array();
+
+		while ($r = @mysql_fetch_array($this->result))
+			$res[] = $r;
+
+		return $res;
+	}
+
 	public function NumRows() {
 		$this->CheckLink();
 
@@ -204,7 +218,7 @@ class SQL {
 		return $this->total_queries;
 	}
 	
-	public function buildTable($name_, $table_structure_, $primary_keys_, $indexes_ = array()) {
+	public function buildTable($name_, $table_structure_, $primary_keys_, $indexes_ = array(), $engine_=null) {
 		$this->CheckLink();
 		
 		// the table exists ?
@@ -242,7 +256,12 @@ class SQL {
 				
 				$query .= ' , '.$name.' (`'.implode('`, `', $index).'`)';
 			}
-			$query .= ') DEFAULT CHARSET=utf8;';
+			$query .= ')';
+			if (! is_null($engine_)) {
+				$query .= ' ENGINE='.$engine_;
+			}
+			
+			$query .= ' DEFAULT CHARSET=utf8;';
 			$ret = $this->DoQuery($query, $name_);
 			return $ret;
 			
