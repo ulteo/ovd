@@ -107,21 +107,6 @@ class UserGroupDB extends Module {
 		return $result;
 	}
 	
-	public function getList() {
-		Logger::debug('main', 'UserGroupDB::getList');
-		$result = array();
-		foreach ($this->instance_type as $key => $value) {
-			$buffer = $value->getList();
-			if (is_array($buffer) === false) {
-				Logger::debug('main', 'UserGroupDB::getList instance '.$this->instance_type.' did not return an array (returned: '.serialize($buffer).')');
-				continue;
-			}
-			
-			$result = array_merge($result, $buffer);
-		}
-		$unique = array_unique($result);
-		return $unique;
-	}
 	public function isWriteable() {
 		if (!array_key_exists('static', $this->instance_type))
 			return false;

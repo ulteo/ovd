@@ -21,14 +21,12 @@
  **/
 class UserGroupDB_ldap {
 	protected $cache_import;
-	protected $cache_list;
 	protected $cache_user_members;
 	protected $preferences;
 	
 	public function __construct() {
 		$this->cache_import = array();
 		$this->cache_user_members = array();
-		$this->cache_list = NULL;
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -169,9 +167,6 @@ class UserGroupDB_ldap {
 		if (array_key_exists($id, $this->cache_import)) {
 			return $this->cache_import[$id];
 		}
-		elseif (is_array($this->cache_list) && array_key_exists($id, $this->cache_list)) {
-			return $this->cache_list[$id];
-		}
 		else {
 			$ug = $this->import_nocache($id);
 			$this->cache_import[$id] = $ug;
@@ -221,10 +216,6 @@ class UserGroupDB_ldap {
 		foreach($ids_ as $dn) {
 			if (array_key_exists($dn, $this->cache_import)) {
 				$g = $this->cache_import[$dn];
-				$result[$g->getUniqueID()] = $g;
-			}
-			elseif (is_array($this->cache_list) && array_key_exists($dn, $this->cache_list)) {
-				$g = $this->cache_list[$dn];
 				$result[$g->getUniqueID()] = $g;
 			}
 			else if (strstr($dn, ',') !== false) {
@@ -278,39 +269,6 @@ class UserGroupDB_ldap {
 		}
 		
 		return $result;
-	}
-	
-	public function getList() {
-		Logger::debug('main','UserGroupDB::ldap::getList');
-		
-		if (is_array($this->cache_list)) {
-			$groups = $this->cache_list;
-		}
-		else {
-			$groups = $this->getList_nocache();
-			$this->cache_list = $groups;
-		}
-		
-		return $groups;
-	}
-	public function getList_nocache() {
-		Logger::debug('main','UserGroupDB::ldap::getList_nocache');
-		
-		$configLDAP = $this->makeLDAPconfig();
-		$ldap = new LDAP($configLDAP);
-		$sr = $ldap->search('cn=*', array_values($this->preferences['match']));
-		$infos = $ldap->get_entries($sr);
-		$groups = array();
-		if (! is_array($infos))
-			return $groups;
-		
-		foreach ($infos as $dn => $info) {
-			$g = $this->generateUsersGroupFromRow($info, $dn, $configLDAP['match']);
-			if (is_object($g))
-				$groups[$dn] = $g;
-		}
-		
-		return $groups;
 	}
 	
 	protected function generateUsersGroupFromRow($info, $dn_, $match_) {
