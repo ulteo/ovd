@@ -1,7 +1,6 @@
 scripts_DATA = activedirectory.php \
                ldap.php \
-			   sql.php \
-			   sql_external.php
+			   sql.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/modules/UserGroupDB
 
