@@ -136,11 +136,21 @@ class UserDB_ldap  extends UserDB {
 			$contains .= $contains_.'*';
 		$contains = preg_replace('/\*\*+/', '*', $contains); // ldap does not handle multiple star characters
 		
+		$missing_attribute_nb = 0;
 		$filter = '(&'.$this->generateFilter().'(|';
 		foreach ($attributes_ as $attribute) {
+			if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
+					$missing_attribute_nb++;
+					continue;
+			}
+			
 			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
 		}
 		$filter .= '))'; 
+		if ($missing_attribute_nb == count($attributes_)) {
+			return array(array(), false);
+		}
+		
 		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
