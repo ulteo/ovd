@@ -75,26 +75,4 @@ abstract class UserDB extends Module  {
 		// populate with sample users
 		return false;
 	}
-	
-	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
-		$users = array();
-		$count = 0;
-		$sizelimit_exceeded = false;
-		$list = $this->getList();
-		foreach ($list as $a_user) {
-			foreach ($attributes_ as $an_attribute) {
-				if ($contains_ == '' or is_string(strstr($a_user->getAttribute($an_attribute), $contains_))) {
-					$users []= $a_user;
-					$count++;
-					if ($limit_ > 0 && $count >= $limit_) {
-						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
-						return array($users, $sizelimit_exceeded);
-					}
-					break;
-				}
-			}
-		}
-		
-		return array($users, $sizelimit_exceeded);
-	}
 }

@@ -23,9 +23,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class UserDB_ldap  extends UserDB {
 	public $config;
-	protected $cache_userlist=NULL;
 	protected $cache_users=NULL;
-	protected $cache_userlist_dn=NULL;
 	
 	public function __construct () {
 		$prefs = Preferences::getInstance();
@@ -34,17 +32,9 @@ class UserDB_ldap  extends UserDB {
 		$this->config = $prefs->get('UserDB','ldap');
 		
 		$this->cache_users = array();
-		$this->cache_userlist_dn = array();
-		
 	}
 	public function import($login_){
 		Logger::debug('main','UserDB::ldap::import('.$login_.')');
-		if (is_array($this->cache_userlist) && isset($this->cache_userlist[$login_])) {
-			if ($this->isOK($this->cache_userlist[$login_]))
-				return $this->cache_userlist[$login_];
-			else
-				return NULL;
-		}
 		
 		if (is_array($this->cache_users) && isset($this->cache_users[$login_])) {
 			if ($this->isOK($this->cache_users[$login_]))
@@ -90,12 +80,7 @@ class UserDB_ldap  extends UserDB {
 		$result = array();
 		$users_filter = array();
 		foreach($logins_ as $login) {
-			if (is_array($this->cache_userlist) && isset($this->cache_userlist[$login])) {
-				if ($this->isOK($this->cache_userlist[$login])) {
-					$result[$login] = $this->cache_userlist[$login];
-				}
-			}
-			else if (is_array($this->cache_users) && isset($this->cache_users[$login])) {
+			if (is_array($this->cache_users) && isset($this->cache_users[$login])) {
 				if ($this->isOK($this->cache_users[$login])) {
 					$result[$login] = $this->cache_users[$login];
 				}
@@ -142,85 +127,6 @@ class UserDB_ldap  extends UserDB {
 		}
 		return $result;
 	}
-
-	public function importFromDN($dn_) {
-		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
-		
-		if (is_array($this->cache_userlist_dn) && isset($this->cache_userlist_dn[$dn_])) {
-			if ($this->isOK($this->cache_userlist_dn[$dn_]))
-				return $this->cache_userlist_dn[$dn_];
-			else
-				return NULL;
-		}
-
-		$config = $this->config;
-		$ldap = new LDAP($config);
-		$sr = $ldap->searchDN($dn_, array_values($this->config['match']), 1);
-		if ($sr === false) {
-			Logger::error('main','UserDB_ldap::fromDN ldap failed (mostly timeout on server)');
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		if (count($infos) == 0) {
-			Logger::error('main','UserDB_ldap::fromDN ldap returned empty result');
-			return NULL;
-		}
-
-		$keys = array_keys($infos);
-		$dn = $keys[0];
-		$info = $infos[$dn];
-		$u = $this->generateUserFromRow($info);
-		$u->setAttribute('dn',  $dn);
-		$u = $this->cleanupUser($u);
-		$this->cache_userlist_dn[$dn_] = $u;
-		if ($this->isOK($u)) {
-			return $u;
-		}
-		else
-			return NULL;
-	}
-	
-	public function getList() {
-		Logger::debug('main','USERDB::ldap::getList');
-		if (!is_array($this->cache_userlist)) {
-			$users = $this->getList_nocache();
-			$this->cache_userlist = $users;
-		}
-		else {
-			$users = $this->cache_userlist;
-		}
-		
-		return $users;
-	}
-
-	public function getList_nocache() {
-		Logger::debug('main','UserDB::ldap::getList_nocache');
-		$users = array();
-
-		$ldap = new LDAP($this->makeLDAPconfig());
-		$filter = $this->generateFilter();
-		$sr = $ldap->search($filter, array_values($this->config['match']));
-		if ($sr === false) {
-			Logger::error('main', 'UserDB::ldap::getList_nocache search failed');
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		foreach ($infos as $dn => $info) {
-			$u = $this->generateUserFromRow($info);
-			$u->setAttribute('dn',  $dn);
-			
-			$u = $this->cleanupUser($u);
-			if ($this->isOK($u))
-				$users[$u->getAttribute('login')]= $u;
-			else {
-				if ($u->hasAttribute('login'))
-					Logger::info('main', 'UserDB::ldap::getList_nocache user \''.$u->getAttribute('login').'\' not ok');
-				else
-					Logger::info('main', 'UserDB::ldap::getList_nocache user does not have login');
-			}
-		}
-		return $users;
-	}
 	
 	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
 		$users = array();
@@ -230,11 +136,21 @@ class UserDB_ldap  extends UserDB {
 			$contains .= $contains_.'*';
 		$contains = preg_replace('/\*\*+/', '*', $contains); // ldap does not handle multiple star characters
 		
+		$missing_attribute_nb = 0;
 		$filter = '(&'.$this->generateFilter().'(|';
 		foreach ($attributes_ as $attribute) {
+			if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
+					$missing_attribute_nb++;
+					continue;
+			}
+			
 			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
 		}
 		$filter .= '))'; 
+		if ($missing_attribute_nb == count($attributes_)) {
+			return array(array(), false);
+		}
+		
 		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');

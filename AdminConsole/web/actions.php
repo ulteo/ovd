@@ -955,7 +955,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
-		$ret = $_SESSION['service']->user_addToGroup($_REQUEST['element'], $_REQUEST['group']);
+		$ret = $_SESSION['service']->users_group_add_user($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
 			$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
 			if (is_object($group)) {
@@ -980,7 +980,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 			redirect();
 		}
 
-		$_SESSION['service']->user_removeToGroup($_REQUEST['element'], $_REQUEST['group']);
+		$_SESSION['service']->users_group_remove_user($_REQUEST['element'], $_REQUEST['group']);
 		popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
 		
 		redirect();
@@ -1039,7 +1039,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			}
 			
 			if ($_REQUEST['type'] == 'static') {
-				$res = $_SESSION['service']->user_addsGroup($_REQUEST['name_group'], $_REQUEST['description_group']);
+				$res = $_SESSION['service']->users_group_add($_REQUEST['name_group'], $_REQUEST['description_group']);
 			}
 			elseif ($_REQUEST['type'] == 'dynamic') {
 				if ($_REQUEST['cached'] === '0') {
@@ -1079,7 +1079,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 					redirect();
 				}
 				
-				$res = $_SESSION['service']->user_removesGroup($id);
+				$res = $_SESSION['service']->users_group_remove($id);
 				if (! $res) {
 					popup_error(sprintf(_("Unable to remove usergroup '%s'"), $id));
 				}
@@ -1118,7 +1118,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			}
 			
 			if ($has_change) {
-				$ret = $_SESSION['service']->user_modifysGroup($group->id, $group->name, $group->description, $group->published);
+				$ret = $_SESSION['service']->users_group_modify($group->id, $group->name, $group->description, $group->published);
 				if (! $ret) {
 					popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
 					redirect();
@@ -1210,9 +1210,9 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 	}
 
 	if ($_REQUEST['action'] == 'add')
-		$res = $_SESSION['service']->user_addsGroup_policy($group->id, $_REQUEST['element']);
+		$res = $_SESSION['service']->users_group_add_policy($group->id, $_REQUEST['element']);
 	else
-		$res = $_SESSION['service']->user_removesGroup_policy($group->id, $_REQUEST['element']);
+		$res = $_SESSION['service']->users_group_remove_policy($group->id, $_REQUEST['element']);
 
 	popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
 	redirect();
@@ -1487,7 +1487,7 @@ if ($_REQUEST['name'] == 'Profile') {
 		}
 		
 		foreach ($_REQUEST['users'] as $user_login) {
-			$res = $_SESSION['service']->user_addProfile($user_login);
+			$res = $_SESSION['service']->user_profile_add($user_login);
 			if (! $res) {
 				popup_error(_('Unable to associate the user to the profile'));
 				redirect();
@@ -1501,7 +1501,7 @@ if ($_REQUEST['name'] == 'Profile') {
 
 	if ($_REQUEST['action'] == 'del') {
 		foreach ($_REQUEST['ids'] as $id) {
-			$res = $_SESSION['service']->user_removeProfile($id);
+			$res = $_SESSION['service']->user_profile_remove($id);
 			if (! $res) {
 				popup_error(sprintf(_("Unable to delete profile '%s'"), $id));
 			}
