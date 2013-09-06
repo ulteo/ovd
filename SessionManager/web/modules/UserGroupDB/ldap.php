@@ -21,12 +21,10 @@
  **/
 class UserGroupDB_ldap {
 	protected $cache_import;
-	protected $cache_user_members;
 	protected $preferences;
 	
 	public function __construct() {
 		$this->cache_import = array();
-		$this->cache_user_members = array();
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
