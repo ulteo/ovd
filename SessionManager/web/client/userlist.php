@@ -35,6 +35,7 @@ if (! array_key_exists('show_list_users', $web_interface_settings) || $web_inter
 }
 
 $search_limit = $prefs->get('general', 'max_items_per_page');
+$userDB = UserDB::getInstance();
 list($users, $partial) = $userDB->getUsersContains('', array('login'), $search_limit);
 
 $dom = new DomDocument('1.0', 'utf-8');
