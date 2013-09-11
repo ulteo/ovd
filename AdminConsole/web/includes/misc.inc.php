@@ -196,3 +196,16 @@ function nodeattrs2array($node_) {
 	
 	return $ret;
 }
+
+function domain2suffix($domain_, $separator='dc') {
+		$domain_ = strtolower($domain_);
+		$buf = explode('.', $domain_);
+		if (! count($buf))
+			return;
+
+		$build = array();
+		foreach($buf as $d)
+			$build []= $separator.'='.$d;
+
+		return implode(',', $build);
+}

@@ -116,7 +116,6 @@ class Configuration_mode_novell extends Configuration_mode {
     $ad_ar['match'] = array();
     $ad_ar['match']['login'] = $uidprefix;
     $ad_ar['match']['displayname'] = 'fullName';
-    $ad_ar['match']['memberof'] = 'memberOf';
 
     // Enable modules
     $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
@@ -135,11 +134,18 @@ class Configuration_mode_novell extends Configuration_mode {
     }
     elseif (isset($form['dsfw'])) { // Active Directory mode
       $prefs->set('UserGroupDB', 'enable', 'activedirectory');
-      $prefs->set('UserGroupDB', 'activedirectory', array('match' => array('description' => 'description','name' => 'sAMAccountName', 'member' => 'member')));
+      $prefs->set('UserGroupDB', 'activedirectory', array('use_child_group' => 0));
     }
     else {
-      $prefs->set('UserGroupDB', 'enable', 'ldap_posix');
-      $prefs->set('UserGroupDB', 'ldap_posix', array('group_dn' => '', 'match' => array('name' => 'cn', 'member' => 'member')));
+		$prefs->set('UserGroupDB', 'enable', 'ldap');
+		$prefs->set('UserGroupDB', 'ldap', array(
+			'filter' => '(objectClass=groupOfNames)',
+			'match' => array('name' => 'cn'),
+			'user_field' => 'groupMembership',
+			'user_field_type' => 'group_dn',
+			'group_field' => 'member',
+			'group_field_type' => 'user_dn',
+		));
     }
     
     // Set the Session Management module
