@@ -60,7 +60,7 @@ class UserDB_sql extends UserDB  {
 		
 		$logins2 = array();
 		foreach($logins_ as $login) {
-			array_push($logins2, '"'.$sql2->CleanValue($login).'"');
+			array_push($logins2, $sql2->Quote($login));
 		}
 		
 		$request = 'SELECT * FROM #1 WHERE @2 IN ('.implode(', ',$logins2).')';

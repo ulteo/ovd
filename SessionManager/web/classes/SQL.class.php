@@ -123,7 +123,7 @@ class SQL {
 		return true;
 	}
 
-	public function CleanValue($value_) {
+	private function CleanValue($value_) {
 		if (! is_string($value_))
 			return $value_;
 

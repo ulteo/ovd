@@ -98,7 +98,7 @@ class UserGroupDB_sql {
 				$result[$g->getUniqueID()] = $g;
 			}
 			else {
-				array_push($ids_filter, '"'.$sql2->CleanValue($id).'"');
+				array_push($ids_filter, $sql2->Quote($id));
 			}
 		}
 		
