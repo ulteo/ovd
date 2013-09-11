@@ -73,7 +73,7 @@ def listImages(apath):
 
 
 def make_image_map(images, width=None):
-	cimages = [image for image in images if not os.path.basename(image['fname']) in ('rotate.gif', 'loader.gif')]
+	cimages = [image for image in images if not os.path.basename(image['fname']) in ('rotate.gif', )]
 	
 	cimages.sort(lambda x,y:-1*cmp(x['width'], y['width']))
 	if width == None:

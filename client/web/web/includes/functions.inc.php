@@ -319,3 +319,68 @@ function get_ie_version() {
 	}
 	return $ie_version;
 }
+
+function get_users_list() {
+	if (! defined('SESSIONMANAGER_HOST'))
+		return false;
+
+	global $sessionmanager_url;
+
+	$sm = new SessionManager($sessionmanager_url);
+	$ret = $sm->query('userlist.php');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$buf = @$dom->loadXML($ret);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$users_node = $dom->getElementsByTagname('users')->item(0);
+	if (is_null($users_node))
+		return false;
+
+	$users = array();
+	foreach ($users_node->childNodes as $user_node) {
+		if ($user_node->hasAttribute('login'))
+			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
+	}
+	natcasesort($users);
+
+	if (count($users) == 0)
+		return false;
+
+	return $users;
+}
+
+function short_list_field($id, $disabled, $selected, $items) {
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<input class=\"input_radio\" type=\"radio\" value=\"${key}\" name=\"${id}\" id=\"${id}_${key}\"".
+			($selected == $key ? " checked=\"checked\"" : "").
+			($disabled ? " disabled=\"disabled\"" : "").
+			"><label for=\"${id}_${key}\" id=\"${gettext}\">${label}</label>";
+	}
+}
+
+function long_list_field($id, $disabled, $selected, $items) {
+	echo "<select id=\"${id}\" ".($disabled ? ' disabled="disabled"' : "").">";
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<option id=\"${gettext}\" value=\"${key}\" ".($selected == $key ? "selected=\"selected\"" : "").">${val}</option>";
+	}
+	echo "</select>";
+}

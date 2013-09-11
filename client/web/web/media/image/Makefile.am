@@ -1,13 +1,11 @@
 SUBDIRS = flags \
           icons
 
-scripts_DATA = close-wrap.png \
-               cross.png \
+scripts_DATA = cross.png \
                error.png \
                favicon.ico \
                favicon.png \
                hide.png \
-               loader.gif \
                logout.png \
                news.png \
                rotate.gif \
