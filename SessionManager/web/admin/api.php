@@ -2901,6 +2901,7 @@ class OvdAdminSoap {
 			$ugp->value = $value_;
 		}
 		
+		Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container_, $setting_);
 		$ret = Abstract_User_Preferences::save($ugp);
 		if (! $ret) {
 			return false;
@@ -3323,6 +3324,7 @@ class OvdAdminSoap {
 			$ugp->value = $value_;
 		}
 		
+		Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container_, $setting_);
 		$ret = Abstract_UserGroup_Preferences::save($ugp);
 		if (! $ret) {
 			return false;
