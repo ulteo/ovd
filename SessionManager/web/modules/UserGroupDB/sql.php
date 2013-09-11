@@ -303,17 +303,27 @@ class UserGroupDB_sql {
 		$sizelimit_exceeded = false;
 		$list = $this->getList();
 		foreach ($list as $a_group) {
-			foreach ($attributes_ as $an_attribute) {
-				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
-					$groups []= $a_group;
-					$count++;
-					if ($limit_ > 0 && $count >= $limit_) {
-						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
-						return array($groups, $sizelimit_exceeded);
+			if ($contains_ != '' && count($attributes_) > 0) {
+				$is_ok = false;
+				foreach ($attributes_ as $an_attribute) {
+					if (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_))) {
+						$is_ok = true;
+						break;
 					}
-					break;
+				}
+				
+				if (! $is_ok) {
+					continue;
 				}
 			}
+			
+			if ($limit_ > 0 && $count >= $limit_) {
+				$sizelimit_exceeded = true;
+				break;
+			}
+			
+			array_push($groups, $a_group);
+			$count++;
 		}
 		
 		return array($groups, $sizelimit_exceeded);
