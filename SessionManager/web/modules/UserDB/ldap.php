@@ -130,27 +130,30 @@ class UserDB_ldap  extends UserDB {
 	
 	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
 		$users = array();
-		$ldap = new LDAP($this->makeLDAPconfig());
-		$contains = '*';
-		if ( $contains_ != '')
-			$contains .= $contains_.'*';
-		$contains = preg_replace('/\*\*+/', '*', $contains); // ldap does not handle multiple star characters
 		
-		$missing_attribute_nb = 0;
-		$filter = '(&'.$this->generateFilter().'(|';
-		foreach ($attributes_ as $attribute) {
-			if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
+		$filter = $this->generateFilter();
+		if ( $contains_ != '') {
+			$contains = preg_replace('/\*\*+/', '*', '*'.$contains_.'*'); // ldap does not handle multiple star characters
+			$filter_contain_rules = array();
+			$missing_attribute_nb = 0;
+			foreach ($attributes_ as $attribute) {
+				if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
 					$missing_attribute_nb++;
 					continue;
+				}
+				
+				array_push($filter_contain_rules, $this->config['match'][$attribute].'='.$contains);
 			}
 			
-			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
-		}
-		$filter .= '))'; 
-		if ($missing_attribute_nb == count($attributes_)) {
-			return array(array(), false);
+			if ($missing_attribute_nb == count($attributes_)) {
+				return array(array(), false);
+			}
+			
+			$filter_contain = LDAP::join_filters($filter_contain_rules, '|');
+			$filter = LDAP::join_filters(array($filter, $filter_contain), '&');
 		}
 		
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');

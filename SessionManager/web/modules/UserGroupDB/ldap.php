@@ -78,30 +78,30 @@ class UserGroupDB_ldap {
 	
 	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
 		$groups = array();
-		$configLDAP = $this->makeLDAPconfig();
 		
-		$ldap = new LDAP($configLDAP);
-		$contains = '*';
-		if ($contains_ != '')
-			$contains .= $contains_.'*';
-		
-		$missing_attribute_nb = 0;
-		$filter_attr = array();
-		foreach ($attributes_ as $attribute) {
-			if (! array_key_exists($attribute, $this->preferences['match']) || strlen($this->preferences['match'][$attribute])==0) {
-				$missing_attribute_nb++;
-				continue;
+		$filter = $this->preferences['filter'];
+		if ( $contains_ != '') {
+			$contains = preg_replace('/\*\*+/', '*', '*'.$contains_.'*'); // ldap does not handle multiple star characters
+			$filter_contain_rules = array();
+			$missing_attribute_nb = 0;
+			foreach ($attributes_ as $attribute) {
+				if (! array_key_exists($attribute, $this->preferences['match']) || strlen($this->preferences['match'][$attribute])==0) {
+					$missing_attribute_nb++;
+					continue;
+				}
+				
+				array_push($filter_contain_rules, $this->preferences['match'][$attribute].'='.$contains);
 			}
 			
-			array_push($filter_attr, '('.$this->preferences['match'][$attribute].'='.$contains.')');
+			if ($missing_attribute_nb == count($attributes_)) {
+				return array(array(), false);
+			}
+			
+			$filter_contain = LDAP::join_filters($filter_contain_rules, '|');
+			$filter = LDAP::join_filters(array($filter, $filter_contain), '&');
 		}
 		
-		if ($missing_attribute_nb == count($attributes_)) {
-			return array(array(), false);
-		}
-		
-		$filter_attr = LDAP::join_filters($filter_attr, '|');
-		$filter = LDAP::join_filters(array($this->preferences['filter'], $filter_attr), '&');
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$sr = $ldap->search($filter, array_values($this->preferences['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UsersGroupDB::ldap::getUsersContaint search failed');
