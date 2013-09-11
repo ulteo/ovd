@@ -87,17 +87,18 @@ class User {
 		
 		$rows = array_unique(array_merge($static, $dynamic));
 
-		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
-			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
-			if (is_object($g))
-				$result[$user_default_group]= $g;
-		}
-
 		$groups_id = array();
 		foreach ($rows as $lug){
 			array_push($groups_id, $lug->group);
 		}
 		$result = $userGroupDB->imports($groups_id);
+		
+		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
+			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
+			if (is_object($g))
+				$result[$user_default_group]= $g;
+		}
+		
 		return $result;
 	}
 
