@@ -2619,26 +2619,6 @@ class OvdAdminSoap {
 		return true;
 	}
 	
-	public function users_list() {
-		$this->check_authorized('viewUsers');
-		
-		$userDB = UserDB::getInstance();
-		
-		//// to change !!!
-		
-		$ret = array();
-		foreach($result as $user) {
-			$u = array(
-				'login' => $user->getAttribute('login'),
-				'displayname' => $user->getAttribute('displayname'),
-			);
-			
-			$ret[$user->getAttribute('login')] = $u;
-		}
-		
-		return $ret;
-	}
-	
 	public function users_list_partial($search_item_, $search_fields_) {
 		$this->check_authorized('viewUsers');
 		

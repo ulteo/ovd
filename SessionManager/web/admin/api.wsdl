@@ -649,11 +649,6 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="users_list">
-			<input message="urn:String"/>
-			<output message="urn:Any"/>
-		</operation>
-		
 		<operation name="users_list_partial">
 			<input message="urn:UsersPartialListRequest"/>
 			<output message="urn:UsersPartialListResponse"/>
@@ -1630,16 +1625,6 @@
 		
 		<operation name="applications_remove_mime_type">
 			<soap:operation soapAction="urn:OvdAdmin#applications_remove_mime_type"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="users_list">
-			<soap:operation soapAction="urn:OvdAdmin#users_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
