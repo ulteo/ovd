@@ -461,7 +461,7 @@ class OvdAdminSoap {
 		else if ($has_changed_ug) {
 			$groups = Abstract_UserGroup_Preferences::get_usersgroups();
 			$groups_to_remove = array();
-			foreach($users as $group_id) {
+			foreach($groups as $group_id) {
 				$group = $userGroupDB->import($group_id);
 				if ($group) {
 					continue;
@@ -482,7 +482,7 @@ class OvdAdminSoap {
 		else if ($has_changed_ug) {
 			$groups = Abstract_UserGroup_Rule::get_usersgroups();
 			$groups_to_remove = array();
-			foreach($users as $group_id) {
+			foreach($groups as $group_id) {
 				$group = $userGroupDB->import($group_id);
 				if ($group) {
 					continue;
