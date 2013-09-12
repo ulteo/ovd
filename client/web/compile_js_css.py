@@ -28,11 +28,27 @@ import sys
 import Image
 
 
-def run(*args):
-	proc = Popen(args, stdout=PIPE)
+def run(*args, **kwargs):
+	if kwargs.has_key("input"):
+		stdin = PIPE
+	else:
+		stdin = None
+	
+	proc = Popen(args, stdout=PIPE, stdin=stdin)
+	if kwargs.has_key("input"):
+		proc.stdin.write(kwargs["input"])
+		proc.stdin.close()
+	
 	output = proc.stdout.read()
 	proc.wait()
 	return output
+
+
+def verify_version():
+	output = run("yui-compressor", "--type", "css", input="@media screen and (max-width:800px){a{color:black}}")
+	if output.find("screen and (") == -1:
+		# Old versions of yui-compressor (2.4.2) suppress the mandatory space after "and"
+		raise Exception("Your version of yui-compressor have a bug with @media css queries. Please use a version >= 2.4.7")
 
 
 def jscompress(outfile, filename):
@@ -134,7 +150,10 @@ copyright = """/**
 * see the original files for individual copyright information
 **/"""%(time.strftime("%Y"))
 
-if __name__ == "__main__":
+
+def main():
+	verify_version()
+
 	compile_images()
 
 	processed_files = []
@@ -191,3 +210,11 @@ if __name__ == "__main__":
 			csscompress(outfile, filename)
 
 	outfile.close()
+
+if __name__ == "__main__":
+	try:
+		main()
+	except Exception as e:
+		print e
+		sys.exit(1)
+	sys.exit(0)
