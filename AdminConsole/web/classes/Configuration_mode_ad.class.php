@@ -80,11 +80,6 @@ class Configuration_mode_ad extends Configuration_mode {
     $ad_ar['login'] = $form['admin_login'];
     $ad_ar['password'] = $form['admin_password'];
 
-
-    $ad_ar['match'] = array();
-    if ($form['user_group'] == 'activedirectory')
-      $ad_ar['match']['memberof'] = 'memberOf';
-
     // Enable modules
     $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
     if ($form['sessionmanagement'] == 'internal') {

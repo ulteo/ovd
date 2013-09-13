@@ -276,26 +276,6 @@ class SessionManager {
 		return $g;
 	}
 	
-	public function users_list($filter_) {
-		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
-		$res = $this->__call('users_list', $args);
-		if ($res === null) {
-			return null;
-		}
-		
-		$users = array();
-		foreach($res as $item) {
-			$user = new User($item);
-			if (! $user->is_valid()) {
-				continue;
-			}
-			
-			$users[]= $user;
-		}
-		
-		return $users;
-	}
-	
 	public function user_info($id_) {
 		$args = func_get_args(); // func_get_args(): Can't be used as a function parameter before PHP 5.3.0
 		$res = $this->__call('user_info', $args);

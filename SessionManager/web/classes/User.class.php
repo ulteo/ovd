@@ -87,17 +87,18 @@ class User {
 		
 		$rows = array_unique(array_merge($static, $dynamic));
 
-		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
-			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
-			if (is_object($g))
-				$result[$user_default_group]= $g;
-		}
-
 		$groups_id = array();
 		foreach ($rows as $lug){
 			array_push($groups_id, $lug->group);
 		}
 		$result = $userGroupDB->imports($groups_id);
+		
+		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
+			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
+			if (is_object($g))
+				$result[$user_default_group]= $g;
+		}
+		
 		return $result;
 	}
 
@@ -249,14 +250,16 @@ class User {
 			Logger::error('main', 'User::getPolicy, default_policy not found on general policy');
 			return array();
 		}
-		$result = $elements['default_policy']->content_available;
 		
-		foreach ($result as $k => $v) {
-				if (in_array($k, $default_policy))
-						$result[$k] = true;
-				else 
-						$result[$k] = false;
+		$policy_items = $elements['default_policy']->content_available;
+		$result = array();
+		foreach ($policy_items as $policy_item) {
+			if (in_array($policy_item, $default_policy))
+				$result[$policy_item] = true;
+			else
+				$result[$policy_item] = false;
 		}
+		
 		$groups = $this->usersGroups();
 		foreach ($groups as $a_group) {
 			$policy = $a_group->getPolicy();

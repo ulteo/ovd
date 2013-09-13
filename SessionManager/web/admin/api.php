@@ -461,7 +461,7 @@ class OvdAdminSoap {
 		else if ($has_changed_ug) {
 			$groups = Abstract_UserGroup_Preferences::get_usersgroups();
 			$groups_to_remove = array();
-			foreach($users as $group_id) {
+			foreach($groups as $group_id) {
 				$group = $userGroupDB->import($group_id);
 				if ($group) {
 					continue;
@@ -482,7 +482,7 @@ class OvdAdminSoap {
 		else if ($has_changed_ug) {
 			$groups = Abstract_UserGroup_Rule::get_usersgroups();
 			$groups_to_remove = array();
-			foreach($users as $group_id) {
+			foreach($groups as $group_id) {
 				$group = $userGroupDB->import($group_id);
 				if ($group) {
 					continue;
@@ -2619,26 +2619,6 @@ class OvdAdminSoap {
 		return true;
 	}
 	
-	public function users_list() {
-		$this->check_authorized('viewUsers');
-		
-		$userDB = UserDB::getInstance();
-		
-		//// to change !!!
-		
-		$ret = array();
-		foreach($result as $user) {
-			$u = array(
-				'login' => $user->getAttribute('login'),
-				'displayname' => $user->getAttribute('displayname'),
-			);
-			
-			$ret[$user->getAttribute('login')] = $u;
-		}
-		
-		return $ret;
-	}
-	
 	public function users_list_partial($search_item_, $search_fields_) {
 		$this->check_authorized('viewUsers');
 		
@@ -2901,6 +2881,7 @@ class OvdAdminSoap {
 			$ugp->value = $value_;
 		}
 		
+		Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container_, $setting_);
 		$ret = Abstract_User_Preferences::save($ugp);
 		if (! $ret) {
 			return false;
@@ -3323,6 +3304,7 @@ class OvdAdminSoap {
 			$ugp->value = $value_;
 		}
 		
+		Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container_, $setting_);
 		$ret = Abstract_UserGroup_Preferences::save($ugp);
 		if (! $ret) {
 			return false;
