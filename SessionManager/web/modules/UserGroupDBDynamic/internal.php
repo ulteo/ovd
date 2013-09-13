@@ -275,6 +275,4 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 	public static function isDefault() {
 		return true;
 	}
-	
-	public static function liaisonType() {} // TODO
 }

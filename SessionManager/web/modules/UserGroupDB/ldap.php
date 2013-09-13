@@ -582,10 +582,6 @@ class UserGroupDB_ldap {
 		return false;
 	}
 	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'ldap'));
-	}
-	
 	public function add($usergroup_){
 		return false;
 	}

@@ -167,9 +167,6 @@ class UserGroupDB extends Module {
 	public static function isDefault() {
 		return self::call_static_method('isDefault');
 	}
-	public static function liaisonType() {
-		return self::call_static_method('liaisonType');
-	}
 	
 	protected static function call_static_method($method_name_, $prefs_=NULL, &$log=array()) {
 		if (is_null($prefs_))

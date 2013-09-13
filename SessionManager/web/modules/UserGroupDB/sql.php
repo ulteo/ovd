@@ -199,10 +199,6 @@ class UserGroupDB_sql {
 		return true;
 	}
 	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'sql'));
-	}
-	
 	public function add($usergroup_){
 		Logger::debug('main', "USERGROUPDB::add($usergroup_)");
 		$sql2 = SQL::getInstance();
