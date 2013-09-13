@@ -314,14 +314,31 @@ function show_manage($id) {
 		$users = $group->getAttribute('users');
 	}
 	
+	$users_partial_list = $group->getAttribute('users_partial_list');
+	$usersList = new UsersList($_REQUEST);
+	if ($users_partial_list) {
+		if ($usersList->is_empty_filter()) {
+			$usersList->set_external_result($users, true);
+		}
+		else {
+			$users2 = $usersList->search($id);
+			if (is_null($users2)) {
+				die_error(_('Error while requesting users'),__FILE__,__LINE__);
+			}
+			
+			$users = array();
+			foreach($users2 as $user) {
+				$users[$user->getAttribute('login')] = $user->getAttribute('displayname');
+			}
+		}
+	}
+	
 	asort($users);
 
     $has_users = (count($users) > 0);
 
   if ($usergroupdb_rw) {
-    $usersList = new UsersList($_REQUEST);
     $users_all = $usersList->search();
-    $search_form = $usersList->getForm();
     if (is_null($users_all))
       $users_all = array();
       $users_available = array();
@@ -335,6 +352,8 @@ function show_manage($id) {
       $users_all = $users;
       uasort($users_all, "user_cmp");
     }
+
+	$search_form = $usersList->getForm();
   }
   else {
     $users = array();
@@ -585,9 +604,14 @@ echo '<br />';
   }
 
   // Users list
-if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
+if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filter() || count($users) > 0)) {
     echo '<div>';
     echo '<h2>'._('List of users in this group').'</h2>';
+
+	if (! is_null($search_form)) {
+		echo $search_form;
+	}
+
     if ($group->isDefault()) {
       echo _('All available users are in this group.');
     }
@@ -627,11 +651,6 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
     }
 
     echo '</table>';
-
-    if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
-      echo '<br/>';
-      echo $search_form;
-    }
     echo '</div>';
     echo '<br/>';
   }

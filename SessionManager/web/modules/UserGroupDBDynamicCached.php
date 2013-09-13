@@ -95,7 +95,7 @@ class UserGroupDBDynamicCached extends Module {
 		return 'UserGroupDBDynamicCached';
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
 		return array(array(), false);
 	}
 }

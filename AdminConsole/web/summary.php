@@ -115,6 +115,10 @@ function show_default() {
 					echo '<td><a href="usersgroup.php?action=manage&id='.$group_id.'">'.$group_name.'</a></td>';
 					echo '</tr>';
 				}
+				
+				if ($user_info['groups_partial_list'] === true) {
+					echo '<tr><td style="text-align: center;"><strong><a href="users.php?action=manage&id='.$u->getAttribute('login').'">...</a></strong></td></tr>';
+				}
 				echo '</table>';
 			}
 			echo '</td>';

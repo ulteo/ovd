@@ -297,12 +297,24 @@ class UserGroupDB_sql {
 		return true;
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
+		if (! is_null($user_)) {
+			$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('login'), NULL);
+			$groups2 = array();
+			foreach($liasons as $group_id => $liason) {
+				array_push($groups2, $group_id);
+			}
+		}
+		
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
 		$list = $this->getList();
 		foreach ($list as $a_group) {
+			if (! is_null($user_) && !in_array($a_group->getUniqueID(), $groups2)) {
+				continue;
+			}
+			
 			if ($contains_ != '' && count($attributes_) > 0) {
 				$is_ok = false;
 				foreach ($attributes_ as $an_attribute) {
@@ -327,5 +339,35 @@ class UserGroupDB_sql {
 		}
 		
 		return array($groups, $sizelimit_exceeded);
+	}
+	
+	public function get_filter_groups_member($group_) {
+		Logger::debug('main', 'UsersGroupDB::sql::get_filter_groups_member ('.$group_->getUniqueID().')');
+		
+		$liasons = Abstract_Liaison::load('UsersGroup', NULL, $group_->getUniqueID());
+		if (! is_array($liasons)) {
+			return array('users' => array());
+		}
+		
+		$users_login = array();
+		foreach($liasons as $user_login => $liason) {
+			array_push($users_login, $user_login);
+		}
+		
+		return array('users' => $users_login);
+	}
+	
+	public function get_groups_including_user_from_list($groups_id_, $user_) {
+		$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('id'), NULL);
+		$groups_id2 = array();
+		foreach($liasons as $group_id => $liason) {
+			if (! in_array($group_id, $groups_id_)) {
+				continue;
+			}
+			
+			array_push($groups_id2, $group_id);
+		}
+		
+		return $this->imports($groups_id2);
 	}
 }

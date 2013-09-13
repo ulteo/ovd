@@ -236,12 +236,26 @@ class UserGroupDBDynamic_internal extends UserGroupDBDynamic {
 		}
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
+		if (! is_null($user_)) {
+			$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('id'), NULL);
+			$groups2 = array();
+			if (is_array($liasons)) {
+				foreach($liasons as $group_id => $liason) {
+					array_push($groups2, $group_id);
+				}
+			}
+		}
+		
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
 		$list = $this->getList();
 		foreach ($list as $a_group) {
+			if (! is_null($user_) && !in_array($a_group->getUniqueID(), $groups2)) {
+				continue;
+			}
+			
 			foreach ($attributes_ as $an_attribute) {
 				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
 					$groups []= $a_group;

@@ -375,4 +375,14 @@ class SQL {
 	public function Quote($string_) {
 		return '"'.$this->CleanValue($string_).'"';
 	}
+
+	public function QuoteField($field_) {
+		if (! is_string($field_)) {
+			return $field_;
+		}
+		
+		$this->CheckLink();
+		
+		return '`'.mysqli_real_escape_string($this->link, $field_).'`';
+	}
 }

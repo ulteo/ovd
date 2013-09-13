@@ -77,23 +77,14 @@ else{
 			if ( count($users_grps) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $group_id => $group_name){
-					if (! array_key_exists($group_id, $users_groups_cache)) {
-						$users_groups_cache[$group_id] = $_SESSION['service']->users_group_info($group_id);
-					}
-					
-					$ugrp = $users_groups_cache[$group_id];
-					if (is_null($ugrp)) {
-						continue;
-					}
-					
 					echo '<tr>';
 					echo '<td>
-					<a href="usersgroup.php?action=manage&id='.$group_id.'">'.$ugrp->name.'</a></td>';
-					if ($ugrp->published)
-						echo '<td>('._('Yes').')</td>';
-					else
-						echo '<td>('._('No').')</td>';
+					<a href="usersgroup.php?action=manage&id='.$group_id.'">'.$group_name.'</a></td>';
 					echo '</tr>';
+				}
+				
+				if ($user_info['groups_partial_list'] === true) {
+					echo '<tr><td>...</td></tr>';
 				}
 				echo '</table>';
 			}

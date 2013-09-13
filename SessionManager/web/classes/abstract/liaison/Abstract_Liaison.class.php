@@ -24,15 +24,7 @@ class Abstract_Liaison {
 	public static function callMethod($method_name_, $type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('main', "Abstract_Liaison::callMethod ('$method_name_', '$type_', '$element_', '$group_')");
 		
-		$liaison_owners = Preferences::liaisonsOwner();
-		
-		if (array_key_exists($type_, $liaison_owners)) {
-			$liaison_type = $liaison_owners[$type_];
-		}
-		else {
-			$liaison_type = 'sql';
-		}
-		
+		$liaison_type = 'sql';
 		$method_to_call = array('Abstract_Liaison_'.$liaison_type, $method_name_);
 		$class_to_use = 'Abstract_Liaison_'.$liaison_type;
 		
