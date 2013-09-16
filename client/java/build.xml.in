@@ -370,6 +370,8 @@
       <include name="**" />
         <manifest>
           <attribute name="Trusted-Library" value="true" />
+          <attribute name="Permissions" value="all-permissions" />
+          <attribute name="Codebase" value="*" />
         </manifest>
     </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
