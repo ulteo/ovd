@@ -308,9 +308,10 @@ function show_manage($id) {
 		echo '<tr class="'.$content.'">';
 		echo '<td>'._('Configuration').'</td>';
 		echo '<td>';
-		echo '<a href="actions.php?name=Application_webapp&action=download&id='.$app->getAttribute('id').'">'._('Download').'</a>';
+		$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($id);
+		echo '<textarea name="app_conf_raw" style="width:100%;height:12em">'.$raw_config.'</textarea>';
 		echo '<br />';
-		echo '<input type="file"  name="file_json" /> ';
+		echo '<a href="actions.php?name=Application_webapp&action=download&id='.$app->getAttribute('id').'">'._('Download').'</a>';
 		echo '</td>';
 		echo '</tr>';
 		

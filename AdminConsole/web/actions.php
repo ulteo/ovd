@@ -704,75 +704,48 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					}
 				}
 			}
-			if (array_key_exists('file_json', $_FILES)) {
-				$upload = $_FILES['file_json'];
-				
-				$have_file = true;
-				if($upload['error']) {
-					switch ($upload['error']) {
-						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+			if (array_key_exists('app_conf_raw', $_REQUEST)) {
+				$configuration = $_REQUEST['app_conf_raw'];
+				$parsed_config = json_decode($configuration, True);
+				if(!$parsed_config){
+					popup_error(_('Incorrect configuration file format'));
+					redirect();
+				}
+
+				if(count(array_keys($parsed_config)) > 1)
+					popup_info(_('Configuration file has more than one main level key, using first, rest will be ignored'));
+
+				$main_key = current(array_keys($parsed_config));
+				$pieces = NULL;
+				preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
+				$has_matches = count($pieces) > 0;
+
+				if($has_matches) {
+					$dynamic_vars = array_unique($pieces[1]);
+					foreach($dynamic_vars as $index=>$name) {
+						if (!array_key_exists($name, $parsed_config[$main_key]['Configuration'])) {
+							popup_error(_('Incorrect configuration file format - missing '.$name.' parameter'));
 							redirect();
-							break;
-						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
-							redirect();
-							break;
-						case 4: // UPLOAD_ERR_NO_FILE
-							$have_file = false;
-							break;
+						}
 					}
 				}
+
+				$transformed_config = array($form_url_prefix => $parsed_config[$main_key]);
+				$transformed_json = json_encode($transformed_config);
 				
-				if ($have_file) {
-					$source_file = $upload['tmp_name'];
-					if (! is_readable($source_file)) {
-						popup_error(_('The file is not readable'));
-						redirect();
-					}
-					
-					$configuration = @file_get_contents($source_file);
-					$parsed_config = json_decode($configuration, True);
-					if(!$parsed_config){
-						popup_error(_('Incorrect configuration format'));
-						redirect();
-					}
-
-					if(count(array_keys($parsed_config)) > 1)
-						popup_info(_('Configuration file has more than one main level key, using first, rest will be ignored'));
-
-					$main_key = current(array_keys($parsed_config));
-					$pieces = NULL;
-					preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
-					$has_matches = count($pieces) > 0;
-
-					if($has_matches) {
-						$dynamic_vars = array_unique($pieces[1]);
-						foreach($dynamic_vars as $index=>$name) {
-							if (!array_key_exists($name, $parsed_config[$main_key]['Configuration'])) {
-								popup_error(_('Incorrect configuration file format - missing '.$name.' parameter'));
-								redirect();
-							}
-						}
-					}
-
-					$transformed_config = array($form_url_prefix => $parsed_config[$main_key]);
-					$transformed_json = json_encode($transformed_config);
-					
-					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_json);
+				$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_json);
+				if (! $ret) {
+					popup_error(_('Unable to change configuration'));
+					redirect();
+				}
+			} else {
+				// Check if we need to change url prefix.
+				if ($form_url_prefix != $current_url_prefix) {
+					// Just change the prefix.
+					$ret = changeUrlPrefix($app->getAttribute('id'), $form_url_prefix);
 					if (! $ret) {
-						popup_error(_('Unable to change json'));
-						redirect();
-					}
-				} else {
-					// Check if we need to change url prefix.
-					if ($form_url_prefix != $current_url_prefix) {
-						// Just change the prefix.
-						$ret = changeUrlPrefix($app->getAttribute('id'), $form_url_prefix);
-						if (! $ret) {
-							popup_info(_('Unable to update web application prefix'));
-							// Warn, but continue flow.
-						}
+						popup_info(_('Unable to update web application prefix'));
+						// Warn, but continue flow.
 					}
 				}
 			}
