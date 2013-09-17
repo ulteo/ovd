@@ -272,20 +272,13 @@ function show_manage($id) {
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 		$count = 1;
 		$app->setAttribute('application_name', $app->getAttribute('name')); // ugly hack
-		$attr_list = array('application_name', 'description', 'url_prefix');
-		asort($attr_list);
+		$attr_list = array('application_name'=>_('Name'), 'description'=>('Description'), 'url_prefix'=>_('Url prefix'));
 		
-		foreach ($attr_list as $attr_name) {
+		foreach ($attr_list as $attr_name=>$display_name) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td style="text-transform: capitalize;">';
-
-			if ($attr_name == 'application_name') {
-				echo _('Name');
-			}
-			else {
-				echo _($attr_name);
-			}
+			echo $display_name;
 			
 			if ($attr_name == 'url_prefix') {
 				$attr_value = getUrlPrefix($app->getAttribute('id'));
@@ -413,14 +406,14 @@ function show_manage($id) {
 }
 
 function display_web_form() {
-	$inputs = array('name', 'url_prefix', 'description', 'app_conf_file');
+	$inputs = array('name'=>_('Name'), 'url_prefix'=>_('Url prefix'), 'description'=>_('Description'), 'app_conf_file'=>_('Configuration'));
 	$count = 0;
 
-	foreach ($inputs as $attr_name) {
+	foreach ($inputs as $attr_name=>$display_name) {
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td style="text-transform: capitalize">';
-		echo _($attr_name);
+		echo $display_name;
 		echo '</td>';
 		echo '<td>';
 
