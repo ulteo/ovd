@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -2173,7 +2174,7 @@ class OvdAdminSoap {
             @file_put_contents($path_rw, @file_get_contents($icon_path));
         }
         
-        // Clone YAML config
+        // Clone app config
         $app_configuration = $webapp_application_DB->search($id_);
         if ($app_configuration != NULL) {
             $application_id = $app->getAttribute('id');

@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
@@ -400,7 +400,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				redirect();
 			}
 
-			if(! array_key_exists('yaml_file', $_FILES)) {
+			if(! array_key_exists('app_conf_file', $_FILES)) {
 				redirect();
 			}
 
@@ -413,7 +413,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				redirect();
 			}
 			
-			$upload = $_FILES['yaml_file'];
+			$upload = $_FILES['app_conf_file'];
 
 			$have_file = true;
 			if ($upload['error']) {
@@ -433,7 +433,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 			
 			if (! $have_file) {
-				popup_error(_('No YAML file'));
+				popup_error(_('No configuration file'));
 				redirect();
 			}
 			
@@ -444,19 +444,19 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 
 			$configuration = @file_get_contents($source_file);
-			$parsed_config = yaml_parse($configuration);
+			$parsed_config = json_decode($configuration, True);
 			if(!$parsed_config){
-				popup_error(_('Incorrect YAML format'));
+				popup_error(_('Incorrect configuration file format'));
 				redirect();
 			}
 
 			if(count(array_keys($parsed_config)) > 1) {
-				popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
+				popup_info(_('Configuration file has more than one main level key, using first, rest will be ignored'));
 			}
 
 			$main_key = current(array_keys($parsed_config));
 			if (empty ($url_prefix)) {
-				// If no prefix was given, use one from YAML file.
+				// If no prefix was given, use one from configuration file.
 				$url_prefix = $main_key;
 			}
 			
@@ -482,17 +482,17 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				$dynamic_vars = array_unique($pieces[1]);
 				foreach($dynamic_vars as $index=>$varname) {
 					if (!array_key_exists($varname, $config_content['Configuration'])) {
-						popup_error(_('Incorrect YAML format - missing '.$varname.' parameter'));
+						popup_error(_('Incorrect configuration file format - missing '.$varname.' parameter'));
 						redirect();
 					}
 				}
 			}
 			
-			// Transform YAML - change save under url_prefix.
+			// Transform configuration file - change save under url_prefix.
 			$transformed_config = array($url_prefix => $config_content);
-			$transformed_yaml = yaml_emit($transformed_config);
+			$transformed_json = json_encode($transformed_config);
 
-			$ret = $_SESSION['service']->application_webapp_add($name, $description, $transformed_yaml);
+			$ret = $_SESSION['service']->application_webapp_add($name, $description, $transformed_json);
 			if (! $ret) {
 				popup_error(_('Unable to add web application'));
 				redirect();
@@ -579,7 +579,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			$app_id = $_REQUEST['id'];
 			$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
 			if ($raw_config !== NULL) {
-				$parsed_config = yaml_parse($raw_config);
+				$parsed_config = json_decode($raw_config, True);
 				$main_key = current(array_keys($parsed_config));
 				
 				// rewrite values from request into config
@@ -600,7 +600,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					$parsed_config[$main_key]['Configuration'][$name]['value'] = $value;
 				}
 				
-				$new_config = yaml_emit($parsed_config);
+				$new_config = json_encode($parsed_config);
 				if ($new_config != $raw_config) {
 					//save
 					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $new_config);
@@ -704,8 +704,8 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					}
 				}
 			}
-			if (array_key_exists('file_yaml', $_FILES)) {
-				$upload = $_FILES['file_yaml'];
+			if (array_key_exists('file_json', $_FILES)) {
+				$upload = $_FILES['file_json'];
 				
 				$have_file = true;
 				if($upload['error']) {
@@ -732,14 +732,14 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					}
 					
 					$configuration = @file_get_contents($source_file);
-					$parsed_config = yaml_parse($configuration);
+					$parsed_config = json_decode($configuration, True);
 					if(!$parsed_config){
-						popup_error(_('Incorrect YAML format'));
+						popup_error(_('Incorrect configuration format'));
 						redirect();
 					}
 
 					if(count(array_keys($parsed_config)) > 1)
-						popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
+						popup_info(_('Configuration file has more than one main level key, using first, rest will be ignored'));
 
 					$main_key = current(array_keys($parsed_config));
 					$pieces = NULL;
@@ -750,18 +750,18 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 						$dynamic_vars = array_unique($pieces[1]);
 						foreach($dynamic_vars as $index=>$name) {
 							if (!array_key_exists($name, $parsed_config[$main_key]['Configuration'])) {
-								popup_error(_('Incorrect YAML format - missing '.$name.' parameter'));
+								popup_error(_('Incorrect configuration file format - missing '.$name.' parameter'));
 								redirect();
 							}
 						}
 					}
 
 					$transformed_config = array($form_url_prefix => $parsed_config[$main_key]);
-					$transformed_yaml = yaml_emit($transformed_config);
+					$transformed_json = json_encode($transformed_config);
 					
-					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_yaml);
+					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_json);
 					if (! $ret) {
-						popup_error(_('Unable to change yaml'));
+						popup_error(_('Unable to change json'));
 						redirect();
 					}
 				} else {
@@ -803,8 +803,8 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 		$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
 
 		if($raw_config!==NULL) {
-			header('Content-disposition: attachment; filename=webapp_'.$app_id.'_config.yaml');
-			header('Content-type: application/x-yaml');
+			header('Content-disposition: attachment; filename=webapp_'.$app_id.'_config.json');
+			header('Content-type: application/x-json');
 			$ignore_redirect = true;
 			print $raw_config;
 		} else {

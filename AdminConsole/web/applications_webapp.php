@@ -3,6 +3,7 @@
  * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -312,11 +313,11 @@ function show_manage($id) {
 
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
-		echo '<td>'._('Yaml_file').'</td>';
+		echo '<td>'._('Configuration').'</td>';
 		echo '<td>';
 		echo '<a href="actions.php?name=Application_webapp&action=download&id='.$app->getAttribute('id').'">'._('Download').'</a>';
 		echo '<br />';
-		echo '<input type="file"  name="file_yaml" /> ';
+		echo '<input type="file"  name="file_json" /> ';
 		echo '</td>';
 		echo '</tr>';
 		
@@ -412,7 +413,7 @@ function show_manage($id) {
 }
 
 function display_web_form() {
-	$inputs = array('name', 'url_prefix', 'description', 'yaml_file');
+	$inputs = array('name', 'url_prefix', 'description', 'app_conf_file');
 	$count = 0;
 
 	foreach ($inputs as $attr_name) {
@@ -426,7 +427,7 @@ function display_web_form() {
 		if ($attr_name == 'name')
 			$attr_name = 'application_name';
 		echo '<input name="'.$attr_name.'" id="'.$attr_name.'"';
-		if(strcmp($attr_name, 'yaml_file')==0)
+		if(strcmp($attr_name, 'app_conf_file')==0)
 			echo 'type="file"';
 		echo '/>';
 
@@ -445,7 +446,7 @@ function display_webapp_configuration($application_id)
 
 	if($raw_config!==NULL) {
 		$pieces = NULL;
-		$parsed_config = yaml_parse($raw_config);
+		$parsed_config = json_decode($raw_config, True);
 		$main_key = current(array_keys($parsed_config));
 		
 		foreach($parsed_config[$main_key]['Configuration'] as $name => $params){
