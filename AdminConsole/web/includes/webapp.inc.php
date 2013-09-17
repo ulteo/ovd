@@ -25,14 +25,6 @@ function checkUrlPrefixFormat($url_prefix) {
 	return preg_match("/^[a-z0-9]+$/", $url_prefix);
 }
 
-// Return url prefix (main config key) of application given by id.
-function getUrlPrefix($app_id) {
-	$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
-	$parsed_config = json_decode($raw_config, True);
-	$main_key = current(array_keys($parsed_config));
-	return $main_key;
-}
-
 // Check if application URL prefix is unique.
 function checkUrlPrefixUnique($url_prefix, $current_app_id=NULL) {
 	// Fetch information about every application aleady in the system.
@@ -41,22 +33,12 @@ function checkUrlPrefixUnique($url_prefix, $current_app_id=NULL) {
 		// Only consider apps other than the current one.
 		// Only consider web apps.
 		if ($app_id != $current_app_id && $app->getAttribute('static') && $app->getAttribute('type') == 'webapp') {
-			$prefix = getUrlPrefix($app_id);
+			$app = $_SESSION['service']->application_webapp_info($app_id);
+			$prefix = $app['url_prefix'];
 			if ($url_prefix == $prefix) {
 				return FALSE;
 			}
 		}
 	}
 	return TRUE;
-}
-
-// Change url prefix of an application.
-function changeUrlPrefix($app_id, $url_prefix) {
-	$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
-	$parsed_config = json_decode($raw_config, True);
-	$main_key = current(array_keys($parsed_config));
-	$config_content = $parsed_config[$main_key];
-	$transformed_config = array($url_prefix => $config_content);
-	$transformed_json = json_encode($transformed_config);
-	return $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $transformed_json);
 }

@@ -32,6 +32,15 @@
 			</xsd:sequence>
 		</xsd:complexType>
 		
+		<xsd:complexType name="web_application">
+			<xsd:sequence>
+				<xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="url_prefix" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="raw_configuration" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="values" type="urn:any" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
 		<xsd:complexType name="application_array" final="#all">
 			<xsd:sequence>
 				<xsd:element name="item" type="urn:application" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
@@ -149,16 +158,26 @@
 	<message name="application_webapp_addMessage">
 		<part name="name" type="urn:string"/>
 		<part name="description" type="urn:string"/>
+		<part name="url_prefix" type="urn:string"/>
 		<part name="configuration" type="urn:any"/>
 	</message>
 
-	<message name="application_webapp_get_raw_configurationMessage">
+	<message name="application_webapp_infoMessage">
 		<part name="application_id" type="urn:integer"/>
 	</message>
 
-	<message name="application_webapp_set_raw_configurationMessage">
+	<message name="application_webapp_info_retMessage">
+		<part name="parameters" type="urn:web_application"/>
+	</message>
+
+	<message name="application_webapp_modifyMessage">
 		<part name="application_id" type="urn:integer"/>
-		<part name="configuration" type="urn:any"/>
+		<part name="parameters" type="urn:web_application"/>
+	</message>
+	
+	<message name="application_webapp_set_valuesMessage">
+		<part name="application_id" type="urn:integer"/>
+		<part name="values" type="urn:any"/>
 	</message>
 	
 	<message name="applications_group_addMessage">
@@ -539,13 +558,18 @@
 			<output message="urn:String"/>
 		</operation>
 
-		<operation name="application_webapp_get_raw_configuration">
-			<input message="urn:application_webapp_get_raw_configurationMessage"/>
-			<output message="urn:String"/>
+		<operation name="application_webapp_info">
+			<input message="urn:application_webapp_infoMessage"/>
+			<output message="urn:application_webapp_info_retMessage"/>
 		</operation>
 
-		<operation name="application_webapp_set_raw_configuration">
-			<input message="urn:application_webapp_set_raw_configurationMessage"/>
+		<operation name="application_webapp_modify">
+			<input message="urn:application_webapp_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+
+		<operation name="application_webapp_set_values">
+			<input message="urn:application_webapp_set_valuesMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
         
@@ -1433,8 +1457,8 @@
 			</output>
 		</operation>
 
-		<operation name="application_webapp_get_raw_configuration">
-			<soap:operation soapAction="urn:OvdAdmin#application_webapp_get_raw_configuration"/>
+		<operation name="application_webapp_info">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_info"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1443,8 +1467,18 @@
 			</output>
 		</operation>
 
-		<operation name="application_webapp_set_raw_configuration">
-			<soap:operation soapAction="urn:OvdAdmin#application_webapp_set_raw_configuration"/>
+		<operation name="application_webapp_modify">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="application_webapp_set_values">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_set_values"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

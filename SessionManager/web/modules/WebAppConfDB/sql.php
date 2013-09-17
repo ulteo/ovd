@@ -70,11 +70,13 @@ class WebAppConfDB_sql extends ApplicationDB {
 	}
 
 	public function generateObjectFromRow($row){
-        $conf = new Application_webapp_configuration($row['id'], $row['application_id'],$row['raw_configuration']);
+        $conf = new Application_webapp_configuration($row['id'], $row['application_id'], $row['url_prefix'], $row['raw_configuration'], json_unserialize($row['values']));
 
         unset($row['id']);
         unset($row['application_id']);
+        unset($row['url_prefix']);
         unset($row['raw_configuration']);
+        unset($row['values']);
 
         foreach ($row as $key => $value){
             $conf->setAttribute($key, $value);
@@ -87,7 +89,7 @@ class WebAppConfDB_sql extends ApplicationDB {
 	}
 
 	public function isOK($conf){
-		$minimun_attribute = array('raw_configuration', 'application_id');
+		$minimun_attribute = array('raw_configuration', 'application_id', 'url_prefix');
 		if (is_object($conf)){
 			foreach ($minimun_attribute as $attribute){
 				if ($conf->hasAttribute($attribute) == false) {
@@ -152,7 +154,11 @@ class WebAppConfDB_sql extends ApplicationDB {
 			}
 			foreach ($attributes as $key){
 				$query_keys   []= '`'.$key.'`';
+				if ($key == 'values') {
+					$query_values []= '"'.mysql_escape_string(json_serialize($conf->getAttribute($key))).'"';
+				} else {
 				$query_values []= '"'.mysql_escape_string($conf->getAttribute($key)).'"';
+				}
 			}
 			$query_keys = implode(', ', $query_keys);
 			$query_values = implode(', ', $query_values);
@@ -190,7 +196,11 @@ class WebAppConfDB_sql extends ApplicationDB {
 			$query = 'UPDATE#1 SET ';
 			$attributes = $conf->getAttributesList();
 			foreach ($attributes as $key){
-				$query .=  '`'.$key.'` = \''.mysql_escape_string($conf->getAttribute($key)).'\' , ';
+				$value = $conf->getAttribute($key);
+				if ($key == 'values') {
+					$value = json_serialize($value);
+				}
+				$query .=  '`'.$key.'` = \''.mysql_escape_string($value).'\' , ';
 			}
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `id` =\''.$conf->getAttribute('id').'\'';
@@ -217,7 +227,9 @@ class WebAppConfDB_sql extends ApplicationDB {
 		$WEBAPPCONF_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'application_id' => 'int(8) NOT NULL',
+			'url_prefix' => 'text NOT NULL',
 			'raw_configuration' => 'text NOT NULL',
+			'values' => 'text NOT NULL',
 		);
 
 		$ret = $sql2->buildTable(self::table, $WEBAPPCONF_table_structure, array('id'));
