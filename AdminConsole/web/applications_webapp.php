@@ -458,7 +458,7 @@ function display_webapp_configuration($application_id)
 				$attr_send = '';
 			}
 			$title = $name;
-			if ($params['title'])
+			if (array_key_exists('title', $params))
 				$title = $params['title'];
 			if($attr_send !== '')
 				echo sprintf('<tr class="%s"><td style="text-transform: capitalize;">%s</td><td>%s%s</td></tr>', $content, $title, $input, $attr_send);
