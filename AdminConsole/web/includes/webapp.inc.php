@@ -3,6 +3,7 @@
  * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,14 +25,6 @@ function checkUrlPrefixFormat($url_prefix) {
 	return preg_match("/^[a-z0-9]+$/", $url_prefix);
 }
 
-// Return url prefix (main YAML key) of application given by id.
-function getUrlPrefix($app_id) {
-	$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
-	$parsed_config = yaml_parse($raw_config);
-	$main_key = current(array_keys($parsed_config));
-	return $main_key;
-}
-
 // Check if application URL prefix is unique.
 function checkUrlPrefixUnique($url_prefix, $current_app_id=NULL) {
 	// Fetch information about every application aleady in the system.
@@ -40,7 +33,8 @@ function checkUrlPrefixUnique($url_prefix, $current_app_id=NULL) {
 		// Only consider apps other than the current one.
 		// Only consider web apps.
 		if ($app_id != $current_app_id && $app->getAttribute('static') && $app->getAttribute('type') == 'webapp') {
-			$prefix = getUrlPrefix($app_id);
+			$app = $_SESSION['service']->application_webapp_info($app_id);
+			$prefix = $app['url_prefix'];
 			if ($url_prefix == $prefix) {
 				return FALSE;
 			}
@@ -48,16 +42,3 @@ function checkUrlPrefixUnique($url_prefix, $current_app_id=NULL) {
 	}
 	return TRUE;
 }
-
-// Change url prefix of an application.
-function changeUrlPrefix($app_id, $url_prefix) {
-	$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
-	$parsed_config = yaml_parse($raw_config);
-	$main_key = current(array_keys($parsed_config));
-	$config_content = $parsed_config[$main_key];
-	$transformed_config = array($url_prefix => $config_content);
-	$transformed_yaml = yaml_emit($transformed_config);
-	return $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $transformed_yaml);
-}
-
-?>

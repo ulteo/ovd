@@ -52,7 +52,7 @@ if (is_array($applications)) {
 
 		$webapp_configuration_object = $webapp_application_DB->search($app->getAttribute('id'));
 		if ($webapp_configuration_object != NULL) {
-			$configuration = $webapp_configuration_object->getAttribute('raw_configuration');
+			$configuration = $webapp_configuration_object->getUpdatedConfguration();
 			$config_node = $dom->createElement('configuration');
 			$config_node->appendChild($dom->createCDATASection($configuration));
 			$app_node->appendChild($config_node);

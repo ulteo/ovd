@@ -6,6 +6,7 @@
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -181,7 +182,7 @@ Content-Length: 174
 
 class CookieFilter(Filter):
     """
-    CookieFilter performs different actions on cookies, based on YAML config.
+    CookieFilter performs different actions on cookies, based on app config.
 
     """
     def __init__(self, app_config, options):
@@ -231,7 +232,7 @@ class CookieFilter(Filter):
 
     def post_process(self, context, result):
         """
-        Based on YAML configuration
+        Based on application configuration
         supressing, managing and relaying cookies
         """
         Logger.debug("CookieFilter post_process")

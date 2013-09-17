@@ -3,6 +3,7 @@
  * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -242,6 +243,7 @@ function show_manage($id) {
 	echo '</table>';
 
 	if ($is_rw and $can_manage_applications) {
+		$app_info = $_SESSION['service']->application_webapp_info($id);
 		echo '<br />';
 		echo '<form action="actions.php" method="post"">';
 		echo '<input type="hidden" name="name" value="Application_webapp" />';
@@ -271,26 +273,16 @@ function show_manage($id) {
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 		$count = 1;
 		$app->setAttribute('application_name', $app->getAttribute('name')); // ugly hack
-		$attr_list = array('application_name', 'description', 'url_prefix');
-		asort($attr_list);
+		$app->setAttribute('url_prefix', $app_info['url_prefix']);
+		$attr_list = array('application_name'=>_('Name'), 'description'=>('Description'), 'url_prefix'=>_('Url prefix'));
 		
-		foreach ($attr_list as $attr_name) {
+		foreach ($attr_list as $attr_name=>$display_name) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td style="text-transform: capitalize;">';
-
-			if ($attr_name == 'application_name') {
-				echo _('Name');
-			}
-			else {
-				echo _($attr_name);
-			}
+			echo $display_name;
 			
-			if ($attr_name == 'url_prefix') {
-				$attr_value = getUrlPrefix($app->getAttribute('id'));
-			} else {
-				$attr_value = $app->getAttribute($attr_name);
-			}
+			$attr_value = $app->getAttribute($attr_name);
 			echo '</td>';
 			echo '<td>';
 			echo '<input type="text" name="'.$attr_name.'" value="'.htmlspecialchars($attr_value).'" style="with:100%;"/>';
@@ -312,11 +304,11 @@ function show_manage($id) {
 
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
-		echo '<td>'._('Yaml_file').'</td>';
+		echo '<td>'._('Configuration').'</td>';
 		echo '<td>';
-		echo '<a href="actions.php?name=Application_webapp&action=download&id='.$app->getAttribute('id').'">'._('Download').'</a>';
+		echo '<textarea name="app_conf_raw" style="width:100%;height:12em">'.$app_info['raw_configuration'].'</textarea>';
 		echo '<br />';
-		echo '<input type="file"  name="file_yaml" /> ';
+		echo '<a href="actions.php?name=Application_webapp&action=download&id='.$app->getAttribute('id').'">'._('Download').'</a>';
 		echo '</td>';
 		echo '</tr>';
 		
@@ -412,21 +404,21 @@ function show_manage($id) {
 }
 
 function display_web_form() {
-	$inputs = array('name', 'url_prefix', 'description', 'yaml_file');
+	$inputs = array('name'=>_('Name'), 'url_prefix'=>_('Url prefix'), 'description'=>_('Description'), 'app_conf_file'=>_('Configuration'));
 	$count = 0;
 
-	foreach ($inputs as $attr_name) {
+	foreach ($inputs as $attr_name=>$display_name) {
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td style="text-transform: capitalize">';
-		echo _($attr_name);
+		echo $display_name;
 		echo '</td>';
 		echo '<td>';
 
 		if ($attr_name == 'name')
 			$attr_name = 'application_name';
 		echo '<input name="'.$attr_name.'" id="'.$attr_name.'"';
-		if(strcmp($attr_name, 'yaml_file')==0)
+		if(strcmp($attr_name, 'app_conf_file')==0)
 			echo 'type="file"';
 		echo '/>';
 
@@ -437,33 +429,45 @@ function display_web_form() {
 }
 
 
-function display_webapp_configuration($application_id)
-{
+function display_webapp_configuration($application_id) {
 	// Fetch configuration and prepare for replacement
-	$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($application_id);
+	$config = $_SESSION['service']->application_webapp_info($application_id);
 	$count = 0;
-
-	if($raw_config!==NULL) {
+	
+	if($config!==NULL) {
 		$pieces = NULL;
-		$parsed_config = yaml_parse($raw_config);
-		$main_key = current(array_keys($parsed_config));
+		$parsed_config = json_decode($config["raw_configuration"], True);
 		
-		foreach($parsed_config[$main_key]['Configuration'] as $name => $params){
+		if (array_key_exists('title', $parsed_config)) {
+			echo('<h1>'.$parsed_config['title'].'</h1>');
+		}
+		
+		if (array_key_exists('description', $parsed_config)) {
+			echo('<p>'.$parsed_config['description'].'</p>');
+		}
+		
+		foreach($parsed_config['Configuration'] as $name => $params) {
 			$content = 'content'.(($count++%2==0)?1:2);
+			$value = '';
+			if (array_key_exists($name, $config['values'])) {
+				$value = $config['values'][$name];
+			} elseif (array_key_exists('value', $params)) {
+				$value = $params['value'];
+			}
 			$attr_send = sprintf('<input type="hidden" name="attributes_send[]" value="%s" />', $name);
 			if ($params['type'] === 'boolean') {
-				if ($params['value'])
+				if ($value)
 					$input = sprintf('<input type="checkbox" name="%s" id="%s" checked="checked"/>', $name, $name);
 				else
 					$input = sprintf('<input type="checkbox" name="%s" id="%s"/>', $name, $name);
 			} elseif (($params['type'] === 'string') || ($params['type'] === 'url') || ($params['type'] === 'inetaddr')) {
-				$input = sprintf('<input type="text" name="%s" id="%s" value="%s"/>', $name, $name, $params['value']);
+				$input = sprintf('<input type="text" name="%s" id="%s" value="%s"/>', $name, $name, $value);
 			} else {
 				//$input = sprintf('<input type="text" name="ignore" id="%s" value="%s" disabled="disabled"/>', $name, $params['value']);
 				$attr_send = '';
 			}
 			$title = $name;
-			if ($params['title'])
+			if (array_key_exists('title', $params))
 				$title = $params['title'];
 			if($attr_send !== '')
 				echo sprintf('<tr class="%s"><td style="text-transform: capitalize;">%s</td><td>%s%s</td></tr>', $content, $title, $input, $attr_send);

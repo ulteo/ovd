@@ -110,7 +110,7 @@ class ApplicationsDispatcher(object):
                             else:
                                 Logger.warn('[WebApps] user {0} is not allowed to open {1}'.format(user, app_id))
                         else:
-                            Logger.warn('[WebApps] no YAML config for app with id {0}'.format(app_id))
+                            Logger.warn('[WebApps] no config for app with id {0}'.format(app_id))
                     else:
                         Logger.warn('[WebApps] can\'t open all when session id={0} is not active'.format(sess_id))
                 else:

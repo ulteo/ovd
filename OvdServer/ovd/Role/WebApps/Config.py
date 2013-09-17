@@ -22,7 +22,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import yaml
+import json
 
 from ovd.Logger import Logger
 from ApplicationRequestProcessor import ApplicationRequestProcessor
@@ -71,10 +71,10 @@ def setup_app(config, app_id, app_name):
                 app_config[key] = config['Configuration'][key]['value']
         
     except KeyError, e:
-        Logger.exception("Incorrent YAML file. Key %s not found." % e)
+        Logger.exception("Incorrent configuration file. Key %s not found." % e)
         return
     except TypeError:
-        Logger.exception("Incorect config dict. Check your YAML file.")
+        Logger.exception("Incorect config dict. Check your configuration file.")
         return
 
     handlers = config.get('Handlers') or {}
@@ -93,7 +93,7 @@ def setup_app(config, app_id, app_name):
 
             app_req_proc_config[handler] = locals()[handler_dict['type']](app_config, params, filters)
     except KeyError, e:
-        Logger.error("Key %s not found. Correct your YAML file" % e)
+        Logger.error("Key %s not found. Correct your configuration file" % e)
         return
 
     app_request_processor = ApplicationRequestProcessor(app_req_proc_config)
@@ -117,7 +117,7 @@ def setup_apps(reset=False):
         if len(config_nodes) < 1:
             continue
             
-        config = yaml.load(config_nodes[0].firstChild.data)
+        config = json.loads(config_nodes[0].firstChild.data)
         if config.keys() < 1:
             continue
         

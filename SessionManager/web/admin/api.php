@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -2019,8 +2020,8 @@ class OvdAdminSoap {
 		return $app->getAttribute('id');
 	}
 	
-	public function application_webapp_add($name_, $description_, $configuration_) {
-		Logger::info('api', sprintf('Name: %s, Description: %s, Configuration: %s', $name_, $description_, $configuration_));
+	public function application_webapp_add($name_, $description_, $url_prefix_, $configuration_) {
+		Logger::debug('api', sprintf('Name: %s, Description: %s, Configuration: %s', $name_, $description_, $configuration_));
 		$application_id = NULL;
 		$this->check_authorized('manageApplications');
 
@@ -2053,7 +2054,7 @@ class OvdAdminSoap {
 			$app->delIcon();
 		}
 
-		$webapp_configuration_object = new Application_webapp_configuration(NULL, $application_id, $configuration_);
+		$webapp_configuration_object = new Application_webapp_configuration(NULL, $application_id, $url_prefix_, $configuration_, NULL);
 		// If we use a remote file, it's undocumented and there's no information about what will they provide.
 		if($configuration_ != NULL) {
 			$webapp_application_DB = WebAppConfDB::getInstance();
@@ -2100,36 +2101,70 @@ class OvdAdminSoap {
 		return $application_id;
 	}
    
-	public function application_webapp_get_raw_configuration($application_id) {
-		$configuration = NULL;
+	public function application_webapp_info($application_id) {
+		$info = NULL;
 		$webapp_application_DB = WebAppConfDB::getInstance();
 		$webapp_configuration_object = $webapp_application_DB->search($application_id);
 		if ($webapp_configuration_object != NULL) {
-			$configuration = $webapp_configuration_object->getAttribute('raw_configuration');
+			$info = array(
+				'application_id' => $webapp_configuration_object->getAttribute('application_id'),
+				'url_prefix' => $webapp_configuration_object->getAttribute('url_prefix'),
+				'raw_configuration' => $webapp_configuration_object->getAttribute('raw_configuration'),
+				'values' => $webapp_configuration_object->getAttribute('values'),
+			);
 		}
-		return $configuration;
+		return $info;
 	}
 
-	public function application_webapp_set_raw_configuration($application_id, $configuration) {
+	public function application_webapp_modify($application_id, $configuration) {
 		$webapp_application_DB = WebAppConfDB::getInstance();
 		$webapp_configuration_object = $webapp_application_DB->search($application_id);
 		if ($webapp_configuration_object != NULL) {
-			$webapp_configuration_object->setAttribute('raw_configuration', $configuration);
-            if (! $webapp_application_DB->isOK($webapp_configuration_object)) {
+			$webapp_configuration_object->setAttribute('url_prefix', $configuration['url_prefix']);
+			$webapp_configuration_object->setAttribute('raw_configuration', $configuration['raw_configuration']);
+			if (! $webapp_application_DB->isOK($webapp_configuration_object)) {
 				Logger::info('api', 'Web application configuration is not ok');
-                return false;
-            }
-            $webapp_application_DB->update($webapp_configuration_object);
-            
-            $servers = Abstract_Server::load_available_by_role('webapps', true);
-            foreach ($servers as $server) {
-                $server->syncWebApplications();
-            }
-        
-            return true;
+				return false;
+			}
+			$webapp_application_DB->update($webapp_configuration_object);
+			$this->log_action('application_webapp_modify', array(
+				'application_id' => $application_id, 
+				'url_prefix' => $configuration['url_prefix']
+			));
+
+			$servers = Abstract_Server::load_available_by_role('webapps', true);
+			foreach ($servers as $server) {
+				$server->syncWebApplications();
+			}
+
+			return true;
 		}
 		return false;
 	}
+
+	public function application_webapp_set_values($application_id, $values) {
+		$webapp_application_DB = WebAppConfDB::getInstance();
+		$webapp_configuration_object = $webapp_application_DB->search($application_id);
+		if ($webapp_configuration_object != NULL) {
+			$old_values = $webapp_configuration_object->getAttribute('values');
+			$webapp_configuration_object->setAttribute('values', $values);
+			if (! $webapp_application_DB->isOK($webapp_configuration_object)) {
+				Logger::info('api', 'Web application configuration is not ok');
+				return false;
+			}
+			$webapp_application_DB->update($webapp_configuration_object);
+			$this->log_action('application_webapp_set_values', array_merge(array('application_id' => $application_id), array_diff($old_values, $values)));
+
+			$servers = Abstract_Server::load_available_by_role('webapps', true);
+			foreach ($servers as $server) {
+				$server->syncWebApplications();
+			}
+
+			return true;
+		}
+		return false;
+	}
+	
     
     public function application_webapp_clone($id_) {
         Logger::info('api', "application_webapp_clone");
@@ -2173,7 +2208,7 @@ class OvdAdminSoap {
             @file_put_contents($path_rw, @file_get_contents($icon_path));
         }
         
-        // Clone YAML config
+        // Clone app config
         $app_configuration = $webapp_application_DB->search($id_);
         if ($app_configuration != NULL) {
             $application_id = $app->getAttribute('id');

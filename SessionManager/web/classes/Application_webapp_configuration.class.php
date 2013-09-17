@@ -23,8 +23,8 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Application_webapp_configuration extends Application_webapp {
 
-	public function __construct($id_, $application_id, $raw_configuration) {
-		Logger::info('api', "Application_webapp_configuration::construct('$id_','$application_id','$raw_configuration')");
+	public function __construct($id_, $application_id, $url_prefix, $raw_configuration, $values) {
+		Logger::debug('api', "Application_webapp_configuration::construct('$id_','$application_id','$url_prefix','$raw_configuration','$values')");
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -42,6 +42,23 @@ class Application_webapp_configuration extends Application_webapp {
 		$this->attributes = array();
 		$this->attributes['id'] = $id_;
 		$this->attributes['application_id'] = $application_id;
+		$this->attributes['url_prefix'] = $url_prefix;
 		$this->attributes['raw_configuration'] = $raw_configuration;
+		$this->attributes['values'] = $values;
+	}
+	
+	public function getUpdatedConfguration() {
+		$raw_configuration = $this->getAttribute('raw_configuration');
+		$url_prefix = $this->getAttribute('url_prefix');
+		$values = $this->getAttribute('values');
+		$parsed_config = json_decode($raw_configuration, True);
+		
+		foreach ($values as $key => $value) {
+			if (array_key_exists($key, $parsed_config['Configuration'])) {
+				$parsed_config['Configuration'][$key]['value'] = $value;
+			}
+		}
+		$parsed_config = array($url_prefix => $parsed_config);
+		return json_encode($parsed_config);
 	}
 }
