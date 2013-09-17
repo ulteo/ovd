@@ -60,5 +60,3 @@ function changeUrlPrefix($app_id, $url_prefix) {
 	$transformed_json = json_encode($transformed_config);
 	return $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $transformed_json);
 }
-
-?>
