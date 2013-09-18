@@ -218,7 +218,7 @@ class UserGroupDB extends Module {
 	}
 	
 	public function get_groups_including_user_from_list($users_groups_id_, $user_) {
-		Logger::debug('main', 'UserGroupDB::get_groups_including_user_from_list(['.implode(', ', $users_groups_id_).'], '.$user_.')');
+		Logger::debug('main', 'UserGroupDB::get_groups_including_user_from_list(['.implode(', ', $users_groups_id_).'], '.$user_->getAttribute('login').')');
 		
 		$groups_by_type = array();
 		foreach($users_groups_id_ as $users_group_id) {
