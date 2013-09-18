@@ -466,7 +466,7 @@ function initialize_framework() {
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
 	/* window manager */
-	framework.listeners.seamless_window_manager = new SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+	framework.listeners.seamless_window_manager = new uovd.provider.rdp.html5.SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 	/* ajaxplorer file manager */
 	framework.listeners.ajaxplorer = new Ajaxplorer(framework.session_management, "#fileManagerContainer");
 	/* Session-based start_app support */

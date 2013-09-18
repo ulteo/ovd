@@ -6,7 +6,6 @@ scripts_DATA = ajaxplorer.js \
                news.js  \
                progress_bar.js \
                seamless_launcher.js  \
-               seamless_window_manager.js  \
                start_app.js  \
                timezones.js  \
                ui.js  \

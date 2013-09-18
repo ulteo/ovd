@@ -1,4 +1,4 @@
-SeamlessWindowManager = function(session_management, node, windowFactory) {
+uovd.provider.rdp.html5.SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.windowFactory = windowFactory;
@@ -10,7 +10,7 @@ SeamlessWindowManager = function(session_management, node, windowFactory) {
 	this.session_management.addCallback("ovd.session.starting", this.handler);
 }
 
-SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
+uovd.provider.rdp.html5.SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 	if(type == "ovd.session.starting") {
 		var session_mode = this.session_management.session.mode;
 
@@ -136,7 +136,7 @@ SeamlessWindowManager.prototype.handleEvents = function(type, source, params) {
 	}
 }
 
-SeamlessWindowManager.prototype.end = function() {
+uovd.provider.rdp.html5.SeamlessWindowManager.prototype.end = function() {
 	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
 		this.node.empty();
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
