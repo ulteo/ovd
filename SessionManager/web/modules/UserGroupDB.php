@@ -214,6 +214,19 @@ class UserGroupDB extends Module {
 				$limit_to_get = $limit_to_get + count($groups1); // revert
 			}
 		}
+		
+		// default users group
+		$prefs = Preferences::getInstance();
+		$user_default_group = $prefs->get('general', 'user_default_group');
+		if (! is_null($user_default_group) && ! in_array($user_default_group, array('-1', ''))) {
+			if (! array_key_exists($user_default_group, $groups)) {
+				$group = $this->import($user_default_group);
+				if ($group) {
+					$groups[$group->getUniqueID()] = $group;
+				}
+			}
+		}
+		
 		return array($groups, $sizelimit_exceeded);
 	}
 	
@@ -243,6 +256,18 @@ class UserGroupDB extends Module {
 			$groups = $value->get_groups_including_user_from_list($groups_by_type[$key], $user_);
 			foreach($groups as $group_id => $group) {
 				$result[$group->getUniqueID()] = $group;
+			}
+		}
+		
+		// default users group
+		$prefs = Preferences::getInstance();
+		$user_default_group = $prefs->get('general', 'user_default_group');
+		if (! is_null($user_default_group) && ! in_array($user_default_group, array('-1', ''))) {
+			if (! array_key_exists($user_default_group, $result)) {
+				$group = $this->import($user_default_group);
+				if ($group) {
+					$result[$group->getUniqueID()] = $group;
+				}
 			}
 		}
 		

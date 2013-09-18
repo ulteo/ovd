@@ -70,15 +70,6 @@ class User {
 			array_push($result, $group->getUniqueID());
 		}
 		
-		// default users group
-		$prefs = Preferences::getInstance();
-		$user_default_group = $prefs->get('general', 'user_default_group');
-		if (! is_null($user_default_group) && ! in_array($user_default_group, array('-1', ''))) {
-			if (! in_array($user_default_group, $result)) {
-				array_push($result, $user_default_group);
-			}
-		}
-		
 		return $result;
 	}
 	
