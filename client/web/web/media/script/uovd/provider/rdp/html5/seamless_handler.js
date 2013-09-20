@@ -25,7 +25,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 			 Spliting it into "seamless" array
 		 */
 
-		var seamless = parameters[0].split(",");
+		var seamless =  base64_decode(parameters[0]).split(",");
 
 		var connection = this.connections[server_id];
 		var guac_client   = connection.guac_client;
@@ -50,7 +50,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 			*/
 			if(seamless[2] == 1) {
 				/* Begin session recovery */
-				guac_tunnel.sendMessage("seamrdp", "SYNC,"+ (this.message_id++) +";\n");
+				guac_tunnel.sendMessage("seamrdp", base64_encode("SYNC,"+ (this.message_id++) +";\n"));
 			}
 		} else if(seamless[0] == "CREATE") {
 			/* seamless[2] = Window id
@@ -175,7 +175,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 		var server_id = params["server_id"];
 		var connection = this.connections[server_id];
 		var guac_tunnel = connection.guac_tunnel
-		guac_tunnel.sendMessage("seamrdp", "DESTROY,"+ (this.message_id++) +","+id+",;\n");
+		guac_tunnel.sendMessage("seamrdp", base64_encode("DESTROY,"+ (this.message_id++) +","+id+",;\n"));
 	} else if(type == "ovd.rdpProvider.seamless.out.windowPropertyChanged") {
 		var id = "0x"+parseInt(params["id"]).toString(16);
 		var server_id = params["server_id"];
@@ -190,7 +190,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				var y = value[1];
 				var w = value[2];
 				var h = value[3];
-				guac_tunnel.sendMessage("seamrdp", "POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n");
+				guac_tunnel.sendMessage("seamrdp", base64_encode("POSITION,"+ (this.message_id++) +","+id+","+x+","+y+","+w+","+h+",;\n"));
 				break
 
 			case "state" :
@@ -200,12 +200,12 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				if(value == "Iconify")    state =  1;
 				if(value == "Maximized")  state =  2;
 				if(value == "Fullscreen") state =  3;
-				guac_tunnel.sendMessage("seamrdp", "STATE,"+ (this.message_id++) +","+id+","+state+",;\n");
+				guac_tunnel.sendMessage("seamrdp", base64_encode("STATE,"+ (this.message_id++) +","+id+","+state+",;\n"));
 				break
 
 			case "focus" :
 				value = value ? "0x0" : "0x1";
-				guac_tunnel.sendMessage("seamrdp", "FOCUS,"+ (this.message_id++) +","+id+","+value+",;\n");
+				guac_tunnel.sendMessage("seamrdp", base64_encode("FOCUS,"+ (this.message_id++) +","+id+","+value+",;\n"));
 				break
 		}
 	} else if(type == "ovd.session.destroying") {
