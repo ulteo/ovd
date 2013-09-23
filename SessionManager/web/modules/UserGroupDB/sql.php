@@ -356,7 +356,12 @@ class UserGroupDB_sql {
 	public function get_groups_including_user_from_list($groups_id_, $user_) {
 		$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('id'), NULL);
 		$groups_id2 = array();
-		foreach($liasons as $group_id => $liason) {
+		foreach($liasons as $useless => $liason) {
+			if (! str_startswith($liason->group, 'static_')) {
+				continue;
+			}
+			
+			$group_id = substr($liason->group, strlen('static_'));
 			if (! in_array($group_id, $groups_id_)) {
 				continue;
 			}
