@@ -160,7 +160,13 @@ public class SeamFrame extends Frame
 	}
 	
 	public void update(Graphics g) {
-		paint(g);
+		if (g != null) {
+			/* Force repaint Now ! */
+			paint(g);
+		} else {
+			/* Can't force repaint. Java will repaint as soon as possible */
+			super.repaint();
+		}
 	}
 
 	public void repaint(int x, int y, int width, int height) {
@@ -171,7 +177,7 @@ public class SeamFrame extends Frame
 		wndBounds.y -= this.maxBounds.y;
 		
 		if (wndBounds.intersects(bounds))
-			super.repaint();
+			this.update(this.getGraphics());
 	}
 	
 	public void paint(Graphics g) {
