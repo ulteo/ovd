@@ -114,6 +114,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
@@ -149,17 +151,19 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_mouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_manager.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/exttunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tmouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/nkeyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
 <?php } ?>

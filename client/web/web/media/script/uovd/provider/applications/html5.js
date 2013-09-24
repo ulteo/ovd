@@ -101,7 +101,6 @@ uovd.provider.applications.Html5.prototype.handleOrders = function(server_id, op
 
 		var connection = this.connections[server_id];
 		var guac_client   = connection.guac_client;
-		var guac_display  = connection.guac_display
 		var guac_canvas   = connection.guac_canvas
 		var guac_tunnel   = connection.guac_tunnel
 		var guac_mouse    = connection.guac_mouse
