@@ -65,7 +65,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.onerror = function() {
 				/* !!! */
@@ -153,7 +153,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.onerror = function() {
 				/* !!! */
@@ -260,7 +260,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				var connection = {};
 
 				/* Connect */
-				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", index);
+				connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 				connection.guac_client.onerror = function() {
 					/* !!! */
