@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
@@ -185,6 +186,6 @@ public class ExternalAppsClient {
 		
 		//  By default, activate unicode in external mode.
 		cli.setInputMethod("unicode");
-		cli.perform();
+		((OvdClientPerformer) cli).perform();
 	}
 }

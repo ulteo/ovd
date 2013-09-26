@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  *
  * This program is free software; you can redistribute it and/or
@@ -24,7 +25,7 @@ package org.ulteo.ovd.client;
  * interface used for all class that needed to use the 'perform' action in the OvdClient
  * class
  */
-public interface OvdClientPerformer {
+public interface OvdClientPerformer extends Runnable {
 	
 	/**
 	 * create all RDP connections needed by the OVD Client 
@@ -41,4 +42,8 @@ public interface OvdClientPerformer {
 	 * run this method when session is ready
 	 */
 	void runSessionReady();
+	
+	public void perform();
+	
+	public void run();
 }

@@ -8,7 +8,8 @@
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- *
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
+ * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -831,7 +832,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.client_actions = ((NativeClientActions)client);
 		if (! this.loadingFrame.cancelled()) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(client));
-			client.perform();
+			((OvdClientPerformer) client).perform();
 		}
 		else
 			this.client_actions.disconnect();
