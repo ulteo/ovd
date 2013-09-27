@@ -37,16 +37,21 @@ all: pre $(EXE) $(LIB)
 pre:
 	mkdir -p $(ARCH)
 
-$(EXE): org_ulteo_utils_jni_WorkArea.o
+$(EXE): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o
 	$(CC) -o $@ $? $(LDFLAGS)
 
-$(LIB): org_ulteo_utils_jni_WorkArea.o
+$(LIB): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o
 ifndef STATIC
 	$(CC) -o $(ARCH)/$@ -shared -Wl,-soname,$@ $? $(LDFLAGS)
 else
 	$(LD) -o $(ARCH)/$@ -share -soname $(LIB) $^ --strip-all \
 		-static $(LDFLAGS) -Bdynamic -lc
 endif
+
+
+src/org_ulteo_utils_jni_LinuxSessionStatus.h:
+	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/LinuxSessionStatus.java
+	javah -d ./src/ org.ulteo.utils.jni.LinuxSessionStatus
 
 src/org_ulteo_utils_jni_WorkArea.h:
 	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/WorkArea.java
@@ -58,6 +63,7 @@ src/org_ulteo_utils_jni_WorkArea.h:
 clean:
 	$(RM) *~
 	$(RM) src/org_ulteo_utils_jni_WorkArea.h
+	$(RM) src/org_ulteo_utils_jni_LinuxSessionStatus.h
 	$(RM) -rf org *.o $(EXE) $(LIB) $(ARCH)
 
 install: all
@@ -72,6 +78,7 @@ dist: clean
 	mkdir -p $$DISTDIR/src ; \
 	cp Makefile $$DISTDIR ; \
 	cp src/org_ulteo_utils_jni_WorkArea.c $$DISTDIR/src ; \
+	cp src/org_ulteo_utils_jni_LinuxSessionStatus.c $$DISTDIR/src ; \
 	tar -zcf ovd-xclient-area.tar.gz $$DISTDIR ; \
 	rm -rf $$DISTDIR
 

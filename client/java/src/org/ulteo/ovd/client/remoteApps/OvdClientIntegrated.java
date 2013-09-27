@@ -33,11 +33,10 @@ import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.ovd.client.desktop.SessionStatus;
+
 
 public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClientPerformer {
-
-	private Thread session_thread = null;
-
 	
 	public OvdClientIntegrated(SessionManagerCommunication smComm, boolean persistent) {
 		super(smComm, persistent);
@@ -132,58 +131,55 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	public void run() {
-		System.out.println("OvdClientIntegrated : run");
 		this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 		boolean isActive = false;
 		
 		while (this.continueSessionStatusMonitoringThread) {
 			String oldSessionStatus = this.sessionStatus;
-			this.sessionStatus = this.smComm.askForSessionStatus();
-			System.out.println("Session Status : " + this.sessionStatus);
+			this.sessionStatus = SessionStatus.getSessionStatus();
+			String smStatus = this.smComm.askForSessionStatus();
 			
-			if (! this.sessionStatus.equals(oldSessionStatus)) {
+			if (! this.sessionStatus.equalsIgnoreCase(oldSessionStatus)) {
 				Logger.info("session status switch from " + oldSessionStatus + " to " + this.sessionStatus);
-				
-				if (this.isWaitRecoveryModeEnabled) {
-					if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INITED) || 
-						this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
-						// Session is resumed
-						this.resumeSession();
-
-						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-						continue;
-					}
-					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INACTIVE)) {
-						// Session is suspended
-						this.suspendSession();
-
-						this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
-						continue;
-					}
+				if ( oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_INACTIVE) &&
+						this.sessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE )) {
+					// Session is resumed
+					this.resumeSession();
+					
+					this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
+					continue;
 				}
-				
-				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
-						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
-						(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
-					if (! isActive) {
-						isActive = true;
-						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-						this.connect();
-						Logger.info("Session is ready");
-						((OvdClientPerformer)this).runSessionReady();
-					}
+				else if (oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE) &&
+						this.sessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_INACTIVE)) {
+					// Session is suspended
+					this.suspendSession();
+					this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
+					continue;
 				}
-				else {
-					if (isActive) {
-						isActive = false;
-						this.sessionTerminated();
-					}
-					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
-						this.sessionTerminated();
-					}
+				else if (oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_UNKNOWN) &&
+						this.sessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE)) {
+					Logger.info("Session is ready");
+					this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
+					this.connect();
+					Logger.info("Session is ready");
+					((OvdClientPerformer)this).runSessionReady();
+					continue;
+				
+				} else if (oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE ) &&
+						this.sessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_UNKNOWN)) {
+					Logger.info("Session is terminated");
+					this.sessionTerminated();
+					continue;
 				}
 			}
 			
+			if (smStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_WAIT_DESTROY) ||
+					smStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_DESTROYED) ||
+					smStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
+				Logger.info("Session is killed by admin");
+				this.sessionTerminated();
+				continue;
+			}
 			if (this instanceof Newser) {
 				try {
 					List<News> newsList = this.smComm.askForNews();
