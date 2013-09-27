@@ -1,0 +1,14 @@
+Source: ovd-wnos
+Section: net
+Priority: extra
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 6), intltool
+Standards-Version: 3.7.2
+
+Package: ulteo-ovd-wnos-client
+Architecture: all
+Depends: debconf, php5, php5-curl
+Recommends: ulteo-ovd-l10n
+Description: Ulteo Open Virtual Desktop - wnos client
+ This is a wnos based client for Ulteo OVD.
+
