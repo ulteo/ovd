@@ -7,7 +7,8 @@ scripts_DATA = ConfigElement_inputlist.class.php \
                ConfigElement_text.class.php \
                ConfigElement_input.class.php \
                ConfigElement_multiselect.class.php \
-               ConfigElement_sliders_loadbalancing.class.php
+               ConfigElement_sliders_loadbalancing.class.php \
+               ConfigElement_week_time_select.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes/configelements
 
