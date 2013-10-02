@@ -69,7 +69,7 @@ if (defined('OPTION_FORCE_SSO') && OPTION_FORCE_SSO === true) {
 	if (array_key_exists('REMOTE_USER', $_SERVER)) {
 		$wi_user_login = $_SERVER['REMOTE_USER'];
 		$force_sso = true;
-		$wi_use_local_credentials == 0;
+		$wi_use_local_credentials = 0;
 	}
 }
 
