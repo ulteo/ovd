@@ -2,6 +2,7 @@ SUBDIRS = guacamole
 
 scripts_DATA = input_keyboard.js \
                input_mouse.js \
+               clipboard_handler.js \
                seamless_handler.js \
                seamless_icon.js \
                seamless_window_factory.js \
