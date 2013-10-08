@@ -29,7 +29,7 @@ import socket
 from Config import Config
 from ovd.Logger import Logger
 from SessionsRepository import SessionsRepository
-from headers_utils import *
+from headers_utils import parse_request_headers, request_headers_get_cookies
 from Utils import replace_params
 from ntlm import HTTPNtlmAuthHandler
 

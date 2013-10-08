@@ -24,7 +24,7 @@ from UserDict import UserDict
 
 from ovd.Logger import Logger
 from Config import Config
-from headers_utils import *
+from headers_utils import parse_request_headers, request_headers_get_cookies
 import random
 
 from ovd.SMRequestManager import SMRequestManager

@@ -33,7 +33,7 @@ from time import sleep
 from Config import Config
 from ovd.Logger import Logger
 from SessionsRepository import SessionsRepository
-from headers_utils import *
+from headers_utils import parse_request_headers
 from HttpMessage import HttpMessage
 from Utils import replace_params, CurlConnection
 
