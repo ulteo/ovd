@@ -213,7 +213,7 @@ bool str_toBool(const char* str) {
 	return res;
 }
 
-bool str_toInt(const char* str) {
+int str_toInt(const char* str) {
 	return atoi(str);
 }
 
