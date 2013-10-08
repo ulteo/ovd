@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -43,7 +43,7 @@ class ApplicationsDispatcher(object):
 	@staticmethod
 	def redirect(communicator, location, cookieName = None, cookieValue = None, cookieDomain = None, cookiePath = None):
 		data = '<html><head><title>Moved</title></head><body><h1>Moved</h1></body></html>'
-		buffer = 'HTTP/1.1 301 Moved Permanently\r\n'
+		buffer = 'HTTP/1.1 302 Moved\r\n'
 		buffer += 'Location: %s\r\n'%(location)
 		
 		if cookieName is not None:

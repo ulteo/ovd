@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2014
+# Author David PHAM-VAN <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,7 +32,10 @@ class WebAppsTCPServer(TCPServer):
 	def shutdown_request(self, request):
 		# Since python 2.7, python shutdown socket with this function
 		# Because of multiprocessing, we do not want this behaviour
-		self.close_request(request)
+		try:
+			self.close_request(request)
+		except:
+			pass
 
 
 

@@ -134,8 +134,8 @@ class ClientHandler(Handler):
 		
 		resp_headers = response.getheaders()
 		
-		code = response.status
-		result = ["HTTP/1.1 %d %s" % (code, httplib.responses[code])]
+		context.code = response.status
+		context.result = ["HTTP/1.1 %d %s" % (context.code, httplib.responses[context.code])]
 		rewrite_links = False
 		content_length = None
 		for name, value in resp_headers:
@@ -153,32 +153,32 @@ class ClientHandler(Handler):
 			elif name.lower() == 'location':
 				value = self.rewrite_links(value)
 			# rewrite header
-			result.append('{0}: {1}'.format(name, value))
+			context.result.append('{0}: {1}'.format(name, value))
 		
-		body = None
+		context.body = None
 		if rewrite_links:
 			# read all chunks
 			chunks = [response.read(Config.chunk_size)]
 			while chunks[-1] != '':
-				chunks.append(response.read())
+				chunks.append(response.read(Config.chunk_size))
 			
 			# concatenate chunks and rewrite links
-			body = ''.join(chunks)
-			body = self.rewrite_links(body)
+			context.body = ''.join(chunks)
+			context.body = self.rewrite_links(context.body)
 			
 			# update content length, because links rewrite may change size
-			content_length = str(len(body))
+			content_length = str(len(context.body))
 		
 		if content_length:
-			result.append('Content-Length: ' + content_length)
-		result.extend(['', '']) # empty lines (separator between headers and body)
+			context.result.append('Content-Length: ' + content_length)
+		context.result.extend(['', '']) # empty lines (separator between headers and body)
 		
 		# post_process of filters
 		
 		for f in post_processors:
-			f.post_process(context, result)
+			f.post_process(context)
 		## send result
-		send_buffer = '\r\n'.join(result)
+		send_buffer = '\r\n'.join(context.result)
 		
 		while send_buffer != '':
 			try:
@@ -189,8 +189,8 @@ class ClientHandler(Handler):
 				pass
 			
 			# if buffer is empty add we still have body now is time to send it
-			if not send_buffer and body != '':
-				send_buffer, body = body, ''
+			if not send_buffer and context.body != '':
+				send_buffer, context.body = context.body, ''
 			
 			# if no links rewrite is needed we can transfer data chunk by chunk,
 			# this should decrease memory usage for large files and user
@@ -216,7 +216,10 @@ class ClientHandler(Handler):
 		if hasattr(communicator.socket, 'sock_shutdown'):
 			communicator.socket.sock_shutdown(SHUT_WR)
 		else:
-			communicator.socket.shutdown(SHUT_WR)
+			try:
+				communicator.socket.shutdown(SHUT_WR)
+			except:
+				pass
 		communicator.handle_close()
 	
 	def check_ssl_certs(self):
@@ -300,11 +303,14 @@ class ChainHandler(Handler):
 class RedirectHandler(Handler):
 	"""
 	Redirects on attempt to access forbidden page.
+	
+	options: 
+		location: url to be redirected to
 	"""
 	def __process__(self, context, post_processors):
 		Logger.debug("RedirectHandler::processing...")
 		send_buffer = """
-HTTP/1.1 301 Moved Permanently
+HTTP/1.1 302 Moved
 Location: {0}
 Content-Type: text/html
 Content-Length: 174
