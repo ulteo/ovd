@@ -554,6 +554,11 @@ div.section {
 }
 
 /* Time grid part */
+
+table.time_grid {
+	border-collapse: collapse;
+}
+
 table.time_grid th {
 	font-size: 70%
 }
@@ -568,6 +573,8 @@ table.time_grid td {
 	width: 10px;
 	background: #bababa;
 	cursor:pointer;
+	padding: 1px;
+	border: 1px solid #ddd;
 }
 
 table.time_grid td.hover {

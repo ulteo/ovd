@@ -68,6 +68,10 @@ var TimeGrid = Class.create({
 			var self = this;
 			for (j=0; j<24; j++) {
 				var td = document.createElement("td");
+				if (Prototype.Browser.IE) {
+					td.onselectstart = function () { return false; };
+				}
+				
 				td.id = i+"_"+j;
 				td.innerHTML = "&nbsp;"
 				if (! this.table.hasClassName("disabled")) {
