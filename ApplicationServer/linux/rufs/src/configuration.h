@@ -39,6 +39,8 @@
 #define MAIN_SHARE_LIST_CONFIGURATION_KEY "sharesList"
 #define MAIN_SHARE_LIST_QUOTA_GRACE "sharesQuotaGrace"
 #define MAIN_PID_FILE "pidFile"
+#define MAIN_UMASK "umask"
+
 
 #define LOG_CONFIGURATION_SECTION "log"
 #define LOG_LEVEL_CONFIGURATION_KEY "level"
@@ -89,6 +91,7 @@ typedef struct _Configuration {
 	char* configFile;
 	char* shareFile;
 	char* pidFile;
+	int umask;
 	long long shareGrace;
 	bool bind;
 	char* source_path;

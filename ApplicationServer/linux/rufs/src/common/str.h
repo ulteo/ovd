@@ -45,6 +45,7 @@ bool str_ltrim(char* str);
 bool str_trim(char* str);
 bool str_toBool(const char* str);
 int str_toInt(const char* str);
+int str_toOct(const char* str);
 long long str_toSize(const char* str);
 char* str_fromSize(long long size);
 void str_unquote();

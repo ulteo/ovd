@@ -347,6 +347,12 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		conf->pidFile = str_dup(value);
 	}
 
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_UMASK);
+	if (value != NULL) {
+		str_unquote(value);
+		conf->umask = str_toOct(value);
+	}
+
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_SHARE_LIST_QUOTA_GRACE);
 	if (value != NULL) {
 		str_unquote(value);

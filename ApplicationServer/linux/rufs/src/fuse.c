@@ -455,6 +455,9 @@ static int rufs_mkdir(const char *path, mode_t mode)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+		mode = 0777 & ~config->umask;
+
 	res = mkdir(trpath, mode);
 	if (res == -1)
 		return -errno;
@@ -722,6 +725,8 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+		mode = 0666 & ~config->umask;
 
 	fd = open(trpath, fi->flags, mode);
 	if (fd == -1)
@@ -1179,8 +1184,6 @@ int fuse_start(int argc, char** argv) {
 	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "allow_other");
 	fuse_opt_add_arg(&args, "-o");
-	fuse_opt_add_arg(&args, "umask=007");
-	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "nonempty");
 	fuse_opt_add_arg(&args, config->destination_path);
 
@@ -1200,6 +1203,9 @@ int fuse_start(int argc, char** argv) {
 		logError("Failed to parse configuration file");
 		sys_exit(CONF_ERROR);
 	}
+
+	if (config->umask)
+		umask(config->umask);
 
 	if (config == NULL) {
 		logError("There is no valid configuration, exiting");

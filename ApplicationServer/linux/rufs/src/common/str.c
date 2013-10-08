@@ -218,6 +218,13 @@ int str_toInt(const char* str) {
 }
 
 
+int str_toOct(const char* str) {
+	if (str == 0)
+		return 0;
+	return strtol(str, str, 8);
+}
+
+
 long long str_toSize(const char* str) {
 	char* temp = str_dup(str);
 	int coef = 0;
