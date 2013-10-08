@@ -527,22 +527,35 @@ class Session {
 	
 	public function orderDisonnect() {
 		Logger::debug('main', 'Starting Session::orderDisonnect for \''.$this->id.'\'');
-		if ($this->mode != self::MODE_DESKTOP) {
-			return false;
+
+		$servers = array();
+		if ($this->mode == self::MODE_DESKTOP) {
+			array_push($servers, $this->server);
+		}
+		else {
+			if (! array_key_exists(Server::SERVER_ROLE_APS, $this->servers)) {
+				Logger::error('main', 'Unable to disconnect session because not using any ApS servers');
+				return false;
+			}
+			
+			$servers = array_keys($this->servers[Server::SERVER_ROLE_APS]);
 		}
 		
-		$server = Abstract_Server::load($this->server);
-		if (! $server) {
-			Logger::error('main', 'Session::orderDeletion Unable to load server \''.$this->server.'\'');
-			return false;
+		$ret = true;
+		foreach($servers as $server_id) {
+			$server = Abstract_Server::load($server_id);
+			if (! $server) {
+				Logger::error('main', 'Session::orderDisonnect Unable to load server \''.$server_id.'\'');
+				$ret = false;
+			}
+			
+			$res = $server->orderSessionDisconnect($this->id);
+			if (! $res) {
+				$ret = false;
+			}
 		}
 		
-		$res = $server->orderSessionDisconnect($this->id);
-		if (! $res) {
-			return false;
-		}
-		
-		return true;
+		return $ret;
 	}
 	
 	public function setRunningApplications($applications_) {
