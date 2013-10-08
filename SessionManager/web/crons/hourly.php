@@ -84,7 +84,6 @@ foreach ($sessions as $session) {
 	else {
 		$session->orderDeletion(true, Session::SESSION_END_STATUS_TIMEOUT);
 	}
-	// ToDo: if desktop & persistent: send disconnect order to desktop server
 }
 //END Sessions time restriction
 
