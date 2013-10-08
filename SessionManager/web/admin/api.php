@@ -4633,6 +4633,18 @@ class OvdAdminSoap {
 			$info['servers'][$s['id']] = $s;
 		}
 		
+		if (! $info['can_start_session_desktop'] || ! $info['can_start_session_applications']) {
+			if (! $can_start_session) {
+				$info['cannot_start_session_reason'] = 'time_restriction';
+			}
+			else if (! $remote_desktop_enabled || ! $remote_applications_enabled) {
+				$info['cannot_start_session_reason'] = 'unauthorized_session_mode';
+			}
+			else {
+				$info['cannot_start_session_reason'] = 'invalid_publications';
+			}
+		}
+		
 		return $info;
 	}
 	
