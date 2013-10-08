@@ -94,6 +94,9 @@ class StaticRequestFilter(Filter):
 		Logger.debug("StaticRequestFilter pre_process target:%s url:%s fields:%r"%(target,login_url,needed_fields))
 		
 		br = mechanize.Browser()
+		#br.set_debug_http(True)
+		#br.set_debug_responses(True)
+		#br.set_debug_redirects(True)
 		br.set_handle_robots(False)
 		br.addheaders = parse_request_headers_list(context.communicator)
 		for header in br.addheaders:

@@ -42,13 +42,14 @@ class Session(UserDict):
 	MODE_DESKTOP = "desktop"
 	MODE_APPLICATIONS = "applications"
 	
-	def __init__(self, id_, data):
+	def __init__(self, id_, data, debug=False):
 		UserDict.__init__(self)
 		self.id = id_
 		self.update(data)
 		self.status = Session.SESSION_STATUS_INITED
-		self.sm_request_manager = SMRequestManager()
-		self.sm_request_manager.initialize();
+		if not debug:
+			self.sm_request_manager = SMRequestManager()
+			self.sm_request_manager.initialize();
 	
 	def switch_status(self, status_):
 		self.status = status_
@@ -72,6 +73,9 @@ class Session(UserDict):
 		except Exception, e:
 			Logger.warn("WebappsServer: unable to format session status xml: %s"(str(e)))
 		
+		if not hasattr(self, "sm_request_manager"):
+			return
+		
 		response = self.sm_request_manager.send_packet("/session/status", doc)
 		Logger.debug2("WebappsServer: send_session_status: %s"%(response))
 		
@@ -87,6 +91,7 @@ class SessionsRepository(object):
 	queue_in = None
 	queue_out = None
 	lock = None
+	debug = False
 	
 	def __init__(self):
 		Logger.info('[WebApps] SessionsRepository init')
@@ -153,7 +158,7 @@ class SessionsRepository(object):
 		sess_id = data.pop('id')
 		Logger.info('[WebApps] creating session id={0} for user {1}'.format(sess_id, data.get('login')))
 		data.setdefault('cookies', {})
-		session = Session(sess_id, data)
+		session = Session(sess_id, data, self.debug)
 		self.sessions[sess_id] = session
 		return session
 	
@@ -215,9 +220,12 @@ class SessionsRepository(object):
 		if cls._instance:
 			return cls._instance.process('_set', sess_id, session)
 		Logger.error('[WebApps] using not initialized SessionsRepository')
+	
+	@classmethod
+	def get_session_id(cls, communicator):
+		if cls.debug:
+			return 1
 		
-	@staticmethod
-	def get_session_id(communicator):
 		headers = parse_request_headers(communicator)
 		cookies = request_headers_get_cookies(headers)
 		if Config.ulteo_session_cookie in cookies:
