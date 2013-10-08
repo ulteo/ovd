@@ -127,7 +127,7 @@ if (isset($_SESSION['mode'])) {
 }
 
 if (!$user->can_use_session()) {
-	Logger::info('main', '(client/start) User '.$user->getAttribute('login').' cannont start/recover a session because of time restriction policy');
+	Logger::info('main', '(client/start) User '.$user->getAttribute('login').' cannot start/recover a session because of time restriction policy');
 	throw_response(UNAUTHORIZED);
 }
 
