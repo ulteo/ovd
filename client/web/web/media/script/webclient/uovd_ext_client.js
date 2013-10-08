@@ -144,6 +144,8 @@ function initialize_framework() {
 	framework.listeners.progress_bar = new ProgressBar(framework.session_management, '#progressBarContent');
 	/* handle client insertion */
 	framework.listeners.desktop_container = new DesktopContainer(framework.session_management, "#desktopContainer");
+	/* handle menu insertion */
+	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
 	/* window manager */

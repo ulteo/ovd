@@ -123,6 +123,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/menu.css" />
 <?php } ?>
 <?php if (!$big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
@@ -181,6 +182,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/menu_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
@@ -379,6 +381,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<div id="applicationsContainer"></div>
 			<div id="desktopContainer"></div>
 			<div id="windowsContainer"></div>
+			<div id="menuContainer"></div>
 		</div>
 	</body>
 </html>

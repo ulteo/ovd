@@ -1,6 +1,7 @@
 scripts_DATA = ajaxplorer.js \
                application_counter.js  \
                desktop_container.js  \
+               menu_container.js  \
                external.js  \
                logger.js  \
                news.js  \
