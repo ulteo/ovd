@@ -1179,6 +1179,8 @@ int fuse_start(int argc, char** argv) {
 	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "allow_other");
 	fuse_opt_add_arg(&args, "-o");
+	fuse_opt_add_arg(&args, "umask=007");
+	fuse_opt_add_arg(&args, "-o");
 	fuse_opt_add_arg(&args, "nonempty");
 	fuse_opt_add_arg(&args, config->destination_path);
 
