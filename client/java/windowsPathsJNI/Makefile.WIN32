@@ -28,11 +28,14 @@ EXEC=libWindowsPaths.dll
 
 all: $(EXEC)
 
-$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_disk_WNetApi.o org_ulteo_ovd_integrated_WindowsPaths.def 
+$(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_disk_WNetApi.o org_ulteo_ovd_integrated_WindowsSessionStatus.o org_ulteo_ovd_integrated_WindowsPaths.def 
 	$(CC) $^ $(LDFLAGS) -shared -o $@ 
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
 	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
+
+org_ulteo_ovd_integrated_WindowsSessionStatus.h:
+	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsSessionStatus 
 
 org_ulteo_utils_jni_WindowsTweaks.h:
 	javah -classpath ../classes/:../required_libraries/registry.jar -d . org.ulteo.utils.jni.WindowsTweaks
@@ -47,6 +50,7 @@ clean:
 	$(RM) *.o $(EXEC)
 	$(RM) *~
 	$(RM) org_ulteo_ovd_integrated_WindowsPaths.h
+	$(RM) org_ulteo_ovd_integrated_WindowsSessionStatus.h
 	$(RM) org_ulteo_utils_jni_WindowsTweaks.h
 	$(RM) org_ulteo_ovd_disk_WNetApi.h
 
