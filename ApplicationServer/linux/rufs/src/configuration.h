@@ -40,6 +40,7 @@
 #define MAIN_SHARE_LIST_QUOTA_GRACE "sharesQuotaGrace"
 #define MAIN_PID_FILE "pidFile"
 #define MAIN_UMASK "umask"
+#define MAIN_PERMISSION_MASK "permissionMask"
 
 
 #define LOG_CONFIGURATION_SECTION "log"
@@ -92,6 +93,7 @@ typedef struct _Configuration {
 	char* shareFile;
 	char* pidFile;
 	int umask;
+	int permission_mask;
 	long long shareGrace;
 	bool bind;
 	char* source_path;

@@ -353,6 +353,12 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		conf->umask = str_toOct(value);
 	}
 
+	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_PERMISSION_MASK);
+	if (value != NULL) {
+		str_unquote(value);
+		conf->permission_mask = str_toOct(value) | 0770000;
+	}
+
 	value = ini_getKey(ini, MAIN_CONFIGURATION_SECTION, MAIN_SHARE_LIST_QUOTA_GRACE);
 	if (value != NULL) {
 		str_unquote(value);

@@ -272,6 +272,9 @@ static int rufs_getattr(const char *path, struct stat *stbuf)
 	if (res == -1)
 		return -errno;
 
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
+
 	return 0;
 }
 
@@ -285,6 +288,9 @@ static int rufs_fgetattr(const char *path, struct stat *stbuf,
 	res = fstat(fi->fh, stbuf);
 	if (res == -1)
 		return -errno;
+
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
 
 	return 0;
 }
@@ -379,6 +385,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 				memset(&st, 0, sizeof(st));
 				st.st_ino = de->d_ino;
 				st.st_mode = de->d_type << 12;
+
+				if (config->permission_mask)
+					st.st_mode &= config->permission_mask;
+
 				transformPathOut(de->d_name, trpath);
 
 				if (list_containString(rootContents, trpath))
@@ -401,6 +411,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		memset(&st, 0, sizeof(st));
 		st.st_ino = de->d_ino;
 		st.st_mode = de->d_type << 12;
+
+		if (config->permission_mask)
+			st.st_mode &= config->permission_mask;
+
 		if (filler(buf, de->d_name, &st, telldir(dp)))
 			break;
 	}
