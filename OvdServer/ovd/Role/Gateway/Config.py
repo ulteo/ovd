@@ -46,6 +46,7 @@ class Config:
 	admin_redirection = False
 	root_redirection = None
 	http_keep_alive = True
+	disable_sslv2 = False
 
 	@classmethod
 	def init(cls, infos):
@@ -129,5 +130,13 @@ class Config:
 				cls.http_keep_alive = True
 			else:
 				Logger.error("Invalid value for 'http_keep_alive' option")
+		
+		if infos.has_key("disable_sslv2"):
+			if infos["disable_sslv2"].lower() == "false":
+				cls.disable_sslv2 = False
+			elif infos["disable_sslv2"].lower() == "true":
+				cls.disable_sslv2 = True
+			else:
+				Logger.error("Invalid value for 'disable_sslv2' option")
 		
 		return True

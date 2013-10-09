@@ -68,6 +68,8 @@ class Role(AbstractRole):
 			self.ssl_ctx.use_privatekey_file(fpem)
 			self.ssl_ctx.use_certificate_file(fpem)
 			self.ssl_ctx.load_verify_locations(fpem)
+			if Config.disable_sslv2:
+				self.ssl_ctx.set_options(SSL.OP_NO_SSLv2)
 		else:
 			Logger.error("Gateway role need a certificate (%s)" % fpem)
 			return False
