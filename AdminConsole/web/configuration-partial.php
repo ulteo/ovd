@@ -20,7 +20,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
 
 if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
 		redirect();
 	}
 	else {
-		require_once(dirname(__FILE__).'/includes/page_template_static.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template_static.php');
 		header_static(_('Configuration'));
 		echo '<p class="msg_error centered">problem : configuration not saved</p>';  // TODO (class msg...) + gettext
 		footer_static();
@@ -68,7 +68,7 @@ else {
 		if (!isset($_GET['mode']))
 			redirect('configuration-sumup.php');
 
-		require_once(dirname(__FILE__).'/includes/page_template.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 		page_header();
 
 		echo '<script type="text/javascript"> configuration_switch_init();</script>';

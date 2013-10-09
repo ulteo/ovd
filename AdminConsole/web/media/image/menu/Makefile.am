@@ -11,7 +11,7 @@ scripts_DATA = applications.png \
                users.png \
                usersgroup.php.png
 
-scriptsdir = $(datadir)/ulteo/administration_console/media/image/menu
+scriptsdir = $(datadir)/ulteo/administration_console/web/media/image/menu
 
 EXTRA_DIST = $(scripts_DATA)
 

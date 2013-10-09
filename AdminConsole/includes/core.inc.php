@@ -24,7 +24,7 @@ require_once(dirname(__FILE__).'/core-minimal.inc.php');
 
 function get_root_admin_url() {
 	// Retrieve the admin root URL
-	$root_admin_dir = dirname(dirname(__FILE__));
+	$root_admin_dir = dirname(__FILE__);
 	$root_admin_url = @$_SERVER['REQUEST_URI'];
 	
 	$len1 = count(explode(DIRECTORY_SEPARATOR, $root_admin_dir));

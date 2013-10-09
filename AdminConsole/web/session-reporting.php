@@ -21,8 +21,8 @@
 **/
 
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 
 if (! checkAuthorization('viewStatus'))
