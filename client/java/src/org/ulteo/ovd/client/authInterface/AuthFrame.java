@@ -217,61 +217,140 @@ public class AuthFrame extends JFrame implements ActionListener, Runnable {
 
 			moreOption.addActionListener(optionListener);
 		}
-
-		gbc.gridx = gbc.gridy = 0;
+		
+		// First line: logo & bug reporter
+		gbc.gridy = gbc.gridx = 0;
 		gbc.insets = new Insets(7, 7, 25, 0);
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		this.add(logoLabel, gbc);
-
+		
 		if (this.showBugReporter) {
 			gbc.gridx = 2;
 			gbc.insets = new Insets(7, 0, 25, 7);
 			gbc.anchor = GridBagConstraints.NORTHEAST;
 			this.add(new BugReportButton(), gbc);
 		}
-
-		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.LINE_END;
+		
+		int pos = 3;
+		
+		// Login line
+		gbc.gridy = pos++;
+		
 		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.insets.left = 0;
-		gbc.insets.top = 0;
-		gbc.insets.bottom = 5;
+		gbc.gridwidth = 1;
+		gbc.weightx = gbc.weighty = 1;
+		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(0, 0, 5, 0);
 		this.add(userLogoLabel, gbc);
-
-		gbc.gridy = 4;
-		this.add(passwordLogoLabel, gbc);
-
-		int pos = 5;
-		if (! this.isGUILocked) {
-			if (this.displayUserLocalCredentials)
-				pos++;
-
-			gbc.gridy = pos;
-			this.add(hostLogoLabel, gbc);
-		}
-
-		pos = 1;
+		
+		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets.left = 5;
-		gbc.gridx = 1;
-		gbc.gridy = 3;
 		this.add(login, gbc);
+		
+		gbc.gridx = 2;
+		gbc.gridwidth = 0;
+		gbc.gridheight = 1;
+		gbc.insets.top = 0;
+		gbc.insets.left = 0;
+		gbc.insets.right = 15;
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		this.add(loginTextField, gbc);
+		
+		// Password line
+		gbc.gridy = pos++;
+		
+		gbc.gridx = 0;
+		gbc.gridwidth = 1;
+		gbc.weightx = gbc.weighty = 1;
+		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(0, 0, 5, 0);
+		this.add(passwordLogoLabel, gbc);
 
-		gbc.gridy = 4;
+		gbc.gridx = 1;
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.insets.left = 5;
 		this.add(password, gbc);
 
+		gbc.gridx = 2;
+		gbc.gridwidth = 0;
+		gbc.gridheight = 1;
+		gbc.insets.top = 0;
+		gbc.insets.left = 0;
+		gbc.insets.right = 15;
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		this.add(passwordTextField, gbc);
+		
+		// use local creds line
 		if (! this.isGUILocked) {
-			pos = 5;
-			if (this.displayUserLocalCredentials)
-				pos++;
-
-			gbc.gridy = pos;
+			if (this.displayUserLocalCredentials) {
+				gbc.gridy = pos++;
+				
+				gbc.gridx = 2;
+				gbc.gridwidth = 0;
+				gbc.gridheight = 1;
+				gbc.insets.top = 0;
+				gbc.insets.left = 0;
+				gbc.insets.right = 15;
+				gbc.weightx = 0;
+				gbc.weighty = 0;
+				gbc.fill = GridBagConstraints.HORIZONTAL;
+				this.add(this.useLocalCredentials, gbc);
+			}
+		
+			// Server line
+			gbc.gridy = pos++;
+			
+			gbc.gridx = 0;
+			gbc.gridwidth = 1;
+			gbc.weightx = gbc.weighty = 1;
+			gbc.anchor = GridBagConstraints.LINE_END;
+			gbc.fill = GridBagConstraints.NONE;
+			gbc.insets = new Insets(0, 0, 5, 0);
+			this.add(hostLogoLabel, gbc);
+			
+			gbc.gridx = 1;
+			gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.insets.left = 5;
 			this.add(host, gbc);
+			
+			gbc.gridx = 2;
+			gbc.gridwidth = 0;
+			gbc.gridheight = 1;
+			gbc.insets.top = 0;
+			gbc.insets.left = 0;
+			gbc.insets.right = 15;
+			gbc.weightx = 0;
+			gbc.weighty = 0;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			this.add(serverTextField, gbc);
+			
+			// RememberMe line
+			gbc.gridy = pos++;
+			gbc.anchor = GridBagConstraints.CENTER;
+			this.add(rememberMe, gbc);
+		}
+		
+		// Start button line
+		gbc.gridy = pos++;
+		
+		gbc.gridx = 2;
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.gridwidth = 1;
+		gbc.fill = GridBagConstraints.NONE;
+		this.add(startButton, gbc);
 
+		if (! this.isGUILocked) {
+			// More option button
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.insets.top = 25;
@@ -279,44 +358,7 @@ public class AuthFrame extends JFrame implements ActionListener, Runnable {
 			gbc.gridy = 15;
 			this.add(moreOption, gbc);
 		}
-
-		gbc.gridwidth = 0;
-		gbc.gridheight = 1;
-		gbc.insets.top = 0;
-		gbc.gridx = 2;
-		gbc.gridy = 3;
-		gbc.insets.left = 0;
-		gbc.insets.right = 15;
-		gbc.weightx = 0;
-		gbc.weighty = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		this.add(loginTextField, gbc);
-
-		gbc.gridy = 4;
-		this.add(passwordTextField, gbc);
-
-		pos = 5;
-		if (! this.isGUILocked) {
-			if (this.displayUserLocalCredentials) {
-				gbc.gridy = pos++;
-				this.add(this.useLocalCredentials, gbc);
-			}
-
-			gbc.gridy = pos++;
-			this.add(serverTextField, gbc);
-
-			gbc.gridy = pos++;
-			gbc.anchor = GridBagConstraints.CENTER;
-			this.add(rememberMe, gbc);
-		}
-
-		gbc.gridx = 2;
-		gbc.gridy = pos++;
-		gbc.anchor = GridBagConstraints.LINE_START;
-		gbc.gridwidth = 1;
-		gbc.fill = GridBagConstraints.NONE;
-		this.add(startButton, gbc);
-
+		
 		this.initKeyActions();
 		this.changeLanguage();
 		
