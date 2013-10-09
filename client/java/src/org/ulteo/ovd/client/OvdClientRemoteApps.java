@@ -6,6 +6,7 @@
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011-2012
+ * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,6 +55,7 @@ import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
+import org.ulteo.ovd.client.remoteApps.RecoverySeamlessDisplay;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener, DesktopIntegrationListener {
 
@@ -72,6 +74,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected boolean performDesktopIntegration = true;
 	protected DesktopIntegrator desktopIntegrator = null;
 	protected final List<WebAppsServerAccess> webAppsServers;
+	protected RecoverySeamlessDisplay recovery_display = null;
 
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, boolean persistent) {
@@ -116,6 +119,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.desktopIntegrator.start();
 		}
 		
+		this.recovery_display = new RecoverySeamlessDisplay(co);
 		co.setShell("OvdRemoteApps");
 	}
 
