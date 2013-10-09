@@ -213,8 +213,15 @@ bool str_toBool(const char* str) {
 	return res;
 }
 
-bool str_toInt(const char* str) {
+int str_toInt(const char* str) {
 	return atoi(str);
+}
+
+
+int str_toOct(const char* str) {
+	if (str == 0)
+		return 0;
+	return strtol(str, str, 8);
 }
 
 

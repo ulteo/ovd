@@ -272,6 +272,9 @@ static int rufs_getattr(const char *path, struct stat *stbuf)
 	if (res == -1)
 		return -errno;
 
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
+
 	return 0;
 }
 
@@ -285,6 +288,9 @@ static int rufs_fgetattr(const char *path, struct stat *stbuf,
 	res = fstat(fi->fh, stbuf);
 	if (res == -1)
 		return -errno;
+
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
 
 	return 0;
 }
@@ -379,6 +385,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 				memset(&st, 0, sizeof(st));
 				st.st_ino = de->d_ino;
 				st.st_mode = de->d_type << 12;
+
+				if (config->permission_mask)
+					st.st_mode &= config->permission_mask;
+
 				transformPathOut(de->d_name, trpath);
 
 				if (list_containString(rootContents, trpath))
@@ -401,6 +411,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		memset(&st, 0, sizeof(st));
 		st.st_ino = de->d_ino;
 		st.st_mode = de->d_type << 12;
+
+		if (config->permission_mask)
+			st.st_mode &= config->permission_mask;
+
 		if (filler(buf, de->d_name, &st, telldir(dp)))
 			break;
 	}
@@ -454,6 +468,9 @@ static int rufs_mkdir(const char *path, mode_t mode)
 	{
 		return -ENOENT;
 	}
+
+	if (config->umask)
+		mode = 0777 & ~config->umask;
 
 	res = mkdir(trpath, mode);
 	if (res == -1)
@@ -722,6 +739,8 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+		mode = 0666 & ~config->umask;
 
 	fd = open(trpath, fi->flags, mode);
 	if (fd == -1)
@@ -1198,6 +1217,9 @@ int fuse_start(int argc, char** argv) {
 		logError("Failed to parse configuration file");
 		sys_exit(CONF_ERROR);
 	}
+
+	if (config->umask)
+		umask(config->umask);
 
 	if (config == NULL) {
 		logError("There is no valid configuration, exiting");
