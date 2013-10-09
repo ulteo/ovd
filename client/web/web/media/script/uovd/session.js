@@ -48,6 +48,11 @@ uovd.Session.prototype.parseSession = function(xml) {
 			var old_status = this.status;
 			this.status = xml.attr("status");
 
+			var time_restriction = xml.attr("time_restriction");
+			if (time_restriction != undefined) {
+				this.session_management.fireEvent("ovd.session.timeRestriction", this, {"when":time_restriction});
+			}
+			
 			if(old_status != this.status) {
 				this.session_management.fireEvent("ovd.session.statusChanged", this, {"from":old_status,"to":this.status});
 			}

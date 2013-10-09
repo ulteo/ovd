@@ -243,8 +243,8 @@ msgstr ""
 
 #: ../../client/web/web/translate.php:127
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
-msgid "You are not authorized to launch a session in this mode"
-msgstr "Vous n'êtes pas autorisé à lancer une session de ce type"
+msgid "You are not authorized to launch a session. Please contact your administrator for more information"
+msgstr "Vous n'êtes pas autorisé à lancer une session. Veuillez contacter votre administrateur"
 
 #: ../../client/web/web/translate.php:128
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
@@ -258,6 +258,9 @@ msgid ""
 msgstr ""
 "Votre session va s'arrêter dans 3 minutes, veuillez sauvegarder vos "
 "documents dès maintenant !"
+
+msgid "Your session is going to be disconnected in %MINUTES% minutes because of logon time restriction policy"
+msgstr "Votre session va être déconnectée dans %MINUTES% minutes pour cause de politique de restriction d'accès"
 
 #: ../../client/web/web/translate.php:132
 msgid "Server: session closed unexpectedly"

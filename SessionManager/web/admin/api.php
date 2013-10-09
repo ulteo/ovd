@@ -4599,6 +4599,8 @@ class OvdAdminSoap {
 			}
 		}
 		
+		$can_start_session = $user->can_use_session();
+		
 		$remote_desktop_settings = $user->getSessionSettings('remote_desktop_settings');
 		$remote_desktop_enabled = ($remote_desktop_settings['enabled'] == 1);
 		$remote_applications_settings = $user->getSessionSettings('remote_applications_settings');
@@ -4606,13 +4608,12 @@ class OvdAdminSoap {
 	
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
-		$info['can_start_session_desktop'] = $remote_desktop_enabled && 
+		$info['can_start_session_desktop'] = $can_start_session && $remote_desktop_enabled && 
 			$sessionmanagement2->getDesktopServer() && 
 			$sessionmanagement2->buildServersList(true);
-		
 		$sessionmanagement2 = clone($sessionmanagement);
 		$sessionmanagement2->user = $user;
-		$info['can_start_session_applications'] = $remote_applications_enabled &&
+		$info['can_start_session_applications'] = $can_start_session && $remote_applications_enabled &&
 			$sessionmanagement2->buildServersList(true);
 		
 		if ($info['can_start_session_desktop'] || $info['can_start_session_applications']) {
@@ -4630,6 +4631,18 @@ class OvdAdminSoap {
 			}
 			
 			$info['servers'][$s['id']] = $s;
+		}
+		
+		if (! $info['can_start_session_desktop'] || ! $info['can_start_session_applications']) {
+			if (! $can_start_session) {
+				$info['cannot_start_session_reason'] = 'time_restriction';
+			}
+			else if (! $remote_desktop_enabled || ! $remote_applications_enabled) {
+				$info['cannot_start_session_reason'] = 'unauthorized_session_mode';
+			}
+			else {
+				$info['cannot_start_session_reason'] = 'invalid_publications';
+			}
 		}
 		
 		return $info;

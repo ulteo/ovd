@@ -307,4 +307,26 @@ class User {
 		
 		return $default_settings;
 	}
+	
+	public function can_use_session($hour_ = null, $day_ = null) {
+		if (is_null($hour_)) {
+			$hour_ = date('G');
+		}
+		
+		if (is_null($day_)) {
+			$day_ = date('w');
+		}
+		
+		$default_settings = $this->getSessionSettings('session_settings_defaults');
+		$restriction = $default_settings['time_restriction'];
+		
+		$restriction_today = substr($restriction, $day_*3*2, 3*2);
+		$restriction_today = base_convert($restriction_today, 16, 2);
+		$diff = 3*8 - strlen($restriction_today);
+		if ($diff > 0) {
+			$restriction_today = str_repeat('0', $diff).$restriction_today;
+		}
+		
+		return ($restriction_today[$hour_] == '1');
+	}
 }

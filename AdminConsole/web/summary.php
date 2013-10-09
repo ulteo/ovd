@@ -31,6 +31,20 @@ function my_own_callback($matches) {
 	return '<span class="'.strtolower($matches[1]).'">'.trim($matches[0]).'</span>';
 }
 
+
+function get_error_code_translation($code_) {
+	switch($code_) {
+		case 'time_restriction':
+			return _('Time restriction policy');
+		case 'unauthorized_session_mode':
+			return _('Unauthorized session mode');
+		case 'invalid_publications':
+			return _('Invalid publications');
+	}
+	
+	return str_replace('%OPTIONNAL_INFO%', (is_null($code_)?'':'('.$code_.')'), _('Unknown reason %OPTIONNAL_INFO%'));
+}
+
 show_default();
   
   
@@ -163,18 +177,38 @@ function show_default() {
 
 			echo '<td style="white-space: nowrap;">';
 			echo '<div>';
-			if ($user_info['can_start_session_desktop'] === true)
+			if ($user_info['can_start_session_desktop'] === true) // add tooltip
 				echo '<img src="media/image/ok.png" alt="" title="" />';
-			else
+			else {
+				$reason = null;
+				if (array_key_exists('cannot_start_session_reason', $user_info)) {
+					$reason = $user_info['cannot_start_session_reason'];
+				}
+				
+				$reason = get_error_code_translation($reason);
+				
+				echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($reason)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">';
 				echo '<img src="media/image/cancel.png" alt="" title="" />';
+				echo '</span>';
+			}
 			echo ' '._('Desktop');
 			echo '</div>';
 			
 			echo '<div>';
 			if ($user_info['can_start_session_applications'] === true)
 				echo '<img src="media/image/ok.png" alt="" title="" />';
-			else
+			else {
+				$reason = null;
+				if (array_key_exists('cannot_start_session_reason', $user_info)) {
+					$reason = $user_info['cannot_start_session_reason'];
+				}
+				
+				$reason = get_error_code_translation($reason);
+				
+				echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($reason)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">';
 				echo '<img src="media/image/cancel.png" alt="" title="" />';
+				echo '</span>';
+			}
 			echo ' '._('Applications');
 			echo '</div>';
 			

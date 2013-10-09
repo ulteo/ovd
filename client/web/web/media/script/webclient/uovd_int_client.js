@@ -372,6 +372,7 @@ function initialize_framework() {
 	/* Set "framework" namespace */
 	window.ovd.framework = {};
 	window.ovd.framework.listeners = {};
+	window.show_time_restriction_windows = false;
 
 	var framework = window.ovd.framework; /* shorten names */
 
@@ -420,6 +421,21 @@ function initialize_framework() {
 			configureUI(mode);
 			pullMainContainer();
 		}
+	});
+	
+	framework.session_management.addCallback("ovd.session.timeRestriction", function(type, source, params) {
+		if (params["when"] > 10) { // HARDCODED 10 value related to next session_status call. Must define by sessionmanagement constant/var
+			return;
+		}
+		
+		if (window.show_time_restriction_windows == true) {
+			return;
+		}
+		
+		window.show_time_restriction_windows = true;
+		setTimeout(function() {
+			alert(i18n.get('session_time_restriction_expire').replace('%MINUTES%', params["when"]));
+		}, 100);
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {

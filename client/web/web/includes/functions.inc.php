@@ -232,12 +232,13 @@ function get_available_translations($lang) {
 		'internal_error'				=>	_('An internal error occured, please contact your administrator'),
 		'invalid_user'					=>	_('You specified an invalid login, please double-check and try again'),
 		'service_not_available'			=>	_('The service is not available, please contact your administrator for more information'),
-		'unauthorized_session_mode'		=>	_('You are not authorized to launch a session in this mode'),
+		'unauthorized'					=>	_('You are not authorized to launch a session. Please contact your administrator for more information'),
 		'user_with_active_session'		=>	_('You already have an active session'),
 
 		'window_onbeforeunload'			=>	_('You will be disconnected from your OVD session.'),
 
 		'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
+		'session_time_restriction_expire'=>	_('Your session is going to be disconnected in %MINUTES% minutes because of logon time restriction policy'),
 
 		'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),
 		'session_end_ok'				=>	_('Your session has ended, you can now close the window'),

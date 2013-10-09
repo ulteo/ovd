@@ -466,7 +466,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private static final String ERROR_INTERNAL = "internal_error";
 	private static final String ERROR_INVALID_USER = "invalid_user";
 	private static final String ERROR_SERVICE_NOT_AVAILABLE = "service_not_available";
-	private static final String ERROR_UNAUTHORIZED_SESSION_MODE = "unauthorized_session_mode";
+	private static final String ERROR_UNAUTHORIZED = "unauthorized";
 	private static final String ERROR_ACTIVE_SESSION = "user_with_active_session";
 	private static final String ERROR_DEFAULT = "default";
 
@@ -482,8 +482,8 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				return I18n._("You specified an invalid login, please double-check and try again");
 			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
 				return I18n._("The service is not available, please contact your administrator for more information");
-			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
-				return I18n._("You are not authorized to launch a session in this mode");
+			else if (key.equals(ERROR_UNAUTHORIZED))
+				return I18n._("You are not authorized to launch a session. Please contact your administrator for more information");
 			else if (key.equals(ERROR_ACTIVE_SESSION))
 				return I18n._("You already have an active session");
 			
@@ -500,7 +500,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				return true;
 			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
 				return true;
-			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
+			else if (key.equals(ERROR_UNAUTHORIZED))
 				return true;
 			else if (key.equals(ERROR_ACTIVE_SESSION))
 				return true;

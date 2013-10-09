@@ -371,6 +371,7 @@ function page_header($params_=array()) {
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common-regular.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/sortable.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/time_grid.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/configuration.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/user.js" charset="utf-8"></script>';

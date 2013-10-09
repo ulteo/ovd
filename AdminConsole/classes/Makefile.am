@@ -12,6 +12,7 @@ scripts_DATA = AbstractObject.class.php  \
                ConfigElement_sliders_loadbalancing.class.php \
                ConfigElement_textarea.class.php \
                ConfigElement_text.class.php \
+               ConfigElement_week_time_select.class.php \
                Configuration_mode_ad.class.php \
                Configuration_mode.class.php \
                Configuration_mode_internal.class.php \

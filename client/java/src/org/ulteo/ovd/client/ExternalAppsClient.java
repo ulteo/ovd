@@ -41,6 +41,7 @@ import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.SessionExpiration;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
@@ -60,6 +61,7 @@ public class ExternalAppsClient {
 	public static void main(String[] args) {
 
 		ClientInfos.showClientInfos();
+		SessionExpiration.getInstance().disable();
 
 		LongOpt[] options = new LongOpt[4];
 		StringBuffer optionsBuffer = new StringBuffer();

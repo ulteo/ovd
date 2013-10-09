@@ -145,6 +145,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 		this.base_url = this.makeUrl("");
 
+		SessionExpiration.getInstance().reset();
 	}
 
 	public String getHost() {
@@ -314,6 +315,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	public boolean askForLogout(boolean persistent) throws SessionManagerException {
+		SessionExpiration.getInstance().reset();
 		Document doc = getNewDocument();
 		if (doc == null)
 			return false;
@@ -626,6 +628,18 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			throw new SessionManagerException("bad xml");
 		}
+		
+		int timeout = -1;
+		try {
+			// time restriction is in minute
+			String time_restriction = rootNode.getAttribute("time_restriction");
+			timeout = Integer.parseInt(time_restriction);
+		}
+		catch (Exception err) {
+			timeout = -1;
+		}
+		
+		SessionExpiration.getInstance().setExpiration(timeout);
 
 		return status;
 	}

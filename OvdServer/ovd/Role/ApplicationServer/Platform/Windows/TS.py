@@ -168,3 +168,15 @@ class TS(AbstractTS):
 			Logger.warn("perform_logoff: exception %s"%(e))
 			return False
 		return True
+	
+	
+	@staticmethod
+	def disconnect(session_id):
+		try:
+			Logger.debug("perform_disconnect: start logoff %d"%(session_id))
+			ret = win32ts.WTSDisconnectSession(None, session_id, True)
+			Logger.debug("perform_disconnect: finish disconnect %d ret: %s"%(session_id, str(ret)))
+		except Exception, e:
+			Logger.warn("perform_disconnect: exception %s"%(e))
+			return False
+		return True
