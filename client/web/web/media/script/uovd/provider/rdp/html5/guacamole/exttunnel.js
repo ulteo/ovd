@@ -35,7 +35,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-uovd.provider.rdp.html5.HTTPTunnel = function(rdp_provider, tunnelURL, index) {
+// Guacamole namespace
+var Guacamole = Guacamole || {};
+
+Guacamole.ExtHTTPTunnel = function(rdp_provider, tunnelURL, index) {
 
 		this.rdp_provider = rdp_provider;
 

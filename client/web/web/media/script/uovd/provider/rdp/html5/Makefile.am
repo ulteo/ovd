@@ -1,6 +1,7 @@
 SUBDIRS = guacamole
 
-scripts_DATA = http_tunnel.js \
+scripts_DATA = input_keyboard.js \
+               input_mouse.js \
                seamless_handler.js \
                seamless_icon.js \
                seamless_window_factory.js \

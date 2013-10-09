@@ -65,7 +65,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.onerror = function() {
 				/* !!! */
@@ -75,23 +75,12 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_display = connection.guac_client.getDisplay();
-			connection.guac_canvas  = connection.guac_display.firstChild.firstChild.firstChild;
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
+			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
-			/* bind mouse events */
-			connection.guac_mouse = new Guacamole.Mouse(connection.guac_canvas);
-			connection.guac_mouse.onmousedown = connection.guac_mouse.onmouseup = connection.guac_mouse.onmousemove = function(mouseState) {
-				connection.guac_client.sendMouseState(mouseState);
-			};
-
-			/* bind keyboard events */
-			connection.guac_keyboard= new Guacamole.Keyboard(document);
-			connection.guac_keyboard.onkeydown = function (keysym) {
-				connection.guac_client.sendKeyEvent(1, keysym);
-			};
-			connection.guac_keyboard.onkeyup = function (keysym) {
-				connection.guac_client.sendKeyEvent(0, keysym);
-			};
+			/* Initialize inputs */
+			connection.keyboard = new uovd.provider.rdp.html5.Keyboard(self, connection);
+			connection.mouse = new uovd.provider.rdp.html5.Mouse(self, connection);
 
 			/* Save server settings */
 			self.connections.push(connection);
@@ -99,9 +88,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			/* Add the fullscreen request function */
 			self.request_fullscreen = function() {
 				jQuery(connection.guac_display).show();
-				if(connection.guac_canvas.requestFullScreen)       { connection.guac_canvas.requestFullScreen(); return ; }
-				if(connection.guac_canvas.webkitRequestFullScreen) { connection.guac_canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT); return ; }
-				if(connection.guac_canvas.mozRequestFullScreen)    { connection.guac_canvas.mozRequestFullScreen(); return ; }
+				if(connection.guac_display.requestFullScreen)       { connection.guac_display.requestFullScreen(); return ; }
+				if(connection.guac_display.webkitRequestFullScreen) { connection.guac_display.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT); return ; }
+				if(connection.guac_display.mozRequestFullScreen)    { connection.guac_display.mozRequestFullScreen(); return ; }
 			};
 
 			/* Hide display */
@@ -153,7 +142,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			var connection = {};
 
 			/* Connect */
-			connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
+			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 			connection.guac_client.onerror = function() {
 				/* !!! */
@@ -163,23 +152,12 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_display = connection.guac_client.getDisplay();
-			connection.guac_canvas  = connection.guac_display.firstChild.firstChild.firstChild;
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
+			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
-			/* bind mouse events */
-			connection.guac_mouse = new Guacamole.Mouse(connection.guac_display);
-			connection.guac_mouse.onmousedown = connection.guac_mouse.onmouseup = connection.guac_mouse.onmousemove = function(mouseState) {
-				connection.guac_client.sendMouseState(mouseState);
-			};
-
-			/* bind keyboard events */
-			connection.guac_keyboard= new Guacamole.Keyboard(document);
-			connection.guac_keyboard.onkeydown = function (keysym) {
-				connection.guac_client.sendKeyEvent(1, keysym);
-			};
-			connection.guac_keyboard.onkeyup = function (keysym) {
-				connection.guac_client.sendKeyEvent(0, keysym);
-			};
+			/* Initialize inputs */
+			connection.keyboard = new uovd.provider.rdp.html5.Keyboard(self, connection);
+			connection.mouse = new uovd.provider.rdp.html5.Mouse(self, connection);
 
 			/* Save server settings */
 			self.connections.push(connection);
@@ -211,6 +189,9 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 		}
 	}
 
+	/* Display */
+	var display = jQuery(document.createElement("div"));
+
 	/* Load servers */
 	var chainLoader = function(index) {
 		/* Recursion control */
@@ -224,14 +205,18 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			var applications_provider = new uovd.provider.applications.Html5(self);
 
 			/* Create a keyboard */
-			var keyboard = new Guacamole.Keyboard(document);
+			var keyboard = new uovd.provider.rdp.html5.Keyboard(self, self.connections[0]);
 
 			/* Share it among all connections */
 			for(var i=0 ; i<self.connections.length ; ++i) {
-				self.connections[i].guac_keyboard = keyboard;
+				self.connections[i].keyboard = keyboard;
+				self.connections[i].guac_keyboard = self.connections[0].guac_keyboard;
 			}
 
 			/* /!\ The mouse is not handled per connection but per window /!\ */
+
+			/* Notify main panel insertion */
+			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":display});
 
 			return;
 		};
@@ -260,7 +245,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				var connection = {};
 
 				/* Connect */
-				connection.guac_tunnel = new uovd.provider.rdp.html5.HTTPTunnel(self, "/ovd/guacamole/tunnel", index);
+				connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
 				connection.guac_client.onerror = function() {
 					/* !!! */
@@ -269,18 +254,20 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				}
 				connection.guac_client.connect("id="+index);
 
-				/* Display */
-				connection.guac_display = connection.guac_client.getDisplay();
-				connection.guac_canvas  = connection.guac_display.firstChild.firstChild.firstChild;
-
 				/* Save server settings */
 				self.connections.push(connection);
+
+				/* Display */
+				connection.guac_display = display;
+
+				/* Canvas */
+				connection.guac_canvas = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
 
 				/* Hide main canvas */
 				jQuery(connection.guac_canvas).hide();
 
-				/* Notify main panel insertion */
-				self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Desktop", "node":connection.guac_display});
+				/* Add it to the display */
+				display.append(connection.guac_canvas);
 
 				/* Call next chainLoader iteration */
 				chainLoader(parseInt(index)+1);

@@ -82,21 +82,17 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 
 		var connection = this.connections[server_id];
 		var guac_client   = connection.guac_client;
-		var guac_display  = connection.guac_display
 		var guac_canvas   = connection.guac_canvas
 		var guac_tunnel   = connection.guac_tunnel
 		var guac_mouse    = connection.guac_mouse
 		var guac_keyboard = connection.guac_keyboard
-
-		var display = guac_client.getDisplay();
-		var main_canvas = display.firstChild.firstChild.firstChild;
 
 		/* Context params for windows */
 		var params = {};
 		params["rdp_provider"] = this.rdp_provider;
 		params["server_id"] = server_id;
 		params["connection"] = connection;
-		params["main_canvas"] = main_canvas;
+		params["main_canvas"] = guac_canvas;
 
 		if(seamless[0] == "HELLO") {
 			/* seamless[2] = flags (0x0001 = reconnect)

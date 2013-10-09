@@ -26,8 +26,18 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		this.node.css("position", "absolute");
 		this.node.prop("id", "w_"+this.id);
 
-		/* Focus on click */
-		this.node.click(function() {
+		/* Mouse */
+		this.mouse = new Guacamole.TabletMouse(this.node[0]);
+
+		function sendMouseState(mouseState) {
+			self.connection.guac_client.sendMouseState(mouseState);
+		}
+
+		this.mouse.onmousemove = function(mouseState) {
+			sendMouseState(mouseState);
+		};
+
+		this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {
 			if(! self.focused) {
 				/* Simulate a focus change event to send the canvas on the top */
 				params["rdp_provider"] = self.rdp_provider;
@@ -39,9 +49,41 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 				params["value"] = true;
 				self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", self, params);
 			}
-		});
 
-		/* Move window */
+			sendMouseState(mouseState);
+		}
+
+		/* Pinch gesture */
+		this.mouse.onmousepinch = function(amount, center_x, center_y, first) {
+			/* Send event */
+			var params = {};
+			params["center_x"] = center_x;
+			params["center_y"] = center_y;
+			params["amount"] = amount;
+			params["first"] = first;
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.pinching", self.node[0], params);
+		};
+
+		/* Pan gesture */
+		this.mouse.onmousepan = function(x, y) {
+			/* Send event */
+			var params = {};
+			params["x"] = x;
+			params["y"] = y;
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.panning", self.node[0], params);
+		};
+
+		this.mouse.ontwofingers = function() {
+			/* Send event */
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.twofingers", self.node[0], {});
+		};
+
+		this.mouse.onthreefingers = function() {
+			/* Send event */
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.threefingers", self.node[0], {});
+		};
+
+		/* Client-side Move window (drag-n-drop) */
 		this.node.mousedown(function(e) {
 			var begin_drag_n_drop = function() {
 				var lastX = e.pageX;
@@ -123,13 +165,6 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 		});
 
-		this.mouse = new Guacamole.Mouse(this.node[0]);
-		this.mouse.onmousemove = this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {
-			var x = parseInt(mouseState.x)+parseInt(self.x);
-			var y = parseInt(mouseState.y)+parseInt(self.y);
-			var newState = new Guacamole.Mouse.State(x, y, mouseState.left, mouseState.middle, mouseState.right, mouseState.up, mouseState.down);
-			self.connection.guac_client.sendMouseState(newState);
-		}
 
 		/* /!\ The keyboard is not handled per window but per connection /!\ */
 	}
@@ -216,17 +251,11 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		this.focused = true;
 
 		/* Bind keyboard events */
-		var self = this; /* closure */
-		this.connection.guac_keyboard.onkeydown = function (keysym) { self.connection.guac_client.sendKeyEvent(1, keysym); };
-		this.connection.guac_keyboard.onkeyup =   function (keysym) { self.connection.guac_client.sendKeyEvent(0, keysym); };
+		this.connection.keyboard.attach(this.connection);
 	}
 
 	this.SeamlessWindow.prototype.blur = function() {
 		this.focused = false;
-
-		/* UnBind keyboard events */
-		this.connection.guac_keyboard.onkeydown = function (keysym) {};
-		this.connection.guac_keyboard.onkeyup =   function (keysym) {};
 	}
 
 	this.SeamlessWindow.prototype.isFocused = function() {
