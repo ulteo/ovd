@@ -29,6 +29,15 @@ class SessionManager {
 	public function __construct($base_url_) {
 		$this->base_url = $base_url_;
 		$this->cookies = array();
+
+		if (isset($_COOKIE)) {
+			foreach($_COOKIE as $cookie_key => $cookie_value) {
+				if (in_array($cookie_key, array('PHPSESSID', 'ovd-client')))
+					continue;
+
+				$this->cookies[$cookie_key] = $cookie_value;
+			}
+		}
 	}
 	
 	public function query($url_) {
@@ -93,8 +102,11 @@ class SessionManager {
 		curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
 		curl_setopt($socket, CURLOPT_FILETIME, true);
 		
-		foreach($this->cookies as $k => $v)
-			curl_setopt($socket, CURLOPT_COOKIE, $k.'='.$v);
+		$cookie_string = "";
+		foreach($this->cookies as $k => $v) {
+			$cookie_string = $cookie_string.$k.'='.$v.'; ';
+		}
+		curl_setopt($socket, CURLOPT_COOKIE, $cookie_string);
 		
 		return $socket;
 	}

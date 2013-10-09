@@ -182,6 +182,9 @@ function validate_settings() {
 			if(java) { setTimeout(jQuery.proxy(java.getUserLogin, java, detection), 1); }
 			else { detection(); }
 		}
+	} else if(settings.force_sso) {
+		jQuery('#user_login').prop('disabled', true);
+		jQuery('#password_row').hide();
 	} else {
 		jQuery('#user_login').show();
 		jQuery('#user_login_local').hide();
@@ -195,7 +198,7 @@ function validate_settings() {
 		 /* RDP provider available ? */
 		 nb_rdp_providers > 0 &&
 	   /* User login or local_credentials valid ? */
-		 (settings.login || settings.use_local_credentials) ) {
+		 (settings.login || settings.use_local_credentials || settings.force_sso) ) {
 		jQuery('#connect_gettext').removeAttr('disabled');
 	} else {
 		jQuery('#connect_gettext').prop('disabled', true);
@@ -255,6 +258,7 @@ function initialize_settings() {
 	/* Settings needed by the framework */
 	if(defaults.local_integration) { settings.local_integration = defaults.local_integration; }
 	if(defaults.rdp_input_method)  { settings.rdp_input_method = defaults.rdp_input_method; }
+	if(defaults.force_sso)         { settings.force_sso = defaults.force_sso; }
 
 	/* Keymap autodetect */
 	if(defaults.keymap_autodetect && ! defaults.force_keymap) {

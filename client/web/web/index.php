@@ -64,6 +64,15 @@ elseif (isset($_COOKIE['ovd-client']['use_local_credentials']))
 if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
 	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
 
+$force_sso = false;
+if (defined('OPTION_FORCE_SSO') && OPTION_FORCE_SSO === true) {
+	if (array_key_exists('REMOTE_USER', $_SERVER)) {
+		$wi_user_login = $_SERVER['REMOTE_USER'];
+		$force_sso = true;
+		$wi_use_local_credentials = 0;
+	}
+}
+
 $wi_session_mode = 'desktop';
 if (defined('OPTION_FORCE_SESSION_MODE'))
 	$wi_session_mode = OPTION_FORCE_SESSION_MODE;
@@ -273,6 +282,7 @@ function get_users_list() {
 			window.ovd.defaults.force_language              = <?php echo defined('OPTION_FORCE_LANGUAGE') && OPTION_FORCE_LANGUAGE === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_input_method          = <?php echo defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_keymap                = <?php echo defined('OPTION_FORCE_KEYMAP') && OPTION_FORCE_KEYMAP === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_sso                   = <?php echo $force_sso === true ? 'true' : 'false'; ?>;
 
 			var i18n = {};
 			<?php
@@ -600,7 +610,7 @@ function get_users_list() {
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<?php
-														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
+														if (! defined('SESSIONMANAGER_HOST') || $users === false || $force_sso === true) {
 													?>
 													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>"/>
 													<?php
