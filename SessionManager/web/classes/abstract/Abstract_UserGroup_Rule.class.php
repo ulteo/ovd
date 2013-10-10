@@ -242,7 +242,7 @@ class Abstract_UserGroup_Rule {
 		$sql = SQL::getInstance();
 		$res = $sql->DoQuery('SELECT COUNT(*) FROM #1 GROUP BY @2', self::table, 'usergroup_id');
 		if ($res !== true) {
-			Logger::error('main', "Abstract_UserGroup_Preferences::get_usersgroups sql request failed");
+			Logger::error('main', "Abstract_UserGroup_Rule::get_usersgroups sql request failed");
 			return array();
 		}
 		
