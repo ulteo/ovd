@@ -88,7 +88,7 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 						FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 
 		if (SUCCEEDED(res)) {
-			log_debug(L"add %ui => %s", *FileHandle, p);
+			log_debug(L"add %lu => %s", *FileHandle, p.c_str());
 			vf.addHandle(*FileHandle, p);
 		}
 		return res;
@@ -129,7 +129,7 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 		res = OriginNtOpenFile(FileHandle, DesiredAccess, &out, IoStatusBlock, ShareAccess, OpenOptions);
 
 		if (SUCCEEDED(res)) {
-			log_debug(L"add %lu => %s", *FileHandle, p);
+			log_debug(L"add %lu => %s", *FileHandle, p.c_str());
 			vf.addHandle(*FileHandle, p);
 		}
 		return res;

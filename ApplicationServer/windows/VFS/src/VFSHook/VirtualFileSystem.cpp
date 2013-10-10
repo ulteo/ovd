@@ -264,7 +264,7 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 			log_debug(L"   => test rules %s", (*it)->getRule().c_str());
 
 			if ((*it)->match(szRemainPath)) {
-				log_debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination());
+				log_debug(L"   => match %s -> %s", (*it)->getRule().c_str(), (*it)->getDestination().c_str());
 				std::wstring remain = szRemainPath;
 
 				if ((*it)->needTranslate())
