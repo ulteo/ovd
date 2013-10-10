@@ -113,7 +113,6 @@ bool configuration_parseLog(Ini* ini) {
 static bool configuration_parseRules(Ini* ini, Configuration* conf) {
 	Section* section = NULL;
 	char expandedPath[PATH_MAX];
-	char* value;
 	int i;
 
 	if (ini == NULL || conf == NULL) {
@@ -163,7 +162,6 @@ static bool configuration_parseUnion(Ini* ini, Configuration* conf, const char* 
 	Union* unionObject = memory_new(Union, true);
 	Section* section = NULL;
 	char expandedPath[PATH_MAX];
-	char* value;
 	int i;
 
 	str_cat(unionObject->name, unionName);
@@ -420,7 +418,7 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 		}
 	}
 
-	if (conf->bind & conf->bind_path[0] == '\0') {
+	if (conf->bind && conf->bind_path[0] == '\0') {
 		logWarn("You authorize bind but there is no bind path");
 	}
 
@@ -430,8 +428,6 @@ static bool configuration_parseMain(Ini* ini, Configuration* conf) {
 
 static bool configuration_parseTranslation(Ini* ini, Configuration* conf) {
 	Translation* trans;
-	char* key;
-	char* value;
 	Section* sec;
 	int i;
 

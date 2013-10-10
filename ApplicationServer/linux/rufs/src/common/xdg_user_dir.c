@@ -25,10 +25,12 @@
   SOFTWARE.
 */
 
+#include "xdg_user_dir.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "str.h"
 #include "types.h"
+#include "memory.h"
 
 /**
  * xdg_user_dir_lookup_with_fallback:
@@ -55,7 +57,6 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 	char *user_dir;
 	char *p, *d;
 	int len;
-	int relative;
 
 	home_dir = getenv ("HOME");
 
@@ -65,21 +66,21 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 	config_home = getenv ("XDG_CONFIG_HOME");
 	if (config_home == NULL || config_home[0] == 0)
 	{
-		config_file = (char*) malloc (strlen (home_dir) + strlen ("/.config/user-dirs.dirs") + 1);
+		config_file = (char*) malloc (str_len (home_dir) + str_len ("/.config/user-dirs.dirs") + 1);
 		if (config_file == NULL)
 			goto error;
 
-		strcpy (config_file, home_dir);
-		strcat (config_file, "/.config/user-dirs.dirs");
+		str_cpy (config_file, home_dir);
+		str_cat (config_file, "/.config/user-dirs.dirs");
 	}
 	else
 	{
-		config_file = (char*) malloc (strlen (config_home) + strlen ("/user-dirs.dirs") + 1);
+		config_file = (char*) malloc (str_len (config_home) + str_len ("/user-dirs.dirs") + 1);
 		if (config_file == NULL)
 			goto error;
 
-		strcpy (config_file, config_home);
-		strcat (config_file, "/user-dirs.dirs");
+		str_cpy (config_file, config_home);
+		str_cat (config_file, "/user-dirs.dirs");
 	}
 
 	file = fopen (config_file, "r");
@@ -91,7 +92,7 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 	while (fgets (buffer, sizeof (buffer), file))
 	{
 		/* Remove newline at end */
-		len = strlen (buffer);
+		len = str_len (buffer);
 		if (len > 0 && buffer[len-1] == '\n')
 			buffer[len-1] = 0;
       
@@ -99,13 +100,13 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 		while (*p == ' ' || *p == '\t')
 			p++;
       
-		if (strncmp (p, "XDG_", 4) != 0)
+		if (str_ncmp (p, "XDG_", 4) != 0)
 			continue;
 		p += 4;
-		if (strncmp (p, type, strlen (type)) != 0)
+		if (str_ncmp (p, type, str_len (type)) != 0)
 			continue;
-		p += strlen (type);
-		if (strncmp (p, "_DIR", 4) != 0)
+		p += str_len (type);
+		if (str_ncmp (p, "_DIR", 4) != 0)
 			continue;
 		p += 4;
 
@@ -123,22 +124,20 @@ xdg_user_dir_lookup_with_fallback (const char *type, const char *fallback)
 			continue;
 		p++;
       
-		relative = 0;
-		if (strncmp (p, "$HOME/", 6) == 0)
+		if (str_ncmp (p, "$HOME/", 6) == 0)
 		{
 			p += 6;
-			relative = 1;
 		}
 		else if (*p != '/')
 			continue;
       
-		user_dir = (char*) malloc (strlen (p) + 2);
+		user_dir = (char*) malloc (str_len (p) + 2);
 		if (user_dir == NULL)
 			goto error2;
 
 		*user_dir = 0;
 
-		d = user_dir + strlen (user_dir);
+		d = user_dir + str_len (user_dir);
 		while (*p && *p != '"')
 		{
 			if ((*p == '\\') && (*(p+1) != 0))
@@ -155,7 +154,7 @@ if (user_dir)
 
 error:
 if (fallback)
-	return strdup (fallback);
+	return str_dup (fallback);
 return NULL;
 }
 
@@ -191,15 +190,15 @@ xdg_user_dir_lookup (const char *type)
 		return NULL;
   
 	/* Special case desktop for historical compatibility */
-	if (strcmp (type, "DESKTOP") == 0)
+	if (str_cmp (type, "DESKTOP") == 0)
 	{
-		user_dir = (char*) memory_alloc((strlen (home_dir) + strlen ("Desktop") + 1), true);
+		user_dir = (char*) memory_alloc((str_len (home_dir) + str_len ("Desktop") + 1), true);
 		if (user_dir == NULL)
 			return NULL;
 
-		strcat (user_dir, "Desktop");
+		str_cat (user_dir, "Desktop");
 		return user_dir;
 	}
   
-	return strdup (home_dir);
+	return str_dup (home_dir);
 }

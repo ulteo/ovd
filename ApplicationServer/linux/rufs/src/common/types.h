@@ -24,8 +24,9 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-
+#ifndef __cplusplus
 typedef enum {false, true} bool;
+#endif
 
 typedef long Any;
 typedef unsigned char byte;
