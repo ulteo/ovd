@@ -27,6 +27,7 @@ class Preferences_admin extends Preferences {
 	public function __construct($element_form_=array(), $partial=false, $init_=false){
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->elements = array();
+		$this->elements_by_uid = array();
 		$this->initialize();
 		try {
 			$filecontents = $this->getConfFileContents();
@@ -37,6 +38,11 @@ class Preferences_admin extends Preferences {
 		catch (Exception $e) {
 		}
 		$this->mergeWithConfFile($element_form_);
+		$sql_conf = $this->get('general', 'sql');
+		$sql = SQL::newInstance($sql_conf);
+		if ($sql->CheckLink(false, false)) {
+			$this->load_from_db();
+		}
 	}
 
 	public function deleteConfFile() {
@@ -46,41 +52,29 @@ class Preferences_admin extends Preferences {
 		init_db($this);
 		$this->deleteConfFile();
 		$filecontents = array();
-		foreach($this->elements as $key1 => $value1) {
-			if (is_array($this->elements[$key1])) {
-				foreach($value1 as $key2 => $value2) {
-					if (is_array($value2)) {
-						foreach($value2 as $key3 => $value3) {
-							if (is_array($value3)) {
-								foreach($value3 as $key4 => $value4) {
-									$buf = $this->elements[$key1][$key2][$key3][$key4];
-									if (!isset($filecontents[$key1][$key2][$key3]))
-										$filecontents[$key1][$key2][$key3] = array();
-									$filecontents[$key1][$key2][$key3][$key4] = $buf->content;
-								}
-							}
-							else {
-								$buf = $this->elements[$key1][$key2][$key3];
-								if (!isset($filecontents[$key1][$key2]))
-									$filecontents[$key1][$key2] = array();
-								$filecontents[$key1][$key2][$key3] = $buf->content;
-							}
-						}
-					}
-					else {
-						$buf = $this->elements[$key1][$key2];
-						if (!isset($filecontents[$key1]))
-							$filecontents[$key1] = array();
-						$filecontents[$key1][$key2] = $buf->content;
-					}
-				}
+		$db_content = array();
+		
+		foreach($this->elements_by_uid as $k => $element) {
+			if (self::keys_match_patterns($k, self::$must_read_from_conf)) {
+				$filecontents[$k] = $element->content;
 			}
 			else {
-				$buf = $this->elements[$key1];
-				$filecontents[$key1] = $buf->content;
+				$db_content[$k] = $element->content;
 			}
 		}
-		return file_put_contents($this->conf_file, json_serialize($filecontents), LOCK_EX);
+		
+		$ret = file_put_contents($this->conf_file, json_serialize($filecontents), LOCK_EX);
+		if ($ret === FALSE) {
+			die_error('Unable to save settings file '.$this->conf_file, __FILE__, __LINE__);
+		}
+		
+		$sql_conf = $this->get('general', 'sql');
+		$sql = SQL::newInstance($sql_conf);
+		if ($sql->CheckLink(false, false)) {
+			$ret = Abstract_Preferences::save($db_content);
+		}
+		
+		return $ret;
 	}
 
 	public function isValid() {

@@ -25,13 +25,17 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Preferences {
 	public $elements;
+	protected $elements_by_uid;
 	protected $conf_file;
 	private static $instance;
 	public $prettyName;
-
+	
+	protected static $must_read_from_conf = array('general.sql.*');
+	
 	public function __construct(){
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->elements = array();
+		$this->elements_by_uid = array();
 		$this->initialize();
 	}
 
@@ -42,6 +46,12 @@ class Preferences {
 		}
 		else {
 			$this->mergeWithConfFile($filecontents);
+			
+			$sql_conf = $this->get('general', 'sql');
+			$sql = SQL::newInstance($sql_conf);
+			if ($sql->CheckLink(false, false)) {
+				$this->load_from_db();
+			}
 		}
 	}
 
@@ -148,38 +158,91 @@ class Preferences {
 		}
 	}
 
-	public function mergeWithConfFile($filecontents) {
-		if (is_array($filecontents)) {
-			foreach($filecontents as $key1 => $value1) {
-				if ((isset($this->elements[$key1])) && is_object($this->elements[$key1])) {
-					$buf = &$this->elements[$key1];
-					$buf->content = $filecontents[$key1];
-				}
-				else if (is_array($filecontents[$key1])) {
-					foreach($value1 as $key2 => $value2) {
-						if ((isset($this->elements[$key1][$key2])) && is_object($this->elements[$key1][$key2])) {
-							$buf = &$this->elements[$key1][$key2];
-							$buf->content = $filecontents[$key1][$key2];
-						}
-						else if (is_array($value2)) {
-							foreach($value2 as $key3 => $value3) {
-								if ((isset($this->elements[$key1][$key2][$key3])) && is_object($this->elements[$key1][$key2][$key3])) {
-									$buf = &$this->elements[$key1][$key2][$key3];
-									$buf->content = $filecontents[$key1][$key2][$key3];
-								}
-								else if (is_array($value3)) {
-									foreach($value3 as $key4 => $value4) {
-										if ((isset($this->elements[$key1][$key2][$key3][$key4])) && is_object($this->elements[$key1][$key2][$key3][$key4])) {
-											$buf = &$this->elements[$key1][$key2][$key3][$key4];
-											$buf->content = $filecontents[$key1][$key2][$key3][$key4];
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+	protected static function keys_match_pattern($key_, $pattern_) {
+		$key_sub = explode('.', $key_);
+		$pattern_sub = explode('.', $pattern_);
+		$last_is_wildcard = false;
+		
+		for ($i=0; $i<count($key_sub); $i++) {
+			$key_part = $key_sub[$i];
+			if (count($pattern_sub) <= $i) {
+				return $last_is_wildcard;
 			}
+			
+			$pattern_part = $pattern_sub[$i];
+			if ($pattern_part == "*") {
+				$last_is_wildcard = true;
+				continue;
+			}
+			
+			$last_is_wildcard = false;
+			if ($key_part != $pattern_part) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	protected static function keys_match_patterns($key_, $patterns_) {
+		foreach($patterns_ as $pattern) {
+			if (self::keys_match_pattern($key_, $pattern)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public function mergeWithConfFile($data_) {
+		if (! is_array($data_)) {
+			return;
+		}
+		
+		foreach($data_ as $k => $v) {
+			if (! array_key_exists($k, $this->elements_by_uid)) {
+				// old version of OVD use a tree level (array including array)
+				$this->load_data_old_storage($k, $v);
+				continue;
+			}
+			
+			if (! self::keys_match_patterns($k, self::$must_read_from_conf)) {
+				continue;
+			}
+			
+			$this->elements_by_uid[$k]->content = $v;
+		}
+	}
+	
+	private function load_data_old_storage($id_, $content_) {
+		if (is_null($content_) || ! is_array($content_)) {
+			error_log('no match for '.$id_);
+			return false;
+		}
+		
+		foreach($content_ as $k => $v) {
+			$id2 = $id_.'.'.$k;
+			if (array_key_exists($id2, $this->elements_by_uid)) {
+				$this->elements_by_uid[$id2]->content = $v;
+			}
+			else { // recursion
+				$this->load_data_old_storage($id2, $v);
+			}
+		}
+	}
+	
+	public function load_from_db() {
+		$values = Abstract_Preferences::load();
+		foreach($values as $k => $v) {
+			if (! array_key_exists($k, $this->elements_by_uid)) {
+				continue;
+			}
+			
+			if (self::keys_match_patterns($k, self::$must_read_from_conf)) {
+				continue;
+			}
+			
+			$this->elements_by_uid[$k]->content = $v;
 		}
 	}
 
@@ -699,6 +762,14 @@ class Preferences {
 				$this->elements[$key_] = $value_;
 			}
 		}
+		
+		$uid = $key_;
+		if (!is_null($container_)) {
+			$uid.= '.'.$container_;
+		}
+		
+		$uid.= '.'.$value_->id;
+		$this->elements_by_uid[$uid] = $value_;
 	}
 
 	public static function moduleIsEnabled($name_) {

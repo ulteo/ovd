@@ -131,12 +131,25 @@ class OvdAdminSoap {
 		return true;
 	}
 	
+	private function system_is_ok() {
+		if (! file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED)) {
+			return false;
+		}
+		
+		$sql = SQL::newInstance($this->prefs->get('general', 'sql'));
+		if (! $sql->CheckLink(false, false)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public function getInitialConfiguration() {
 		$c = array(
 			'version' => OVD_SM_VERSION,
 			'max_items_per_page' => $this->prefs->get('general', 'max_items_per_page'),
 			'admin_language' => $this->prefs->get('general', 'admin_language'),
-			'system_inited' => file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED),
+			'system_inited' => $this->system_is_ok(),
 			'system_in_maintenance' => $this->prefs->get('general', 'system_in_maintenance'),
 		);
 		

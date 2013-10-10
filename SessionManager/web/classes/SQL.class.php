@@ -78,18 +78,23 @@ class SQL {
 		return self::$instance;
 	}
 
-	public function CheckLink($die_=true) {
+	public function CheckLink($die_=true, $event_=true) {
 		if ($this->link)
 			return;
 
-		$ev = new SqlFailure(array('host' => $this->sqlhost));
+		if ($event_) {
+			$ev = new SqlFailure(array('host' => $this->sqlhost));
+		}
 
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
 		if (! $this->link) {
 			if ($die_) {
-				$ev->setAttribute('status', -1);
-				$ev->emit();
+				if ($event_) {
+					$ev->setAttribute('status', -1);
+					$ev->emit();
+				}
+				
 				die_error('Link to SQL server failed.',__FILE__,__LINE__);
 			}
 
@@ -98,8 +103,11 @@ class SQL {
 
 		if ($this->SelectDB($this->sqlbase) === false) {
 			if ($die_) {
-				$ev->setAttribute('status', -1);
-				$ev->emit();
+				if ($event_) {
+					$ev->setAttribute('status', -1);
+					$ev->emit();
+				}
+				
 				die_error('Could not select database.',__FILE__,__LINE__);
 			}
 
@@ -107,8 +115,11 @@ class SQL {
 		}
 
 		$this->DoQuery('SET NAMES utf8');
-		$ev->setAttribute('status', 1);
-		$ev->emit();
+		if ($event_) {
+			$ev->setAttribute('status', 1);
+			$ev->emit();
+		}
+		
 		return true;
 	}
 
