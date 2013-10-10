@@ -73,6 +73,9 @@ bool RSync::init() {
 	if (! this->filter.empty())
 		this->process->addArgs(L"--include-from=\""+this->filter+L"\"");
 
+	this->process->addArgs(L"--delete");
+	this->process->addArgs(L"--delete-excluded");
+
 	this->process->addArgs(L"\""+this->src+L"\"");
 	this->process->addArgs(L"\""+this->dst+L"\"");
 
