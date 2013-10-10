@@ -177,43 +177,50 @@ class User {
 	}
 	
 	public function getSharedFolders() {
-		$sharedfolders = array();
 		if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
 			return array();
 		}
+		
 		$session_settings_defaults = $this->getSessionSettings('session_settings_defaults');
 		if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {
 			$enable_sharedfolders = $session_settings_defaults['enable_sharedfolders'];
 			if ($enable_sharedfolders == 0) {
-				return $sharedfolders;
+				return array();
 			}
 		}
-		
+
 		$usergroups = $this->usersGroups();
 		if (is_array($usergroups) === false) {
 			Logger::error('main', 'User::getSharedFolders usersGroups failed for user (login='.$this->getAttribute('login').')');
+			return array();
 		}
-		else {
-			$sharedfolderdb = SharedFolderDB::getInstance();
-			foreach ($usergroups as $group) {
-				$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general',  'session_settings_defaults');
-				if (array_key_exists('enable_sharedfolders', $prefs_of_a_group_unsort)) {
-					$pref = $prefs_of_a_group_unsort['enable_sharedfolders'];
-					$element = $pref->toConfigElement();
-					$enable_sharedfolders = $element->content;
-					if ($enable_sharedfolders == 0) {
-						continue;
-					}
-				}
-				$networkfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
-				if (is_array($networkfolders)) {
-					foreach ($networkfolders as $a_networkfolder) {
-						$sharedfolders[] = $a_networkfolder;
-					}
-				}
+		
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$publications = $sharedfolderdb->get_publications();
+		
+		$sharedfolders = array();
+		foreach ($publications as $publication) {
+			if (! array_key_exists($publication['group'], $usergroups)) {
+				continue;
 			}
+			
+			if (array_key_exists($publication['share'], $sharedfolders)) {
+				if ($publication['mode'] == 'rw' && $sharedfolders[$publication['share']]['mode'] != 'rw') {
+					$sharedfolders[$publication['share']]['mode'] = $publication['mode'];
+				}
+				
+				continue;
+			}
+			
+			$share = $sharedfolderdb->import($publication['share']);
+			if (is_null($share)) {
+				continue;
+			}
+			
+			$sharedfolders[$publication['share']] = array('share' => $share, 'mode' => $publication['mode']);
 		}
-		return array_unique($sharedfolders);
+		
+		return $sharedfolders;
 	}
 
 	public function getAttributesList(){

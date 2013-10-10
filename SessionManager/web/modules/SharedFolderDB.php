@@ -101,6 +101,10 @@ abstract class SharedFolderDB extends Module  {
 	public function delUserGroupToSharedFolder($usergroup_, $sharedfolder_) {
 		return false;
 	}
+
+	public function get_publications() {
+		return array();
+	}
 	
 	public function chooseFileServer() {
 		return false;

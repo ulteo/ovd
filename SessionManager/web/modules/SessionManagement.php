@@ -466,7 +466,8 @@ abstract class SessionManagement extends Module {
 						}
 
 						if (count($sharedfolders) > 0) {
-							foreach ($sharedfolders as $sharedfolder) {
+							foreach ($sharedfolders as $sharedfolder_id => $info) {
+								$sharedfolder = $info['share'];
 								$fileserver = Abstract_Server::load($sharedfolder->server);
 								if (! $fileserver || ! $fileserver->isOnline() || $fileserver->getAttribute('locked')) {
 									Logger::warning('main', 'SessionManagement::buildServersList - Server "'.$sharedfolder->server.'" for SharedFolder "'.$sharedfolder->id.'" is not available');
@@ -482,18 +483,6 @@ abstract class SessionManagement extends Module {
 									}
 								}
 
-								$modeUsed = '';
-								$modes = $sharedfolder->getPublishedUserGroups();
-								$userGroups = array_keys($this->user->usersGroups());
-								
-								foreach($modes as $mode => $group) {
-									if (! in_array(key($group), $userGroups))
-										continue;
-									
-									if (($modeUsed === '') || !($modeUsed === 'rw'))
-										$modeUsed = $mode;
-								}
-
 								if (! array_key_exists($fileserver->id, $this->servers[Server::SERVER_ROLE_FS]))
 									$this->servers[Server::SERVER_ROLE_FS][$fileserver->id] = array();
 
@@ -502,7 +491,7 @@ abstract class SessionManagement extends Module {
 									'rid'		=>	$this->find_uniq_rid('sharedfolder', true),
 									'dir'		=>	$sharedfolder->id,
 									'name'		=>	$sharedfolder->name,
-									'mode'		=>	$modeUsed
+									'mode'		=>	$info['mode']
 								);
 							}
 						}

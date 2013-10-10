@@ -4586,8 +4586,8 @@ class OvdAdminSoap {
 		$info['shared_folders'] = array();
 		if (array_key_exists('enable_sharedfolders', $info['settings']) && $info['settings']['enable_sharedfolders'] == 1) {
 			$shared_folders = $user->getSharedFolders();
-			foreach ($shared_folders as $shared_folder) {
-				$info['shared_folders'][$shared_folder->id] = $shared_folder->name;
+			foreach ($shared_folders as $shared_folder_id => $infos) {
+				$info['shared_folders'][$shared_folder_id] = array('share_name' => $infos['share']->name, 'mode' => $infos['mode']);
 			}
 		}
 		

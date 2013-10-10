@@ -164,11 +164,11 @@ function show_default() {
 					echo '<a href="profiles.php?action=manage&id='.$profile_id.'">'.$profile_name.'</a></td>';
 					echo '</tr>';
 				}
-				foreach ($user_info['shared_folders'] as $share_id => $share_name) {
+				foreach ($user_info['shared_folders'] as $share_id => $info) {
 					echo '<tr>';
 					echo '<td>'._('Shared folder').'</td>';
 					echo '<td>';
-					echo '<a href="sharedfolders.php?action=manage&id='.$share_id.'">'.$share_name.'</a></td>';
+					echo '<a href="sharedfolders.php?action=manage&id='.$share_id.'">'.$info['share_name'].'</a> ('._('mode: ').$info['mode'].')</td>';
 					echo '</tr>';
 				}
 				echo '</table>';
