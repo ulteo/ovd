@@ -30,6 +30,7 @@
 #include <shlobj.h> 
 
 
+static int registry_hooked = false;
 
 // original hooked function pointer
 PtrNtCreateFile OriginNtCreateFile = (PtrNtCreateFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateFile");
@@ -620,6 +621,7 @@ void setupHooks() {
 
 	//Intercept Reg API
 	if (conf.supportHookRegistry()) {
+		registry_hooked = true;
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateKey, myNtCreateKey, "NtCreateKey");
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
@@ -638,8 +640,10 @@ void releaseHooks() {
 	Mhook_Unhook((PVOID*)&OriginNtClose);
 	
 	//Reg API
-	Mhook_Unhook((PVOID*)&OriginNtCreateKey);	
-	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
-	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
+	if (registry_hooked) {
+		Mhook_Unhook((PVOID*)&OriginNtCreateKey);
+		Mhook_Unhook((PVOID*)&OriginNtOpenKey);
+		Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
+	}
 	log_debug(L"Un-Hooked program");
 }
