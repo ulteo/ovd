@@ -20,6 +20,8 @@
 
 import os
 import sys
+import win32api
+import win32con
 from win32com.shell import shell, shellcon
 from ovd.Logger import Logger
 import ConfigParser
@@ -196,8 +198,16 @@ class GPO:
 				index += 1
 		
 		try:
-			os.makedirs(os.path.dirname(self.iniScriptFile))
-			f = open(self.iniScriptFile, 'wb+')
+			if not os.path.exists(self.iniScriptFile):
+				dir = os.path.dirname(self.iniScriptFile)
+				
+				if not os.path.exists(dir):
+					os.makedirs(dir)
+				
+				open(self.iniScriptFile, 'a').close()
+				win32api.SetFileAttributes(self.iniScriptFile, win32con.FILE_ATTRIBUTE_HIDDEN)
+
+			f = open(self.iniScriptFile, 'rb+')
 			f.truncate()
 			
 			if self.useUTF16:
