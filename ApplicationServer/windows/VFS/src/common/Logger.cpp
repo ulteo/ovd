@@ -114,20 +114,26 @@ void Logger::setDevelOutput(bool value) {
 
 void Logger::debug(const wchar_t* format,...)
 {
-    wchar_t buf[MAX_DBG_MSG_LEN];
-	std::wostringstream out;
+	wchar_t buf[MAX_DBG_MSG_LEN];
 	
 	va_list args;
-    va_start(args, format);
+	va_start(args, format);
 	vswprintf_s(buf,MAX_DBG_MSG_LEN, format, args);
-    va_end(args);
+	va_end(args);
 
-	out<<this->module<<": "<<buf;
+	this->idebug(buf);
+}
+
+void Logger::idebug(const wchar_t* msg)
+{
+	std::wostringstream out;
+
+	out<<this->module<<": "<<msg;
 
 	if (out.str().find(L"Dbgview") != std::string::npos)
 		return;
 
-    OutputDebugString(out.str().c_str());
+	OutputDebugString(out.str().c_str());
 }
 
 void Logger::log(Level lvl, wchar_t *fmt,...) {
@@ -179,7 +185,7 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 		out<<temp;
 
 	if (this->useDevelStdOut)
-		this->debug(temp);
+		this->idebug(temp);
 
 	if (this->useStdOut)
 		std::wcout<<temp;

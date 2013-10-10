@@ -30,6 +30,7 @@ public:
 
 	// NOTE: not working
 	void debug(const wchar_t * format,...);
+	void idebug(const wchar_t * msg);
 	
 	// output log to log file
 	void log(Level lvl, wchar_t *fmt,...);
