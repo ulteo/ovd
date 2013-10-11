@@ -217,7 +217,7 @@ def main():
 
 	for match in re.findall("<link rel=\"stylesheet\" type=\"text/css\" href=\"media/(.*).css\" />", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".css")
-		if not os.path.basename(filename) in ("webclient.css", "images_files.css") and not os.path.basename(filename) in processed_files:
+		if not os.path.basename(filename) in ("webclient.css", "images_files.css", "custom.css") and not os.path.basename(filename) in processed_files:
 			processed_files.append(os.path.basename(filename))
 			csscompress(outfile, filename)
 

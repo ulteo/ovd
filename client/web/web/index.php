@@ -168,6 +168,11 @@ if ($gateway_first) {
 <?php if (!$big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
 <?php } ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/custom/custom.css")) {
+	$custom_css = true;
+?>
+		<link rel="stylesheet" type="text/css" href="media/custom/custom.css" />
+<?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
 
@@ -591,6 +596,11 @@ if ($gateway_first) {
 				</div>
 			</div>
 			<div id="footer"></div>
+<?php
+	if (isset($custom_css) && $custom_css === true) {
+		echo ("<p style=\"position:absolute;right:10px;bottom:0px;opacity:0.5;\">Powered by Ulteo</p>");
+	}
+?>
 		</div>
 	</body>
 </html>

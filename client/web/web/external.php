@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -126,6 +126,11 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 <?php } ?>
 <?php if (!$big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
+<?php } ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/custom/custom.css")) {
+	$custom_css = true;
+?>
+		<link rel="stylesheet" type="text/css" href="media/custom/custom.css" />
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
