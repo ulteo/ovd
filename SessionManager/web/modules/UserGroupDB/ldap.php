@@ -268,8 +268,16 @@ class UserGroupDB_ldap {
 			$filter_rdn_rules = array();
 			foreach($groups_dn as $group_dn) {
 				$expl = explode_with_escape(',', $group_dn, 2);
+				if (count($expl) != 2) {
+					continue;
+				}
+				
 				$rdn = $expl[0];
 				array_push($filter_rdn_rules, $rdn);
+			}
+			
+			if (count($filter_rdn_rules) == 0) {
+				return array();
 			}
 			
 			array_push($filters, LDAP::join_filters($filter_rdn_rules, '|'));
