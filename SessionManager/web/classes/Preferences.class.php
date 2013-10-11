@@ -780,4 +780,16 @@ class Preferences {
 		$mods_enable = $prefs->get('general', 'module_enable');
 		return in_array($name_, $mods_enable);
 	}
+	
+	public function get_element_from_uid($uid_) {
+		if (! array_key_exists($uid_, $this->elements_by_uid)) {
+			return null;
+		}
+		
+		return $this->elements_by_uid[$uid_];
+	}
+	
+	public function get_uid_list() {
+		return array_keys($this->elements_by_uid);
+	}
 }

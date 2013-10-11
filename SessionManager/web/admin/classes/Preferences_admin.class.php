@@ -55,6 +55,11 @@ class Preferences_admin extends Preferences {
 		$db_content = array();
 		
 		foreach($this->elements_by_uid as $k => $element) {
+			if ($element->values_equals($element->content, $element->content_default)) {
+				// Don't save in db/file when value is default value
+				continue;
+			}
+			
 			if (self::keys_match_patterns($k, self::$must_read_from_conf)) {
 				$filecontents[$k] = $element->content;
 			}

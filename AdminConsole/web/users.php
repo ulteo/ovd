@@ -273,7 +273,7 @@ function show_manage($login) {
 			$unuse_settings[$categ] = array();
 			
 			foreach($settings as $setting_id => $setting_attributes) {
-				$p = $prefs->load_element($setting_attributes, 'general.'.$categ);
+				$p = $prefs->load_element($setting_attributes, 'general.'.$categ.'.'.$setting_id);
 				$session_prefs[$categ][$setting_id] = $p;
 				
 				if (array_key_exists($categ , $categs2) && array_key_exists($setting_id, $categs2[$categ])) {

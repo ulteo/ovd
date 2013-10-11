@@ -59,8 +59,9 @@ class Preferences_admin {
 			return;
 		}
 		
-		foreach($prefs as $key => $elements) {
-			$this->elements[$key] = $this->load_elements($elements, $key);
+		foreach($prefs as $key => $element) {
+			$c = $this->load_element($element, $key);
+			$this->insert_in_elements($c, $key, $this->elements);
 		}
 	}
 	
@@ -71,31 +72,26 @@ class Preferences_admin {
 		return ($ret === true);
 	}
 	
-	protected function load_elements($elements, $path) {
-		$items = array();
-		
-		foreach($elements as $element_id => $element) {
-			if ($element_id == 'is_node_tree')
-				continue;
-			
-			if (array_key_exists('is_node_tree', $element)) {
-				$item = $this->load_elements($element , $path.'.'.$element_id);
-			}
-			else {
-				$item = $this->load_element($element, $path);
-				if (is_null($item))
-					continue;
-			}
-			
-			$items[$element_id] = $item;
+	private static function insert_in_elements(&$c_, $key_, &$elements_) {
+		$res = explode ('.', $key_, 2);
+		if (count($res) == 1) {
+			// insert here
+			$elements_[$key_] = $c_;
 		}
-		
-		return $items;
+		else {
+			$root = $res[0];
+			
+			if (! array_key_exists($root, $elements_)) {
+				$elements_[$root] = array();
+			}
+			
+			self::insert_in_element($c_, $res[1], $elements_[$root]);
+		}
 	}
 	
-	public function load_element($element_, $path_) {
+	public function load_element($element_, $key_) {
 		$title = $element_['id'];
-		$gid = $path_.'.'.$element_['id'];
+		$gid = $key_;
 		
 		if (array_key_exists($gid, $this->titles)) {
 			$title = $this->titles[$gid];
@@ -182,13 +178,14 @@ class Preferences_admin {
 		
 		foreach ($elements_ as $container => $elements2) {
 			if (is_object($elements2)) {
-				$c = $this->export_element($elements2);
+				$ret[$container] = $this->export_element($elements2);
 			}
 			else {
-				$c = $this->export_elements($elements2);
+				$ret2 = $this->export_elements($elements2);
+				foreach($ret2 as $k => $v) {
+					$ret[$container.'.'.$k] = $v;
+				}
 			}
-			
-			$ret[$container] = $c;
 		}
 		
 		return $ret;

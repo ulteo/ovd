@@ -303,66 +303,28 @@ class OvdAdminSoap {
 		return $e;
 	}
 	
-	private static function pref_elements2dict($elements) {
-		$ret = array('is_node_tree' => true);
-		
-		foreach ($elements as $container => $elements2) {
-			if (is_array($elements2)) {
-				$ret[$container] = self::pref_elements2dict($elements2);
-			}
-			else {
-				$e = self::pref_element2dict($elements2);
-				$ret[$e['id']] = $e;
-			}
+	private static function setting_write_diff($uid, $new_value_, $element_, &$diff_) {
+		$c_old = $element_->content;
+		$c_new = $new_value_;
+		if (self::get_pref_element_type($element_) == 'password') {
+			$c_old = '*****';
+			$c_new = '*******';
 		}
 		
-		return $ret;
-	}
-	
-	private static function import_elements_content_from_dict($elements_, $settings_) {
-		$diff = array();
-		foreach ($elements_ as $container => $elements) {
-			if (! array_key_exists($container, $settings_)) {
-				continue;
-			}
-			
-			if (is_array($elements)) {
-				$diff_sub = self::import_elements_content_from_dict($elements, $settings_[$container]);
-				foreach($diff_sub as $k => $v) {
-					$diff[$container.'.'.$k] = $v;
-				}
-			}
-			else {
-				if ($elements->contentEqualsTo($settings_[$container])) {
-					continue;
-				}
-				
-				$c_old = $elements->content;
-				$c_new = $settings_[$container];
-				if (self::get_pref_element_type($elements) == 'password') {
-					$c_old = '*****';
-					$c_new = '*******';
-				}
-				
-				$diff[$container] = array('old' => $c_old, 'new' => $c_new);
-				
-				$elements->content = $settings_[$container];
-			}
-		}
-		
-		return $diff;
+		$diff_[$uid] = array('old' => $c_old, 'new' => $c_new);
 	}
 	
 	public function settings_get() {
 		$this->check_authorized('viewConfiguration');
 		
-		$keys = $this->prefs->getKeys();
+		$keys = $this->prefs->get_uid_list();
 		
 		$ret = array();
 		
-		foreach ($keys as $key_name) {
-			//$elements = $this->prefs->elements[$key_name];
-			$ret[$key_name] = self::pref_elements2dict($this->prefs->elements[$key_name]);
+		foreach($keys as $k) {
+			$element = $this->prefs->get_element_from_uid($k);
+			
+			$ret[$k] = self::pref_element2dict($element);
 		}
 		
 		return $ret;
@@ -375,17 +337,19 @@ class OvdAdminSoap {
 		$prefs = new Preferences_admin();
 		
 		$diff = array();
-		
-		$keys = $prefs->getKeys();
-		foreach ($keys as $key_name) {
-			if (! array_key_exists($key_name, $settings_)) {
+		foreach($settings_ as $k => $v) {
+			$element = $prefs->get_element_from_uid($k);
+			if (is_null($element)) {
+				// means backend bug!
 				continue;
 			}
 			
-			$diff_sub = $this->import_elements_content_from_dict($prefs->elements[$key_name], $settings_[$key_name]);
-			foreach($diff_sub as $k => $v) {
-				$diff[$key_name.'.'.$k] = $v;
+			if ($element->values_equals($v, $element->content)) {
+				continue;
 			}
+			
+			self::setting_write_diff($k, $v, $element, $diff);
+			$element->content = $v;
 		}
 		
 		$ret = $prefs->isValid();
@@ -412,14 +376,18 @@ class OvdAdminSoap {
 		
 		// saving preferences
 		$prefs = new Preferences_admin();
-		
-		$keys = $prefs->getKeys();
-		foreach ($keys as $key_name) {
-			if (! array_key_exists($key_name, $settings_)) {
+		foreach($settings_ as $k => $v) {
+			$element = $prefs->get_element_from_uid($k);
+			if (is_null($element)) {
+				// means backend bug!
 				continue;
 			}
 			
-			$this->import_elements_content_from_dict($prefs->elements[$key_name], $settings_[$key_name]);
+			if ($element->values_equals($v, $element->content)) {
+				continue;
+			}
+			
+			$element->content = $v;
 		}
 		
 		$mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
@@ -3155,7 +3123,7 @@ class OvdAdminSoap {
 		return $ret;
 	}
 	
-	public function user_settings_set($user_id_, $container_, $setting_, $value_) {
+	public function user_settings_set($user_id_, $settings_) {
 		$this->check_authorized('manageUsers');
 		
 		$userDB = UserDB::getInstance();
@@ -3164,27 +3132,40 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$diff = array();
 		$prefs = Preferences::getInstance();
-		$session_settings_defaults = $prefs->getElements('general', $container_);
-		if (! array_key_exists($setting_, $session_settings_defaults)) {
-			return false;
+		$user_prefs = Abstract_Preferences::load_user($user->getAttribute('login'));
+		foreach($settings_ as $k => $v) {
+			$element = $prefs->get_element_from_uid($k);
+			if (is_null($element)) {
+				// unknwon incoming key
+				continue;
+			}
+			
+			if (! self::is_key_authorized_override($k)) {
+				// user overridden settings are only available for session settings
+				continue;
+			}
+			
+			if (array_key_exists($k, $user_prefs) && $element->values_equals($v, $user_prefs[$k])) {
+				// nothing to: already the same value
+				continue;
+			}
+			
+			self::setting_write_diff($k, $v, $element, $diff);
+			$user_prefs[$k] = $v;
 		}
 		
-		$config_element = clone $session_settings_defaults[$setting_];
-		$config_element->content = $value_;
-		$ret = Abstract_Preferences::save_user_item($user->getAttribute('login'), 'general.'.$container_.'.'.$setting_, $config_element->content);
+		$ret = Abstract_Preferences::save_user($user->getAttribute('login'), $user_prefs);
 		if (! $ret) {
 			return false;
 		}
 		
-		$this->log_action('user_settings_set', array('login' => $user->getAttribute('login'), $container_.'_'.$setting_ => array(
-			'old' => $session_settings_defaults[$setting_]->content,
-			'new' => $config_element->content,
-		)));
+		$this->log_action('user_settings_set', array('login' => $user->getAttribute('login'), 'values' => $diff));
 		return true;
 	}
 	
-	public function user_settings_remove($user_id_, $container_, $setting_) {
+	public function user_settings_remove($user_id_, $keys_) {
 		$this->check_authorized('manageUsers');
 		
 		$userDB = UserDB::getInstance();
@@ -3193,18 +3174,25 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$diff_ = array();
 		$prefs = Preferences::getInstance();
-		$session_settings_defaults = $prefs->getElements('general', $container_);
-		if (! array_key_exists($setting_, $session_settings_defaults)) {
-			return false;
+		foreach($keys_ as $key) {
+			$element = $prefs->get_element_from_uid($key);
+			if (is_null($element)) {
+				// unknwon incoming key
+				continue;
+			}
+			
+			if (! self::is_key_authorized_override($key)) {
+				// user overridden settings are only available for session settings
+				continue;
+			}
+			
+			Abstract_Preferences::delete_user($user->getAttribute('login'), $key);
+			self::setting_write_diff($key, null, $element, $diff);
 		}
 		
-		$ret = Abstract_Preferences::delete_user($user->getAttribute('login'), 'general.'.$container_.'.'.$setting_);
-		if (! $ret) {
-			return false;
-		}
-		
-		$this->log_action('user_settings_remove', array('login' => $user->getAttribute('login'), $container_.'_'.$setting_ => null));
+		$this->log_action('user_settings_remove', array('login' => $user->getAttribute('login'), 'values' => $diff));
 		return true;
 	}
 	
@@ -3604,7 +3592,18 @@ class OvdAdminSoap {
 		return $res;
 	}
 	
-	public function users_group_settings_set($group_id_, $container_, $setting_, $value_) {
+	private static function is_key_authorized_override($key_) {
+		$categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
+		foreach($categs as $categ) {
+			if (str_startswith($key_, 'general.'.$categ.'.')) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function users_group_settings_set($group_id_, $settings_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3614,26 +3613,40 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$diff = array();
 		$prefs = Preferences::getInstance();
-		$session_settings_defaults = $prefs->getElements('general', $container_);
-		if (! array_key_exists($setting_, $session_settings_defaults)) {
-			return false;
+		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
+		foreach($settings_ as $k => $v) {
+			$element = $prefs->get_element_from_uid($k);
+			if (is_null($element)) {
+				// unknwon incoming key
+				continue;
+			}
+			
+			if (! self::is_key_authorized_override($k)) {
+				// users group overridden settings are only available for session settings
+				continue;
+			}
+			
+			if (array_key_exists($k, $group_prefs) && $element->values_equals($v, $group_prefs[$k])) {
+				// nothing to: already the same value
+				continue;
+			}
+			
+			self::setting_write_diff($k, $v, $element, $diff);
+			$group_prefs[$k] = $v;
 		}
 		
-		$config_element->content = $value_;
-		$ret = Abstract_Preferences::save_group_item($group->getUniqueID(), 'general.'.$container_.'.'.$setting_, $config_element->content);
+		$ret = Abstract_Preferences::save_group($group->getUniqueID(), $group_prefs);
 		if (! $ret) {
 			return false;
 		}
 		
-		$this->log_action('users_group_settings_set', array('group' => $group->name, $container_.'_'.$setting_ => array(
-			'old' => $session_settings_defaults[$setting_]->content,
-			'new' => $config_element->content,
-		)));
+		$this->log_action('users_group_settings_set', array('group' => $group->name, 'values' => $diff));
 		return true;
 	}
 	
-	public function users_group_settings_remove($group_id_, $container_, $setting_) {
+	public function users_group_settings_remove($group_id_, $keys_) {
 		$this->check_authorized('manageUsersGroups');
 		
 		$userGroupDB = UserGroupDB::getInstance();
@@ -3642,18 +3655,25 @@ class OvdAdminSoap {
 			return false;
 		}
 		
+		$diff_ = array();
 		$prefs = Preferences::getInstance();
-		$session_settings_defaults = $prefs->getElements('general', $container_);
-		if (! array_key_exists($setting_, $session_settings_defaults)) {
-			return false;
+		foreach($keys_ as $key) {
+			$element = $prefs->get_element_from_uid($key);
+			if (is_null($element)) {
+				// unknwon incoming key
+				continue;
+			}
+			
+			if (! self::is_key_authorized_override($key)) {
+				// users group overriden settings are only available for session settings
+				continue;
+			}
+			
+			Abstract_Preferences::delete_group($group->getUniqueID(), $key);
+			self::setting_write_diff($key, null, $element, $diff);
 		}
 		
-		$ret = Abstract_Preferences::delete_group($group->getUniqueID(), 'general.'.$container_.'.'.$setting_);
-		if (! $ret) {
-			return false;
-		}
-		
-		$this->log_action('users_group_settings_remove', array('group' => $group->name, $container_.'_'.$setting_ => null));
+		$this->log_action('users_group_settings_remove', array('group' => $group->name, 'values' => $diff));
 		return true;
 	}
 	

@@ -234,15 +234,12 @@
 	
 	<message name="user_settings_setMessage">
 		<part name="user_id" type="xsd:string"/>
-		<part name="container" type="xsd:string"/>
-		<part name="setting" type="xsd:string"/>
-		<part name="value" type="xsd:any"/>
+		<part name="settings" type="xsd:any"/>
 	</message>
 	
 	<message name="user_settings_removeMessage">
 		<part name="user_id" type="xsd:string"/>
-		<part name="container" type="xsd:string"/>
-		<part name="setting" type="xsd:string"/>
+		<part name="keys" type="xsd:any"/>
 	</message>
 	
 	<message name="users_group_addMessage">
@@ -283,15 +280,12 @@
 	
 	<message name="users_group_settings_setMessage">
 		<part name="group_id" type="xsd:string"/>
-		<part name="container" type="xsd:string"/>
-		<part name="setting" type="xsd:string"/>
-		<part name="value" type="xsd:any"/>
+		<part name="settings" type="xsd:any"/>
 	</message>
 	
 	<message name="users_group_settings_removeMessage">
 		<part name="group_id" type="xsd:string"/>
-		<part name="container" type="xsd:string"/>
-		<part name="setting" type="xsd:string"/>
+		<part name="keys" type="xsd:any"/>
 	</message>
 	
 	<message name="UsersGroup_policyMessage">

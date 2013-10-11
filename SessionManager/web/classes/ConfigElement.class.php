@@ -59,7 +59,11 @@ abstract class ConfigElement{
 	}
 	
 	public function contentEqualsTo($content_) {
-		return ($this->content == $content_);
+		return self::values_equals($this->content, $content_);
+	}
+	
+	public static function values_equals($value1_, $value2_) {
+		return ($value1_ == $value2_);
 	}
 }
 

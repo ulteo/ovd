@@ -22,27 +22,27 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_dictionary extends ConfigElement {
-	public function contentEqualsTo($content_) {
-		if (count($this->content) != count($content_)) {
+	public static function values_equals($value1_, $value2_) {
+		if (count($value1_) != count($value2_)) {
 			return false;
 		}
 		
-		foreach($this->content as $k => $v) {
-			if (! array_key_exists($k, $content_)) {
+		foreach($value1_ as $k => $v) {
+			if (! array_key_exists($k, $value2_)) {
 				return false;
 			}
 			
-			if ($v != $content_[$k]) {
+			if ($v != $value2_[$k]) {
 				return false;
 			}
 		}
 		
-		foreach($content_ as $k => $v) {
-			if (! array_key_exists($k, $this->content)) {
+		foreach($value2_ as $k => $v) {
+			if (! array_key_exists($k, $value1_)) {
 				return false;
 			}
 			
-			if ($v != $this->content[$k]) {
+			if ($v != $value1_[$k]) {
 				return false;
 			}
 		}

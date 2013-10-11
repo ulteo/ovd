@@ -1262,10 +1262,15 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 		
 		$ret = null;
 		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$ret = $_SESSION['service']->users_group_settings_set($unique_id, $_REQUEST['container'], $_REQUEST['element_id'], null);
+			$new_settings = array();
+			$new_settings['general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']] = null;
+			
+			$ret = $_SESSION['service']->users_group_settings_set($unique_id, $new_settings);
 		}
 		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$ret = $_SESSION['service']->users_group_settings_remove($unique_id, $_REQUEST['container'], $_REQUEST['element_id']);
+			$keys = array('general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']);
+			
+			$ret = $_SESSION['service']->users_group_settings_remove($unique_id, $keys);
 		}
 		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
 			$container = $_REQUEST['container'];
@@ -1279,13 +1284,14 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 			}
 			$formarray = formToArray($formdata);
 			if (isset($formarray['general'][$container])) {
+				$new_settings = array();
+				
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
-					$ret = $_SESSION['service']->users_group_settings_set($unique_id, $container, $element_id, $value);
-					if ( $ret !== true) {
-						break;
-					}
+					$new_settings['general.'.$container.'.'.$element_id] = $value;
 				}
+				
+				$ret = $_SESSION['service']->users_group_settings_set($unique_id, $new_settings);
 			}
 		}
 		
@@ -1390,10 +1396,15 @@ if ($_REQUEST['name'] == 'User_settings') {
 	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
 		$ret = null;
 		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $_REQUEST['container'], $_REQUEST['element_id'], null);
+			$settings = array();
+			$settings['general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']] = null;
+			
+			$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $settings);
 		}
 		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$ret = $_SESSION['service']->user_settings_remove($_REQUEST['unique_id'], $_REQUEST['container'], $_REQUEST['element_id']);
+			$keys = array('general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']);
+			
+			$ret = $_SESSION['service']->user_settings_remove($_REQUEST['unique_id'], $keys);
 		}
 		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
 			$container = $_REQUEST['container'];
@@ -1407,15 +1418,14 @@ if ($_REQUEST['name'] == 'User_settings') {
 			}
 			$formarray = formToArray($formdata);
 			if (isset($formarray['general'][$container])) {
-				$data = $formarray['general'][$container];
+				$new_settings = array();
 				
-				$ret = null;
+				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
-					$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $container, $element_id, $value);
-					if ( $ret !== true) {
-						break;
-					}
+					$new_settings['general.'.$container.'.'.$element_id] = $value;
 				}
+				
+				$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $new_settings);
 			}
 		}
 		

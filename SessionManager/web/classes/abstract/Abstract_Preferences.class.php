@@ -103,7 +103,37 @@ class Abstract_Preferences {
 		
 		return $ret;
 	}
-
+	
+	private static function save($type_, $owner_, $data_) {
+		$sql = SQL::getInstance();
+		
+		// First: delete all
+		$query = 'DELETE FROM #1 WHERE @2 = %3';
+		if (! is_null($owner_)) {
+			$query.= ' AND '.$sql->QuoteField('owner').' = '.$sql->Quote($owner_);
+		}
+		
+		$sql->DoQuery($query, self::$table, 'owner_type', $type_);
+		
+		if (count($data_) == 0) {
+			return true;
+		}
+		
+		// Then: push in one request
+		$values = array();
+		foreach($data_ as $k => $v) {
+			array_push($values, '('.$sql->Quote($type_).','.$sql->Quote($owner_).','.$sql->Quote($k).','.$sql->Quote(json_serialize($v)).')');
+		}
+		
+		$res = $sql->DoQuery('INSERT INTO #1 (@2, @3, @4, @5) VALUES '.implode(',', $values), self::$table, 'owner_type', 'owner', 'key', 'value');
+		if ($res !== true) {
+			Logger::error('main', "Abstract_Preferences::save Unable to save preferences");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private static function delete($type_ = null, $owners_ = null, $pattern_ = null) {
 		$sql = SQL::getInstance();
 		
@@ -147,24 +177,7 @@ class Abstract_Preferences {
 	}
 	
 	public static function save_general($data_) {
-		$sql = SQL::getInstance();
-		
-		// First: delete all
-		$sql->DoQuery('DELETE FROM #1 WHERE @2 = %3', self::$table, 'owner_type', self::$TYPE_GENERAL);
-		
-		// Then: push in one request
-		$values = array();
-		foreach($data_ as $k => $v) {
-			array_push($values, '('.$sql->Quote(self::$TYPE_GENERAL).','.$sql->Quote($k).','.$sql->Quote(json_serialize($v)).')');
-		}
-		
-		$res = $sql->DoQuery('INSERT INTO #1 (@2, @3, @4) VALUES '.implode(',', $values), self::$table, 'owner_type', 'key', 'value');
-		if ($res !== true) {
-			Logger::error('main', "Abstract_Preferences::save Unable to save preferences");
-			return false;
-		}
-		
-		return true;
+		return self::save(self::$TYPE_GENERAL, null, $data_);
 	}
 	
 	private static function load_by_owner($type_, $pattern_) {
@@ -203,27 +216,12 @@ class Abstract_Preferences {
 		return $ret;
 	}
 	
-	public static function save_owner_item($type_, $owner_, $key_, $value_) {
-		$sql = SQL::getInstance();
-		
-		if (! in_array($type_, array(self::$TYPE_GROUP, self::$TYPE_USER))) {
-			return false;
-		}
-		
-		$res = $sql->DoQuery('INSERT INTO #1 (@2, @3, @4, @5) VALUES (%6, %7, %8, %9)', self::$table,
-			'owner_type', 'owner', 'key', 'value',
-			$type_, $owner_, $key_, json_serialize($value_)
-		);
-		if ($res !== true) {
-			Logger::error('main', "Abstract_Preferences::save_owner_item Unable to save preference");
-			return false;
-		}
-		
-		return true;
-	}
-	
 	public static function load_group($group_, $pattern_=null) {
 		return self::load(self::$TYPE_GROUP, array($group_), $pattern_);
+	}
+	
+	public static function save_group($group_, $data_) {
+		return self::save(self::$TYPE_GROUP, $group_, $data_);
 	}
 	
 	private static function delete_groups($groups_ = null, $pattern_ = null) {
@@ -238,21 +236,16 @@ class Abstract_Preferences {
 		return self::delete_groups(array($group_), $pattern_);
 	}
 	
-	public static function save_group_item($group_, $key_, $value_) {
-		$sql = SQL::getInstance();
-		
-		self::delete_group($group_, $key_);
-		
-		// Then save
-		return self::save_owner_item(self::$TYPE_GROUP, $group_, $key_, $value_);
-	}
-	
 	public static function load_by_group($pattern_=null) {
 		return self::load_by_owner(self::$TYPE_GROUP, $pattern_);
 	}
 	
 	public static function load_user($user_, $pattern_=null) {
 		return self::load(self::$TYPE_USER, array($user_), $pattern_);
+	}
+	
+	public static function save_user($user_, $data_) {
+		return self::save(self::$TYPE_USER, $user_, $data_);
 	}
 	
 	private static function delete_users($users_ = null, $pattern_ = null) {
@@ -267,16 +260,6 @@ class Abstract_Preferences {
 		return self::delete_users(array($user_), $pattern_);
 	}
 	
-	public static function save_user_item($user_, $key_, $value_) {
-		$sql = SQL::getInstance();
-		
-		// First: delete
-		self::delete_user($user_, $key_);
-		
-		// Then save
-		return self::save_owner_item(self::$TYPE_USER, $user_, $key_, $value_);
-	}
-
 	public static function load_by_user($pattern_=null) {
 		return self::load_by_owner(self::$TYPE_USER, $pattern_);
 	}
