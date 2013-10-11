@@ -94,11 +94,6 @@ abstract class ConfigElement{
 	}
 
 	protected function htmlID() {
-		$html_id = '';
-		foreach ($this->path as $node) {
-			$html_id .= $node.$this->formSeparator;
-		}
-		$html_id = substr($html_id, 0, (strlen($this->formSeparator)*-1));
-		return $html_id;
+		return implode($this->formSeparator, $this->path);
 	}
 }
