@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
 		}
 	}
 	else {
-		require_once(dirname(__FILE__).'/includes/page_template_static.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template_static.php');
 		header_static(_('Configuration'));
 		echo 'problem : configuration not saved<br>';  // TODO (class msg...) + gettext
 		footer_static();
@@ -78,7 +78,7 @@ else {
 		catch (Exception $e) {
 		}
 		
-		require_once(dirname(__FILE__).'/includes/page_template.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 		page_header();
 		
 		// printing of preferences
@@ -102,7 +102,7 @@ else {
 		catch (Exception $e) {
 		}
 		if (is_object($prefs)) {
-			require_once(dirname(__FILE__).'/includes/page_template.php');
+			require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 			page_header();
 
 			print_prefs($prefs, $can_manage_configuration);
