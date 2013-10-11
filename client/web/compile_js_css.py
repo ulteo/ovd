@@ -124,6 +124,18 @@ def compile_images():
 		css["width"] = css["image"].size[0]
 		css["height"] = css["image"].size[1]
 		images.append(css)
+
+	cssimages = os.path.join("web", "media", "style", "images_files.css")
+	cssimagesfile = open(cssimages, "w")
+	for css in images:
+		cssimagesfile.write(""".image_%(class)s {
+  background: url(\"%(fname)s\") no-repeat transparent;
+  width: %(width)dpx;
+  height: %(height)dpx;
+}
+
+""" % css)
+	cssimagesfile.close()
 	
 	imagemap = make_image_map(images)
 	uovd_png = tempfile.NamedTemporaryFile()
@@ -205,7 +217,7 @@ def main():
 
 	for match in re.findall("<link rel=\"stylesheet\" type=\"text/css\" href=\"media/(.*).css\" />", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".css")
-		if not os.path.basename(filename) in ("webclient.css", ) and not os.path.basename(filename) in processed_files:
+		if not os.path.basename(filename) in ("webclient.css", "images_files.css") and not os.path.basename(filename) in processed_files:
 			processed_files.append(os.path.basename(filename))
 			csscompress(outfile, filename)
 

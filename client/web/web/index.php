@@ -31,14 +31,6 @@ if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png
 	$big_image_map = true;
 }
 
-if (!$big_image_map) {
-	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-	if ($logo_size === false)
-		$logo_size = "";
-	else
-		$logo_size = $logo_size[3];
-}
-
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
 
@@ -162,10 +154,8 @@ if ($gateway_first) {
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
-<?php } else {
-					if ($big_image_map) { ?>
+<?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
-<?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/dialogs.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/login.css" />
@@ -174,6 +164,9 @@ if ($gateway_first) {
 		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+<?php } ?>
+<?php if (!$big_image_map) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
@@ -242,7 +235,6 @@ if ($gateway_first) {
 			window.ovd.defaults.gateway                     = <?php echo $gateway_first === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap_autodetect           = <?php echo defined('OPTION_KEYMAP_AUTO_DETECT') && OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']) ? 'true' : 'false'; ?>;
 			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
-			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
 			window.ovd.defaults.user_keymap                 = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
 			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_method !== null ? '\''.$rdp_input_method.'\'' : 'undefined'; ?>;
 			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
@@ -281,19 +273,11 @@ if ($gateway_first) {
 			<div class="boxMessage">
 				<div class="shadowBox">
 					<div class="boxLogo">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
-						<?php } else { ?>
 						<div class="image_ulteo-small_png"></div>
-						<?php } ?>
 					</div>
 					<p><strong>JavaScript must be enabled</strong></p>
 					<div class="boxLogo">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-						<?php } else { ?>
 						<div class="image_error_png"></div>
-						<?php } ?>
 					</div>
 					<p>
 						<?php echo str_replace(
@@ -310,11 +294,7 @@ if ($gateway_first) {
 			<div id="lock" style="display: none;"></div>
 			<div id="systemTest" class="shadowBox" style="display: none;">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_rotate_gif"></div>
-					<?php } ?>
 				</div>
 				<h1><span id="system_compatibility_check_1_gettext">&nbsp;</span></h1>
 				<p id="system_compatibility_check_2_gettext">&nbsp;</p>
@@ -323,11 +303,7 @@ if ($gateway_first) {
 
 			<div id="systemTestError" class="shadowBox" style="display: none;">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_error_png"></div>
-					<?php } ?>
 				</div>
 				<h1><span id="system_compatibility_error_1_gettext">&nbsp;</span></h1>
 				<p id="system_compatibility_error_5_gettext">&nbsp;</p>
@@ -335,11 +311,7 @@ if ($gateway_first) {
 
 			<div id="news" class="shadowBox" style="display: none;">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/news.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_news_png"></div>
-					<?php } ?>
 					<br><a id="newsHideLink" href="javascript:;"><span id="close_gettext">&nbsp;</span></a>
 				</div>
 				<h1 id="newsTitle"></h1>
@@ -350,20 +322,12 @@ if ($gateway_first) {
 		<div id="splashContainer" class="boxMessage" style="display: none;">
 			<div id="splashContainerContent" class="shadowBox">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-					<?php } else { ?>
 					<div class="image_ulteo_png"></div>
-					<?php } ?>
 				</div>
 				<h1 class="loadling_text" style="display: none;" id="loading_ovd_gettext">&nbsp;</h1>
 				<h1 class="loadling_text" style="display: none;" id="unloading_ovd_gettext">&nbsp;</h1>
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_rotate_gif"></div>
-					<?php } ?>
 				</div>
 				<div id="progressBar"><div id="progressBarContent"></div></div>
 			</div>
@@ -372,11 +336,7 @@ if ($gateway_first) {
 		<div id="endContainer" class="boxMessage" style="display: none;">
 			<div id="endContainerContent" class="shadowBox">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-					<?php } else { ?>
 					<div class="image_ulteo_png"></div>
-					<?php } ?>
 				</div>
 				<div id="endContent"></div>
 			</div>
@@ -385,28 +345,16 @@ if ($gateway_first) {
 		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeader">
 				<div id="headerLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
-					<?php } else { ?>
 					<div class="image_ulteo-small_png"></div>
-					<?php } ?>
 				</div>
 				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 				<div id="newsList"></div>
 				<a id="logout_link" href="javascript:;">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_logout_png" style="display:inline-block"></div>
-					<?php } ?>
 					<br /><span id="logout_gettext">&nbsp;</span>
 				</a>
 				<a id="suspend_link" href="javascript:;">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_suspend_png" style="display:inline-block"></div>
-					<?php } ?>
 					<br /><span id="suspend_gettext">&nbsp;</span>
 				</a>
 				<div class="collapse"></div>
@@ -420,11 +368,7 @@ if ($gateway_first) {
 			<div id="fullScreenMessage" class="boxMessage" style="display: none;">
 				<div id="fullScreenMessageContainer" class="shadowBox">
 					<div class="boxLogo">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-						<?php } else { ?>
 						<div class="image_ulteo_png"></div>
-						<?php } ?>
 					</div>
 					<p>
 						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
@@ -448,11 +392,7 @@ if ($gateway_first) {
 							
 							<div class="loginElement" style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 								<label class="loginLabel" for="sessionmanager_host">
-									<?php if (!$big_image_map) { ?>
-									<img src="media/image/icons/sessionmanager.png" width="22" height="22" alt="" title="" />
-									<?php } else { ?>
 									<div class="image_sessionmanager_png"></div>
-									<?php } ?>
 									<strong><span id="session_manager_gettext">&nbsp;</span></strong>
 								</label>
 								<div class="loginField">
@@ -462,11 +402,7 @@ if ($gateway_first) {
 							
 							<div class="loginElement">
 								<label class="loginLabel" for="user_login">
-									<?php if (!$big_image_map) { ?>
-									<img src="media/image/icons/user_login.png" width="22" height="22" alt="" title="" />
-									<?php } else { ?>
 									<div class="image_user_login_png"></div>
-									<?php } ?>
 									<strong><span id="login_gettext">&nbsp;</span></strong>
 								</label>
 								<div class="loginField">
@@ -492,12 +428,8 @@ if ($gateway_first) {
 								
 							<div class="loginElement" id="password_row">
 								<label class="loginLabel" for="user_password">
-									<?php if (!$big_image_map) { ?>
-									<img src="media/image/icons/user_password.png" width="22" height="22" alt="" title="" />
-									<?php } else { ?>
 									<div class="image_user_password_png"></div>
-									<?php } ?>
-										<strong><span id="password_gettext">&nbsp;</span></strong>
+									<strong><span id="password_gettext">&nbsp;</span></strong>
 								</label>
 								<div class="loginField">
 									<input type="password" id="user_password" value=""/>
@@ -508,11 +440,7 @@ if ($gateway_first) {
 								
 								<div class="loginElement" id="use_local_credentials"<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 									<label class="loginLabel" for="use_local_credentials_true">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/use_local_credentials.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_use_local_credentials_png"></div>
-										<?php } ?>
 										<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -525,11 +453,7 @@ if ($gateway_first) {
 								
 								<div class="loginElement">
 									<label class="loginLabel" for="session_mode">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_session_mode_png"></div>
-										<?php } ?>
 										<strong><span id="mode_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -542,11 +466,7 @@ if ($gateway_first) {
 								
 								<div class="loginElement">
 									<label class="loginLabel" for="rdp_mode">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_session_mode_png"></div>
-										<?php } ?>
 										<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -565,11 +485,7 @@ if ($gateway_first) {
 								
 								<div class="loginElement" id="advanced_settings_desktop">
 									<label class="loginLabel" for="desktop_fullscreen">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/settings_desktop_fullscreen.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_settings_desktop_fullscreen_png"></div>
-										<?php } ?>
 										<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -579,19 +495,11 @@ if ($gateway_first) {
 								
 								<div class="loginElement">
 									<label class="loginLabel" for="session_language">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/session_language.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_session_language_png"></div>
-										<?php } ?>
 										<strong><span id="language_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
-										<?php if (!$big_image_map) { ?>
-										<img id="session_language_flag" width="16" height="11" />
-										<?php } else { ?>
 										<div id="session_language_flag" style="display:inline-block;" ></div>
-										<?php } ?>
 										<select id="session_language" <?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
 											<?php
 												foreach ($languages as $language) {
@@ -604,11 +512,7 @@ if ($gateway_first) {
 								
 								<div class="loginElement">
 									<label class="loginLabel" for="session_keymap">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_keyboard_layout_png"></div>
-										<?php } ?>
 										<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -623,11 +527,7 @@ if ($gateway_first) {
 							
 								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
 									<label class="loginLabel" for="session_input_method">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_keyboard_layout_png"></div>
-										<?php } ?>
 										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
@@ -643,11 +543,7 @@ if ($gateway_first) {
 ?>
 									<div class="loginElement">
 										<label class="loginLabel" for="session_input_method">
-											<?php if (!$big_image_map) { ?>
-											<img src="media/image/icons/debug.png" width="22" height="22" alt="" title="" />
-											<?php } else { ?>
 											<div class="image_debug_png"></div>
-											<?php } ?>
 											<strong><span id="debug_gettext">&nbsp;</span></strong>
 										</label>
 										<div class="loginField">
@@ -666,20 +562,12 @@ if ($gateway_first) {
 							
 							<div class="loginElement">
 								<div class="loginLabel">
-									<?php if (!$big_image_map) { ?>
-									<span id="advanced_settings_status"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input type="button" id="advanced_settings_gettext" value=""/>
-									<?php } else { ?>
 									<span id="advanced_settings_status" class="image_show_png"></span><input type="button" id="advanced_settings_gettext" value=""/>
-									<?php } ?>
 								</div>
 								<div class="loginField">
 									<span id="submitButton"><input type="submit" id="connect_gettext" value="" /></span>
 									<span id="submitLoader" style="display: none;">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-										<?php } else { ?>
 										<div class="image_rotate_gif"></div>
-										<?php } ?>
 									</span>
 								</div>
 							</div>

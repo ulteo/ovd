@@ -295,12 +295,10 @@ function initialize_ui() {
 	jQuery('#advanced_settings_gettext').on('click', function () {
 		if(jQuery('#advanced_settings').filter(":visible")[0]) {
 			jQuery('#advanced_settings').slideUp(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_show_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/show.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_show_png');
 		} else {
 			jQuery('#advanced_settings').slideDown(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/hide.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
 		}
 	});
 	jQuery('#startsession').on('submit', function() {
@@ -330,8 +328,7 @@ function initialize_ui() {
 		settings.language = jQuery(this).val();
 
 		/* Update flag */
-		if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-		else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
+		jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
 
 		/* Translate UI */
 		translateInterface(settings.language);
@@ -361,8 +358,7 @@ function initialize_ui() {
 	set_component_orientation(settings.language);
 
 	/* Initial flag */
-	if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-	else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
+	jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
 }
 
 function initialize_framework() {

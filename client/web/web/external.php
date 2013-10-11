@@ -45,14 +45,6 @@ if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png
 	$big_image_map = true;
 }
 
-if (!$big_image_map) {
-	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-	if ($logo_size === false)
-		$logo_size = "";
-	else
-		$logo_size = $logo_size[3];
-}
-
 if (OPTION_FORCE_LANGUAGE !== true && array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
 
@@ -121,10 +113,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
-<?php } else {
-					if ($big_image_map) { ?>
+<?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
-<?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/dialogs.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/login.css" />
@@ -133,6 +123,9 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+<?php } ?>
+<?php if (!$big_image_map) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
@@ -201,7 +194,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			window.ovd.defaults.gateway                     = <?php echo $gateway_first === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap_autodetect           = <?php echo defined('OPTION_KEYMAP_AUTO_DETECT') && OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']) ? 'true' : 'false'; ?>;
 			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
-			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap                      = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
 			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_unicode !== null ? '\''.$rdp_input_unicode.'\'' : 'undefined'; ?>;
 			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
@@ -287,20 +279,12 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 							</div>
 						</td>
 						<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-<?php if (!$big_image_map) { ?>
-							<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-<?php } else { ?>
 							<div class="image_error_png"></div>
-<?php } ?>
 						</td>
 					</tr>
 				</table>
 				<div style="text-align:center;">
-<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
-<?php } else { ?>
 					<div class="image_ulteo-small_png" style="margin-left: auto; margin-right: auto;"></div>
-<?php } ?>
 				</div>
 			</div>
 		</noscript>
@@ -313,11 +297,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<div id="systemTest" class="shadowBox" style="display: none;">
 			<div class="boxLogo">
-				<?php if (!$big_image_map) { ?>
-				<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-				<?php } else { ?>
 				<div class="image_rotate_gif"></div>
-				<?php } ?>
 			</div>
 			<h1><span id="system_compatibility_check_1_gettext">&nbsp;</span></h1>
 			<p id="system_compatibility_check_2_gettext">&nbsp;</p>
@@ -326,11 +306,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<div id="systemTestError" class="shadowBox" style="display: none;">
 			<div class="boxLogo">
-				<?php if (!$big_image_map) { ?>
-				<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-				<?php } else { ?>
 				<div class="image_error_png"></div>
-				<?php } ?>
 			</div>
 			<h1><span id="system_compatibility_error_1_gettext">&nbsp;</span></h1>
 			<p id="system_compatibility_error_5_gettext">&nbsp;</p>
@@ -339,20 +315,12 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<div id="splashContainer" class="boxMessage" style="display: none;">
 			<div id="splashContainerContent" class="shadowBox">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-					<?php } else { ?>
 					<div class="image_ulteo_png"></div>
-					<?php } ?>
 				</div>
 				<h1 class="loadling_text" style="display: none;" id="loading_ovd_gettext">&nbsp;</h1>
 				<h1 class="loadling_text" style="display: none;" id="unloading_ovd_gettext">&nbsp;</h1>
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_rotate_gif"></div>
-					<?php } ?>
 				</div>
 				<div id="progressBar"><div id="progressBarContent"></div></div>
 			</div>
@@ -361,11 +329,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<div id="endContainer" class="boxMessage" style="display: none;">
 			<div id="endContainerContent" class="shadowBox">
 				<div class="boxLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-					<?php } else { ?>
 					<div class="image_ulteo_png"></div>
-					<?php } ?>
 				</div>
 				<div id="endContent"></div>
 			</div>
@@ -374,28 +338,16 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeader">
 				<div id="headerLogo">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
-					<?php } else { ?>
 					<div class="image_ulteo-small_png"></div>
-					<?php } ?>
 				</div>
 				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 				<div id="newsList"></div>
 				<a id="logout_link" href="javascript:;">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_logout_png" style="display:inline-block"></div>
-					<?php } ?>
 					<br /><span id="logout_gettext">&nbsp;</span>
 				</a>
 				<a id="suspend_link" href="javascript:;">
-					<?php if (!$big_image_map) { ?>
-					<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
-					<?php } else { ?>
 					<div class="image_suspend_png" style="display:inline-block"></div>
-					<?php } ?>
 					<br /><span id="suspend_gettext">&nbsp;</span>
 				</a>
 				<div class="collapse"></div>
@@ -409,11 +361,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<div id="fullScreenMessage" class="boxMessage" style="display: none;">
 				<div id="fullScreenMessageContainer" class="shadowBox">
 					<div class="boxLogo">
-						<?php if (!$big_image_map) { ?>
-						<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-						<?php } else { ?>
 						<div class="image_ulteo_png"></div>
-						<?php } ?>
 					</div>
 					<p>
 						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
