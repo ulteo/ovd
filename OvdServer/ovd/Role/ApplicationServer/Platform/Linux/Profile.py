@@ -38,6 +38,7 @@ from ovd.Platform.System import System
 
 class Profile(AbstractProfile):
 	MOUNT_POINT = "/mnt/ulteo/ovd"
+	DEFAULT_PERMISSION = "file_mode=0700,dir_mode=0600"
 	
 	def init(self):
 		self.profileMounted = False
@@ -56,11 +57,11 @@ class Profile(AbstractProfile):
 	def mount_cifs(self, share, uri, dest):
 		mount_env = {}
 		if share.has_key("login") and share.has_key("password"):
-			cmd = "mount -t cifs -o 'uid=%s,gid=0,umask=077' //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 			mount_env["USER"] = share["login"]
 			mount_env["PASSWD"] = share["password"]
 		else:
-			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,umask=077' //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 		
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, share mount command: '%s'"%(cmd))
@@ -97,7 +98,7 @@ class Profile(AbstractProfile):
 			f.write("%s %s %s\n"%(mount_uri, share["login"], share["password"]))
 			f.close()
 		
-		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,dir_mode=700,file_mode=600' '%s' %s"%(davfs_conf, self.session.user.name, mount_uri, dest)
+		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,%s' '%s' %s"%(davfs_conf, self.session.user.name, DEFAULT_PERMISSION, mount_uri, dest)
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
 		p = System.execute(cmd)
