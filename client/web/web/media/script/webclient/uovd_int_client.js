@@ -248,7 +248,7 @@ function initialize_settings() {
 	settings.width                 = jQuery(window).innerWidth();
 	settings.height                = jQuery(window).innerHeight();
 	settings.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
-	settings.debug                 = jQuery("#debug_true").prop('checked');
+	settings.debug                 = jQuery("#debug_1").prop('checked');
 	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	settings.rdp_provider          = jQuery('#rdp_mode').val();
 	settings.http_provider         = "proxy";
@@ -312,7 +312,7 @@ function initialize_ui() {
 	jQuery('#user_password').on('keyup change', function() { settings.password = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_mode').on('click change', function() { settings.mode = jQuery(this).val(); validate_settings(); });
 	jQuery('#rdp_mode').on('click change', function() { settings.rdp_provider = jQuery(this).val(); validate_settings(); });
-	jQuery('#debug_true, #debug_false').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#debug_1, #debug_0').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#desktop_fullscreen_1, #desktop_fullscreen_0').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#use_local_credentials_1, #use_local_credentials_0').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });

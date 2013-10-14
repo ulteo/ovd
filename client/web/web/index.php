@@ -128,8 +128,10 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 
 $confirm_logout = OPTION_CONFIRM_LOGOUT;
 
-if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
+if ($debug_mode === false && array_key_exists('debug', $_REQUEST)) {
 	$debug_mode = true;
+	$big_image_map = false;
+}
 
 $headers = apache_request_headers();
 $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
@@ -152,7 +154,7 @@ if ($gateway_first) {
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css") && $debug_mode != true) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
 <?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
@@ -176,7 +178,7 @@ if ($gateway_first) {
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js") && $debug_mode != true) { ?>
 		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
@@ -214,7 +216,7 @@ if ($gateway_first) {
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
 <?php } ?>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js") && $debug_mode != true) { ?>
 		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
