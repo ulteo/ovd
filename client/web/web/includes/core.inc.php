@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -78,14 +79,9 @@ if (! defined('OPTION_FORCE_LANGUAGE'))
 $user_language = OPTION_LANGUAGE_DEFAULT;
 if (OPTION_LANGUAGE_AUTO_DETECT === true) {
 	// Autodetect language from browser settings
-	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-		$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-		$buf = explode(';', $buf[0]);
-		$lang = strtolower(str_replace('_', '-', $buf[0]));
-		
-		$languages = get_available_languages();
-		if (language_is_supported($languages, $lang))
-			$user_language = $lang;
+	$browser_languages = detectBrowserLanguage(get_available_languages());
+	if (count($browser_languages) > 0) {
+		$user_language = $browser_languages[0];
 	}
 }
 

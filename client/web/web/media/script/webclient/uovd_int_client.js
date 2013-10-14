@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -145,13 +145,13 @@ function validate_settings() {
 		if(! framework.rdp_providers.java || ! framework.tests.java) {
 			showLoginError("Use local credentials : Java support required");
 			settings.use_local_credentials = false;
-			jQuery("#use_local_credentials_true").removeAttr('checked');
-			jQuery("#use_local_credentials_false").prop("checked", "checked")
+			jQuery("#use_local_credentials_1").removeAttr('checked');
+			jQuery("#use_local_credentials_0").prop("checked", "checked")
 		} else {
 			settings.http_provider = "java";
 			settings.use_local_credentials = true;
-			jQuery("#use_local_credentials_false").removeAttr('checked');
-			jQuery("#use_local_credentials_true").prop("checked", "checked")
+			jQuery("#use_local_credentials_0").removeAttr('checked');
+			jQuery("#use_local_credentials_1").prop("checked", "checked")
 		}
 	}
 
@@ -218,9 +218,9 @@ function initialize_defaults() {
 	defaults.timezone              = getTimezoneName();
 	defaults.width                 = jQuery(window).innerWidth();
 	defaults.height                = jQuery(window).innerHeight();
-	defaults.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
-	defaults.debug                 = jQuery("#debug_true").prop('checked');
-	defaults.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
+	defaults.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
+	defaults.debug                 = jQuery("#debug_1").prop('checked');
+	defaults.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	defaults.rdp_provider          = jQuery('#rdp_mode').val();
 	defaults.rdp_input_method      = jQuery('#session_input_method').val();
 	defaults.http_provider         = "proxy";
@@ -247,9 +247,9 @@ function initialize_settings() {
 	settings.timezone              = getTimezoneName();
 	settings.width                 = jQuery(window).innerWidth();
 	settings.height                = jQuery(window).innerHeight();
-	settings.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
-	settings.debug                 = jQuery("#debug_true").prop('checked');
-	settings.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
+	settings.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
+	settings.debug                 = jQuery("#debug_1").prop('checked');
+	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	settings.rdp_provider          = jQuery('#rdp_mode').val();
 	settings.http_provider         = "proxy";
 	settings.webapps_provider      = "jsonp";
@@ -295,12 +295,10 @@ function initialize_ui() {
 	jQuery('#advanced_settings_gettext').on('click', function () {
 		if(jQuery('#advanced_settings').filter(":visible")[0]) {
 			jQuery('#advanced_settings').slideUp(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_show_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/show.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_show_png');
 		} else {
 			jQuery('#advanced_settings').slideDown(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/hide.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
 		}
 	});
 	jQuery('#startsession').on('submit', function() {
@@ -314,9 +312,9 @@ function initialize_ui() {
 	jQuery('#user_password').on('keyup change', function() { settings.password = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_mode').on('click change', function() { settings.mode = jQuery(this).val(); validate_settings(); });
 	jQuery('#rdp_mode').on('click change', function() { settings.rdp_provider = jQuery(this).val(); validate_settings(); });
-	jQuery('#debug_true, #debug_false').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
-	jQuery('#desktop_fullscreen_true, #desktop_fullscreen_false').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
-	jQuery('#use_local_credentials_true, #use_local_credentials_false').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#debug_1, #debug_0').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#desktop_fullscreen_1, #desktop_fullscreen_0').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#use_local_credentials_1, #use_local_credentials_0').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_input_method').on('change keyup', function() { settings.rdp_input_method = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('keyup change', function() { settings.sessionmanager = jQuery(this).val(); validate_settings(); });
@@ -330,8 +328,7 @@ function initialize_ui() {
 		settings.language = jQuery(this).val();
 
 		/* Update flag */
-		if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-		else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
+		jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
 
 		/* Translate UI */
 		translateInterface(settings.language);
@@ -361,11 +358,7 @@ function initialize_ui() {
 	set_component_orientation(settings.language);
 
 	/* Initial flag */
-	if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-	else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
-
-	/* Fade-in the login panel */
-	jQuery('#loginBox').fadeIn(1000);
+	jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
 }
 
 function initialize_framework() {
@@ -400,13 +393,12 @@ function initialize_framework() {
 	/* handle status modifications */
 	framework.session_management.addCallback("ovd.session.starting", function(type, source, params) {
 		synchronize();
-		pushLogin();
+		hideLogin();
 		showSplash();
 		pushMainContainer();
 
 		/* Wait for the animation end then show outside of the viewport */
 		setTimeout(function() {
-			hideLogin();
 			showMainContainer();
 			enableLogin();
 		}, 2000);
@@ -420,6 +412,10 @@ function initialize_framework() {
 			var mode = framework.session_management.session.mode;
 			configureUI(mode);
 			pullMainContainer();
+		}
+		
+		if(to == uovd.SESSION_STATUS_LOGGED) {
+			hideSplash();
 		}
 	});
 	
@@ -440,9 +436,11 @@ function initialize_framework() {
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
 		hideMainContainer();
+		showSplash();
 	});
 
 	framework.session_management.addCallback("ovd.session.destroyed", function(type, source, params) {
+		hideMainContainer();
 		hideSplash();
 		generateEnd_internal();
 		showEnd();
@@ -488,7 +486,7 @@ function initialize_framework() {
 	/* window manager */
 	framework.listeners.seamless_window_manager = new uovd.provider.rdp.html5.SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 	/* ajaxplorer file manager */
-	framework.listeners.ajaxplorer = new Ajaxplorer(framework.session_management, "#fileManagerContainer");
+	framework.listeners.ajaxplorer = new Ajaxplorer(framework.session_management, "#fileManagerContainer", "#appsContainer");
 	/* Session-based start_app support */
 	framework.listeners.start_app = new StartApp(framework.session_management);
 	/* application counter */
@@ -523,6 +521,7 @@ function initialize_tests() {
 		framework.tests[i] = true;
 		hideLock();
 		hideSystemTest();
+		jQuery('#loginBox').fadeIn();
 		validate_settings();
 	}
 

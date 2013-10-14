@@ -36,39 +36,33 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			applications_sorted.sort(function(a, b) { var n1=a.name.toLowerCase(); var n2=b.name.toLowerCase(); return (n1>n2 ? 1 : (n1<n2 ? -1 : 0)); })
 
 			/* Create launchers */
-			var table = jQuery(document.createElement("table"));
-			var tbody = jQuery(document.createElement("tbody"));
+			var ul = jQuery(document.createElement("ul"));
 
 			for(var i=0 ; i<applications_sorted.length ; ++i) {
 				var id = applications_sorted[i].id;
 
-				var tr = jQuery(document.createElement("tr"));
-				tr.prop("id", "application_"+id);
-				tr.prop("className", "applicationLauncherDisabled");
+				var li = jQuery(document.createElement("li"));
+				li.prop("id", "application_"+id);
+				li.prop("className", "applicationLauncherDisabled");
 
-				var td_img = jQuery(document.createElement("td"))
 				var img = jQuery(document.createElement("img"));
 				img.addClass("application_icon");
 				img.prop("src", "icon.php?id="+id);
-				td_img.append(img);
 
-				var td_name = jQuery(document.createElement("td"));
-				td_name.addClass("application_name");
-				td_name.html(this.applications[id].name+" ");
+				var p_name = jQuery(document.createElement("p"));
+				p_name.addClass("application_name");
+				p_name.html(this.applications[id].name);
 
-				var td_count = jQuery(document.createElement("td"));
 				var count = jQuery(document.createElement("span"));
 				count.addClass("application_instance_counter");
-				td_count.append(count);
 
-				tr.append(td_img, td_name, td_count);
+				li.append(img, p_name, count);
 
-				this.content[id] = {"node":tr, "event":null};
-				tbody.append(tr);
+				this.content[id] = {"node":li, "event":null};
+				ul.append(li);
 			}
 
-			table.append(tbody);
-			this.node.append(table);
+			this.node.append(ul);
 		}
 	}
 
@@ -82,21 +76,13 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
 				var item =  this.content[id];
-
-				var node = new jQuery(document.createElement("a"));
-				node.prop("href", "javascript:;");
-				node.html(this.applications[id].name);
-				
-				item["node"].find(":eq(2)").empty();
-				item["node"].find(":eq(2)").append(node);
-				
 				var self = this; /* closure */
 				item["event"] = function () {
-					var appId = jQuery(this).parent().parent().prop("id").split("_")[1];
+					var appId = jQuery(this).prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
 					self.session_management.fireEvent("ovd.applicationsProvider.applicationStart", self, {"id":appId});
 				}
-				node.click(item["event"]);
+				item["node"].click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
 			}
 		}
@@ -121,6 +107,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				node.html("");
 			} else {
 				node.html(next);
+				node.parent().addClass("launched");
 			}
 		}
 
@@ -136,6 +123,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 			if(next == 0) {
 				node.html("");
+				node.parent().removeClass("launched");
 			} else {
 				node.html(next);
 			}

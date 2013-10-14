@@ -1,0 +1,38 @@
+html[dir="rtl"] .loginElement {
+	clear: left;
+}
+
+html[dir="rtl"] .loginField {
+	float: left;
+}
+
+html[dir="rtl"] #loginBoxLogo {
+	float: right;
+}
+
+html[dir="rtl"] #loginForm {
+	border-right: 1px solid #EEEEEE;
+	border-left: none;
+	margin-left: 0;
+	margin-right: 330px;
+}
+
+html[dir="rtl"] #advanced_settings {
+	clear: left;
+}
+
+html[dir="rtl"] #advanced_settings_status {
+	left: -17px;
+}
+
+html[dir="rtl"] #advanced_settings_gettext {
+	padding-left: 0px;
+	padding-right: 18px;
+}
+
+html[dir="rtl"] #fileManagerContainer {
+	border-left: none;
+	border-right: 5px solid;
+	left: 0;
+	right: auto;
+}

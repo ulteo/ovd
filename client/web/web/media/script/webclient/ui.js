@@ -48,15 +48,6 @@ function hideNews() {
 	jQuery('#news').hide();
 }
 
-function showIFrame(url_) {
-	jQuery('#iframeContainer').prop('src', url_);
-	jQuery('#iframe').show();
-}
-
-function hideIFrame() {
-	jQuery('#iframe').hide();
-}
-
 function showMainContainer() {
 	jQuery('#sessionContainer').fadeIn();
 }
@@ -252,13 +243,6 @@ function configureUI(mode) {
 	if(mode == uovd.SESSION_MODE_APPLICATIONS) {
 		/* Configure page layout */
 		(function() {
-			/* Set page size */
-			var page_height = jQuery("body").innerHeight();
-			var header_height = jQuery('#applicationsHeader').height();
-			var content_height = parseInt(page_height)-parseInt(header_height)-30;
-			jQuery('#appsContainer').height(content_height);
-			jQuery('#fileManagerContainer').height(content_height);
-
 			/* Hide desktops */
 			/* do not use .hide() or applet wil not load */
 			jQuery('#desktopContainer').width(1).height(1).css("overflow", "hidden");

@@ -1,7 +1,9 @@
-Ajaxplorer = function(session_management, node) {
+Ajaxplorer = function(session_management, node, appnode) {
 	this.node = jQuery(node);
+	this.appnode = jQuery(appnode);
 	this.session_management = session_management;
 	this.handler = jQuery.proxy(this.handleEvents, this);
+	this.div = null;
 
 	/* Do NOT remove ovd.session.started in destructor as it is used as a delayed initializer */
 	this.session_management.addCallback("ovd.session.started", this.handler);
@@ -51,16 +53,19 @@ Ajaxplorer.prototype.handleEvents = function(type, source, params) {
 }
 
 Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
+	this.div = jQuery(document.createElement("div"));
 	var iframe = jQuery(document.createElement("iframe"));
-	iframe.width("100%").height("100%");
-	iframe.css("border", "none");
 	iframe.prop("src", "ajaxplorer/");
-	this.node.append(iframe);
+	this.div.append(iframe);
+	this.node.append(this.div);
+	this.appnode.addClass("withFileManager")
+	this.node.show();
 }
 
 Ajaxplorer.prototype.end = function() {
 	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
-		this.node.empty();
+		this.node.remove(this.div);
+		this.appnode.removeClass("withFileManager")
 		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.destroying", this.handler);
 	}

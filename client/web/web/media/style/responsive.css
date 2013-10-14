@@ -1,0 +1,27 @@
+@media screen and (max-width:800px) {
+
+	#loginForm {
+		padding: 10px;
+		margin-left: 10px !important;
+		margin-right: 10px !important;
+	}
+	
+	#loginBoxLogo {
+		display: none;
+	}
+
+	#loginBoxLogoSmall {
+		display: block;
+		float: none;
+		width: 141px;
+		height: 80px;
+		margin: 0px auto;
+	}
+
+}
+
+@media screen and (max-width:500px) {
+	.loginField {
+		float: none;
+	}
+}

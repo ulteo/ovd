@@ -28,11 +28,27 @@ import sys
 import Image
 
 
-def run(*args):
-	proc = Popen(args, stdout=PIPE)
+def run(*args, **kwargs):
+	if kwargs.has_key("input"):
+		stdin = PIPE
+	else:
+		stdin = None
+	
+	proc = Popen(args, stdout=PIPE, stdin=stdin)
+	if kwargs.has_key("input"):
+		proc.stdin.write(kwargs["input"])
+		proc.stdin.close()
+	
 	output = proc.stdout.read()
 	proc.wait()
 	return output
+
+
+def verify_version():
+	output = run("yui-compressor", "--type", "css", input="@media screen and (max-width:800px){a{color:black}}")
+	if output.find("screen and (") == -1:
+		# Old versions of yui-compressor (2.4.2) suppress the mandatory space after "and"
+		raise Exception("Your version of yui-compressor have a bug with @media css queries. Please use a version >= 2.4.7")
 
 
 def jscompress(outfile, filename):
@@ -57,7 +73,7 @@ def listImages(apath):
 
 
 def make_image_map(images, width=None):
-	cimages = [image for image in images if not os.path.basename(image['fname']) in ('rotate.gif', 'loader.gif')]
+	cimages = [image for image in images if not os.path.basename(image['fname']) in ('rotate.gif', )]
 	
 	cimages.sort(lambda x,y:-1*cmp(x['width'], y['width']))
 	if width == None:
@@ -108,6 +124,18 @@ def compile_images():
 		css["width"] = css["image"].size[0]
 		css["height"] = css["image"].size[1]
 		images.append(css)
+
+	cssimages = os.path.join("web", "media", "style", "images_files.css")
+	cssimagesfile = open(cssimages, "w")
+	for css in images:
+		cssimagesfile.write(""".image_%(class)s {
+  background: url(\"%(fname)s\") no-repeat transparent;
+  width: %(width)dpx;
+  height: %(height)dpx;
+}
+
+""" % css)
+	cssimagesfile.close()
 	
 	imagemap = make_image_map(images)
 	uovd_png = tempfile.NamedTemporaryFile()
@@ -134,7 +162,10 @@ copyright = """/**
 * see the original files for individual copyright information
 **/"""%(time.strftime("%Y"))
 
-if __name__ == "__main__":
+
+def main():
+	verify_version()
+
 	compile_images()
 
 	processed_files = []
@@ -186,8 +217,16 @@ if __name__ == "__main__":
 
 	for match in re.findall("<link rel=\"stylesheet\" type=\"text/css\" href=\"media/(.*).css\" />", content, re.IGNORECASE):
 		filename = os.path.join("web", "media", match + ".css")
-		if not os.path.basename(filename) in ("webclient.css", ) and not os.path.basename(filename) in processed_files:
+		if not os.path.basename(filename) in ("webclient.css", "images_files.css", "custom.css") and not os.path.basename(filename) in processed_files:
 			processed_files.append(os.path.basename(filename))
 			csscompress(outfile, filename)
 
 	outfile.close()
+
+if __name__ == "__main__":
+	try:
+		main()
+	except Exception as e:
+		print e
+		sys.exit(1)
+	sys.exit(0)

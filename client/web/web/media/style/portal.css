@@ -1,0 +1,171 @@
+#applicationsHeader {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	color: #333;
+	background: #222;
+	background: linear-gradient(to bottom, #222, #111) repeat scroll 0 0 transparent;
+}
+
+#applicationsHeader #headerLogo {
+	float: left;
+	margin: 5px;
+}
+
+#applicationsHeader h1 {
+	float: left;
+	margin: 20px;
+	color: #999999;
+	font-size: 2em;
+}
+
+#applicationsHeader > a {
+    display: block;
+    float: right;
+    margin: 10px 10px 0 0;
+    text-align: center;
+}
+
+#applicationsHeader a {
+	color: #AACBEC;
+}
+
+#applicationsHeader a:hover {
+	color: #ECD0AA;
+}
+
+#applicationsHeader #newsList {
+	color: #FFFFFF;
+	float: left;
+	height: 80px;
+	margin: 5px 10px 5px 0;
+	overflow: auto;
+	width: 30%;
+}
+
+#applicationsHeader #newsList ul {
+	margin: 0;
+}
+
+#applicationsHeader #newsList li { 
+	cursor: pointer;
+}
+
+#applicationsHeader #newsList .date {
+	display: inline-block;
+	width: 62px;
+	font-weight: bold;
+}
+
+#applicationsHeader #newsList .title:before {
+	content: ":";
+	margin-right: 6px;
+}
+
+#applicationsHeader > a:hover img, #applicationsHeader > a:hover div {
+	opacity: 0.5;
+}
+
+.collapse {
+	clear: both;
+}
+
+#applicationsContainer {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 0 0;
+	padding: 0px;
+	background: #eee;
+	border-bottom: 1px solid #ccc;
+}
+
+#appsContainer ul {
+	margin: 0;
+	padding: 0;
+}
+
+#appsContainer li {
+	margin: 0 0 2px 2px;
+	padding: 5px;
+	list-style: none;
+	float:left;
+	text-align: center;
+	display: block;
+	background-color: #def;
+	width: 110px;
+	height: 90px;
+}
+
+#appsContainer li.applicationLauncherEnabled:hover {
+	background-color: #bdf;
+}
+
+#appsContainer li.launched {
+	background-color: #C8AAEC;
+}
+
+#appsContainer li.applicationLauncherDisabled {
+	opacity: 0.40;
+	filter: alpha(opacity=40);
+	-moz-opacity: 0.40;
+	font-weight: bold;
+}
+
+#appsContainer li.applicationLauncherEnabled {
+	opacity: 1.00;
+	filter: alpha(opacity=100);
+	-moz-opacity: 1.00;
+	cursor: pointer;
+}
+
+#appsContainer li .application_instance_counter {
+	width: 15px;
+	text-align: right;
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+#fileManagerContainer {
+	border-left: 5px solid;
+	bottom: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 90px;
+	width: 69%;
+}
+
+#fileManagerContainer h2 {
+	padding: 6px;
+}
+
+#fileManagerContainer div {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	top: 32px;
+	right: 0px;
+}
+
+#fileManagerContainer iframe {
+	border: none;
+	height: 100%;
+	width: 100%;
+}
+
+#appsContainer {
+	width: 100%;
+	overflow: auto;
+	position: absolute;
+	top: 90px;
+	bottom: 0px;
+}
+
+#appsContainer.withFileManager {
+	width: 30%;
+}

@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -125,6 +125,38 @@ function language_is_supported($languages_list, $lang) {
 	}
 	
 	return false;
+}
+
+// parse list of comma separated language tags and sort it by the quality value
+function detectBrowserLanguage($languages_list) {
+	$languages = array();
+	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$languageList = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		$languageRanges = explode(',', trim($languageList));
+		foreach ($languageRanges as $languageRange) {
+			if (preg_match('/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/', trim($languageRange), $match)) {
+				if (language_is_supported($languages_list, strtolower($match[1]))) {
+					if (!isset($match[2])) {
+						$match[2] = '1.0';
+					} else {
+						$match[2] = (string) floatval($match[2]);
+					}
+					if (!isset($languagesQ[$match[2]])) {
+						$languagesQ[$match[2]] = array();
+					}
+					$languagesQ[$match[2]][] = strtolower($match[1]);
+				}
+			}
+		}
+		krsort($languagesQ);
+		foreach ($languagesQ as $langQ) {
+			foreach ($langQ as $lang) {
+				$languages[] = $lang;
+			}
+		}
+	}
+	
+	return $languages;
 }
 
 function locale2unix($locale_) {
@@ -286,4 +318,69 @@ function get_ie_version() {
 		$ie_version = PHP_INT_MAX;
 	}
 	return $ie_version;
+}
+
+function get_users_list() {
+	if (! defined('SESSIONMANAGER_HOST'))
+		return false;
+
+	global $sessionmanager_url;
+
+	$sm = new SessionManager($sessionmanager_url);
+	$ret = $sm->query('userlist.php');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$buf = @$dom->loadXML($ret);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$users_node = $dom->getElementsByTagname('users')->item(0);
+	if (is_null($users_node))
+		return false;
+
+	$users = array();
+	foreach ($users_node->childNodes as $user_node) {
+		if ($user_node->hasAttribute('login'))
+			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
+	}
+	natcasesort($users);
+
+	if (count($users) == 0)
+		return false;
+
+	return $users;
+}
+
+function short_list_field($id, $disabled, $selected, $items) {
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<input class=\"input_radio\" type=\"radio\" value=\"${key}\" name=\"${id}\" id=\"${id}_${key}\"".
+			($selected == $key ? " checked=\"checked\"" : "").
+			($disabled ? " disabled=\"disabled\"" : "").
+			"><label for=\"${id}_${key}\" id=\"${gettext}\">${label}</label>";
+	}
+}
+
+function long_list_field($id, $disabled, $selected, $items) {
+	echo "<select id=\"${id}\" ".($disabled ? ' disabled="disabled"' : "").">";
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<option id=\"${gettext}\" value=\"${key}\" ".($selected == $key ? "selected=\"selected\"" : "").">${val}</option>";
+	}
+	echo "</select>";
 }
