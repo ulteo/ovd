@@ -108,7 +108,7 @@ class Share:
 				Logger.debug("FS: command '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read().decode("UTF-8")))
 				return False
 		
-		cmd = 'net usershare add %s "%s" %s %s_ro:r,%s_rw:f,Everyone:d'%(self.name, self.frontDirectory, self.name, self.group, self.group)
+		cmd = 'net usershare add %s "%s" %s %s_ro:r,%s_rw:f'%(self.name, self.frontDirectory, self.name, self.group, self.group)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add share")
