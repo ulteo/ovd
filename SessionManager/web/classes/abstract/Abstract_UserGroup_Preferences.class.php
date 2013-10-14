@@ -72,6 +72,24 @@ class Abstract_UserGroup_Preferences {
 		return $ret;
 	}
 	
+	public static function load_all($key_, $container_) {
+		$ret = array();
+		$sql = SQL::getInstance();
+		$res = $sql->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @2 = %7 AND @3 = %8', 'group_id', 'key', 'container', 'element_id', 'value', $sql->prefix.self::$table, $key_, $container_);
+		
+		if ($res !== true) {
+			Logger::error('main', "Abstract_UserGroup_PreferencesloadByUserGroupId($group_id_,$key_,$container_) sql request failed");
+		}
+		else {
+			$rows = $sql->FetchAllResults();
+			foreach ($rows as $row) {
+				array_push($ret, new UserGroup_Preferences($row['group_id'], $row['key'], $row['container'], $row['element_id'], json_unserialize($row['value'])));
+			}
+		}
+		
+		return $ret;
+	}
+	
 	public static function save($usergroup_prefs_) {
 		$sql = SQL::getInstance();
 		return $res = $sql->DoQuery('INSERT INTO #1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)', self::$table, 'group_id', 'key', 'container', 'element_id', 'value', $usergroup_prefs_->usergroup_id, $usergroup_prefs_->key, $usergroup_prefs_->container, $usergroup_prefs_->element_id, json_serialize($usergroup_prefs_->value));

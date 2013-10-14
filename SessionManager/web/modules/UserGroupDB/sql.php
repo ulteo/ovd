@@ -98,7 +98,7 @@ class UserGroupDB_sql {
 				$result[$g->getUniqueID()] = $g;
 			}
 			else {
-				array_push($ids_filter, '"'.$sql2->CleanValue($id).'"');
+				array_push($ids_filter, $sql2->Quote($id));
 			}
 		}
 		
@@ -199,10 +199,6 @@ class UserGroupDB_sql {
 		return true;
 	}
 	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'sql'));
-	}
-	
 	public function add($usergroup_){
 		Logger::debug('main', "USERGROUPDB::add($usergroup_)");
 		$sql2 = SQL::getInstance();
@@ -297,25 +293,82 @@ class UserGroupDB_sql {
 		return true;
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
+		if (! is_null($user_)) {
+			$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('login'), NULL);
+			$groups2 = array();
+			foreach($liasons as $group_id => $liason) {
+				array_push($groups2, $group_id);
+			}
+		}
+		
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;
 		$list = $this->getList();
 		foreach ($list as $a_group) {
-			foreach ($attributes_ as $an_attribute) {
-				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
-					$groups []= $a_group;
-					$count++;
-					if ($limit_ > 0 && $count >= $limit_) {
-						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
-						return array($groups, $sizelimit_exceeded);
+			if (! is_null($user_) && !in_array($a_group->getUniqueID(), $groups2)) {
+				continue;
+			}
+			
+			if ($contains_ != '' && count($attributes_) > 0) {
+				$is_ok = false;
+				foreach ($attributes_ as $an_attribute) {
+					if (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_))) {
+						$is_ok = true;
+						break;
 					}
-					break;
+				}
+				
+				if (! $is_ok) {
+					continue;
 				}
 			}
+			
+			if ($limit_ > 0 && $count >= $limit_) {
+				$sizelimit_exceeded = true;
+				break;
+			}
+			
+			array_push($groups, $a_group);
+			$count++;
 		}
 		
 		return array($groups, $sizelimit_exceeded);
+	}
+	
+	public function get_filter_groups_member($group_) {
+		Logger::debug('main', 'UsersGroupDB::sql::get_filter_groups_member ('.$group_->getUniqueID().')');
+		
+		$liasons = Abstract_Liaison::load('UsersGroup', NULL, $group_->getUniqueID());
+		if (! is_array($liasons)) {
+			return array('users' => array());
+		}
+		
+		$users_login = array();
+		foreach($liasons as $user_login => $liason) {
+			array_push($users_login, $user_login);
+		}
+		
+		return array('users' => $users_login);
+	}
+	
+	public function get_groups_including_user_from_list($groups_id_, $user_) {
+		$liasons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('login'), NULL);
+		$groups_id2 = array();
+		foreach($liasons as $useless => $liason) {
+			if (! str_startswith($liason->group, 'static_')) {
+				continue;
+			}
+			
+			$group_id = substr($liason->group, strlen('static_'));
+			if (! in_array($group_id, $groups_id_)) {
+				continue;
+			}
+			
+			array_push($groups_id2, $group_id);
+		}
+		
+		return $this->imports($groups_id2);
 	}
 }

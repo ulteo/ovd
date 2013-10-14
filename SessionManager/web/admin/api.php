@@ -2695,7 +2695,11 @@ class OvdAdminSoap {
 		
 		$u['locale'] = $user->getLocale();
 		
-		$groups = $user->usersGroups();
+		$search_limit = $this->prefs->get('general', 'max_items_per_page');
+		
+		$usergroupDB = UserGroupDB::getInstance();
+		list($groups, $sizelimit_exceeded) = $usergroupDB->getGroupsContains('', array(), $search_limit, $user);
+		$u['groups_partial_list'] = $sizelimit_exceeded;
 		if (count($groups) > 0) {
 			$u['groups'] = array();
 			foreach($groups as $group_id => $group) {
@@ -2964,18 +2968,27 @@ class OvdAdminSoap {
 		);
 	}
 	
-	public function users_groups_list_partial($search_item_, $search_fields_) {
+	public function users_groups_list_partial($search_item_, $search_fields_, $user_login_) {
 		$this->check_authorized('viewUsersGroups');
 		
 		if (!is_array($search_fields_)) {
 			$search_fields_ = array('name', 'description');
 		}
 		
+		$user = null;
+		if (is_string($user_login_) && strlen($user_login_) > 0) {
+			$userDB = UserDB::getInstance();
+			$user = $userDB->import($user_login_);
+			if (! $user) {
+				array('partial' => false, 'data' => array());
+			}
+		}
+		
 		$userGroupDB = UserGroupDB::getInstance();
 		
 		$search_limit = $this->prefs->get('general', 'max_items_per_page');
 		
-		list($result, $partial) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit);
+		list($result, $partial) = $userGroupDB->getGroupsContains($search_item_, $search_fields_, $search_limit, $user);
 		
 		$ret = array();
 		foreach($result as $group) {
@@ -2996,13 +3009,14 @@ class OvdAdminSoap {
 		
 		$g = self::generate_usersgroup_array($group);
 		
-		$users = $group->usersLogin();
+		$search_limit = $this->prefs->get('general', 'max_items_per_page');
+		
+		$userDB = UserDB::getInstance();
+		list($users, $sizelimit_exceeded) = $userDB->getUsersContains('', array(), $search_limit, $group);
+		$g['users_partial_list'] = $sizelimit_exceeded;
 		if (count($users) > 0) {
-			$userDB = UserDB::getInstance();
-			$users2 = $userDB->imports($users);
-			
 			$s['users'] = array();
-			foreach($users2 as $user) {
+			foreach($users as $user) {
 				$g['users'][$user->getAttribute('login')] = $user->getAttribute('displayname');
 			}
 		}
@@ -4555,9 +4569,13 @@ class OvdAdminSoap {
 		$info = array(); // Should only request SessionManagement instance to catch all these information ...
 		$info['settings'] = $user->getSessionSettings('session_settings_defaults');
 		
+		$search_limit = $this->prefs->get('general', 'max_items_per_page');
+		
+		$usergroupDB = UserGroupDB::getInstance();
+		list($groups, $sizelimit_exceeded) = $usergroupDB->getGroupsContains('', array(), $search_limit, $user);
 		$info['user_grps'] = array();
-		$users_grps = $user->usersGroups();
-		foreach ($users_grps as $group_id => $group) {
+		$info['groups_partial_list'] = $sizelimit_exceeded;
+		foreach($groups as $group_id => $group) {
 			$info['user_grps'][$group_id]= $group->name;
 		}
 		
@@ -4586,8 +4604,8 @@ class OvdAdminSoap {
 		$info['shared_folders'] = array();
 		if (array_key_exists('enable_sharedfolders', $info['settings']) && $info['settings']['enable_sharedfolders'] == 1) {
 			$shared_folders = $user->getSharedFolders();
-			foreach ($shared_folders as $shared_folder) {
-				$info['shared_folders'][$shared_folder->id] = $shared_folder->name;
+			foreach ($shared_folders as $shared_folder_id => $infos) {
+				$info['shared_folders'][$shared_folder_id] = array('share_name' => $infos['share']->name, 'mode' => $infos['mode']);
 			}
 		}
 		

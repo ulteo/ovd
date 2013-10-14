@@ -42,9 +42,21 @@ class UsersList {
 		}
 	}
 	
+	public function is_partial_result() {
+		return $this->partial_result;
+	}
 	
-	function search() {
-		$res = $_SESSION['service']->users_list_partial($this->search_item, $this->search_fields);
+	public function is_empty_filter() {
+		return $this->empty_filter;
+	}
+	
+	public function set_external_result($result_, $partial_result_) {
+		$this->result = $result_;
+		$this->partial_result = $partial_result_;
+	}
+	
+	function search($group_=null) {
+		$res = $_SESSION['service']->users_list_partial($this->search_item, $this->search_fields, $group_);
 		if ($res === null) {
 			return array();
 		}

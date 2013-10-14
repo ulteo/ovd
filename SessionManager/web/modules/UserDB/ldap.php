@@ -33,6 +33,7 @@ class UserDB_ldap  extends UserDB {
 		
 		$this->cache_users = array();
 	}
+
 	public function import($login_){
 		Logger::debug('main','UserDB::ldap::import('.$login_.')');
 		
@@ -128,29 +129,52 @@ class UserDB_ldap  extends UserDB {
 		return $result;
 	}
 	
-	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0, $group_=null) {
 		$users = array();
-		$ldap = new LDAP($this->makeLDAPconfig());
-		$contains = '*';
-		if ( $contains_ != '')
-			$contains .= $contains_.'*';
-		$contains = preg_replace('/\*\*+/', '*', $contains); // ldap does not handle multiple star characters
 		
-		$missing_attribute_nb = 0;
-		$filter = '(&'.$this->generateFilter().'(|';
-		foreach ($attributes_ as $attribute) {
-			if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
+		$filters = array($this->generateFilter());
+		if ( $contains_ != '') {
+			$contains = preg_replace('/\*\*+/', '*', '*'.$contains_.'*'); // ldap does not handle multiple star characters
+			$filter_contain_rules = array();
+			$missing_attribute_nb = 0;
+			foreach ($attributes_ as $attribute) {
+				if (! array_key_exists($attribute, $this->config['match']) || strlen($this->config['match'][$attribute])==0) {
 					$missing_attribute_nb++;
 					continue;
+				}
+				
+				array_push($filter_contain_rules, $this->config['match'][$attribute].'='.$contains);
 			}
 			
-			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
-		}
-		$filter .= '))'; 
-		if ($missing_attribute_nb == count($attributes_)) {
-			return array(array(), false);
+			if ($missing_attribute_nb == count($attributes_)) {
+				return array(array(), false);
+			}
+			
+			array_push($filters, LDAP::join_filters($filter_contain_rules, '|'));
 		}
 		
+		if (! is_null($group_)) {
+			$userGroupDB = UserGroupDB::getInstance('static');
+			$group_filter_res = $userGroupDB->get_filter_groups_member($group_);
+			if (array_key_exists('filter', $group_filter_res)) {
+				array_push($filters, $group_filter_res['filter']);
+			}
+			else {
+				if (! array_key_exists('users', $group_filter_res) || !is_array($group_filter_res['users']) || count($group_filter_res['users']) == 0) {
+					return array(array(), false);
+				}
+				
+				$filter_group_rules = array();
+				foreach($group_filter_res['users'] as $login) {
+					array_push($filter_group_rules, '('.$this->config['match']['login'].'='.$login.')');
+				}
+				
+				array_push($filters, LDAP::join_filters($filter_group_rules, '|'));
+			}
+		}
+		
+		$filter = LDAP::join_filters($filters, '&');
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
@@ -160,6 +184,12 @@ class UserDB_ldap  extends UserDB {
 		
 		$infos = $ldap->get_entries($sr);
 		foreach ($infos as $dn => $info) {
+			if (! is_null($group_) && array_key_exists('dns', $group_filter_res)) {
+				if (! in_array($dn, $group_filter_res['dns'])) {
+					continue;
+				}
+			}
+			
 			$u = $this->generateUserFromRow($info);
 			$u->setAttribute('dn',  $dn);
 			

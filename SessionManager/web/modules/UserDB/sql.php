@@ -60,7 +60,7 @@ class UserDB_sql extends UserDB  {
 		
 		$logins2 = array();
 		foreach($logins_ as $login) {
-			array_push($logins2, '"'.$sql2->CleanValue($login).'"');
+			array_push($logins2, $sql2->Quote($login));
 		}
 		
 		$request = 'SELECT * FROM #1 WHERE @2 IN ('.implode(', ',$logins2).')';
@@ -140,29 +140,57 @@ class UserDB_sql extends UserDB  {
 		return $result;
 	}
 	
-	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0, $group_=null) {
 		$sql2 = SQL::getInstance();
 		
-		$contains = str_replace('*', '%', $contains_);
-		$contains = "%$contains%";
-		$sep = " OR ";
-		$search = '';
-		foreach ($attributes_ as $attribute) {
-			$search .= " ".$attribute." LIKE ".$sql2->Quote($contains);
-			$search .= $sep;
+		$search = array();
+		if (strlen($contains_) > 0) {
+			$contains = str_replace('*', '%', $contains_);
+			$contains = preg_replace('/\%\%+/', '%', '%'.$contains.'%');
+			
+			$rules_contain = array();
+			foreach ($attributes_ as $attribute) {
+				if (! in_array($attribute, array('login', 'displayname'))) {
+					continue;
+				}
+				
+				array_push($rules_contain, $sql2->QuoteField($attribute)." LIKE ".$sql2->Quote($contains));
+			}
+			
+			if (count($rules_contain) > 0) {
+				array_push($search, '('.implode(' OR ', $rules_contain).') ');
+			}
 		}
-		if (count($attributes_) > 0) {
-			$search = substr($search, 0, -1*strlen($sep)); // remove the last sep
+		
+		if (! is_null($group_)) {
+			$userGroupDB = UserGroupDB::getInstance('static');
+			$group_filter_res = $userGroupDB->get_filter_groups_member($group_);
+			if (! array_key_exists('users', $group_filter_res) || !is_array($group_filter_res['users']) || count($group_filter_res['users']) == 0) {
+				return array(array(), false);
+			}
+			
+			$users_login_sql = array();
+			foreach($group_filter_res['users'] as $login) {
+				array_push($users_login_sql, $sql2->Quote($login));
+			}
+			
+			array_push($search, $sql2->QuoteField('login') .'IN ('.implode(',', $users_login_sql).')');
 		}
 		
 		$users = array();
 		$sizelimit_exceeded = false;
-		$count = 0;
-		$limit = '';
-		if ($limit_ != 0)
-			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
 		
-		$res = $sql2->DoQuery('SELECT * FROM #1 WHERE '.$search.' '.$limit, self::table);
+		$request = 'SELECT * FROM #1';
+		if (count($search) > 0) {
+			$request.= ' WHERE '.implode(' AND ', $search);
+		}
+		
+		$count = 0;
+		if ($limit_ != 0) {
+			$request.= ' LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
+		}
+		
+		$res = $sql2->DoQuery($request, self::table);
 		if ($res === false) {
 			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
 			return NULL;

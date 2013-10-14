@@ -201,6 +201,7 @@
 		<part name="search" type="xsd:string"/>
 <!-- 		<part name="search_fields" type="urn:any"/>-->
 		<part name="search_fields" type="urn:string_array"/>
+		<part name="search_user" type="urn:string"/>
 	</message>
 	
 	<message name="UsersPartialListResponse">

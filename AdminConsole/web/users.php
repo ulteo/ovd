@@ -207,15 +207,33 @@ function show_manage($login) {
 
   // Users Group
   $groups_mine = $u->getAttribute('groups');
+	$groups_partial_list = $u->getAttribute('groups_partial_list');
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	if ($groups_partial_list) {
+		if ($usersgroupsList->is_empty_filter()) {
+			$usersgroupsList->set_external_result($groups_mine, true);
+		}
+		else {
+			$groups_mine2 = $usersgroupsList->search($login);
+			if (is_null($groups_mine)) {
+				die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
+			}
+			
+			$groups_mine = array();
+			foreach($groups_mine2 as $group) {
+				$groups_mine[$group->id] = $group->name;
+			}
+		}
+	}
+	
   uasort($groups_mine, 'usergroup_cmp');
 
   $groups_available = array();
 	$default_group_id = null;
 	if ($usergroupdb_rw) {
-		$usersgroupsList = new UsersGroupsList($_REQUEST);
+		// do not request other groups if we do not display the 'add to' panel ...
 		$groups_all = $usersgroupsList->search();
 		usort($groups_all, "usergroup_cmp");
-		$searchDiv = $usersgroupsList->getForm();
 		
 		foreach($groups_all as $group) {
 			if (! array_key_exists($group->id, $groups_mine))
@@ -227,6 +245,9 @@ function show_manage($login) {
 		}
 	}
 	uasort($groups_available, 'usergroup_cmp');
+	
+	// need to be after all search call!
+	$searchDiv = $usersgroupsList->getForm();
 
 	$can_manage_users = isAuthorized('manageUsers');
 	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
@@ -340,9 +361,11 @@ function show_manage($login) {
   }
 
   // User groups part
-  if (count($groups_mine)>0 or ($usergroupdb_rw and count($groups_all)>0)) {
+  if (count($groups_mine)>0 or !$usersgroupsList->is_empty_filter() or ($usergroupdb_rw and count($groups_all)>0)) {
     echo '<div>';
     echo '<h2>'._('User groups with this user').'</h2>';
+
+    echo $searchDiv;
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     foreach ($groups_mine as $group_id => $group_name) {

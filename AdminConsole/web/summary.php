@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,6 +115,10 @@ function show_default() {
 					echo '<td><a href="usersgroup.php?action=manage&id='.$group_id.'">'.$group_name.'</a></td>';
 					echo '</tr>';
 				}
+				
+				if ($user_info['groups_partial_list'] === true) {
+					echo '<tr><td style="text-align: center;"><strong><a href="users.php?action=manage&id='.$u->getAttribute('login').'">...</a></strong></td></tr>';
+				}
 				echo '</table>';
 			}
 			echo '</td>';
@@ -164,11 +168,11 @@ function show_default() {
 					echo '<a href="profiles.php?action=manage&id='.$profile_id.'">'.$profile_name.'</a></td>';
 					echo '</tr>';
 				}
-				foreach ($user_info['shared_folders'] as $share_id => $share_name) {
+				foreach ($user_info['shared_folders'] as $share_id => $info) {
 					echo '<tr>';
 					echo '<td>'._('Shared folder').'</td>';
 					echo '<td>';
-					echo '<a href="sharedfolders.php?action=manage&id='.$share_id.'">'.$share_name.'</a></td>';
+					echo '<a href="sharedfolders.php?action=manage&id='.$share_id.'">'.$info['share_name'].'</a> ('._('mode: ').$info['mode'].')</td>';
 					echo '</tr>';
 				}
 				echo '</table>';

@@ -76,32 +76,101 @@ class UserGroupDB_ldap {
 		return $this->preferences;
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
 		$groups = array();
-		$configLDAP = $this->makeLDAPconfig();
 		
-		$ldap = new LDAP($configLDAP);
-		$contains = '*';
-		if ($contains_ != '')
-			$contains .= $contains_.'*';
-		
-		$missing_attribute_nb = 0;
-		$filter_attr = array();
-		foreach ($attributes_ as $attribute) {
-			if (! array_key_exists($attribute, $this->preferences['match']) || strlen($this->preferences['match'][$attribute])==0) {
-				$missing_attribute_nb++;
-				continue;
+		$filters = array($this->preferences['filter']);
+		if ( $contains_ != '') {
+			$contains = preg_replace('/\*\*+/', '*', '*'.$contains_.'*'); // ldap does not handle multiple star characters
+			$filter_contain_rules = array();
+			$missing_attribute_nb = 0;
+			foreach ($attributes_ as $attribute) {
+				if (! array_key_exists($attribute, $this->preferences['match']) || strlen($this->preferences['match'][$attribute])==0) {
+					$missing_attribute_nb++;
+					continue;
+				}
+				
+				array_push($filter_contain_rules, $this->preferences['match'][$attribute].'='.$contains);
 			}
 			
-			array_push($filter_attr, '('.$this->preferences['match'][$attribute].'='.$contains.')');
+			if ($missing_attribute_nb == count($attributes_)) {
+				return array(array(), false);
+			}
+			
+			array_push($filters, LDAP::join_filters($filter_contain_rules, '|'));
 		}
 		
-		if ($missing_attribute_nb == count($attributes_)) {
-			return array(array(), false);
+		$sizelimit_exceeded_user = false;
+		if (! is_null($user_)) {
+			if (in_array('group_field', $this->preferences['group_match_user'])) {
+				if ($this->preferences['group_field_type'] == 'user_dn') {
+					$value = $user_->getAttribute('dn');
+				}
+				else {
+					$value = $user_->getAttribute('login');
+				}
+				
+				$filter_user = $this->preferences['group_field'].'='.$value;
+			}
+			else {
+				$field = $this->preferences['user_field'];
+				
+				$userDB = UserDB::getInstance();
+				$configLDAP = $userDB->config;
+				$ldap = new LDAP($configLDAP);
+				$sr = $ldap->searchDN($user_->getAttribute('dn'), array($field));
+				if ($sr === false) {
+					Logger::error('main','UserGroupDB::ldapimport_by_user ldap failed (mostly timeout on server)');
+					return array();
+				}
+				
+				$infos = $ldap->get_entries($sr);
+				if (!is_array($infos) || $infos === array()) {
+					return array();
+				}
+				
+				$keys = array_keys($infos);
+				$dn = $keys[0];
+				$info = $infos[$dn];
+				if (is_array($info[$field])) {
+					if (isset($info[$field]['count'])) {
+						unset($info[$field]['count']);
+					}
+					
+					$memberof = $info[$field];
+				}
+				else {
+					$memberof = array($info[$field]);
+				}
+				
+				while(count($memberof) > $limit_) {
+					$sizelimit_exceeded_user = true;
+					array_pop($memberof);
+				}
+				
+				$filter_user_rules = array();
+				if ($this->preferences['user_field_type'] == 'group_dn') {
+					foreach($memberof as $dn) {
+						list($rdn, $sub) = explode_with_escape(',', $dn, 2);
+						array_push($filter_user_rules, '('.$rdn.')');
+					}
+				}
+				else {
+					$filters = array();
+					foreach($memberof as $name) {
+						array_push($filter_user_rules, '('.$this->preferences['match']['name'].'='.$name.')');
+					}
+				}
+				
+				$filter_user = LDAP::join_filters($filter_user_rules, '|');
+			}
+			
+			array_push($filters, $filter_user);
 		}
 		
-		$filter_attr = LDAP::join_filters($filter_attr, '|');
-		$filter = LDAP::join_filters(array($this->preferences['filter'], $filter_attr), '&');
+		$filter = LDAP::join_filters($filters, '&');
+		
+		$ldap = new LDAP($this->makeLDAPconfig());
 		$sr = $ldap->search($filter, array_values($this->preferences['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UsersGroupDB::ldap::getUsersContaint search failed');
@@ -112,10 +181,169 @@ class UserGroupDB_ldap {
 		$infos = $ldap->get_entries($sr);
 		
 		foreach ($infos as $dn => $info) {
+			if (! is_null($user_) && isset($memberof)) {
+				if (! in_array($dn, $memberof)) {
+					continue;
+				}
+			}
+			
 			$ug = $this->generateUsersGroupFromRow($info, $dn, $this->preferences['match']);
 			$groups[$dn] = $ug;
 		}
-		return array($groups, $sizelimit_exceeded);
+		return array($groups, ($sizelimit_exceeded_user or $sizelimit_exceeded));
+	}
+	
+	public function get_filter_groups_member($group_) {
+		Logger::debug('main', 'UsersGroupDB::get_filter_groups_member ('.$group_->getUniqueID().')');
+		
+		$result = array();
+		if (in_array('user_field', $this->preferences['group_match_user'])) {
+			if ($this->preferences['user_field_type'] == 'group_dn') {
+				$value = $group_->id;
+			}
+			else {
+				$value = $group_->name;
+			}
+			
+			$result['filter'] = $this->preferences['user_field'].'='.$value;
+		}
+		else {
+			$field = $this->preferences['group_field'];
+			$configLDAP = $this->makeLDAPconfig();
+			$ldap = new LDAP($configLDAP);
+			$sr = $ldap->searchDN($group_->id, array($field));
+			if ($sr === false) {
+				Logger::error('main', 'UsersGroupDB::get_filter_groups_member search failed for ('.$group_->name.')');
+				return array('users' => array());
+			}
+			
+			$infos = $ldap->get_entries($sr);
+			if (!is_array($infos) || $infos === array()) {
+				return array('users' => array());
+			}
+			
+			$keys = array_keys($infos);
+			$dn = $keys[0];
+			$info = $infos[$dn];
+			if (! array_key_exists($field, $info)) {
+				return null;
+			}
+			
+			if (is_array($info[$field])) {
+				if (isset($info[$field]['count'])) {
+					unset($info[$field]['count']);
+				}
+				
+				$members = $info[$field];
+			}
+			else {
+				$members = array($info[$field]);
+			}
+			
+			$filter_rdn_rules = array();
+			if ($this->preferences['group_field_type'] == 'user_dn') {
+				$result['dns'] = $members;
+				foreach($members as $dn) {
+					$expl = explode_with_escape(',', $dn, 2);
+					$rdn = $expl[0];
+					array_push($filter_rdn_rules, $rdn);
+				}
+				
+				$result['filter'] = LDAP::join_filters($filter_rdn_rules, '|');
+			}
+			else {
+				$result['users'] = $members;
+			}
+		}
+		
+		return $result;
+	}
+	
+	public function get_groups_including_user_from_list($groups_dn, $user_) {
+		$groups_result = array();
+		if (in_array('user_field', $this->preferences['group_match_user'])) {
+			$groups = $this->imports($groups_dn);
+			
+			$field = $this->preferences['user_field'];
+			$configLDAP = $this->makeLDAPconfig();
+			// get userdb ldap config instead!!!
+		
+			$ldap = new LDAP($configLDAP);
+			$sr = $ldap->searchDN($user_->getAttribute('dn'), array($field));
+			if ($sr === false) {
+				return array();
+			}
+			
+			$infos = $ldap->get_entries($sr);
+			if (!is_array($infos) || $infos === array()) {
+				return array();
+			}
+			
+			$keys = array_keys($infos);
+			$dn = $keys[0];
+			$info = $infos[$dn];
+			if (! array_key_exists($field, $info)) {
+				return array();
+			}
+			
+			if (is_array($info[$field])) {
+				if (isset($info[$field]['count'])) {
+					unset($info[$field]['count']);
+				}
+				
+				$memberof = $info[$field];
+			}
+			else {
+				$memberof = array($info[$field]);
+			}
+			
+			foreach($groups as $group) {
+				if ($this->preferences['user_field_type'] == 'group_dn') {
+					$item = $group->id;
+				}
+				else {
+					$item = $group->name;
+				}
+				
+				if (! in_array($item, $memberof)) {
+					continue;
+				}
+				
+				$groups_result[$group->id] = $group;
+			}
+		}
+		else { // group_field
+			$filters = array();
+			$filter_rdn_rules = array();
+			foreach($groups_dn as $group_dn) {
+				$expl = explode_with_escape(',', $group_dn, 2);
+				$rdn = $expl[0];
+				array_push($filter_rdn_rules, $rdn);
+			}
+			
+			array_push($filters, LDAP::join_filters($filter_rdn_rules, '|'));
+			
+			if ($this->preferences['group_field_type'] == 'user_dn') {
+				$item = $user_->getAttribute('dn');
+			}
+			else {
+				$item = $user_->getAttribute('login');
+			}
+			
+			array_push($filters, $this->preferences['group_field'].'='.$item);
+			
+			$filter = LDAP::join_filters($filters, '&');
+			$groups2 = $this->import_from_filter($filter);
+			foreach($groups2 as $group_id => $group) {
+				if (! in_array($group_id, $groups_dn)) {
+					continue;
+				}
+				
+				$groups_result[$group->id] = $group;
+			}
+		}
+		
+		return $groups_result;
 	}
 	
 	public function isWriteable() {
@@ -354,10 +582,6 @@ class UserGroupDB_ldap {
 		return false;
 	}
 	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'ldap'));
-	}
-	
 	public function add($usergroup_){
 		return false;
 	}
@@ -384,4 +608,3 @@ class UserGroupDB_ldap {
 		return true;
 	}
 }
- 

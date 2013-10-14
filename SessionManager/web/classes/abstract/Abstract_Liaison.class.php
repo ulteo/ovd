@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,23 +20,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Abstract_Liaison_sql {
+class Abstract_Liaison {
 	const table = 'liaison';
 	
 	public static function load($type_, $element_=NULL, $group_=NULL) {
 		if (is_null($element_) && is_null($group_))
-			return Abstract_Liaison_sql::loadAll($type_);
+			return Abstract_Liaison::loadAll($type_);
 		else if (is_null($element_))
-			return Abstract_Liaison_sql::loadElements($type_, $group_);
+			return Abstract_Liaison::loadElements($type_, $group_);
 		else if (is_null($group_))
-			return Abstract_Liaison_sql::loadGroups($type_, $element_);
+			return Abstract_Liaison::loadGroups($type_, $element_);
 		else
-			return Abstract_Liaison_sql::loadUnique($type_, $element_, $group_);
+			return Abstract_Liaison::loadUnique($type_, $element_, $group_);
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('main', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison::save ($type_,$element_,$group_)");
 		$sql2 = SQL::getInstance();
 		
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM #1 WHERE @2=%5 AND @3=%6 AND @4=%7', self::table, 'type', 'element', 'group',  $type_, $element_, $group_);
@@ -48,11 +48,11 @@ class Abstract_Liaison_sql {
 		return ($res !== false);
 	}
 	public static function delete($type_, $element_, $group_) {
-		Logger::debug('main', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison::delete ($type_,$element_,$group_)");
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::delete get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::delete get Preferences failed');
 			return false;
 		}
 		
@@ -72,12 +72,12 @@ class Abstract_Liaison_sql {
 		return ($res !== false);
 	}
 	public static function loadElements($type_, $group_) {
-		Logger::debug('main', "Abstract_Liaison_sql::loadElements ($type_,$group_)");
+		Logger::debug('main', "Abstract_Liaison::loadElements ($type_,$group_)");
 		$result = array();
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadElements get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::loadElements get Preferences failed');
 			return NULL;
 		}
 		
@@ -91,17 +91,17 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
-		Logger::error('main', "Abstract_Liaison_sql::loadElements($type_, $group_) error end of function");
+		Logger::error('main', "Abstract_Liaison::loadElements($type_, $group_) error end of function");
 		return NULL;
 	}
 	
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('main', "Abstract_Liaison_sql::loadGroups ($type_,$element_)");
+		Logger::debug('main', "Abstract_Liaison::loadGroups ($type_,$element_)");
 		$result = array();
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadGroups get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::loadGroups get Preferences failed');
 			return NULL;
 		}
 		
@@ -115,17 +115,17 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
-		Logger::error('main', "Abstract_Liaison_sql::loadGroups($type_, $element_) error end of function");
+		Logger::error('main', "Abstract_Liaison::loadGroups($type_, $element_) error end of function");
 		return NULL;
 	}
 	
 	public static function loadAll($type_) {
-		Logger::debug('main', "Abstract_Liaison_sql::loadAll ($type_)");
+		Logger::debug('main', "Abstract_Liaison::loadAll ($type_)");
 		$result = array();
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::loadAll get Preferences failed');
 			return NULL;
 		}
 		
@@ -139,16 +139,16 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
-		Logger::error('main', "Abstract_Liaison_sql::loadAll($type_) error end of function");
+		Logger::error('main', "Abstract_Liaison::loadAll($type_) error end of function");
 		return NULL;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
-		Logger::debug('main', "Abstract_Liaison_sql::loadUnique ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison::loadUnique ($type_,$element_,$group_)");
 		$result = array();
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::loadAll get Preferences failed');
 			return NULL;
 		}
 		
@@ -159,13 +159,13 @@ class Abstract_Liaison_sql {
 				return NULL;
 			}
 			else if ($sql2->NumRows() > 1) {
-				Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error doublon (".$sql2->NumRows().")");
+				Logger::error('main', "Abstract_Liaison::loadUnique($type_, $element_, $group_) error doublon (".$sql2->NumRows().")");
 				self::cleanup();
 			}
 			return new Liaison($element_, $group_);
 		}
 		else {
-			Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error DoQuery failed");
+			Logger::error('main', "Abstract_Liaison::loadUnique($type_, $element_, $group_) error DoQuery failed");
 			return NULL;
 		}
 	}
@@ -197,17 +197,17 @@ class Abstract_Liaison_sql {
 	}
 	
 	protected static function  cleanup() {
-		Logger::debug('main', 'Abstract_Liaison_sql::cleanup');
+		Logger::debug('main', 'Abstract_Liaison::cleanup');
 		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::cleanup get Preferences failed');
+			Logger::error('main', 'Abstract_Liaison::cleanup get Preferences failed');
 			return false;
 		}
 		
 		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM #4', 'type', 'element', 'group', self::table);
 		if ($res === false) {
-			Logger::error('main', 'Abstract_Liaison_sql::cleanup DoQuery failed');
+			Logger::error('main', 'Abstract_Liaison::cleanup DoQuery failed');
 			return false;
 		}
 		

@@ -675,49 +675,4 @@ class Preferences {
 		$mods_enable = $prefs->get('general', 'module_enable');
 		return in_array($name_, $mods_enable);
 	}
-	
-	public function getLiaisonsOwner() {
-		$types = array();
-		
-		$modules_enable = $this->get('general', 'module_enable');
-		foreach ($modules_enable as $module_name) {
-			if (method_exists($module_name, 'getInstance')) {
-				try {
-					$module_instance = call_user_func(array($module_name, 'getInstance'));
-				}
-				catch (Exception $err) {
-					continue;
-				}
-				if (is_object($module_instance)) {
-					if (method_exists($module_instance, 'liaisonType')) {
-						$liaisons = $module_instance->liaisonType();
-						if (is_array($liaisons)) {
-							foreach ($liaisons as $liaison) {
-								if (is_array($liaison) && array_key_exists('type', $liaison) && array_key_exists('owner', $liaison)) {
-									$types[$liaison['type']] = $liaison['owner'];
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		$overwrited_liaisons = $this->get('general', 'liaison');
-		foreach ($overwrited_liaisons as $type => $owner) {
-			$types[$type] = $owner;
-		}
-		
-		return $types;
-	}
-	
-	public static function liaisonsOwner() {
-		$types = array();
-		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed', __FILE__, __LINE__);
-		
-		return $prefs->getLiaisonsOwner();
-	}
 }

@@ -56,67 +56,63 @@ class User {
 		$locale = locale2unix($language);
 		return $locale;
 	}
-
-	public function usersGroups(){
-		Logger::debug('main','USER::UsersGroups');
+	
+	protected function get_my_usersgroups_from_list($users_group_id_) {
 		$result = array();
-		// add the default user group is enable
-		$prefs = Preferences::getInstance();
-		if (!$prefs) {
-			Logger::critical('main', 'USER::UsersGroups get prefs failed');
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		}
-		$user_default_group = $prefs->get('general', 'user_default_group');
-		$userGroupDB = UserGroupDB::getInstance();
-
-		$static = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
-		if (is_null($static)) {
-			Logger::error('main', 'User::usersGroups load('.$this->attributes['login'].') is null');
-			return $result;
-		}
 		
-		if ($userGroupDB->isDynamic()) {
-			$dynamic = Abstract_Liaison_dynamic::load('UsersGroup', $this->attributes['login'], NULL);
-			if (is_null($dynamic)) {
-				$dynamic = array();
+		$UserGroupDB = UserGroupDB::getInstance();
+		$users_groups_mine = $UserGroupDB->get_groups_including_user_from_list($users_group_id_, $this);
+		foreach($users_groups_mine as $group) {
+			if (! $group->published) {
+				continue;
 			}
-		}
-		else {
-			$dynamic = array();
-		}
-		
-		$rows = array_unique(array_merge($static, $dynamic));
-
-		$groups_id = array();
-		foreach ($rows as $lug){
-			array_push($groups_id, $lug->group);
-		}
-		$result = $userGroupDB->imports($groups_id);
-		
-		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
-			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
-			if (is_object($g))
-				$result[$user_default_group]= $g;
+			
+			array_push($result, $group->getUniqueID());
 		}
 		
 		return $result;
 	}
-
+	
 	public function appsGroups(){
 		Logger::debug('main','USER::appsGroups');
 		$apps_group_list = array();
-		$users_grps = $this->usersGroups();
-		foreach ($users_grps as $ugrp){
-			if ($ugrp->published){
-				$app_group_s = $ugrp->appsGroups();
-				if (is_array($app_group_s)) {
-					foreach($app_group_s as $app_group){
-						if ($app_group->published){
-							array_push($apps_group_list,$app_group->id);
-						}
-					}
-				}
+
+		$ApplicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$UserGroupDB = UserGroupDB::getInstance();
+
+		$publications = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, NULL);
+		$users_group_id = array();
+
+		foreach($publications as $publication) {
+			if (in_array($publication->element, $users_group_id)) {
+				continue;
 			}
+			
+			$users_group_id[]= $publication->element;
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
+		
+		foreach($publications as $publication) {
+			if (! in_array($publication->element, $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			if (in_array($publication->group, $apps_group_list)) {
+				continue;
+			}
+			
+			$g = $ApplicationsGroupDB->import($publication->group);
+			if (! is_object($g)) {
+				continue;
+			}
+			
+			if (! $g->published) {
+				continue;
+			}
+			
+			array_push($apps_group_list, $publication->group);
 		}
 		return array_unique($apps_group_list);
 	}
@@ -177,43 +173,55 @@ class User {
 	}
 	
 	public function getSharedFolders() {
-		$sharedfolders = array();
 		if (Preferences::moduleIsEnabled('SharedFolderDB') == false) {
 			return array();
 		}
+		
 		$session_settings_defaults = $this->getSessionSettings('session_settings_defaults');
 		if (array_key_exists('enable_sharedfolders', $session_settings_defaults)) {
 			$enable_sharedfolders = $session_settings_defaults['enable_sharedfolders'];
 			if ($enable_sharedfolders == 0) {
-				return $sharedfolders;
+				return array();
 			}
 		}
 		
-		$usergroups = $this->usersGroups();
-		if (is_array($usergroups) === false) {
-			Logger::error('main', 'User::getSharedFolders usersGroups failed for user (login='.$this->getAttribute('login').')');
-		}
-		else {
-			$sharedfolderdb = SharedFolderDB::getInstance();
-			foreach ($usergroups as $group) {
-				$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general',  'session_settings_defaults');
-				if (array_key_exists('enable_sharedfolders', $prefs_of_a_group_unsort)) {
-					$pref = $prefs_of_a_group_unsort['enable_sharedfolders'];
-					$element = $pref->toConfigElement();
-					$enable_sharedfolders = $element->content;
-					if ($enable_sharedfolders == 0) {
-						continue;
-					}
-				}
-				$networkfolders = $sharedfolderdb->importFromUsergroup($group->getUniqueID());
-				if (is_array($networkfolders)) {
-					foreach ($networkfolders as $a_networkfolder) {
-						$sharedfolders[] = $a_networkfolder;
-					}
-				}
+		$sharedfolderdb = SharedFolderDB::getInstance();
+		$publications = $sharedfolderdb->get_publications();
+		$users_group_id = array();
+		foreach ($publications as $publication) {
+			if (in_array($publication['group'], $users_group_id)) {
+				continue;
 			}
+			
+			array_push($users_group_id, $publication['group']);
 		}
-		return array_unique($sharedfolders);
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
+		
+		$sharedfolders = array();
+		foreach ($publications as $publication) {
+			if (! in_array($publication['group'], $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			if (array_key_exists($publication['share'], $sharedfolders)) {
+				if ($publication['mode'] == 'rw' && $sharedfolders[$publication['share']]['mode'] != 'rw') {
+					$sharedfolders[$publication['share']]['mode'] = $publication['mode'];
+				}
+				
+				continue;
+			}
+			
+			$share = $sharedfolderdb->import($publication['share']);
+			if (is_null($share)) {
+				continue;
+			}
+			
+			$sharedfolders[$publication['share']] = array('share' => $share, 'mode' => $publication['mode']);
+		}
+		
+		return $sharedfolders;
 	}
 
 	public function getAttributesList(){
@@ -243,8 +251,10 @@ class User {
 	public function getPolicy() {
 		Logger::debug('main', 'User::getPolicy for '.$this->getAttribute('login'));
 		$prefs = Preferences::getInstance();
+		
 		$policies = $prefs->get('general', 'policy');
 		$default_policy = $policies['default_policy'];
+		
 		$elements = $prefs->getElements('general', 'policy');
 		if (array_key_exists('default_policy', $elements) == false) {
 			Logger::error('main', 'User::getPolicy, default_policy not found on general policy');
@@ -260,21 +270,35 @@ class User {
 				$result[$policy_item] = false;
 		}
 		
-		$groups = $this->usersGroups();
-		foreach ($groups as $a_group) {
-			$policy = $a_group->getPolicy();
-			if (is_array($policy)) {
-				foreach ($policy as $key => $value){
-					if (array_key_exists($key, $result)) {
-						if ($value == true)
-							$result[$key] = $value;
-					}
-					else {
-						$result[$key] = $value;
-					}
-				}
-			}
+		$acls = Abstract_Liaison::load('ACL', NULL, NULL);
+		if (! is_array($acls)) {
+			$acls = array();
 		}
+		
+		$users_group_id = array();
+		foreach ($acls as $acl_liaison) {
+			if (in_array($acl_liaison->element, $users_group_id)) {
+				continue;
+			}
+			
+			array_push($users_group_id, $acl_liaison->element);
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
+		
+		foreach ($acls as $acl_liaison) {
+			if (! in_array($acl_liaison->element, $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			if (! in_array($acl_liaison->group, $items)) {
+				continue;
+			}
+			
+			$result[$acl_liaison->group] = true;
+		}
+		
 		return $result;
 	}
 	
@@ -282,17 +306,34 @@ class User {
 		$prefs = Preferences::getInstance();
 		$overriden = array();
 		$default_settings = $prefs->get('general', $container_);
-		$groups = $this->usersGroups();
-		foreach ($groups as $a_group) {
-			$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($a_group->getUniqueID(), 'general', $container_);
-			foreach ($prefs_of_a_group_unsort as $key => $pref) {
-				$element = $pref->toConfigElement();
-				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
-					ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
-				}
-				$default_settings[$key] = $element->content;
-				$overriden[$key] = true;
+		
+		// load rules (overriden settings)
+		$user_groups_preferences = Abstract_UserGroup_Preferences::load_all('general', $container_);
+		$users_group_id = array();
+		foreach ($user_groups_preferences as $key => $pref) {
+			if (in_array($pref->usergroup_id, $users_group_id)) {
+				continue;
 			}
+			
+			array_push($users_group_id, $pref->usergroup_id);
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
+		
+		// Finnaly, overwrite default settings with users groups settings
+		foreach ($user_groups_preferences as $pref) {
+			$key = $pref->element_id;
+			if (! in_array($pref->usergroup_id, $users_groups_mine_ids)) {
+				continue;
+			}
+			
+			$element = $pref->toConfigElement();
+			if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
+				ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
+			}
+			$default_settings[$key] = $element->content;
+			$overriden[$key] = true;
 		}
 		
 		$prefs_of_a_user_unsort = Abstract_User_Preferences::loadByUserLogin($this->getAttribute('login'), 'general', $container_);
