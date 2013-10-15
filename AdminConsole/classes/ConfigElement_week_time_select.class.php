@@ -23,9 +23,10 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class ConfigElement_week_time_select extends ConfigElement {
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		
 		$str = '<table class="time_grid'.($readonly?' disabled':'').'" id="table_'.$html_id.'"></table>';
-		$str.= '<input type="hidden" id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$html_id.'"').' value="'.$this->content.'" />'."\n";
+		$str.= '<input type="hidden" id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$input_name.'"').' value="'.$this->content.'" />'."\n";
 		$str.= '<script type="text/javascript" charset="utf-8">'."\n";
 		$str.= 'Event.observe(window, "load", function() {'."\n";
 		$str.= '	setTimeout(function() {';

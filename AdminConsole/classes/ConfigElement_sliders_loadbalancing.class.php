@@ -24,6 +24,7 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 	public function toHTML($readonly=false) {
 		$sliders = array();
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		$html = '';
 
 		$html .= '<script type="text/javascript">
@@ -51,7 +52,7 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 			if (array_key_exists($i, $sliders)) {
 				$sliders[$i] = array();
 			}
-			$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
+			$label3 = $input_name.$this->formSeparator.$i.$this->formSeparator;
 
 			$default_value = 0;
 			if (array_key_exists($key1, $this->content_default)) {

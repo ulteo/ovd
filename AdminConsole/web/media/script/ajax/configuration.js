@@ -52,7 +52,6 @@ function configuration4_mod(js) {
 			for (var i = 0, n = elements.length; i < n; i++) {
 				var newname = elements[i].name.replace(re, rt );
 				elements[i].setAttribute('name', newname);
-				elements[i].setAttribute('id', newname);
 				if (elements[i].getAttribute('type') == 'hidden') {
 					elements[i].setAttribute('value', index);
 				}

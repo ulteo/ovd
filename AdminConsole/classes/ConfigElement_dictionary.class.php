@@ -24,21 +24,22 @@ class ConfigElement_dictionary extends ConfigElement {
 	public function toHTML($readonly=false) {
 		$html = '';
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		
 		$html .= '<div id="'.$html_id.'">';
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
 		$i = 0;
 		foreach ($this->content as $key1 => $value1){
-			$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
+			$label3 = $input_name.$this->formSeparator.$i.$this->formSeparator;
 			$html .= '<tr>';
 				$html .= '<td>';
 					$html .= '<div id="'.$html_id.$this->formSeparator.$i.'_diva">';
-							$html .= '<input type="text" id="'.$label3.'key" '.($readonly?'disabled="disabled"':'name="'.$label3.'key"').' value="'.$key1.'" size="25" />';
+							$html .= '<input type="text" '.($readonly?'disabled="disabled"':'name="'.$label3.'key"').' value="'.$key1.'" size="25" />';
 						$html .= '</div>';
 					$html .= '</td>';
 					$html .= '<td>';
 				$html .= '<div id="'.$html_id.$this->formSeparator.$key1.'_divb">';
-					$html .= '<input type="text" id="'.$label3.'value" '.($readonly?'disabled="disabled"':'name="'.$label3.'value"').' value="'.$value1.'" size="25" />';
+					$html .= '<input type="text" '.($readonly?'disabled="disabled"':'name="'.$label3.'value"').' value="'.$value1.'" size="25" />';
 					if ($readonly == false) {
 						$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="media/image/less.png"/></a>';
 					}
@@ -47,16 +48,16 @@ class ConfigElement_dictionary extends ConfigElement {
 			$html .= '</tr>';
 			$i += 1;
 		}
-		$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
+		$label3 = $input_name.$this->formSeparator.$i.$this->formSeparator;
 		$html .= '<tr>';
 		$html .= '<td>';
 			$html .= '<div id="'.$html_id.$this->formSeparator.$i.'_divadda">';
-				$html .= '<input type="text" id="'.$label3.'key" '.($readonly?'disabled="disabled"':'name="'.$label3.'key"').' value="" size="25" />';
+				$html .= '<input type="text" '.($readonly?'disabled="disabled"':'name="'.$label3.'key"').' value="" size="25" />';
 			$html .= '</div>';
 		$html .= '</td>';
 		$html .= '<td>';
 		$html .= '<div id="'.$html_id.$this->formSeparator.$i.'_divaddb">';
-			$html .= '<input type="text" id="'.$label3.'value" '.($readonly?'disabled="disabled"':'name="'.$label3.'value"').' value="" size="25" />';
+			$html .= '<input type="text" '.($readonly?'disabled="disabled"':'name="'.$label3.'value"').' value="" size="25" />';
 		if ($readonly == false) {
 			$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="media/image/more.png"/></a>';
 		}

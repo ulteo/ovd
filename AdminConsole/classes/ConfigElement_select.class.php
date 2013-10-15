@@ -25,10 +25,11 @@ class ConfigElement_select extends ConfigElement { // list of text (r) (fixed le
 	
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		$html = '';
 		
 		if (is_array($this->content_available)) {
-			$html .= '<select id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$html_id.'"').' onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\'); configuration_switch_references(this, \''.$this->path['key_name'].'___'.$this->path['container'].'\','.$this->getReferencesJSArray().');">';
+			$html .= '<select id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$input_name.'"').' onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\'); configuration_switch_references(this, \''.$this->path['key_name'].'___'.$this->path['container'].'\','.$this->getReferencesJSArray().');">';
 			foreach ($this->content_available as $mykey => $myval){
 				if ( $mykey == $this->content)
 					$html .= '<option value="'.$mykey.'" selected="selected" >'.$myval.'</option>';

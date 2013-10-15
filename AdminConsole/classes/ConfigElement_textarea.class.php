@@ -23,7 +23,8 @@
 class configElement_textarea extends ConfigElement {  // text area
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		
-		return '<textarea '.$disabled.' rows="7" cols="60" id="'.$html_id.'"  '.($readonly?'disabled="disabled"':'name="'.$html_id.'"').'>'.$this->content.'</textarea>';
+		return '<textarea '.$disabled.' rows="7" cols="60" id="'.$html_id.'"  '.($readonly?'disabled="disabled"':'name="'.$input_name.'"').'>'.$this->content.'</textarea>';
 	}
 }

@@ -23,7 +23,8 @@
 class ConfigElement_input extends ConfigElement {
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
+		$input_name = $this->get_input_name();
 		
-		return '<input type="text" id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$html_id.'"').' value="'.$this->content.'" size="25" />';
+		return '<input type="text" id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$input_name.'"').' value="'.$this->content.'" size="25" />';
 	}
 }

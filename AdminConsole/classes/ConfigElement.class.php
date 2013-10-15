@@ -30,6 +30,7 @@ abstract class ConfigElement{
 	public $content_available;
 	public $formSeparator='';
 	public $path=array();
+	protected $prefix = null;
 
 	abstract public function toHTML($readonly=false);
 
@@ -94,6 +95,19 @@ abstract class ConfigElement{
 	}
 
 	protected function htmlID() {
+		$ret = implode($this->formSeparator, $this->path);
+		if (! is_null($this->prefix)) {
+			$ret = implode($this->formSeparator, array($this->prefix, $ret));
+		}
+		
+		return $ret;
+	}
+	
+	protected function get_input_name() {
 		return implode($this->formSeparator, $this->path);
+	}
+	
+	public function setPrefixID($prefix_) {
+		$this->prefix = $prefix_;
 	}
 }
