@@ -5,18 +5,16 @@ Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Standards-Version: 3.7.3
 Build-Depends: cdbs, debhelper (>= 6)
 
-Package: ulteo-ovd-debconf-database
-Architecture: all
-Depends: debconf-utils
-Description: Ulteo Open Virtual Desktop - debconf database
- Debconf database used to make a quick install
-
 Package: ulteo-ovd-easy-install
 Architecture: all
-Suggests: ulteo-ovd-debconf-database
-Pre-Depends: debconf
 Depends: mysql-server, wwwconfig-common,
- ulteo-ovd-session-manager, ulteo-ovd-subsystem,
- ulteo-ovd-web-client, ulteo-ovd-web-client-ajaxplorer
+ ulteo-ovd-session-manager, ulteo-ovd-slaveserver-role-aps,
+ ulteo-ovd-web-client, ulteo-ovd-web-client-ajaxplorer,
+ ulteo-ovd-slaveserver-role-fs
+Recommends: firefox, gimp, leafpad, libreoffice,
+ ulteo-ovd-desktop | ulteo-ovd-desktop-legacy,
+ language-pack-en, language-pack-fr, language-pack-es, language-pack-de,
+ language-pack-it, language-pack-ru, language-pack-zh-hans | language-pack-zh-hant,
+ language-pack-pt
 Description: Ulteo Open Virtual Desktop - easy install
  Install quickly and easily the Ulteo OVD with a chroot system.
