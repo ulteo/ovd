@@ -216,6 +216,15 @@ html[dir="rtl"] ul {
 	font-weight: bold;
 }
 
+.role_enabled {
+	list-style-type: disc;
+	font-weight: bold;
+}
+.role_disabled {
+	list-style-type: circle;
+	font-weight: 100;
+}
+
 .spacer {
 	clear: both;
 }

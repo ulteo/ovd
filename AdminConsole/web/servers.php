@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,9 +123,13 @@ function show_default() {
       echo '<td>';
       echo '<ul>';
       $roles = $s->getAttribute('roles');
-      asort($roles);
+      ksort($roles);
+      $server_roles_disabled = array();
+      if ($s->hasAttribute('roles_disabled')) {
+          $server_roles_disabled = $s->getAttribute('roles_disabled');
+      }
       foreach ($roles as $a_role => $role_enabled) {
-          echo "<li>$a_role</li>";
+          echo "<li class=\"" . (array_key_exists($a_role, $server_roles_disabled)?"role_disabled":"role_enabled") . "\">$a_role</li>";
       }
       echo '</ul>';
       echo '</td>';
