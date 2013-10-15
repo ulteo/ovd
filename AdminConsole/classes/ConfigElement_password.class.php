@@ -23,11 +23,7 @@
 class ConfigElement_password extends ConfigElement {  // input password (rw)
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
-		$disabled = '';
-		if ($readonly) {
-			$disabled = 'disabled="disabled"';
-		}
-
-		return '<input type="password" '.$disabled.' id="'.$html_id.'" name="'.$html_id.'" value="'.$this->content.'" size="25" />';
+		
+		return '<input type="password" id="'.$html_id.'" '.($readonly?'disabled="disabled"':'name="'.$html_id.'"').' value="'.$this->content.'" size="25" />';
 	}
 }

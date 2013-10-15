@@ -24,21 +24,17 @@ class ConfigElement_multiselect extends ConfigElement { // list of text (r) (fix
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
 		$html = '';
-		$disabled = '';
-		if ($readonly) {
-			$disabled = 'disabled="disabled"';
-		}
-
+		
 		foreach ($this->content_available as $mykey => $myval){
 			if ( in_array($mykey,$this->content))
-				$html .= '<input class="input_checkbox" type="checkbox" '.$disabled.' name="'.$html_id.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
+				$html .= '<input class="input_checkbox" type="checkbox" '.($readonly?'disabled="disabled"':'name="'.$html_id.'[]"').' checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
 			else
-				$html .= '<input class="input_checkbox" type="checkbox" '.$disabled.' name="'.$html_id.'[]" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
+				$html .= '<input class="input_checkbox" type="checkbox" '.($readonly?'disabled="disabled"':'name="'.$html_id.'[]"').' value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';
 			// TODO targetid
 			$html .= $myval;
 			$html .= '<br />';
 		}
-		$html .= '<input class="input_checkbox" type="hidden" '.$disabled.' name="'.$html_id.'[]" value="thisIsADirtyHack" />'; // dirty hack for []
+		$html .= '<input class="input_checkbox" type="hidden" '.($readonly?'':'name="'.$html_id.'[]"').' value="thisIsADirtyHack" />'; // dirty hack for []
 		return $html;
 	}
 }

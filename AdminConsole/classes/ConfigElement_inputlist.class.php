@@ -23,10 +23,6 @@
 class ConfigElement_inputlist extends ConfigElement { // list of input text (fixed length)
 	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
-		$disabled = '';
-		if ($readonly) {
-			$disabled = 'disabled="disabled"';
-		}
 		$html = '';
 
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
@@ -37,11 +33,11 @@ class ConfigElement_inputlist extends ConfigElement { // list of input text (fix
 			$html .= '<tr>';
 				$html .= '<td>';
 					$html .=  $key1;
-					$html .=  '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$key1.'" size="25" />';
+					$html .=  '<input type="hidden" id="'.$label3.'key" '.($readonly?'':'name="'.$label3.'key"').' value="'.$key1.'" size="25" />';
 				$html .= '</td>';
 				$html .= '<td>';
 				$html .= '<div id="'.$html_id.$this->formSeparator.$key1.'_divb">';
-					$html .=  '<input type="text" '.$disabled.' id="'.$label3.'value" name="'.$label3.'value" value="'.$value1.'" size="25" />';
+					$html .=  '<input type="text" id="'.$label3.'value" '.($readonly?'disabled="disabled"':'name="'.$label3.'value"').' value="'.$value1.'" size="25" />';
 				$html .= '</div>';
 				$html .= '</td>';
 			$html .=  '</tr>';
