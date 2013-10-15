@@ -38,6 +38,7 @@ class ConfigElement_week_time_select extends ConfigElement {
 		$str.= '		grid.set_value("'.$this->content.'");';
 		$str.= '		grid.add_change_callback(function(value_) {'."\n";
 		$str.= '			$("'.$html_id.'").value = value_;'."\n";
+		$str.= '			fire_event_change($("'.$html_id.'"));'."\n";
 		$str.= '		});'."\n";
 		$str.= '	}, 100);'."\n";
 		$str.= '});'."\n";

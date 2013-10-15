@@ -19,6 +19,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+function fire_event_change(element_) {
+	if ("createEvent" in document) {
+		var evt = document.createEvent("HTMLEvents");
+		evt.initEvent("change", false, true);
+		element_.dispatchEvent(evt);
+	}
+	else {
+		element_.fireEvent("onchange");
+	}
+}
+
 function page_content(url,div) {
 	new Ajax.Updater(
 		$(div),
