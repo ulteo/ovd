@@ -5180,6 +5180,24 @@ class OvdAdminSoap {
 	}
 }
 
+class AdminErrorManager extends ErrorManager {
+	private $server_instance = null;
+	
+	public function __construct($server_instance_) {
+		$this->server_instance = $server_instance_;
+	}
+	
+	public function perform($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
+		error_log('die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
+		$this->server_instance->fault('internal_error', $error_);
+	}
+	
+	protected function report_error_message($msg_) {
+		Logger::error('api', 'report_error_message \''.$msg_.'\'');
+	}
+}
+
+
 if (defined('SESSIONMANAGER_ADMIN_DEBUG') && SESSIONMANAGER_ADMIN_DEBUG === true && ! isset($_SESSION['admin_ovd_user'])) {
 	// turn off the wsdl cache
 	ini_set('soap.wsdl_cache_enabled', 0);
@@ -5187,6 +5205,8 @@ if (defined('SESSIONMANAGER_ADMIN_DEBUG') && SESSIONMANAGER_ADMIN_DEBUG === true
 
 $server = new SoapServer('api.wsdl');
 $server->setClass('OvdAdminSoap');
+
+ErrorManager::setInstance(new AdminErrorManager($server));
 
 try {
 	$server->handle();
