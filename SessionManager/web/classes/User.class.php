@@ -342,42 +342,46 @@ class User {
 		$default_settings = $prefs->get('general', $container_);
 		
 		// load rules (overriden settings)
-		$user_groups_preferences = Abstract_UserGroup_Preferences::load_all('general', $container_);
+		$preferences_by_group = Abstract_Preferences::load_by_group('general.'.$container_.'.*');
 		$users_group_id = array();
-		foreach ($user_groups_preferences as $key => $pref) {
-			if (in_array($pref->usergroup_id, $users_group_id)) {
+		foreach ($preferences_by_group as $group => $useless) {
+			if (in_array($group, $users_group_id)) {
 				continue;
 			}
 			
-			array_push($users_group_id, $pref->usergroup_id);
+			array_push($users_group_id, $group);
 		}
 		
 		// from this group, which are these I am into
 		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
 		
 		// Finnaly, overwrite default settings with users groups settings
-		foreach ($user_groups_preferences as $pref) {
-			$key = $pref->element_id;
-			if (! in_array($pref->usergroup_id, $users_groups_mine_ids)) {
+		foreach ($users_groups_mine_ids as $group) {
+			if (! array_key_exists($group, $preferences_by_group)) {
+				// means potentially bug in backend !
 				continue;
 			}
 			
-			$element = $pref->toConfigElement();
-			if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
-				ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
+			foreach ($preferences_by_group[$group] as $setting_key => $setting_value) {
+				$key = substr($setting_key, strrpos('.', $setting_key));
+				
+				$element = $pref->toConfigElement();
+				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($setting_value != $default_settings[$key])) {
+					ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
+				}
+				
+				$default_settings[$key] = $setting_value;
+				$overriden[$key] = true;
 			}
-			$default_settings[$key] = $element->content;
-			$overriden[$key] = true;
 		}
 		
-		$prefs_of_a_user_unsort = Abstract_User_Preferences::loadByUserLogin($this->getAttribute('login'), 'general', $container_);
-		foreach ($prefs_of_a_user_unsort as $key => $pref) {
-			$element = $pref->toConfigElement();
-			if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
+		$user_preferences = Abstract_Preferences::load_user($this->getAttribute('login'), 'general.'.$container_.'.*');
+		foreach ($user_preferences as $setting_key => $setting_value) {
+			$key = substr($setting_key, strrpos('.', $setting_key));
+			if (isset($overriden[$key]) && ($overriden[$key] == true) && ($setting_value != $default_settings[$key])) {
 				Logger::debug("User '".$this->getAttribute('login')."' has at least overriden preferences but with different values, the result will be unpredictable.");
 			}
-			$default_settings[$key] = $element->content;
-			$overriden[$key] = true;
+			$default_settings[$key] = $setting_value;
 		}
 		
 		return $default_settings;

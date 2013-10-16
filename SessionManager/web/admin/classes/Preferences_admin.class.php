@@ -71,7 +71,7 @@ class Preferences_admin extends Preferences {
 		$sql_conf = $this->get('general', 'sql');
 		$sql = SQL::newInstance($sql_conf);
 		if ($sql->CheckLink(false, false)) {
-			$ret = Abstract_Preferences::save($db_content);
+			$ret = Abstract_Preferences::save_general($db_content);
 		}
 		
 		return $ret;

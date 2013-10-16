@@ -458,10 +458,11 @@ class OvdAdminSoap {
 		
 		// Clean orphan user settings
 		if ($userdb_changed_enable) {
-			Abstract_User_Preferences::delete_all();
+			Abstract_Preferences::delete_all_users();
 		}
 		else if ($has_changed_u) {
-			$users = Abstract_User_Preferences::get_users();
+			$users_settings = Abstract_Preferences::load_by_user();
+			$users = array_keys($users_settings);
 			$users_to_remove = array();
 			foreach($users as $login) {
 				$user = $userDB->import($login);
@@ -473,16 +474,17 @@ class OvdAdminSoap {
 			}
 			
 			if (count($users_to_remove) > 0) {
-				Abstract_User_Preferences::deleteByUserLogins($users_to_remove);
+				Abstract_Preferences::delete_users($users_to_remove);
 			}
 		}
 		
 		// Clean orphan users group settings
 		if ($usersgroupdb_changed_enable) {
-			Abstract_UserGroup_Preferences::delete_all();
+			Abstract_Preferences::delete_all_groups();
 		}
 		else if ($has_changed_ug) {
-			$groups = Abstract_UserGroup_Preferences::get_usersgroups();
+			$groups_settings = Abstract_Preferences::load_by_group();
+			$groups = array_keys($groups_settings);
 			$groups_to_remove = array();
 			foreach($groups as $group_id) {
 				$group = $userGroupDB->import($group_id);
@@ -494,7 +496,7 @@ class OvdAdminSoap {
 			}
 			
 			if (count($groups_to_remove) > 0) {
-				Abstract_UserGroup_Preferences::deleteByUserGroupIds($groups_to_remove);
+				Abstract_Preferences::delete_groups($groups_to_remove);
 			}
 		}
 		
@@ -2997,6 +2999,9 @@ class OvdAdminSoap {
 		// Settings
 		$u['settings'] = array();
 		$u['settings_default'] = array();
+		
+		$user_prefs = Abstract_Preferences::load_user($user->getAttribute('login'));
+		
 		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
 		foreach ($session_prefs_categs as $session_prefs_categ) {
 			$u['settings'][$session_prefs_categ] = array();
@@ -3006,11 +3011,16 @@ class OvdAdminSoap {
 			foreach($session_prefs as $session_pref) {
 				$e = self::pref_element2dict($session_pref);
 				$u['settings_default'][$session_prefs_categ][$e['id']] = $e;
-			}
-			
-			$user_prefs = Abstract_User_Preferences::loadByUserLogin($user->getAttribute('login'), 'general', $session_prefs_categ);
-			foreach($user_prefs as $user_pref) {
-				$u['settings'][$session_prefs_categ][$user_pref->element_id] = $user_pref->value;
+				
+				$uid = 'general.'.$session_prefs_categ.'.'.$e['id'];
+				if (array_key_exists($uid, $user_prefs)) {
+					$value = $user_prefs[$uid];
+					if (is_null($value) || $value === FALSE) {
+						$value = $session_pref->content;
+					}
+					
+					$u['settings'][$session_prefs_categ][$e['id']] = $value;
+				}
 			}
 		}
 		
@@ -3161,13 +3171,8 @@ class OvdAdminSoap {
 		}
 		
 		$config_element = clone $session_settings_defaults[$setting_];
-		$ugp = new User_Preferences($user->getAttribute('login'), 'general', $container_, $setting_, $config_element->content);
-		if (! is_null($value_)) {
-			$ugp->value = $value_;
-		}
-		
-		Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container_, $setting_);
-		$ret = Abstract_User_Preferences::save($ugp);
+		$config_element->content = $value_;
+		$ret = Abstract_Preferences::save_user_item($user->getAttribute('login'), 'general.'.$container_.'.'.$setting_, $config_element->content);
 		if (! $ret) {
 			return false;
 		}
@@ -3194,7 +3199,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$ret = Abstract_User_Preferences::delete($user->getAttribute('login'), 'general', $container_, $setting_);
+		$ret = Abstract_Preferences::delete_user($user->getAttribute('login'), 'general.'.$container_.'.'.$setting_);
 		if (! $ret) {
 			return false;
 		}
@@ -3316,17 +3321,24 @@ class OvdAdminSoap {
 		$g['settings'] = array();
 		$g['settings_default'] = array();
 		
+		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
+		
 		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
 		foreach ($session_prefs_categs as $session_prefs_categ) {
 			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
 			foreach($session_prefs as $session_pref) {
 				$e = self::pref_element2dict($session_pref);
 				$g['settings_default'][$session_prefs_categ][$e['id']] = $e;
-			}
-			
-			$group_prefs = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general', $session_prefs_categ);
-			foreach($group_prefs as $group_pref) {
-				$g['settings'][$session_prefs_categ][$group_pref->element_id] = $group_pref->value;
+				
+				$uid = 'general.'.$session_prefs_categ.'.'.$e['id'];
+				if (array_key_exists($uid, $group_prefs)) {
+					$value = $group_prefs[$uid];
+					if (is_null($value) || $value === FALSE) {
+						$value = $session_pref->content;
+					}
+					
+					$g['settings'][$session_prefs_categ][$e['id']] = $value;
+				}
 			}
 		}
 		
@@ -3608,14 +3620,8 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$config_element = clone $session_settings_defaults[$setting_];
-		$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', $container_, $setting_, $config_element->content);
-		if (! is_null($value_)) {
-			$ugp->value = $value_;
-		}
-		
-		Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container_, $setting_);
-		$ret = Abstract_UserGroup_Preferences::save($ugp);
+		$config_element->content = $value_;
+		$ret = Abstract_Preferences::save_group_item($group->getUniqueID(), 'general.'.$container_.'.'.$setting_, $config_element->content);
 		if (! $ret) {
 			return false;
 		}
@@ -3642,7 +3648,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', $container_, $setting_);
+		$ret = Abstract_Preferences::delete_group($group->getUniqueID(), 'general.'.$container_.'.'.$setting_);
 		if (! $ret) {
 			return false;
 		}

@@ -10,9 +10,7 @@ scripts_DATA = Abstract_AdminAction.class.php\
                Abstract_Session.class.php \
                Abstract_Task.class.php \
                Abstract_Token.class.php \
-               Abstract_UserGroup_Preferences.class.php \
                Abstract_UserGroup_Rule.class.php \
-               Abstract_User_Preferences.class.php \
                Abstract_Network_Folder.class.php \
                Abstract_VDI.class.php
 

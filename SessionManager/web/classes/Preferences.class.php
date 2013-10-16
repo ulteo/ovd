@@ -232,7 +232,7 @@ class Preferences {
 	}
 	
 	public function load_from_db() {
-		$values = Abstract_Preferences::load();
+		$values = Abstract_Preferences::load_general();
 		foreach($values as $k => $v) {
 			if (! array_key_exists($k, $this->elements_by_uid)) {
 				continue;

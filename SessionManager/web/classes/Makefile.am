@@ -36,10 +36,8 @@ scripts_DATA = AdminAction.class.php \
                UsersGroup.class.php \
                UsersGroup_dynamic.class.php \
                UsersGroup_dynamic_cached.class.php \
-               UserGroup_Preferences.class.php \
                UserGroup_Rule.class.php \
                UserGroup_Rules.class.php \
-               User_Preferences.class.php \
                VDI.class.php \
                VDI_MasterOS.class.php \
                VDI_VM.class.php
