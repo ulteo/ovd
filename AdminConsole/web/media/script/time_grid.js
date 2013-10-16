@@ -124,7 +124,10 @@ var TimeGrid = Class.create({
 			
 			var p = day_value[pos];
 			if (p=="1") {
-				self.toggle_cell(item2);
+				item2.addClassName("selected");
+			}
+			else {
+				item2.removeClassName("selected");
 			}
 			
 			if (pos == 23) {
