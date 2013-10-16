@@ -37,6 +37,12 @@ class ConfigElement_week_time_select extends ConfigElement {
 		$str.= '			$("'.$html_id.'").value = value_;'."\n";
 		$str.= '			fire_event_change($("'.$html_id.'"));'."\n";
 		$str.= '		});'."\n";
+		$str.= '		'."\n";
+		$str.= '		$("'.$html_id.'").observe(\'change\', function(e) {'."\n";
+		$str.= '			var new_val = $("'.$html_id.'").value;'."\n";
+		$str.= '			if (new_val == grid.get_value()) { return; }'."\n";
+		$str.= '			grid.set_value(new_val);'."\n";
+		$str.= '		});'."\n";
 		$str.= '	}, 100);'."\n";
 		$str.= '});'."\n";
 		$str.= '</script>'."\n";
