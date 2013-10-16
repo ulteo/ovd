@@ -622,6 +622,10 @@ table.time_grid td.selected {
 	 background: #004985;
 }
 
+table.time_grid.disabled td.selected {
+	 background: #666;
+}
+
 table.time_grid td.selected.hover {
 	 background: #8e8e8e;
 }
