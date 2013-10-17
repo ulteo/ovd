@@ -47,6 +47,7 @@ function get_root_admin_url() {
 }
 
 define('ROOT_ADMIN_URL', get_root_admin_url());
+define('CURRENT_ADMIN_PAGE', substr($_SERVER['REQUEST_URI'], strlen(ROOT_ADMIN_URL)+1));
 
 if (! array_key_exists('service', $_SESSION) or ! array_key_exists('admin_login', $_SESSION) or ! array_key_exists('admin_password', $_SESSION)) {
 	if (basename($_SERVER['PHP_SELF']) == 'login.php') {
@@ -81,6 +82,12 @@ catch (Exception $e) {
 
 $_SESSION['service'] = $service;
 $_SESSION['configuration'] = $configuration;
+
+if (! array_key_exists('system_inited', $_SESSION['configuration']) or  $_SESSION['configuration']['system_inited'] !== true) {
+	if ($_SERVER['REQUEST_METHOD'] == 'GET' && CURRENT_ADMIN_PAGE != 'configuration.php?action=init') {
+		redirect('configuration.php?action=init');
+	}
+}
 
 if (array_key_exists('admin_language', $_SESSION['configuration'])) {
 	$lang = $_SESSION['configuration']['admin_language'];

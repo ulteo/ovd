@@ -25,10 +25,6 @@
 require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
 require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
-if (! array_key_exists('system_inited', $_SESSION['configuration']) or  $_SESSION['configuration']['system_inited'] !== true) {
-	// TODO installation
-	redirect('configuration.php?action=init');
-}
 
 $show_servers = isAuthorized('viewServers') || isAuthorized('manageServers');
 $show_users = isAuthorized('viewUsers') || isAuthorized('manageUsers');
