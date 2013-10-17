@@ -258,35 +258,27 @@ class Preferences_admin {
 	
 	public function mergeWithConfFile($filecontents) {
 		if (is_array($filecontents)) {
-			foreach($filecontents as $key1 => $value1) {
-				if ((isset($this->elements[$key1])) && is_object($this->elements[$key1])) {
-					$buf = &$this->elements[$key1];
-					$buf->content = $filecontents[$key1];
+			self::merge_data($this->elements, $filecontents);
+		}
+	}
+	
+	private static function merge_data(&$elements_, &$contents_) {
+		foreach($contents_ as $key => $value) {
+			if (! array_key_exists($key, $elements_)) {
+				continue;
+			}
+			
+			if (is_object($elements_[$key])) {
+				$element = &$elements_[$key];
+				$v = $element->html2value($contents_[$key]);
+				if (is_null($v)) {
+					continue;
 				}
-				else if (is_array($filecontents[$key1])) {
-					foreach($value1 as $key2 => $value2) {
-						if ((isset($this->elements[$key1][$key2])) && is_object($this->elements[$key1][$key2])) {
-							$buf = &$this->elements[$key1][$key2];
-							$buf->content = $filecontents[$key1][$key2];
-						}
-						else if (is_array($value2)) {
-							foreach($value2 as $key3 => $value3) {
-								if ((isset($this->elements[$key1][$key2][$key3])) && is_object($this->elements[$key1][$key2][$key3])) {
-									$buf = &$this->elements[$key1][$key2][$key3];
-									$buf->content = $filecontents[$key1][$key2][$key3];
-								}
-								else if (is_array($value3)) {
-									foreach($value3 as $key4 => $value4) {
-										if ((isset($this->elements[$key1][$key2][$key3][$key4])) && is_object($this->elements[$key1][$key2][$key3][$key4])) {
-											$buf = &$this->elements[$key1][$key2][$key3][$key4];
-											$buf->content = $filecontents[$key1][$key2][$key3][$key4];
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				
+				$element->content = $v;
+			}
+			else if (is_array($value)) {
+				self::merge_data($elements_[$key], $value);
 			}
 		}
 	}
