@@ -23,6 +23,10 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_dictionary extends ConfigElement {
 	public static function values_equals($value1_, $value2_) {
+		if (! is_array($value1_) || ! is_array($value2_)) {
+			return ($value1_ == $value2_);
+		}
+		
 		if (count($value1_) != count($value2_)) {
 			return false;
 		}

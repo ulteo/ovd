@@ -58,7 +58,7 @@ class User {
 		return $locale;
 	}
 	
-	protected function get_my_usersgroups_from_list($users_group_id_) {
+	public function get_my_usersgroups_from_list($users_group_id_) {
 		$result = array();
 		
 		$UserGroupDB = UserGroupDB::getInstance();
@@ -364,8 +364,6 @@ class User {
 			
 			foreach ($preferences_by_group[$group] as $setting_key => $setting_value) {
 				$key = substr($setting_key, strrpos('.', $setting_key));
-				
-				$element = $pref->toConfigElement();
 				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($setting_value != $default_settings[$key])) {
 					ErrorManager::report('User "'.$this->getAttribute('login').'" has at least two groups with the same overriden rule but with different values, the result will be unpredictable.');
 				}

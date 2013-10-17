@@ -125,6 +125,10 @@ class Abstract_Preferences {
 			array_push($values, '('.$sql->Quote($type_).','.$sql->Quote($owner_).','.$sql->Quote($k).','.$sql->Quote(json_serialize($v)).')');
 		}
 		
+		if (count($data_) == 0) {
+			return true;
+		}
+		
 		$res = $sql->DoQuery('INSERT INTO #1 (@2, @3, @4, @5) VALUES '.implode(',', $values), self::$table, 'owner_type', 'owner', 'key', 'value');
 		if ($res !== true) {
 			Logger::error('main', "Abstract_Preferences::save Unable to save preferences");

@@ -2966,30 +2966,11 @@ class OvdAdminSoap {
 		
 		// Settings
 		$u['settings'] = array();
-		$u['settings_default'] = array();
 		
 		$user_prefs = Abstract_Preferences::load_user($user->getAttribute('login'));
 		
-		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
-		foreach ($session_prefs_categs as $session_prefs_categ) {
-			$u['settings'][$session_prefs_categ] = array();
-			$u['settings_default'][$session_prefs_categ] = array();
-			
-			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
-			foreach($session_prefs as $session_pref) {
-				$e = self::pref_element2dict($session_pref);
-				$u['settings_default'][$session_prefs_categ][$e['id']] = $e;
-				
-				$uid = 'general.'.$session_prefs_categ.'.'.$e['id'];
-				if (array_key_exists($uid, $user_prefs)) {
-					$value = $user_prefs[$uid];
-					if (is_null($value) || $value === FALSE) {
-						$value = $session_pref->content;
-					}
-					
-					$u['settings'][$session_prefs_categ][$e['id']] = $value;
-				}
-			}
+		foreach ($user_prefs as $setting_id => $setting_value) {
+			$u['settings'][$setting_id] = $setting_value;
 		}
 		
 		return $u;
@@ -3123,6 +3104,89 @@ class OvdAdminSoap {
 		return $ret;
 	}
 	
+	
+	public function user_settings_get($user_id_) {
+		$this->check_authorized('viewUsersGroups');
+		
+		$userDB = UserDB::getInstance();
+		$user = $userDB->import($user_id_);
+		if (! is_object($user)) {
+			return null;
+		}
+		
+		$settings = array();
+		
+		$user_prefs = Abstract_Preferences::load_user($user->getAttribute('login'));
+
+		$settings_by_group = Abstract_Preferences::load_by_group();
+		$users_group_id = array();
+		foreach ($settings_by_group as $group => $useless) {
+			if (in_array($group, $users_group_id)) {
+				continue;
+			}
+			
+			array_push($users_group_id, $group);
+		}
+		
+		// from this group, which are these I am into
+		$users_groups_mine_ids = $user->get_my_usersgroups_from_list($users_group_id);
+		
+		$userGroupDB = UserGroupDB::getInstance();
+		$groups = $userGroupDB->imports($users_groups_mine_ids);
+		
+		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
+		foreach ($session_prefs_categs as $session_prefs_categ) {
+			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
+			foreach($session_prefs as $session_pref) {
+				$setting = self::pref_element2dict($session_pref);
+				$uid = 'general.'.$session_prefs_categ.'.'.$setting['id'];
+				
+				$setting['values'] = array('default' => $session_pref->content_default);
+				$setting['value'] = $session_pref->content_default;
+				if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
+					$setting['values']['global']  = $session_pref->content;
+					$setting['value'] = $session_pref->content;
+				}
+				
+				foreach ($groups as $group_id => $group) {
+					if (! array_key_exists($group_id, $settings_by_group)) {
+						// means potentially bug in backend !
+						continue;
+					}
+					
+					if (! array_key_exists($uid, $settings_by_group[$group_id])) {
+						// means potentially bug in backend !
+						continue;
+					}
+					
+					$value = $settings_by_group[$group_id][$uid];
+					if (is_null($value) || $value === FALSE) {
+						continue;
+					}
+					
+					if (! array_key_exists('groups', $setting['values'])) {
+						$setting['values']['groups'] = array();
+					}
+					
+					$setting['values']['groups'][$group_id] = array('value' => $value, 'group' => $group->name);
+					$setting['value'] = $value;
+				}
+				
+				if (array_key_exists($uid, $user_prefs)) {
+					$value = $user_prefs[$uid];
+					if (! is_null($value) && $value !== FALSE) {
+						$setting['values']['user'] = $value;
+						$setting['value'] = $value;
+					}
+				}
+				
+				$settings[$uid] = $setting;
+			}
+		}
+		
+		return $settings;
+	}
+	
 	public function user_settings_set($user_id_, $settings_) {
 		$this->check_authorized('manageUsers');
 		
@@ -3147,6 +3211,15 @@ class OvdAdminSoap {
 				continue;
 			}
 			
+			if (is_null($v)) {
+				if (array_key_exists($k, $user_prefs)) {
+					unset($user_prefs[$k]);
+					self::setting_write_diff($k, $v, $element, $diff);
+				}
+				
+				continue;
+			}
+			
 			if (array_key_exists($k, $user_prefs) && $element->values_equals($v, $user_prefs[$k])) {
 				// nothing to: already the same value
 				continue;
@@ -3162,37 +3235,6 @@ class OvdAdminSoap {
 		}
 		
 		$this->log_action('user_settings_set', array('login' => $user->getAttribute('login'), 'values' => $diff));
-		return true;
-	}
-	
-	public function user_settings_remove($user_id_, $keys_) {
-		$this->check_authorized('manageUsers');
-		
-		$userDB = UserDB::getInstance();
-		$user = $userDB->import($user_id_);
-		if (! is_object($user)) {
-			return false;
-		}
-		
-		$diff_ = array();
-		$prefs = Preferences::getInstance();
-		foreach($keys_ as $key) {
-			$element = $prefs->get_element_from_uid($key);
-			if (is_null($element)) {
-				// unknwon incoming key
-				continue;
-			}
-			
-			if (! self::is_key_authorized_override($key)) {
-				// user overridden settings are only available for session settings
-				continue;
-			}
-			
-			Abstract_Preferences::delete_user($user->getAttribute('login'), $key);
-			self::setting_write_diff($key, null, $element, $diff);
-		}
-		
-		$this->log_action('user_settings_remove', array('login' => $user->getAttribute('login'), 'values' => $diff));
 		return true;
 	}
 	
@@ -3307,27 +3349,11 @@ class OvdAdminSoap {
 		
 		// Settings
 		$g['settings'] = array();
-		$g['settings_default'] = array();
 		
 		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
 		
-		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
-		foreach ($session_prefs_categs as $session_prefs_categ) {
-			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
-			foreach($session_prefs as $session_pref) {
-				$e = self::pref_element2dict($session_pref);
-				$g['settings_default'][$session_prefs_categ][$e['id']] = $e;
-				
-				$uid = 'general.'.$session_prefs_categ.'.'.$e['id'];
-				if (array_key_exists($uid, $group_prefs)) {
-					$value = $group_prefs[$uid];
-					if (is_null($value) || $value === FALSE) {
-						$value = $session_pref->content;
-					}
-					
-					$g['settings'][$session_prefs_categ][$e['id']] = $value;
-				}
-			}
+		foreach ($group_prefs as $setting_id => $setting_value) {
+			$g['settings'][$setting_id] = $setting_value;
 		}
 		
 		return $g;
@@ -3603,6 +3629,48 @@ class OvdAdminSoap {
 		return false;
 	}
 	
+	public function users_group_settings_get($group_id_) {
+		$this->check_authorized('viewUsersGroups');
+		
+		$userGroupDB = UserGroupDB::getInstance();
+		$group = $userGroupDB->import($group_id_);
+		if (! $group) {
+			return null;
+		}
+		
+		$settings = array();
+		
+		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
+		
+		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
+		foreach ($session_prefs_categs as $session_prefs_categ) {
+			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
+			foreach($session_prefs as $session_pref) {
+				$setting = self::pref_element2dict($session_pref);
+				$uid = 'general.'.$session_prefs_categ.'.'.$setting['id'];
+				
+				$setting['values'] = array('default' => $session_pref->content_default);
+				$setting['value'] = $session_pref->content_default;
+				if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
+					$setting['values']['global']  = $session_pref->content;
+					$setting['value'] =  $session_pref->content;
+				}
+				
+				if (array_key_exists($uid, $group_prefs)) {
+					$value = $group_prefs[$uid];
+					if (! is_null($value) && $value !== FALSE) {
+						$setting['values']['group'] = $value;
+						$setting['value'] = $value;
+					}
+				}
+				
+				$settings[$uid] = $setting;
+			}
+		}
+		
+		return $settings;
+	}
+	
 	public function users_group_settings_set($group_id_, $settings_) {
 		$this->check_authorized('manageUsersGroups');
 		
@@ -3628,6 +3696,15 @@ class OvdAdminSoap {
 				continue;
 			}
 			
+			if (is_null($v)) {
+				if (array_key_exists($k, $group_prefs)) {
+					unset($group_prefs[$k]);
+					self::setting_write_diff($k, $v, $element, $diff);
+				}
+				
+				continue;
+			}
+			
 			if (array_key_exists($k, $group_prefs) && $element->values_equals($v, $group_prefs[$k])) {
 				// nothing to: already the same value
 				continue;
@@ -3643,37 +3720,6 @@ class OvdAdminSoap {
 		}
 		
 		$this->log_action('users_group_settings_set', array('group' => $group->name, 'values' => $diff));
-		return true;
-	}
-	
-	public function users_group_settings_remove($group_id_, $keys_) {
-		$this->check_authorized('manageUsersGroups');
-		
-		$userGroupDB = UserGroupDB::getInstance();
-		$group = $userGroupDB->import($group_id_);
-		if (! is_object($group)) {
-			return false;
-		}
-		
-		$diff_ = array();
-		$prefs = Preferences::getInstance();
-		foreach($keys_ as $key) {
-			$element = $prefs->get_element_from_uid($key);
-			if (is_null($element)) {
-				// unknwon incoming key
-				continue;
-			}
-			
-			if (! self::is_key_authorized_override($key)) {
-				// users group overriden settings are only available for session settings
-				continue;
-			}
-			
-			Abstract_Preferences::delete_group($group->getUniqueID(), $key);
-			self::setting_write_diff($key, null, $element, $diff);
-		}
-		
-		$this->log_action('users_group_settings_remove', array('group' => $group->name, 'values' => $diff));
 		return true;
 	}
 	

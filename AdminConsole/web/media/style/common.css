@@ -402,6 +402,29 @@ table.main_sub2 td.status {
 	vertical-align: middle;
 }
 
+div.tooltip {
+	position: absolute;
+	border: 1px solid black;
+	background: #fec;
+	padding: 5px;
+	z-index: 5000;
+	overflow: auto;
+}
+
+div.tooltip table.settings {
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+div.tooltip table.settings th, td {
+	padding: 3px;
+}
+
+div.tooltip table.settings tfoot td {
+	text-align: center;
+}
+
 #loading_div {
 	vertical-align: middle;
 
@@ -609,10 +632,16 @@ table.time_grid th div {
 table.time_grid td {
 	width: 10px;
 	background: #bababa;
-	cursor:pointer;
 	padding: 1px;
+	cursor:pointer;
 	border: 1px solid #ddd;
 }
+
+table.time_grid.disabled td {
+	cursor:default;
+}
+
+
 
 table.time_grid td.hover {
 	background: #0062b3;

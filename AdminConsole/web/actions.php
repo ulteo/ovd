@@ -1259,20 +1259,9 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 if ($_REQUEST['name'] == 'UserGroup_settings') {
 	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
 		$unique_id = $_REQUEST['unique_id'];
-		
 		$ret = null;
-		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$new_settings = array();
-			$new_settings['general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']] = null;
-			
-			$ret = $_SESSION['service']->users_group_settings_set($unique_id, $new_settings);
-		}
-		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$keys = array('general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']);
-			
-			$ret = $_SESSION['service']->users_group_settings_remove($unique_id, $keys);
-		}
-		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
+		if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
+
 			$container = $_REQUEST['container'];
 			$formdata = array();
 			$sep = '___';
@@ -1283,16 +1272,25 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 				}
 			}
 			$formarray = formToArray($formdata);
+			
+			$new_settings = array();
+			
+			$settings = $_SESSION['service']->users_group_settings_get($unique_id);
+			$prefs = new Preferences_admin(null, false);
+			$prefs->load($settings);
+			$categ_prefs = $prefs->get_elements('general', $container);
+			foreach(array_keys($categ_prefs) as $setting_key) {
+				$new_settings['general.'.$container.'.'.$setting_key] = null;
+			}
+			
 			if (isset($formarray['general'][$container])) {
-				$new_settings = array();
-				
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
 					$new_settings['general.'.$container.'.'.$element_id] = $value;
 				}
-				
-				$ret = $_SESSION['service']->users_group_settings_set($unique_id, $new_settings);
 			}
+			
+			$ret = $_SESSION['service']->users_group_settings_set($unique_id, $new_settings);
 		}
 		
 		if ($ret === true) {
@@ -1394,19 +1392,9 @@ if ($_REQUEST['name'] == 'User') {
 
 if ($_REQUEST['name'] == 'User_settings') {
 	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
+		$unique_id = $_REQUEST['unique_id'];
 		$ret = null;
-		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$settings = array();
-			$settings['general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']] = null;
-			
-			$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $settings);
-		}
-		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['container']) && isset($_REQUEST['element_id'])) {
-			$keys = array('general.'.$_REQUEST['container'].'.'.$_REQUEST['element_id']);
-			
-			$ret = $_SESSION['service']->user_settings_remove($_REQUEST['unique_id'], $keys);
-		}
-		else if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
+		if ($_REQUEST['action'] == 'modify' && isset($_REQUEST['container'])) {
 			$container = $_REQUEST['container'];
 			$formdata = array();
 			$sep = '___';
@@ -1417,16 +1405,25 @@ if ($_REQUEST['name'] == 'User_settings') {
 				}
 			}
 			$formarray = formToArray($formdata);
+			
+			$new_settings = array();
+			
+			$settings = $_SESSION['service']->user_settings_get($unique_id);
+			$prefs = new Preferences_admin(null, false);
+			$prefs->load($settings);
+			$categ_prefs = $prefs->get_elements('general', $container);
+			foreach(array_keys($categ_prefs) as $setting_key) {
+				$new_settings['general.'.$container.'.'.$setting_key] = null;
+			}
+			
 			if (isset($formarray['general'][$container])) {
-				$new_settings = array();
-				
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
 					$new_settings['general.'.$container.'.'.$element_id] = $value;
 				}
-				
-				$ret = $_SESSION['service']->user_settings_set($_REQUEST['unique_id'], $new_settings);
 			}
+			
+			$ret = $_SESSION['service']->user_settings_set($unique_id, $new_settings);
 		}
 		
 		if ($ret === true) {

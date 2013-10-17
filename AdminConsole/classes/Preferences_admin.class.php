@@ -34,8 +34,8 @@ class Preferences_admin {
 		$this->initialize();
 		
 		if ($load === true) {
-			$this->load();
-			$this->mergeWithConfFile($element_form_);
+			$prefs = $_SESSION['service']->settings_get();
+			$this->load($prefs, $element_form_);
 		}
 	}
 	
@@ -53,15 +53,18 @@ class Preferences_admin {
 		return $this->titles[$key];
 	}
 	
-	protected function load() {
-		$prefs = $_SESSION['service']->settings_get();
-		if (is_null($prefs)) {
+	public function load($prefs_, $values_=null) {
+		if (is_null($prefs_) and ! is_array($prefs_)) {
 			return;
 		}
 		
-		foreach($prefs as $key => $element) {
+		foreach($prefs_ as $key => $element) {
 			$c = $this->load_element($element, $key);
 			$this->insert_in_elements($c, $key, $this->elements);
+		}
+		
+		if (is_array($values_)) {
+			self::merge_data($this->elements, $values_);
 		}
 	}
 	
@@ -85,7 +88,7 @@ class Preferences_admin {
 				$elements_[$root] = array();
 			}
 			
-			self::insert_in_element($c_, $res[1], $elements_[$root]);
+			self::insert_in_elements($c_, $res[1], $elements_[$root]);
 		}
 	}
 	
@@ -230,6 +233,18 @@ class Preferences_admin {
 		}
 	}
 
+	public function get_elements($container_,$container_sub_) {
+		if (! array_key_exists($container_, $this->elements)) {
+			return array();
+		}
+		
+		if (! array_key_exists($container_sub_, $this->elements[$container_])) {
+			return array();
+		}
+		
+		return $this->elements[$container_][$container_sub_];
+	}
+	
 	public function addPrettyName($key_,$prettyName_) {
 		$this->prettyName[$key_] = $prettyName_;
 	}
@@ -253,10 +268,12 @@ class Preferences_admin {
 		return array_keys($this->elements);
 	}
 	
-	public function mergeWithConfFile($filecontents) {
-		if (is_array($filecontents)) {
-			self::merge_data($this->elements, $filecontents);
+	public function getSubKeys($container_) {
+		if (! array_key_exists($container_, $this->elements)) {
+			return array();
 		}
+		
+		return array_keys($this->elements[$container_]);
 	}
 	
 	private static function merge_data(&$elements_, &$contents_) {

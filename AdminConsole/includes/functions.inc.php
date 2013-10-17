@@ -88,9 +88,15 @@ function print_prefs5($prefs,$key_name, $container) {
 	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($container, $key_name).'</th></tr>';
 	foreach ( $elements2 as $element_key => $element) {
 		// we print element
-		echo '<tr class="content'.($color % 2 +1).'">';
+		echo '<tr class="content'.($color % 2 +1).'" id="tr_'.$container.'_'.$element_key.'">';
 		echo '<td style="width: 200px;">';
 		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($element->description_detailed)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$element->label.'</span>';
+		
+		echo '<span style="float: right;">';
+		echo '<input id="button_show_'.$container.'_'.$element_key.'" type="button" value="+" onclick="configuration_show_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
+		echo '<input id="button_hide_'.$container.'_'.$element_key.'" type="button" value="-" style="display: none" onclick="configuration_hide_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
+		echo '</span>';
+		
 		echo '</td>';
 		echo '<td style="padding: 3px;">';
 		echo "\n";
@@ -101,6 +107,61 @@ function print_prefs5($prefs,$key_name, $container) {
 		$color++;
 	}
 	echo '</table>';
+	
+	foreach ( $elements2 as $element_key => $element) {
+		print_pref_values($key_name, $container, $element, $element->content);
+	}
+}
+
+function print_pref_values($key_name_, $container_, $element_, $saved_value_, $values_ = array()) {
+	$i = 0;
+	$data = array();
+	array_push($data, array('title' => _('Default value'), 'value' => $element_->content_default));
+	foreach($values_ as $value) {
+		array_push($data, $value);
+	}
+	
+	array_push($data, array('title' => _('Saved value'), 'value' => $saved_value_));
+	
+	echo '<div id="cache_more_info_'.$container_.'_'.$element_->id.'" class="tooltip" style="display: none;">';
+	echo '<table class="settings">';
+	echo '<thead>';
+	echo '<tr>';
+	foreach($data as $value) {
+		echo '<th>'.$value['title'].'</th>';
+	}
+	
+	echo '<tr>';
+	echo '</thead><tbody>';
+	foreach($data as $value) {
+		echo '<td>';
+		$c = clone $element_;
+		$c->content = $value['value'];
+		$c->setPrefixID('values_extra_'.($i++));
+		$c->setPath(array('key_name' => $key_name_, 'container' => $container_, 'element_id' => $element_->id));
+		echo $c->toHTML(true);
+		echo '</td>';
+	}
+	
+	echo '</tr>';
+	echo '</tbody>';
+	if (can_set_value_to_config_element($element_)) {
+		echo '<tfoot><tr>';
+		foreach($data as $value) {
+			$c = clone $element_;
+			$c->setFormSeparator('___');  // global $sep
+			$c->setPath(array('key_name' => $key_name_, 'container' => $container_, 'element_id' => $element_->id));
+			
+			echo '<td>';
+			echo '<input type="button" value="'._('Set to this value').'" onclick="configuration_set_value(\''.$c->get_input_name().'\', \''.$value['value'].'\');" />';
+			echo '</td>';
+		}
+		
+		echo '</tr></tfoot>';
+	}
+	
+	echo '</table>';
+	echo '</div>';
 }
 
 function print_prefs4($prefs,$key_name,$recursive=true) {
@@ -175,6 +236,33 @@ function print_prefs($prefs_, $print_form_=true) {
 		echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
 		echo '</form>';
 	}
+}
+
+function print_overriden_pref($key_name_, $container_, $element_, $value_ = null, $class_content_ = null) {
+	echo '<tr '.(is_null($class_content_)?'':'class="'.$class_content_.'"').' id="tr_'.$container_.'_'.$element_->id.'">';
+	
+	echo '<td style="width: 250px;" >';
+	echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $element_->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$element_->label.'</span>';
+	echo '<span style="float: right;">';
+	echo '<input id="button_show_'.$container_.'_'.$element_->id.'" type="button" value="+" onclick="configuration_show_extra_values(\''.$container_.'\', \''.$element_->id.'\');  return false;"/>';
+	echo '<input id="button_hide_'.$container_.'_'.$element_->id.'" type="button" value="-" style="display: none" onclick="configuration_hide_extra_values(\''.$container_.'\', \''.$element_->id.'\');  return false;"/>';
+	echo '</span>';
+	echo '</td>';
+	
+	echo '<td style="padding: 3px;">';
+	$c = clone $element_;
+	if (! is_null($value_)) {
+		$c->content = $value_;
+	}
+	
+	print_element($key_name_, $container_, $element_->id, $c);
+	echo '</td>';
+	
+	echo '<td>';
+	echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="configuration_del(\''.$container_.'\', \''.$element_->id.'\');  return false;"/>';
+	echo '</td>';
+	
+	echo '</tr>';
 }
 
 function formToArray($form_) {
@@ -285,6 +373,24 @@ function formToArray_cleanup(&$buf) {
 		}
 	}
 }
+
+function can_set_value_to_config_element($element_) {
+	$c = get_class($element_);
+	return (in_array($c, array(
+		'ConfigElement_input',
+		'ConfigElement_password',
+		'ConfigElement_select',
+		'ConfigElement_week_time_select',
+	)));
+
+	// Not possible until JS review for:
+	//	ConfigElement_dictionary
+	//	ConfigElement_inputlist
+	//	ConfigElement_sliders_loadbalancing
+	//	ConfigElement_multiselect
+	//	ConfigElement_text
+}
+
 
 function get_classes_startwith_admin($start_name) {
 	$files = glob(CLASSES_DIR.'/'.$start_name.'*.class.php');

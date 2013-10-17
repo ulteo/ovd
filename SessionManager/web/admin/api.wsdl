@@ -231,15 +231,14 @@
 		<part name="displayname" type="xsd:string"/>
 		<part name="password" type="xsd:string"/>
 	</message>
+		
+	<message name="user_settings_getMessage">
+		<part name="user_id" type="xsd:string"/>
+	</message>
 	
 	<message name="user_settings_setMessage">
 		<part name="user_id" type="xsd:string"/>
 		<part name="settings" type="xsd:any"/>
-	</message>
-	
-	<message name="user_settings_removeMessage">
-		<part name="user_id" type="xsd:string"/>
-		<part name="keys" type="xsd:any"/>
 	</message>
 	
 	<message name="users_group_addMessage">
@@ -278,14 +277,13 @@
 		<part name="schedule" type="xsd:integer"/>
 	</message>
 	
+	<message name="users_group_settings_getMessage">
+		<part name="group_id" type="xsd:string"/>
+	</message>
+	
 	<message name="users_group_settings_setMessage">
 		<part name="group_id" type="xsd:string"/>
 		<part name="settings" type="xsd:any"/>
-	</message>
-	
-	<message name="users_group_settings_removeMessage">
-		<part name="group_id" type="xsd:string"/>
-		<part name="keys" type="xsd:any"/>
 	</message>
 	
 	<message name="UsersGroup_policyMessage">
@@ -780,13 +778,13 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_settings_set">
-			<input message="urn:user_settings_setMessage"/>
-			<output message="urn:Boolean"/>
+		<operation name="user_settings_get">
+			<input message="urn:user_settings_getMessage"/>
+			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="user_settings_remove">
-			<input message="urn:user_settings_removeMessage"/>
+		<operation name="user_settings_set">
+			<input message="urn:user_settings_setMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -855,13 +853,13 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="users_group_settings_set">
-			<input message="urn:users_group_settings_setMessage"/>
-			<output message="urn:Boolean"/>
+		<operation name="users_group_settings_get">
+			<input message="urn:users_group_settings_getMessage"/>
+			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="users_group_settings_remove">
-			<input message="urn:users_group_settings_removeMessage"/>
+		<operation name="users_group_settings_set">
+			<input message="urn:users_group_settings_setMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -1980,8 +1978,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_settings_set">
-			<soap:operation soapAction="urn:OvdAdmin#user_settings_set"/>
+		<operation name="user_settings_get">
+			<soap:operation soapAction="urn:OvdAdmin#user_settings_get"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1990,8 +1988,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_settings_remove">
-			<soap:operation soapAction="urn:OvdAdmin#user_settings_remove"/>
+		<operation name="user_settings_set">
+			<soap:operation soapAction="urn:OvdAdmin#user_settings_set"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2110,8 +2108,8 @@
 			</output>
 		</operation>
 		
-		<operation name="users_group_settings_set">
-			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_set"/>
+		<operation name="users_group_settings_get">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_get"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2120,8 +2118,8 @@
 			</output>
 		</operation>
 		
-		<operation name="users_group_settings_remove">
-			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_remove"/>
+		<operation name="users_group_settings_set">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_set"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

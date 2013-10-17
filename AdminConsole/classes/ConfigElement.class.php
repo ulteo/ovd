@@ -103,7 +103,7 @@ abstract class ConfigElement{
 		return $ret;
 	}
 	
-	protected function get_input_name() {
+	public function get_input_name() {
 		return implode($this->formSeparator, $this->path);
 	}
 	

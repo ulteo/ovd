@@ -405,35 +405,34 @@ function show_manage($id) {
   $unuse_settings = array();
   $session_prefs = array();
 
-	if ($group->hasAttribute('settings_default')) {
+		$settings = $_SESSION['service']->users_group_settings_get($id);
 		$prefs = new Preferences_admin(null, false);
-		
-		$categs = $group->getAttribute('settings_default');
-		$categs2 = array();
+		$prefs->load($settings);
+
+		$group_settings = array();
 		if ($group->hasAttribute('settings')) {
-			$categs2 = $group->getAttribute('settings');
+			$group_settings = $group->getAttribute('settings');
 		}
 		
-		foreach($categs as $categ => $settings) {
+		$categs = $prefs->getSubKeys('general');
+		foreach($categs as $categ) {
+			$categ_prefs = $prefs->get_elements('general', $categ);
+			
 			$session_prefs[$categ] = array();
 			$prefs_of_a_group[$categ] = array();
 			$unuse_settings[$categ] = array();
 			
-			foreach($settings as $setting_id => $setting_attributes) {
-				$p = $prefs->load_element($setting_attributes, 'general.'.$categ.'.'.$setting_id);
+			foreach($categ_prefs as $setting_id => $p) {
 				$session_prefs[$categ][$setting_id] = $p;
-				
-				if (array_key_exists($categ , $categs2) && array_key_exists($setting_id, $categs2[$categ])) {
-					$p2 = clone $p;
-					$p2->content = $categs2[$categ][$setting_id];
-					$prefs_of_a_group[$categ][$setting_id] = $p2;
+				$uid = 'general'.'.'.$categ.'.'.$setting_id;
+				if (array_key_exists($uid, $group_settings)) {
+					array_push($prefs_of_a_group[$categ], $setting_id);
 				}
 				else {
-					$unuse_settings[$categ][$setting_id] = $p;
+					array_push($unuse_settings[$categ], $setting_id);
 				}
 			}
 		}
-	}
 
 
   page_header();
@@ -930,87 +929,112 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 		
 		echo '<br />';
 	}
-	echo '<div>'; // Session Settings configuration
+	
+	echo '<div>'; // Session settings configuration
 	echo '<h2>';
 	echo _('Session Settings configuration');
 	echo '</h2>';
 	
-	if ($prefs_of_a_group != array()) {
-		foreach ($prefs_of_a_group as $container => $prefs_of_a_group_value) {
+	if (count($session_prefs)>0) {
+		$key_name = 'general';
+		
+		foreach ($session_prefs as $container => $container_prefs) {
 			echo '<fieldset class="prefssessionusergroup">';
-			echo '<legend>'.$prefs->getPrettyName('general.'.$container).'</legend>';
+			echo '<legend>'.$prefs->getPrettyName($key_name.'.'.$container).'</legend>';
 			
 			echo '<form action="actions.php" method="post">';
-			$key_name = 'general';
 			echo '<input type="hidden" name="container" value="'.$container.'" />';
 			// from admin/functions.inc.php
 			$color=0;
-			if (count($prefs_of_a_group_value) != 0) {
-				echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3" style="margin-bottom: 10px;">'; // TODO
-				echo '<tr  class="title">';
-				echo '<th>'._('Name').'</th>';
-				echo '<th>'._('Default value').'</th>';
-				echo '<th>'._('Value').'</th>';
-				echo '<th>'._('Action').'</th>';
-				echo '<tr>';
-				
-				foreach ($prefs_of_a_group_value as $element_key => $config_element) {
-					echo '<tr class="content'.($color % 2 +1).'">';
-					echo '<td style="width: 250px;">';
-					echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $config_element->description_detailed).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$config_element->label.'</span>';
-					
-					echo '<td>';
-					$default_element = $session_prefs[$container][$config_element->id];
-					$default_element->setFormSeparator('NaN'); // it must be different of ___
-					$default_element->setPath(array('key_name' => $key_name, 'container' => $container, 'element_id' => $config_element->id));
-					echo $default_element->toHTML(true);
-					echo '</td>';
-					
-					echo '</td>';
-					echo '<td style="padding: 3px;">';
-					print_element($key_name, $container, $element_key, $config_element);
-					echo '</td>';
-					
-					echo '<td>';
-					echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="usergroup_settings_remove(\''.$group->id.'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
-					echo '</td>';
-					
-					echo '</tr>';
-					$color++;
-				}
+
+			echo '<table class="main_sub" id="settings_table_'.$container.'" border="0" cellspacing="1" cellpadding="3" style="margin-bottom: 10px;'.((count($prefs_of_a_group[$container])==0)?' display: none;':'').' ">';
+			echo '<thead>';
+			echo '<tr  class="title">';
+			echo '<th>'._('Name').'</th>';
+			echo '<th>'._('Group value').'</th>';
+			echo '<th>'._('Action').'</th>';
+			echo '</tr>';
+			echo '</thead><tbody>';
 			
-				// end from
-				echo '<tr class="content'.($color % 2 +1).'">';
-				echo '<td colspan="3"></td>';
-				echo '<td>';
-				echo '<input type="hidden" name="name" value="UserGroup_settings" />';
-				echo '<input type="hidden" name="container" value="'.$container.'" />';
-				echo '<input type="hidden" name="unique_id" value="'.$group->id.'" />';
-				echo '<input type="hidden" name="action" value="modify" />';
-				echo '<input type="submit" value="'._('Save settings').'" />';
+			foreach ($container_prefs as $element_key => $config_element) {
+				if (! in_array($element_key, $prefs_of_a_group[$container])) {
+					continue;
+				}
 				
-				echo '</td>';
-				echo '</tr>';
-				echo '</table>';
-				echo '</form>';
+				print_overriden_pref($key_name, $container, $config_element, $group_settings[$key_name.'.'.$container.'.'.$element_key], 'content'.(($color++) % 2 +1));
 			}
 			
-			if ($unuse_settings[$container] != array()) {
-				echo '<form action="actions.php" method="post">';
-					echo '<input type="hidden" name="name" value="UserGroup_settings" />';
-					echo '<input type="hidden" name="container" value="'.$container.'" />';
-					echo '<input type="hidden" name="unique_id" value="'.$group->id.'" />';
-					echo '<input type="hidden" name="action" value="add" />';
-					
-				echo '<select name="element_id">';
-				foreach ($unuse_settings[$container] as $setting_name => $setting_content) {
-					echo '<option value="'.$setting_name.'" >'.$setting_content->label.'</option>';
+			// end from
+			echo '</tbody><tfoot>';
+			echo '<tr class="content'.($color % 2 +1).'" id="foot_'.$container.'" style="display: none;">';
+			echo '<td colspan="2"></td>';
+			echo '<td>';
+			echo '<input type="hidden" name="name" value="UserGroup_settings" />';
+			echo '<input type="hidden" name="container" value="'.$container.'" />';
+			echo '<input type="hidden" name="unique_id" value="'.$group->id.'" />';
+			echo '<input type="hidden" name="action" value="modify" />';
+			echo '<input type="submit" value="'._('Save settings').'" style="background-color: red; font-weight:bold;"/>';
+			
+			echo '</td>';
+			echo '</tr></tfoot>';
+			echo '</table>';
+			
+			echo '</form>';
+			
+			echo '<form '.((count($unuse_settings[$container])==0)?'style="display: none;"':'').' onsubmit="configuration_add(\''.$container.'\', this.settings.value); return false;">';
+			echo '<select id="settings_select_'.$container.'" name="settings" onchange="configuration_add(\''.$container.'\', this.value); return false;">';
+			foreach ($session_prefs[$container] as $setting_name => $setting_content) {
+				if (in_array($setting_name, $prefs_of_a_group[$container])) {
+					continue;
 				}
-				echo '</select>';
-				echo ' ';
-				echo '<input type="submit" value="'._('Add this setting').'" />';
-				echo '</form>';
+				
+				echo '<option value="'.$setting_name.'" >'.$setting_content->label.'</option>';
 			}
+			echo '</select>';
+			echo ' ';
+			echo '<input type="submit" value="'._('Add this setting').'" />';
+			echo '</form>';
+			
+			echo '<div style="display: none;">'; // Content for javascript purpose
+			echo '<select id="cache_select_'.$container.'">';
+			foreach ($session_prefs[$container] as $setting_name => $setting_content) {
+				echo '<option value="'.$setting_name.'" >'.$setting_content->label.'</option>';
+			}
+			echo '</select>';
+			
+			echo '<table id="cache_table_'.$container.'"><tbody>';
+			foreach ($session_prefs[$container] as $element_key => $config_element) {
+				if (in_array($element_key, $prefs_of_a_group[$container])) {
+					continue;
+				}
+				
+				print_overriden_pref($key_name, $container, $config_element);
+			}
+			
+			echo '</tbody></table>';
+			echo '</div>';
+			
+			echo '<div>';
+			foreach ($session_prefs[$container] as $element_key => $config_element) {
+				$uid = $key_name.'.'.$container.'.'.$element_key;
+				$setting = $settings[$uid];
+				
+				$extra = array();
+				if (array_key_exists('global', $setting['values'])) {
+					array_push($extra, array('title' => _('Global value'), 'value' => $setting['values']['global']));
+				}
+				
+				print_pref_values($key_name, $container, $config_element, $setting['value'], $extra);
+			}
+			
+			echo '</div>';
+			
+			echo '<script>';
+			echo 'Event.observe(window, \'load\', function() {';
+			echo 'configuration_change_monitor(\''.$container.'\')';
+			echo '});';
+			echo '</script>';
+			
 			echo '</fieldset>';
 		}
 	}
