@@ -86,7 +86,7 @@ else {
 			echo '<form method="post" action="configuration.php">';
 			echo '<input type="hidden" name="setup" value="setup" />';
 		}
-		print_prefs5($prefs, 'general', 'sql');
+		print_prefs5($prefs, 'general', 'sql', false);
 		if ($can_manage_configuration) {
 			echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
 			echo '</form>';

@@ -78,7 +78,7 @@ function print_element($key_name,$container,$element_key,$element) {
 	return true;
 }
 
-function print_prefs5($prefs,$key_name, $container) {
+function print_prefs5($prefs,$key_name, $container, $show_extra_values = true) {
 	if (! isset($prefs->elements[$key_name][$container]))
 		return;
 
@@ -92,10 +92,12 @@ function print_prefs5($prefs,$key_name, $container) {
 		echo '<td style="width: 200px;">';
 		echo '<span onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", htmlspecialchars($element->description_detailed)).'\'); return false;" onmouseout="hideInfoBulle(); return false;">'.$element->label.'</span>';
 		
-		echo '<span style="float: right;">';
-		echo '<input id="button_show_'.$container.'_'.$element_key.'" type="button" value="+" onclick="configuration_show_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
-		echo '<input id="button_hide_'.$container.'_'.$element_key.'" type="button" value="-" style="display: none" onclick="configuration_hide_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
-		echo '</span>';
+		if ($show_extra_values) {
+			echo '<span style="float: right;">';
+			echo '<input id="button_show_'.$container.'_'.$element_key.'" type="button" value="+" onclick="configuration_show_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
+			echo '<input id="button_hide_'.$container.'_'.$element_key.'" type="button" value="-" style="display: none" onclick="configuration_hide_extra_values(\''.$container.'\', \''.$element_key.'\');  return false;"/>';
+			echo '</span>';
+		}
 		
 		echo '</td>';
 		echo '<td style="padding: 3px;">';
@@ -108,8 +110,10 @@ function print_prefs5($prefs,$key_name, $container) {
 	}
 	echo '</table>';
 	
-	foreach ( $elements2 as $element_key => $element) {
-		print_pref_values($key_name, $container, $element, $element->content);
+	if ($show_extra_values) {
+		foreach ( $elements2 as $element_key => $element) {
+			print_pref_values($key_name, $container, $element, $element->content);
+		}
 	}
 }
 

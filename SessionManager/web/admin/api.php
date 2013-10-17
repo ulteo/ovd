@@ -32,6 +32,18 @@ class OvdAdminSoap {
 	private $logged_as_ovd_user = false;
 	private $user_rights = array();
 	
+	private $user_can_overrride = array(
+		'general.session_settings_defaults.*',
+		'general.remote_desktop_settings.*',
+		'general.remote_applications_settings.*',
+	);
+	
+	private $users_group_can_overrride = array(
+		'general.session_settings_defaults.*',
+		'general.remote_desktop_settings.*',
+		'general.remote_applications_settings.*',
+	);
+	
 	public function __construct() {
 		if (! array_key_exists('PHP_AUTH_USER', $_SERVER) || ! array_key_exists('PHP_AUTH_PW', $_SERVER)) {
 			throw new SoapFault('auth_failed', 'Authentication Failed');
@@ -2970,6 +2982,10 @@ class OvdAdminSoap {
 		$user_prefs = Abstract_Preferences::load_user($user->getAttribute('login'));
 		
 		foreach ($user_prefs as $setting_id => $setting_value) {
+			if (! $this->prefs->keys_match_patterns($setting_id, $this->user_can_overrride)) {
+				continue;
+			}
+			
 			$u['settings'][$setting_id] = $setting_value;
 		}
 		
@@ -3134,54 +3150,55 @@ class OvdAdminSoap {
 		$userGroupDB = UserGroupDB::getInstance();
 		$groups = $userGroupDB->imports($users_groups_mine_ids);
 		
-		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
-		foreach ($session_prefs_categs as $session_prefs_categ) {
-			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
-			foreach($session_prefs as $session_pref) {
-				$setting = self::pref_element2dict($session_pref);
-				$uid = 'general.'.$session_prefs_categ.'.'.$setting['id'];
-				
-				$setting['values'] = array('default' => $session_pref->content_default);
-				$setting['value'] = $session_pref->content_default;
-				if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
-					$setting['values']['global']  = $session_pref->content;
-					$setting['value'] = $session_pref->content;
+		$settings_keys = $this->prefs->get_uid_list();
+		foreach($settings_keys as $uid) {
+			if (! $this->prefs->keys_match_patterns($uid, $this->user_can_overrride)) {
+				continue;
+			}
+			
+			$session_pref = $this->prefs->get_element_from_uid($uid);
+			$setting = self::pref_element2dict($session_pref);
+			
+			$setting['values'] = array('default' => $session_pref->content_default);
+			$setting['value'] = $session_pref->content_default;
+			if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
+				$setting['values']['global']  = $session_pref->content;
+				$setting['value'] = $session_pref->content;
+			}
+			
+			foreach ($groups as $group_id => $group) {
+				if (! array_key_exists($group_id, $settings_by_group)) {
+					// means potentially bug in backend !
+					continue;
 				}
 				
-				foreach ($groups as $group_id => $group) {
-					if (! array_key_exists($group_id, $settings_by_group)) {
-						// means potentially bug in backend !
-						continue;
-					}
-					
-					if (! array_key_exists($uid, $settings_by_group[$group_id])) {
-						// means potentially bug in backend !
-						continue;
-					}
-					
-					$value = $settings_by_group[$group_id][$uid];
-					if (is_null($value) || $value === FALSE) {
-						continue;
-					}
-					
-					if (! array_key_exists('groups', $setting['values'])) {
-						$setting['values']['groups'] = array();
-					}
-					
-					$setting['values']['groups'][$group_id] = array('value' => $value, 'group' => $group->name);
+				if (! array_key_exists($uid, $settings_by_group[$group_id])) {
+					// means potentially bug in backend !
+					continue;
+				}
+				
+				$value = $settings_by_group[$group_id][$uid];
+				if (is_null($value) || $value === FALSE) {
+					continue;
+				}
+				
+				if (! array_key_exists('groups', $setting['values'])) {
+					$setting['values']['groups'] = array();
+				}
+				
+				$setting['values']['groups'][$group_id] = array('value' => $value, 'group' => $group->name);
+				$setting['value'] = $value;
+			}
+			
+			if (array_key_exists($uid, $user_prefs)) {
+				$value = $user_prefs[$uid];
+				if (! is_null($value) && $value !== FALSE) {
+					$setting['values']['user'] = $value;
 					$setting['value'] = $value;
 				}
-				
-				if (array_key_exists($uid, $user_prefs)) {
-					$value = $user_prefs[$uid];
-					if (! is_null($value) && $value !== FALSE) {
-						$setting['values']['user'] = $value;
-						$setting['value'] = $value;
-					}
-				}
-				
-				$settings[$uid] = $setting;
 			}
+			
+			$settings[$uid] = $setting;
 		}
 		
 		return $settings;
@@ -3206,8 +3223,7 @@ class OvdAdminSoap {
 				continue;
 			}
 			
-			if (! self::is_key_authorized_override($k)) {
-				// user overridden settings are only available for session settings
+			if (! $this->prefs->keys_match_patterns($k, $this->user_can_overrride)) {
 				continue;
 			}
 			
@@ -3353,6 +3369,10 @@ class OvdAdminSoap {
 		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
 		
 		foreach ($group_prefs as $setting_id => $setting_value) {
+			if (! $this->prefs->keys_match_patterns($setting_id, $this->users_group_can_overrride)) {
+				continue;
+			}
+			
 			$g['settings'][$setting_id] = $setting_value;
 		}
 		
@@ -3618,16 +3638,6 @@ class OvdAdminSoap {
 		return $res;
 	}
 	
-	private static function is_key_authorized_override($key_) {
-		$categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
-		foreach($categs as $categ) {
-			if (str_startswith($key_, 'general.'.$categ.'.')) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
 	
 	public function users_group_settings_get($group_id_) {
 		$this->check_authorized('viewUsersGroups');
@@ -3642,30 +3652,31 @@ class OvdAdminSoap {
 		
 		$group_prefs = Abstract_Preferences::load_group($group->getUniqueID());
 		
-		$session_prefs_categs = array('session_settings_defaults', 'remote_desktop_settings',  'remote_applications_settings');
-		foreach ($session_prefs_categs as $session_prefs_categ) {
-			$session_prefs = $this->prefs->getElements('general', $session_prefs_categ);
-			foreach($session_prefs as $session_pref) {
-				$setting = self::pref_element2dict($session_pref);
-				$uid = 'general.'.$session_prefs_categ.'.'.$setting['id'];
-				
-				$setting['values'] = array('default' => $session_pref->content_default);
-				$setting['value'] = $session_pref->content_default;
-				if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
-					$setting['values']['global']  = $session_pref->content;
-					$setting['value'] =  $session_pref->content;
-				}
-				
-				if (array_key_exists($uid, $group_prefs)) {
-					$value = $group_prefs[$uid];
-					if (! is_null($value) && $value !== FALSE) {
-						$setting['values']['group'] = $value;
-						$setting['value'] = $value;
-					}
-				}
-				
-				$settings[$uid] = $setting;
+		$settings_keys = $this->prefs->get_uid_list();
+		foreach($settings_keys as $uid) {
+			if (! $this->prefs->keys_match_patterns($uid, $this->users_group_can_overrride)) {
+				continue;
 			}
+			
+			$session_pref = $this->prefs->get_element_from_uid($uid);
+			$setting = self::pref_element2dict($session_pref);
+			
+			$setting['values'] = array('default' => $session_pref->content_default);
+			$setting['value'] = $session_pref->content_default;
+			if (! $session_pref->values_equals($session_pref->content_default, $session_pref->content)) {
+				$setting['values']['global']  = $session_pref->content;
+				$setting['value'] =  $session_pref->content;
+			}
+			
+			if (array_key_exists($uid, $group_prefs)) {
+				$value = $group_prefs[$uid];
+				if (! is_null($value) && $value !== FALSE) {
+					$setting['values']['group'] = $value;
+					$setting['value'] = $value;
+				}
+			}
+			
+			$settings[$uid] = $setting;
 		}
 		
 		return $settings;
@@ -3691,8 +3702,7 @@ class OvdAdminSoap {
 				continue;
 			}
 			
-			if (! self::is_key_authorized_override($k)) {
-				// users group overridden settings are only available for session settings
+			if (! $this->prefs->keys_match_patterns($k, $this->users_group_can_overrride)) {
 				continue;
 			}
 			

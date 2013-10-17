@@ -184,7 +184,7 @@ class Preferences {
 		return true;
 	}
 	
-	protected static function keys_match_patterns($key_, $patterns_) {
+	public static function keys_match_patterns($key_, $patterns_) {
 		foreach($patterns_ as $pattern) {
 			if (self::keys_match_pattern($key_, $pattern)) {
 				return true;
