@@ -280,7 +280,7 @@ class Server {
 	}
 
 	public function isOnline() {
-		if ($this->getAttribute('status') != 'ready') {
+		if (! in_array($this->getAttribute('status'), array('ready', 'pending'))) {
 			Logger::debug('main', 'Server::isOnline server "'.$this->fqdn.':'.$this->web_port.'" is not "ready"');
 			return false;
 		}
@@ -292,7 +292,7 @@ class Server {
 			$this->getStatus();
 		}
 
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
+		if ($this->hasAttribute('status') && (in_array($this->getAttribute('status'), array('ready', 'pending'))))
 			return true;
 
 		if ($warn === true && $this->getAttribute('locked') == 0) {
@@ -458,6 +458,11 @@ class Server {
 
 		switch ($this->getAttribute('status')) {
 			case 'pending':
+				$sessions = Abstract_Session::getByServer($this->id);
+				foreach ($sessions as $session) {
+					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "pending", killing Session \''.$session->id.'\'');
+					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_DOWN);
+				}
 				break;
 			case 'down':
 				$sessions = Abstract_Session::getByServer($this->id);

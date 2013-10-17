@@ -76,8 +76,8 @@ class Role(AbstractRole):
 	When role is stopped, all running virtuals machines are stopped
 	and the http server is closed
 	"""
-	def stop(self):
-		Logger.info("Hypervisor:: stopping")
+	def force_stop(self):
+		AbstractRole.force_stop(self)
 		
 		for vm in self.virtual_machine :
 			vm = self.virtual_machine[vm]
@@ -100,7 +100,9 @@ class Role(AbstractRole):
 		
 		self.webserver.serve_forever()
 		
-		while True:
+		while self.loop:
+			if self.status == Role.STATUS_STOPPING:
+				break
 			
 			try:
 				(request, obj) = self.queue.get(True, 4)
@@ -114,6 +116,8 @@ class Role(AbstractRole):
 			
 			if request == "create":
 				self.create_vm(obj[0])
+		
+		self.force_stop()
 		
 		self.status = Role.STATUS_STOP
 	

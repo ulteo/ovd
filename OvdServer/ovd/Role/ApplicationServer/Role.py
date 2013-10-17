@@ -69,8 +69,6 @@ class Role(AbstractRole):
 		self.applications_id_SM = {}
 		self.applications_mutex = threading.Lock()
 		
-		self.loop = True
-		
 		self.static_apps = ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
@@ -135,15 +133,23 @@ class Role(AbstractRole):
 		self.setStaticAppsMustBeSync(True)
 	
 	
-	def stop(self):
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		
+		for session in self.sessions.values():
+			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+			self.spool_action("destroy", session.id)
+	
+	
+	def force_stop(self):
+		AbstractRole.force_stop(self)
+		
 		for thread in self.threads:
 			thread.terminate()
 		
 		for thread in self.threads:
 			thread.join()
 		
-		self.loop = False
-	
 	
 	def finalize(self):
 		Logger._instance.setThreadedMode(False)
@@ -184,6 +190,12 @@ class Role(AbstractRole):
 		self.status = Role.STATUS_RUNNING
 		
 		while self.loop:
+			if self.status == Role.STATUS_ERROR:
+				break
+			
+			if self.status == Role.STATUS_STOPPING and len(self.sessions) == 0:
+				break
+			
 			while True:
 				try:
 					session = self.sessions_sync.get_nowait()
@@ -191,7 +203,8 @@ class Role(AbstractRole):
 					break
 				except (EOFError, socket.error):
 					Logger.debug("APS:: Role stopping")
-					return
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if not self.sessions.has_key(session.id):
 					Logger.warn("Session %s do not exist, session information are ignored"%(session.id))
@@ -205,6 +218,9 @@ class Role(AbstractRole):
 				else:
 					self.sessions[session.id] = session
 			
+			if self.status == Role.STATUS_ERROR:
+				break
+			
 			self.update_locked_sessions()
 			
 			for session in self.sessions.values():
@@ -213,7 +229,8 @@ class Role(AbstractRole):
 				except Exception, err:
 					Logger.error("RDP server dialog failed ... exiting")
 					Logger.debug("RDP server dialog: "+str(err))
-					return
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if ts_id is None:
 					if session.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE]:
@@ -233,7 +250,8 @@ class Role(AbstractRole):
 				except Exception,err:
 					Logger.error("RDP server dialog failed ... exiting")
 					Logger.debug("RDP server dialog: "+str(err))
-					return
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if session.status == Session.SESSION_STATUS_INITED:
 					if ts_status is TS.STATUS_LOGGED:
@@ -271,6 +289,7 @@ class Role(AbstractRole):
 			else:
 				time.sleep(1)
 		
+		self.force_stop()
 		self.status = Role.STATUS_STOP
 	
 	

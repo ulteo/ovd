@@ -175,12 +175,26 @@ class SlaveServer:
 	def stop(self, Signum=None, Frame=None):
 		Logger.info("SlaveServer stop")
 		self.stopped = True
-		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
+		
+		t0 = time.time()
+		stop_timeout = Config.stop_timeout
 		
 		for (role, dialog) in self.role_dialogs:
-			if role.getStatus() is role.STATUS_RUNNING:
-				Logger.debug("Stopping role %s" % role.getName())
-				role.stop()
+			role.order_stop()
+			
+		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
+			
+		for (role, dialog) in self.role_dialogs:
+			while not role.stopped():
+				t1 = time.time()
+				
+				if (stop_timeout > 0) and (t1-t0 > stop_timeout):
+					Logger.warn("SlaveServer::stop role %s error"%(role.getName()))
+					role.force_stop()
+					break
+				
+				Logger.debug("Waiting for role %s status stop"%(role.getName()))
+				time.sleep(2)
 		
 		for (role, dialog) in self.role_dialogs:
 			if role.thread.isAlive():

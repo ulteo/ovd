@@ -90,7 +90,13 @@ class Role(AbstractRole):
 		return True
 	
 	
-	def stop(self):
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		self.force_stop()
+	
+	
+	def force_stop(self):
+		AbstractRole.force_stop(self)
 		self.server.shutdown()
 		for pid in list(self.processes):
 			self.kill_process(pid)

@@ -90,7 +90,12 @@ class Role(AbstractRole):
 		return True
 	
 	
-	def stop(self):
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		self.force_stop()
+	
+	
+	def force_stop(self):
 		self.server.shutdown()
 		self.sessions_repo.stop()
 		self.apps_repo.stop()

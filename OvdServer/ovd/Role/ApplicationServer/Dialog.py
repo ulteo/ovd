@@ -222,6 +222,9 @@ class Dialog(AbstractDialog):
 	
 	
 	def req_session_create(self, request):
+		if self.role_instance.stopping():
+			return self.req_stopping(request)
+		
 		environment = DomainUlteo()
 		try:
 			document = minidom.parseString(request["data"])
@@ -513,6 +516,14 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(self.debian_request2xml(req_id, req))
 	
+	
+	def req_stopping(self, req):
+		doc = Document()
+		rootNode = doc.createElement('error')
+		rootNode.setAttribute("id", "server is stopping")
+		doc.appendChild(rootNode)
+		return self.req_answer(doc)
+
 	
 	def req_debian_id(self, req):
 		try:

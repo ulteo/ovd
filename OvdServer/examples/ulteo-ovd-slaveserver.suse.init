@@ -87,6 +87,27 @@ do_stop () {
 
 	else
 		kill $pid
+		waitpid $pid
+		rm -f $PIDFILE
+	fi
+	return 0
+}
+
+do_force_stop () {
+	echo -n "Force stopping $NAME"
+
+	if [ ! -f $PIDFILE ]; then
+		echo -n " (not running)"
+		return 0
+	fi
+
+	local pid=$(pidofproc -p $PIDFILE /usr/bin/python)
+	if [ $? -ne 0 ]; then
+		echo -n " (not running)"
+		rm -f $PIDFILE
+
+	else
+		kill $pid
 		waitpid $pid 10
 		if [ $? -eq 1 ]; then
 			echo -n " (force kill)"
@@ -110,6 +131,11 @@ case $1 in
 		rc_status -v
 	;;
 
+	force-stop)
+		do_force_stop
+		rc_status -v
+	;;
+
 	restart|force-reload)
 		do_stop
 		rc_status -v
@@ -119,7 +145,7 @@ case $1 in
 	;;
 
 	*)
-		echo "Usage: $0 {start|stop|force-reload|restart}"
+		echo "Usage: $0 {start|stop|force-stop|force-reload|restart}"
         	rc_failed 1
 	;;
 esac

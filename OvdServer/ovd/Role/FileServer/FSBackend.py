@@ -144,23 +144,62 @@ class FSBackend:
 		
 		cmd = "umount \"%s\""%(self.path["spool"])
 		Logger.debug("FSBackend release command '%s'"%(cmd))
-		for _ in xrange(30):
-			if not os.path.ismount(self.path["spool"]):
-				return True
+		if not os.path.ismount(self.path["spool"]):
+			return True
 			
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.debug("FSBackend is busy, waiting")
-				time.sleep(2)
-			else:
-				return True
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.debug("FSBackend is busy")
+			return False
 		
-		Logger.error("Failed to release FSBackend (status: %d) %s"%(p.returncode, p.stdout.read()))
-		cmd = "umount -l \"%s\""%(self.path["spool"])
-		Logger.debug("FSBackend failedback release command '%s'"%(cmd))
+		return True
+	
+	
+	def get_lsof(self, path):
+		cmd = "lsof -t \"%s\""%(path)
+		
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.warn("Failed to get the list of processus blocked on a share")
+			return None
+		
+		res = p.stdout.read().decode("UTF-8")
+		return res.split()
+		
+		
+	def force_stop(self):
+		if (len(self.path) == 0) or not os.path.ismount(self.path["spool"]):
+			Logger.warn("FSBackend is already stopped")
+			return True
+		
+		cmd = "umount \"%s\""%(self.path["spool"])
+		if not os.path.ismount(self.path["spool"]):
+			return True
+			
 		p = System.execute(cmd)
 		if p.returncode == 0:
 			return True
 		
-		Logger.error("Unable to stop FSBackend")
+		pids = self.get_lsof(self.path["spool"])
+		
+		for pid in pids:
+			try:
+				pid = int(pid)
+				os.kill(pid, signal.SIGTERM)
+				time.sleep(0.5)
+				os.kill(pid, signal.SIGKILL)
+			except Exception, e:
+				if e.errno != errno.ESRCH:
+					Logger.error("Failed to kill processus %s: %s"%( pid, str(e)))
+		
+		if not os.path.ismount(self.path["spool"]):
+			return True
+		
+		Logger.error("FSBackend force the unmount of %s"%(self.path["spool"]))
+		cmd = "umount -l \"%s\""%(self.path["spool"])
+		p = System.execute(cmd)
+		if p.returncode == 0:
+			return True
+		
+		Logger.error("Unable to stop FSBackend %s"%(p.stdout.read().decode("UTF-8")))
 		return False

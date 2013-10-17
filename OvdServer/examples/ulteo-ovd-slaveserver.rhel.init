@@ -58,7 +58,13 @@ do_start () {
 
 do_stop () {
 	echo -n "Stopping $NAME"
-	killproc -p "$PIDFILE" $PROGRAM
+	killproc -t 100000 -p "$PIDFILE" $PROGRAM
+	echo
+}
+
+do_force_stop() {
+	echo -n "Force stopping $NAME"
+	killproc -t 10 -p "$PIDFILE" $PROGRAM
 	echo
 }
 
@@ -69,6 +75,10 @@ case $1 in
 
 	stop)
 		do_stop
+	;;
+
+	force-stop)
+		do_force_stop
 	;;
 
 	restart|force-reload)
@@ -83,7 +93,7 @@ case $1 in
 	;;
 
 	*)
-		echo "Usage: $0 {start|stop|force-reload|restart|status}"
+		echo "Usage: $0 {start|stop|force-stop|force-reload|restart|status}"
 		exit 2
 	;;
 esac
