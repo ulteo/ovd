@@ -187,18 +187,9 @@ function configuration_switch_init() {
 }
 
 function configuration_switch_init2() {
-	var objs = $$('input');
-	for (var i in objs){
-		if ((objs[i].type == "select-one" ) || (objs[i].type == "checkbox")) {
-			objs[i].onchange();
+	$$('input', 'select').each(function(element) {
+		if ((element.type == "select-one" ) || (element.type == "checkbox")) {
+			fire_event_change(element);
 		}
-	}
-	var objs = $$('select');
-	for (var i in objs){
-		if ((objs[i].type == "select-one" ) || (objs[i].type == "checkbox")) {
-			objs[i].onchange();
-		}
-	}
-
-
+	});
 }
