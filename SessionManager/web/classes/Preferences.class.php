@@ -309,38 +309,61 @@ class Preferences {
 		$c = new ConfigElement_dictionary('liaison', array());
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_multiselect('default_policy', array());
-		$c->setContentAvailable(array(
-			'canUseAdminPanel',
-			'viewServers',
-			'manageServers',
-			'viewSharedFolders',
-			'manageSharedFolders',
-			'viewUsers',
-			'manageUsers',
-			'viewUsersGroups',
-			'manageUsersGroups',
-			'viewApplications',
-			'manageApplications',
-			'viewApplicationsGroups',
-			'manageApplicationsGroups',
-			'viewPublications',
-			'managePublications',
-			'viewConfiguration',
-			'manageConfiguration',
-			'viewStatus',
-			'manageSession',
-			'manageReporting',
-			'viewSummary',
-			'viewNews',
-			'manageNews',
-			'manageScripts',
-			'viewScripts',
-			'manageScriptsGroups',
-			'viewScriptsGroups'
-		));
-
+		$c = new ConfigElement_boolean('canUseAdminPanel', false);
 		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewServers', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageServers', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewSharedFolders', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageSharedFolders', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewUsers', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageUsers', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewUsersGroups', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageUsersGroups', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewApplications', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageApplications', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewApplicationsGroups', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageApplicationsGroups', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewPublications', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('managePublications', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewConfiguration', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageConfiguration', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewStatus', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageSession', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageReporting', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewSummary', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewNews', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageNews', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageScripts', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewScripts', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('manageScriptsGroups', false);
+		$this->add($c,'general', 'policy');
+		$c = new ConfigElement_boolean('viewScriptsGroups', false);
+		$this->add($c,'general', 'policy');
+		
 		$c = new ConfigElement_select('type', 'mysql');
 		$c->setContentAvailable(array('mysql'));
 		$this->add($c,'general','sql');

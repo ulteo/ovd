@@ -142,48 +142,30 @@ class UsersGroup {
 		return $user_default_group === $this->getUniqueID();
 	}
 	
-	public function getPolicy($with_default_=true) {
+	public function getPolicy() {
 		Logger::debug('main', 'UsersGroup::getPolicy for '.$this->id);
 		$prefs = Preferences::getInstance();
-		$prefs_policy = $prefs->get('general', 'policy');
 		$elements = $prefs->getElements('general', 'policy');
-		if (array_key_exists('default_policy', $elements) == false) {
-			Logger::error('main', 'UsersGroup::getPolicy, default_policy not found on general policy');
-			return array();
-		}
-		$result_keys = $elements['default_policy']->content_available;
 		
 		$result = array();
-		foreach ($result_keys as $key) {
-			$result[$key] = false;
-		}
-		$default_policy = $prefs_policy['default_policy'];
-		
-		foreach ($default_policy as $k => $v) {
-			if ( $with_default_) {
-				$result[$v] = true;
+		foreach($elements as $element_key => $element) {
+			if ($element->content != true) {
+				continue;
 			}
-			else {
-				unset($result[$v]);
-			}
+			
+			$result[$element] = true;
 		}
 		
-		$acls = Abstract_Liaison::load('ACL', $this->getUniqueID(), NULL);
-		if (is_array($acls)) {
-			foreach ($acls as $acl_liaison) {
-				$result[$acl_liaison->group] = True;
+		$group_settings = Abstract_Preferences::load_group($this->getUniqueID(), 'general.policy.*');
+		foreach($group_settings as $setting_id => $setting_value) {
+			if ($setting_value == true) {
+				$result[$setting_id] = true;
+			}
+			else if (array_key_exists($setting_id, $result)) {
+				unset($result[$setting_id]);
 			}
 		}
+		
 		return $result;
-	}
-	
-	public function updatePolicy($new_policy_) {
-		$old_policy = $this->getPolicy();
-		Abstract_Liaison::delete('ACL', $this->getUniqueID(), NULL);
-		foreach ($new_policy_ as $a_policy => $allow) {
-			if ( $allow) {
-				Abstract_Liaison::save('ACL', $this->getUniqueID(), $a_policy);
-			}
-		}
 	}
 }

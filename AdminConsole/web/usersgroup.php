@@ -285,18 +285,6 @@ function show_manage($id) {
   
   $usergroupdb_rw = usergroupdb_is_writable();
 
-  $policy = $group->getAttribute('policy');
-  $policy_rule_enable = 0;
-  $policy_rules_disable = 0;
-  foreach($policy as $key => $value) {
-	  if ($value === true)
-		  $policy_rule_enable++;
-	  else
-		  $policy_rules_disable++;
-  }
-
-  $default_policy = $group->getAttribute('default_policy');
-
   if ($group->published) {
     $status = '<span class="msg_ok">'._('Enabled').'</span>';
     $status_change = _('Block');
@@ -805,55 +793,6 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 		echo '</table>';
 		echo '</div>';
 	}
-
-	// Policy of this group
-	echo '<div>';
-	echo '<h2>'._('Policy of this group').'</h2>';
-	echo '<table border="0" cellspacing="1" cellpadding="3">';
-
-	foreach($policy as $key => $value) {
-		if ($value === false)
-			continue;
-
-		$extends_from_default = ($default_policy[$key] === $value);
-		$buffer = ($extends_from_default===true?' ('._('extend from default').')':'');
-
-		echo '<tr>';
-		echo '<td>'.$key.' '.$buffer.'</td>';
-		if ($can_manage_usersgroups && ! $extends_from_default) {
-			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this rule?').'\');">';
-			echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
-			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-			echo '<input type="hidden" name="element" value="'.$key.'" />';
-			echo '<input type="submit" value="'._('Delete this rule').'" />';
-			echo '</form>';
-			echo '</td>';
-		}
-		echo '</tr>';
-	}
-	if ($can_manage_usersgroups && count($policy_rules_disable)>0 && (array_search(false, $policy) !== false)) {
-		echo '<tr><form action="actions.php" method="post"><td>';
-		echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
-		echo '<input type="hidden" name="action" value="add" />';
-		echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-		echo '<select name="element">';
-
-		foreach($policy as $key => $value) {
-			if ($value === true)
-				continue;
-
-			echo '<option value="'.$key.'" >'.$key.'</option>';
-		}
-		echo '</select>';
-		echo '</td><td><input type="submit" value="'._('Add this rule').'" /></td>';
-		echo '</form></tr>';
-	}
-
-	echo '</table>';
-	echo '</div>';
-	echo '<br/>';
 
     if (is_module_enabled('SharedFolderDB')) {
 		$all_sharedfolders = $_SESSION['service']->shared_folders_list();

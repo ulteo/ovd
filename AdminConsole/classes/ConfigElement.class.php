@@ -81,7 +81,15 @@ abstract class ConfigElement{
 			$this->content = '';
 		}
 	}
-
+	
+	public function value2html($value_) {
+		return $value_;
+	}
+	
+	public function html2value($value_) {
+		return $value_;
+	}
+	
 	public function setPath($path_) {
 		$this->path = $path_;
 	}

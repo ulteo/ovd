@@ -2,6 +2,7 @@ scripts_DATA = AbstractObject.class.php  \
                Application.class.php \
                ApplicationsGroup.class.php \
                ConfigElement.class.php \
+               ConfigElement_boolean.class.php \
                ConfigElement_dictionary.class.php \
                ConfigElement_input.class.php \
                ConfigElement_inputlist.class.php \

@@ -42,6 +42,7 @@ class OvdAdminSoap {
 		'general.session_settings_defaults.*',
 		'general.remote_desktop_settings.*',
 		'general.remote_applications_settings.*',
+		'general.policy.*',
 	);
 	
 	public function __construct() {
@@ -70,17 +71,9 @@ class OvdAdminSoap {
 			$policy = $user->getPolicy();
 		}
 		else { // Ovd admin
-			$policies = $this->prefs->get('general', 'policy');
-			$default_policy = $policies['default_policy'];
 			$elements = $this->prefs->getElements('general', 'policy');
-			if (array_key_exists('default_policy', $elements) == false) {
-				Logger::error('api', 'User::getPolicy, default_policy not found on general policy');
-				return array();
-			}
-			
-			$policy = $elements['default_policy']->content_available;
-			foreach ($policy as $k => $v) {
-				$policy[$v] = true;
+			foreach($elements as $element_key => $element) {
+				$policy[$element_key] = true;
 			}
 		}
 		
@@ -3353,16 +3346,6 @@ class OvdAdminSoap {
 			}
 		}
 		
-		// Policy
-		$policy = $group->getPolicy();
-		$prefs_policy = $this->prefs->get('general', 'policy');
-		$default_policy = $prefs_policy['default_policy'];
-		$g['policy'] = $policy;
-		$g['default_policy'] = array();
-		foreach($policy as $key => $value) {
-			$g['default_policy'][$key] = in_array($key, $default_policy);
-		}
-		
 		// Settings
 		$g['settings'] = array();
 		
@@ -3730,50 +3713,6 @@ class OvdAdminSoap {
 		}
 		
 		$this->log_action('users_group_settings_set', array('group' => $group->name, 'values' => $diff));
-		return true;
-	}
-	
-	public function users_group_add_policy($group_id_, $rule_) {
-		$this->check_authorized('manageUsersGroups');
-		
-		$userGroupDB = UserGroupDB::getInstance();
-		$group = $userGroupDB->import($group_id_);
-		if (! is_object($group)) {
-			Logger::error('api', sprintf('Failed to import Usergroup "%s"', $group_id_));
-			return false;
-		}
-		
-		$policy_old = $group->getPolicy(false);
-		$policy = $group->getPolicy(false);
-		$policy[$rule_] = true;
-		
-		$group->updatePolicy($policy);
-		$this->log_action('users_group_add_policy', array('group' => $group->name, 'value' => array(
-			'old' => $policy_old,
-			'new' => $policy,
-		)));
-		return true;
-	}
-	
-	public function users_group_remove_policy($group_id_, $rule_) {
-		$this->check_authorized('manageUsersGroups');
-		
-		$userGroupDB = UserGroupDB::getInstance();
-		$group = $userGroupDB->import($group_id_);
-		if (! is_object($group)) {
-			Logger::error('api', sprintf('Failed to import Usergroup "%s"', $group_id_));
-			return false;
-		}
-		
-		$policy_old = $group->getPolicy(false);
-		$policy = $group->getPolicy(false);
-		$policy[$rule_] = false;
-		
-		$group->updatePolicy($policy);
-		$this->log_action('users_group_remove_policy', array('group' => $group->name, 'value' => array(
-			'old' => $policy_old,
-			'new' => $policy,
-		)));
 		return true;
 	}
 	

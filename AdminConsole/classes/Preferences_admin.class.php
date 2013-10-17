@@ -110,6 +110,9 @@ class Preferences_admin {
 		
 		switch($element_['type']) {
 		// simplify that with a call function !!!
+			case 'boolean':
+				$c = new ConfigElement_boolean($element_['id'], $title, $description, $description, $element_['value'], $element_['default_value']);
+				break;
 			case 'list':
 				$c = new ConfigElement_list($element_['id'], $title, $description, $description, $element_['value'], $element_['default_value']);
 				break;

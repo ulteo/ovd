@@ -1222,40 +1222,6 @@ if ($_REQUEST['name'] == 'UserGroup') {
 	}
 }
 
-if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
-	if (! checkAuthorization('manageUsersGroups'))
-		redirect();
-
-	if (!isset($_REQUEST['id']) 
-		or !isset($_REQUEST['element'])
-		or !in_array($_REQUEST['action'], array('add', 'del'))) {
-		popup_error('Error usage');
-		redirect();
-	}
-
-	if (isset($_SESSION['admin_ovd_user'])) {
-		$policy = $_SESSION['admin_ovd_user']->getPolicy();
-		if (! $policy['manageUsersGroup']) {
-			popup_error('You are not allowed to perform this action');
-			redirect();
-		}
-	}
-
-	$group = $_SESSION['service']->users_group_info($_REQUEST['id']);
-	if (! is_object($group)) {
-		popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
-		redirect();
-	}
-
-	if ($_REQUEST['action'] == 'add')
-		$res = $_SESSION['service']->users_group_add_policy($group->id, $_REQUEST['element']);
-	else
-		$res = $_SESSION['service']->users_group_remove_policy($group->id, $_REQUEST['element']);
-
-	popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
-	redirect();
-}
-
 if ($_REQUEST['name'] == 'UserGroup_settings') {
 	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
 		$unique_id = $_REQUEST['unique_id'];
@@ -1277,7 +1243,7 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 			
 			$settings = $_SESSION['service']->users_group_settings_get($unique_id);
 			$prefs = new Preferences_admin(null, false);
-			$prefs->load($settings);
+			$prefs->load($settings, $formarray);
 			$categ_prefs = $prefs->get_elements('general', $container);
 			foreach(array_keys($categ_prefs) as $setting_key) {
 				$new_settings['general.'.$container.'.'.$setting_key] = null;
@@ -1286,7 +1252,7 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 			if (isset($formarray['general'][$container])) {
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
-					$new_settings['general.'.$container.'.'.$element_id] = $value;
+					$new_settings['general.'.$container.'.'.$element_id] = $prefs->get('general', $container, $element_id);
 				}
 			}
 			
@@ -1410,7 +1376,7 @@ if ($_REQUEST['name'] == 'User_settings') {
 			
 			$settings = $_SESSION['service']->user_settings_get($unique_id);
 			$prefs = new Preferences_admin(null, false);
-			$prefs->load($settings);
+			$prefs->load($settings, $formarray);
 			$categ_prefs = $prefs->get_elements('general', $container);
 			foreach(array_keys($categ_prefs) as $setting_key) {
 				$new_settings['general.'.$container.'.'.$setting_key] = null;
@@ -1419,7 +1385,7 @@ if ($_REQUEST['name'] == 'User_settings') {
 			if (isset($formarray['general'][$container])) {
 				$data = $formarray['general'][$container];
 				foreach ($data as $element_id => $value) {
-					$new_settings['general.'.$container.'.'.$element_id] = $value;
+					$new_settings['general.'.$container.'.'.$element_id] = $prefs->get('general', $container, $element_id);
 				}
 			}
 			

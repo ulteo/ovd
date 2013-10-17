@@ -286,11 +286,6 @@
 		<part name="settings" type="xsd:any"/>
 	</message>
 	
-	<message name="UsersGroup_policyMessage">
-		<part name="group_id" type="xsd:string"/>
-		<part name="rule" type="xsd:string"/>
-	</message>
-	
 	<message name="UserToGroupMessage">
 		<part name="user_id" type="xsd:string"/>
 		<part name="group_id" type="xsd:string"/>
@@ -785,16 +780,6 @@
 		
 		<operation name="user_settings_set">
 			<input message="urn:user_settings_setMessage"/>
-			<output message="urn:Boolean"/>
-		</operation>
-		
-		<operation name="users_group_add_policy">
-			<input message="urn:UsersGroup_policyMessage"/>
-			<output message="urn:Boolean"/>
-		</operation>
-		
-		<operation name="users_group_remove_policy">
-			<input message="urn:UsersGroup_policyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -2120,26 +2105,6 @@
 		
 		<operation name="users_group_settings_set">
 			<soap:operation soapAction="urn:OvdAdmin#users_group_settings_set"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="users_group_add_policy">
-			<soap:operation soapAction="urn:OvdAdmin#users_group_add_policy"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="users_group_remove_policy">
-			<soap:operation soapAction="urn:OvdAdmin#users_group_remove_policy"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

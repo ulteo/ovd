@@ -1,4 +1,5 @@
-scripts_DATA = ConfigElement_inputlist.class.php \
+scripts_DATA = ConfigElement_boolean.class.php \
+               ConfigElement_inputlist.class.php \
                ConfigElement_password.class.php \
                ConfigElement_textarea.class.php \
                ConfigElement_dictionary.class.php \

@@ -285,52 +285,37 @@ class User {
 	public function getPolicy() {
 		Logger::debug('main', 'User::getPolicy for '.$this->getAttribute('login'));
 		$prefs = Preferences::getInstance();
-		
-		$policies = $prefs->get('general', 'policy');
-		$default_policy = $policies['default_policy'];
-		
 		$elements = $prefs->getElements('general', 'policy');
-		if (array_key_exists('default_policy', $elements) == false) {
-			Logger::error('main', 'User::getPolicy, default_policy not found on general policy');
-			return array();
-		}
 		
-		$policy_items = $elements['default_policy']->content_available;
 		$result = array();
-		foreach ($policy_items as $policy_item) {
-			if (in_array($policy_item, $default_policy))
-				$result[$policy_item] = true;
-			else
-				$result[$policy_item] = false;
-		}
-		
-		$acls = Abstract_Liaison::load('ACL', NULL, NULL);
-		if (! is_array($acls)) {
-			$acls = array();
-		}
-		
-		$users_group_id = array();
-		foreach ($acls as $acl_liaison) {
-			if (in_array($acl_liaison->element, $users_group_id)) {
+		foreach($elements as $element_key => $element) {
+			if ($element->content != true) {
 				continue;
 			}
 			
-			array_push($users_group_id, $acl_liaison->element);
+			$result[$element_key] = true;
 		}
+		
+		$policy_by_group = Abstract_Preferences::load_by_group('general.policy.*');
+		$users_group_id = array_unique(array_keys($policy_by_group));
 		
 		// from this group, which are these I am into
 		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);
 		
-		foreach ($acls as $acl_liaison) {
-			if (! in_array($acl_liaison->element, $users_groups_mine_ids)) {
+		foreach ($users_groups_mine_ids as $group) {
+			if (! array_key_exists($group, $policy_by_group)) {
+				// means potentially bug in backend !
 				continue;
 			}
 			
-			if (! in_array($acl_liaison->group, $policy_items)) {
-				continue;
+			foreach($policy_by_group[$group] as $setting_id => $setting_value) {
+				if ($setting_value == true) {
+					$result[$setting_id] = true;
+				}
+				else if (array_key_exists($setting_id, $result)) {
+					unset($result[$setting_id]);
+				}
 			}
-			
-			$result[$acl_liaison->group] = true;
 		}
 		
 		return $result;
@@ -343,14 +328,7 @@ class User {
 		
 		// load rules (overriden settings)
 		$preferences_by_group = Abstract_Preferences::load_by_group('general.'.$container_.'.*');
-		$users_group_id = array();
-		foreach ($preferences_by_group as $group => $useless) {
-			if (in_array($group, $users_group_id)) {
-				continue;
-			}
-			
-			array_push($users_group_id, $group);
-		}
+		$users_group_id = array_unique(array_keys($preferences_by_group));
 		
 		// from this group, which are these I am into
 		$users_groups_mine_ids = $this->get_my_usersgroups_from_list($users_group_id);

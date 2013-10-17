@@ -157,7 +157,7 @@ function print_pref_values($key_name_, $container_, $element_, $saved_value_, $v
 			$c->setPath(array('key_name' => $key_name_, 'container' => $container_, 'element_id' => $element_->id));
 			
 			echo '<td>';
-			echo '<input type="button" value="'._('Set to this value').'" onclick="configuration_set_value(\''.$c->get_input_name().'\', \''.$value['value'].'\');" />';
+			echo '<input type="button" value="'._('Set to this value').'" onclick="configuration_set_value(\''.$c->get_input_name().'\', \''.$c->value2html($value['value']).'\');" />';
 			echo '</td>';
 		}
 		
@@ -381,12 +381,13 @@ function formToArray_cleanup(&$buf) {
 function can_set_value_to_config_element($element_) {
 	$c = get_class($element_);
 	return (in_array($c, array(
+		'ConfigElement_boolean',
 		'ConfigElement_input',
 		'ConfigElement_password',
 		'ConfigElement_select',
 		'ConfigElement_week_time_select',
 	)));
-
+	
 	// Not possible until JS review for:
 	//	ConfigElement_dictionary
 	//	ConfigElement_inputlist

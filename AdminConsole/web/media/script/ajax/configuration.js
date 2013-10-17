@@ -202,8 +202,12 @@ function configuration_set_value(key_, value_) {
 	
 	var element = elements[0];
 	if (element.nodeName.toLowerCase() == 'input') {
-		element.value = value_;
-		
+		if (element.type.toLowerCase() == 'checkbox') {
+			element.checked = (value_ == true);
+		}
+		else {
+			element.value = value_;
+		}
 	}
 	else if (element.nodeName.toLowerCase() == 'select') {
 		for(var i=0; i<element.options.length; i++) {
