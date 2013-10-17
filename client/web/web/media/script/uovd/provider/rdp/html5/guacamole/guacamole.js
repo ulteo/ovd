@@ -561,11 +561,6 @@ Guacamole.Client = function(tunnel) {
 
         },
 
-		"printjob": function(parameters) {
-			var pdf_url = '/guacamole'+parameters[0];
-			var w = window.open(pdf_url, '_blank');
-		},
-
         "push": function(parameters) {
 
             var layer = getLayer(parseInt(parameters[0]));

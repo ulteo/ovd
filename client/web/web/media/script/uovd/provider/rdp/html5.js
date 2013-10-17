@@ -88,6 +88,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			/* set handler for clipboard channel */
 			var clipboard_instructionHandler = new uovd.provider.rdp.html5.ClipboardHandler(self);
 
+			/* set handler for printer channel */
+			var print_instructionHandler = new uovd.provider.rdp.html5.PrintHandler(self);
+
 			/* Add the fullscreen request function */
 			self.request_fullscreen = function() {
 				jQuery(connection.guac_display).show();
@@ -168,6 +171,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			/* set handler for clipboard channel */
 			var clipboard_instructionHandler = new uovd.provider.rdp.html5.ClipboardHandler(self);
 
+			/* set handler for printer channel */
+			var print_instructionHandler = new uovd.provider.rdp.html5.PrintHandler(self);
+
 			/* Add the fullscreen request function */
 			self.request_fullscreen = function() {};
 
@@ -209,6 +215,9 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 
 			/* set handler for clipboard channel */
 			var clipboard_instructionHandler = new uovd.provider.rdp.html5.ClipboardHandler(self);
+
+			/* set handler for printer channel */
+			var print_instructionHandler = new uovd.provider.rdp.html5.PrintHandler(self);
 
 			/* set applications_provider */
 			var applications_provider = new uovd.provider.applications.Html5(self);
