@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author David LECHEVALIER <david@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,7 +32,7 @@ import threading
 from Config import Config
 from ControlProcess import ControlChildProcess
 from ConnectionPoolProcess import ConnectionPoolProcess
-from TCPHandler import GatewayTCPHandler
+from TCPHandler import GatewayTCPHandler, GatewayTCPServer
 from ovd.Logger import Logger
 from ovd.Role.Role import Role as AbstractRole
 
@@ -77,7 +78,7 @@ class Role(AbstractRole):
 		addr = (Config.address, Config.port)
 		try:
 			GatewayTCPHandler.role = self
-			self.server = TCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
+			self.server = GatewayTCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
 			self.server.allow_reuse_address = Config.general.server_allow_reuse_address
 			
 			self.server.server_bind()
