@@ -33,7 +33,7 @@ MenuContainer.prototype.handleEvents = function(type, source, params) {
 				self.node.animate({"top": "0"});
 				self.bottom.html("&#x25B2"); /* Unicode "/\" arrow */
 			} else {
-				self.node.animate({"top": "-33%"});
+				self.node.animate({"top": -1 * parseInt(self.node.height())});
 				self.bottom.html("&#x25BC"); /* Unicode " \/" arrow */
 			}
 
