@@ -62,7 +62,8 @@ uovd.provider.rdp.html5.PrintHandler.prototype.handleEvents = function(type, sou
 			"box-sizing": "border-box",
 			"width":"100%",
 			"height":"100%",
-			"background": "#FFF"
+			"background": "#FFF",
+			"overflow": "auto"
 		});
 
 		/* Append UI elements */
