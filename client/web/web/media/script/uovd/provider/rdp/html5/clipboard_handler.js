@@ -53,9 +53,13 @@ uovd.provider.rdp.html5.ClipboardHandler.prototype.handleEvents = function(type,
 		/* Build menu UI element */
 		this.textarea = jQuery(document.createElement("textarea"));
 		this.textarea.css({
+			"display": "block",
 			"box-sizing": "border-box",
 			"width":"100%",
 			"height":"100%",
+			"margin":0,
+			"padding":0,
+			"border": "none",
 			"resize": "none"
 		});
 
