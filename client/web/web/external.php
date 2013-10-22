@@ -124,6 +124,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/menu.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/framework.css" />
 <?php } ?>
 <?php if (!$big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
