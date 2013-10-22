@@ -3,6 +3,7 @@ MenuContainer = function(session_management, node) {
 	this.session_management = session_management;
 	this.body = null;
 	this.bottom = null;
+	this.content = {};
 
 	/* Notifications */
 	this.blink_interval = null;
@@ -11,7 +12,6 @@ MenuContainer = function(session_management, node) {
 	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.session_management.addCallback("ovd.rdpProvider.menu",          this.handler);
 	this.session_management.addCallback("ovd.rdpProvider.menu.notify",   this.handler);
-	this.session_management.addCallback("ovd.session.starting",          this.handler);
 	this.session_management.addCallback("ovd.session.started",           this.handler);
 	this.session_management.addCallback("ovd.session.destroying",        this.handler);
 }
@@ -19,7 +19,7 @@ MenuContainer = function(session_management, node) {
 MenuContainer.prototype.handleEvents = function(type, source, params) {
 	var self = this; /* closure */
 
-	if(type == "ovd.session.starting" ) {
+	if(type == "ovd.session.started" ) {
 		/* Add inner components */
 		this.body =   jQuery(document.createElement('div')).attr('id', 'menuContainer_main');
 		this.bottom = jQuery(document.createElement('div')).attr('id', 'menuContainer_bottom');
@@ -40,18 +40,14 @@ MenuContainer.prototype.handleEvents = function(type, source, params) {
 			self.blinkStop();
 		});
 
-		/* Hide if empty */
-		this.node.hide();
-		this.started = false;
-	}
-
-	if(type == "ovd.session.started" ) {
-		this.started = true;
-
-		/* Show the panel if not empty */
-		if(this.body.find("*")[0]) {
+		/* Fill the content */
+		for(name in this.content) {
+			var entry = this.content[name];
+			this.body.append(entry);
 			this.node.show();
 		}
+
+		this.started = true;
 	}
 
 	if(type == "ovd.rdpProvider.menu") {
@@ -62,11 +58,16 @@ MenuContainer.prototype.handleEvents = function(type, source, params) {
 		var entry = jQuery(document.createElement('div')).addClass("menuContainer_entry");
 		var title = jQuery(document.createElement('h3')).html(type);
 		var control = jQuery(document.createElement('div')).addClass("menuContainer_control").append(node);
-
 		entry.append(title, control);
-		this.body.append(entry);
+
+		/* If not started : put it in the queue
+		   Else : put it in the queue AND show it
+		*/
+
+		this.content[type] = entry;
 
 		if(this.started) {
+			this.body.append(entry);
 			this.node.show();
 		}
 	}
@@ -124,5 +125,8 @@ MenuContainer.prototype.blinkStop = function() {
 }
 
 MenuContainer.prototype.end = function() {
+	this.blinkStop();
 	this.node.empty();
+	this.content = {};
+	this.started = false;
 }
