@@ -607,7 +607,16 @@ abstract class SessionManagement extends Module {
 			return false;
 		}
 		
-		$applications = $this->user->applications();
+		$applications = array();
+		$all_applications = $this->user->applications();
+		
+		// Filter applications by type
+		foreach($all_applications as $application) {
+			if(in_array($application->getAttribute('type'), array(Server::SERVER_TYPE_LINUX, Server::SERVER_TYPE_WINDOWS))){
+				array_push($applications, $application);
+			}
+		}
+
 		$nb_application_to_publish = count($applications);
 		
 		if ($nb_application_to_publish == 0) {
@@ -686,6 +695,8 @@ abstract class SessionManagement extends Module {
 		
 		$applications = array();
 		$all_applications = $this->user->applications();
+		
+		// Filter applications by type
 		foreach($all_applications as $application) {
 			if($application->getAttribute('type') == 'webapp'){
 				$applications[] = $application;
