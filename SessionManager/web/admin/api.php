@@ -4078,7 +4078,7 @@ class OvdAdminSoap {
 			return false;
 		}
 		
-		$this->log_action('session_kill', array('id' => $id_, 'user' => $user_login));
+		$this->log_action('session_kill', array('id' => $id_, 'user' => $this->user_login));
 		return true;
 	}
 	
