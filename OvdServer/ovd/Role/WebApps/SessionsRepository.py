@@ -27,6 +27,8 @@ from Config import Config
 from headers_utils import *
 import random
 
+from ovd.SMRequestManager import SMRequestManager
+from xml.dom.minidom import Document
 
 class Session(UserDict):
     SESSION_STATUS_UNKNOWN = "unknown"
@@ -44,16 +46,40 @@ class Session(UserDict):
         UserDict.__init__(self)
         self.id = id_
         self.update(data)
-        self.switch_status(Session.SESSION_STATUS_INITED)
+        self.status = Session.SESSION_STATUS_INITED
+        self.sm_request_manager = SMRequestManager()
+        self.sm_request_manager.initialize();
 
     def switch_status(self, status_):
         self.status = status_
+        self.send_server_status()
     
     def credentials(self):
         return {
             'USE_CURRENT_USER_LOGIN': self.get('USER_LOGIN', ''),
             'USE_CURRENT_USER_PASSWD': self.get('USER_PASSWD', ''),
         }
+
+    def send_server_status(self):
+        doc = None;
+        try:
+            doc = Document()
+            rootNode = doc.createElement('session')
+            rootNode.setAttribute("id", self.id)
+            rootNode.setAttribute("status", self.status)
+            rootNode.setAttribute("role", "webapps")
+            doc.appendChild(rootNode)
+        except Exception, e:
+            print str(e)
+
+        response = self.sm_request_manager.send_packet("/session/status", doc)
+        Logger.debug2("WebappsServer: send_session_status: %s"%(response))
+
+        if response is False:
+            Logger.warn("WebappsServer: unable to send session status")
+        else:
+            response.close()
+            response = None
 
         
 class SessionsRepository(object):

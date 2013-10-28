@@ -754,6 +754,8 @@ if (! isset($old_session_id)) {
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
 			throw_response(INTERNAL_ERROR);
+		} else {
+			$session->setServerStatus($server->id, Session::SESSION_STATUS_READY, NULL, Server::SERVER_ROLE_WEBAPPS);
 		}
 
 		$ret_dom = new DomDocument('1.0', 'utf-8');

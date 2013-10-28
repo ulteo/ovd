@@ -532,10 +532,10 @@ class Session {
 						$buf = $session_server->orderSessionDeletion($this->id, 'webapps');
 						if (! $buf) {
 							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
-							$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED);
+							$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED, NULL, Server::SERVER_ROLE_WEBAPPS);
 							$destroyed++;
 						} else
-						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYING);
+						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYING, NULL, Server::SERVER_ROLE_WEBAPPS);
 					}
 				}
 			}

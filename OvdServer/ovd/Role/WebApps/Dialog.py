@@ -134,7 +134,7 @@ class Dialog(AbstractDialog):
     def req_session_destroy(self, session_id):
         session = SessionsRepository.get(session_id, check_active=False)
         if session is not None:
-            session.switch_status(Session.SESSION_STATUS_DESTROYED)
+            session.status = Session.SESSION_STATUS_DESTROYED
             SessionsRepository.set(session_id, session)
             Logger.info("[WebApps] session id={0} destroyed".format(session_id))
         else:
