@@ -510,7 +510,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 										<strong><span id="language_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
-										<div id="session_language_flag" style="display:inline-block;" ></div>
 										<select id="session_language" <?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
 											<?php
 												$browser_languages = detectBrowserLanguage($languages);
@@ -518,7 +517,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 													foreach ($browser_languages as $browser_language) {
 														foreach ($languages as $language) {
 															if ($browser_language == $language['id']) {
-																echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+																echo '<option value="'.$language['id'].'" style="background-image: url(media/image/flags/'.$language['id'].'.png)"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?'  selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
 																break;
 															}
 														}
@@ -527,7 +526,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 												}
 												foreach ($languages as $language) {
 													if (!in_array($language['id'], $browser_languages)) {
-														echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+														echo '<option value="'.$language['id'].'" style="background-image: url(media/image/flags/'.$language['id'].'.png)"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
 													}
 												}
 											?>
