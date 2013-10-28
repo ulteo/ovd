@@ -7,6 +7,7 @@
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -487,10 +488,10 @@ class Session {
 						$buf = $session_server->orderSessionDeletion($this->id);
 						if (! $buf) {
 							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
-							$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYED);
+							$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED);
 							$destroyed++;
 						} else
-							$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYING);
+							$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYING);
 					}
 				}
 			}
@@ -514,10 +515,10 @@ class Session {
 					$buf = $session_server->orderSessionDeletion($this->id, 'webapps');
 					if (! $buf) {
 						Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
-						$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYED);
+						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED);
 						$destroyed++;
 					} else
-						$this->setServerStatus($session_server->fqdn, Session::SESSION_STATUS_DESTROYING);
+						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYING);
 				}
 			}
 		}
