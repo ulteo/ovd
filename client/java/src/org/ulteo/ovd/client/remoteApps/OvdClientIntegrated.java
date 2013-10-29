@@ -55,13 +55,41 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	public void createRDPConnections() {
+		List<ServerAccess> servers = this.smComm.getServers();
+		List<ServerAccess> rdp_servers = new ArrayList<ServerAccess>();
+
+		for (ServerAccess server : servers) {
+			if(server.isRDP()) {
+				rdp_servers.add(server);
+			}
+		}
+
 		this.configureRDP(this.smComm.getResponseProperties());
-		_createRDPConnections(this.smComm.getServers());
+		_createRDPConnections(rdp_servers);
 	}
 	
 	@Override
 	public boolean checkRDPConnections() {
 		return _checkRDPConnections();
+	}
+
+	@Override
+	public void createWebAppsConnections() {
+		List<ServerAccess> servers = this.smComm.getServers();
+		List<ServerAccess> webapps_servers = new ArrayList<ServerAccess>();
+
+		for (ServerAccess server : servers) {
+			if(! server.isRDP()) {
+				webapps_servers.add(server);
+			}
+		}
+
+		_createWebAppsConnections(webapps_servers);
+	}
+	
+	@Override
+	public boolean checkWebAppsConnections() {
+		return _checkWebAppsConnections();
 	}
 	
 	@Override
@@ -77,6 +105,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 		
 		this.createRDPConnections();
+		this.createWebAppsConnections();
 		
 		this.sessionStatusMonitoringThread = new Thread(this);
 		this.continueSessionStatusMonitoringThread = true;
@@ -106,7 +135,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 				} catch (InterruptedException ex) {}
 			}
 
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+			if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 				this.disconnection();
 				break;
 			}
@@ -116,7 +145,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {}
 
-				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+				if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 					this.disconnection();
 					break;
 				}

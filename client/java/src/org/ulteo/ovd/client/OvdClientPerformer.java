@@ -39,6 +39,17 @@ public interface OvdClientPerformer extends Runnable {
 	boolean checkRDPConnections();
 
 	/**
+	 * create all WebApps connections needed by the OVD Client 
+	 */
+	void createWebAppsConnections();
+
+	/**
+	 * check if all WebApps connections are correctly connected
+	 * @return
+	 */
+	boolean checkWebAppsConnections();
+
+	/**
 	 * run this method when session is ready
 	 */
 	void runSessionReady();

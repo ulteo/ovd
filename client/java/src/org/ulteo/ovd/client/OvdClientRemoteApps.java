@@ -276,10 +276,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
-		if (!server.isRDP()) {
-			// Non-RDP servers don't need this connection.
-			return null;
-		}
 
 		if (this.screensize == null) {
 			Logger.error("Failed to initialize RDP connection: RDP configuration is not set");
@@ -326,8 +322,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	protected void _createRDPConnections(List<ServerAccess> serversList) {
-		this.ApplicationIndex = 0;
-
 		for (ServerAccess server : serversList) {
 			if (this.isCancelled)
 				return;
@@ -336,10 +330,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				RdpConnectionOvd rc = this.createRDPConnection(server);
 				if (rc != null)
 					this.processIconCache(rc);
-			} else {
-				final WebAppsServerAccess webAppServer = (WebAppsServerAccess) server;
-				createWepAppConnection(webAppServer);
-				this.processWebAppIconCache(webAppServer);
 			}
 		}
 	}
@@ -377,6 +367,23 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 		
 		return (nSeveralConnectionsFailed == nConnections) ? false : true;
+	}
+
+	protected void _createWebAppsConnections(List<ServerAccess> serversList) {
+		for (ServerAccess server : serversList) {
+			if (this.isCancelled)
+				return;
+
+			if (! server.isRDP()) {
+				final WebAppsServerAccess webAppServer = (WebAppsServerAccess) server; /* Local Cast */
+				createWepAppConnection(webAppServer);
+				this.processWebAppIconCache(webAppServer);
+			}
+		}
+	}
+
+	protected boolean _checkWebAppsConnections() {
+		return true;
 	}
 	
 	public void setPerformDesktopIntegration(boolean value) {
