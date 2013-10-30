@@ -230,7 +230,7 @@ function initialize_defaults() {
 	defaults.rdp_provider          = jQuery('#rdp_mode').val();
 	defaults.rdp_input_method      = jQuery('#session_input_method').val();
 	defaults.http_provider         = "proxy";
-	defaults.webapps_provider			 = "jsonp";
+	defaults.webapps_provider      = "proxy";
 	defaults.wc_url                = getWebClientBaseURL();
 }
 
@@ -258,7 +258,7 @@ function initialize_settings() {
 	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	settings.rdp_provider          = jQuery('#rdp_mode').val();
 	settings.http_provider         = "proxy";
-	settings.webapps_provider      = "jsonp";
+	settings.webapps_provider      = "proxy";
 	settings.wc_url                = defaults.wc_url;
 
 	/* Settings needed by the framework */
@@ -388,7 +388,8 @@ function initialize_framework() {
 	};
 
 	framework.webapps_providers = {
-		jsonp: new uovd.provider.webapps.Jsonp()
+		jsonp: new uovd.provider.webapps.Jsonp(),
+		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php")
 	};
 
 	/* Setup Handlers */

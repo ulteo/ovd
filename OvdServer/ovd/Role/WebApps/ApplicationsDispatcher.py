@@ -28,7 +28,7 @@ from ApplicationsRepository import ApplicationsRepository
 from Context import Context
 from Config import Config
 from SessionsRepository import SessionsRepository, Session
-from Utils import HTTP_301, HTTP_200_connected
+from Utils import HTTP_301, HTTP_200_status_header, HTTP_200_status_content
 
 
 class ApplicationsDispatcher(object):
@@ -59,7 +59,8 @@ class ApplicationsDispatcher(object):
                     sess_id = session.id
                     session.switch_status(Session.SESSION_STATUS_INACTIVE)
                     SessionsRepository.set(sess_id, session)
-                    send_buffer = HTTP_200_connected.format(qs['id'][0])
+                    send_buffer = HTTP_200_status_content.format(qs['id'][0], "disconnected")
+                    send_buffer = HTTP_200_status_header.format(len(send_buffer)) + '\r\n\r\n' + send_buffer
                     communicator.send(send_buffer)
                     return
                 else:
@@ -75,7 +76,8 @@ class ApplicationsDispatcher(object):
                     if session.status in [Session.SESSION_STATUS_INITED, Session.SESSION_STATUS_INACTIVE]:
                         session.switch_status(Session.SESSION_STATUS_ACTIVE)
                         SessionsRepository.set(sess_id, session)
-                        send_buffer = HTTP_200_connected.format(qs['id'][0])
+                        send_buffer = HTTP_200_status_content.format(qs['id'][0], "ready")
+                        send_buffer = HTTP_200_status_header.format(len(send_buffer)) + '\r\n\r\n' + send_buffer
                         communicator.send(send_buffer)
                         return
                     else:

@@ -57,14 +57,15 @@ def replace_params(text, params):
     return RE_PARAM.sub(get_value, text)
 
 
-HTTP_200_connected = """
+HTTP_200_status_header = """
 HTTP/1.1 200 OK
-Content-Type: application/javascript
-Content-Length: 54
+Content-Type: text/xml
+Content-Length: {0}
+""".strip()
 
-(function(){{
-    webappServerStatus({0}, 'ready');
-}})();
+HTTP_200_status_content = """
+<?xml version="1.0" encoding="UTF-8"?>
+<webapp_server_status server="{0}" status="{1}" />
 """.strip()
 
 HTTP_301 = """
