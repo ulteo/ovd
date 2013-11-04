@@ -36,23 +36,6 @@ else:
 
 version_strict = ".".join([p for p in (re.split("[^\d\.]", version)[0]+".0"*4).split(".")  if p.isdigit()][:4])
 
-# OS detection
-if sys.platform == "linux2":
-    platform_dir = "Linux"
-elif sys.platform == "win32":
-    platform_dir = "Windows"
-else:
-   raise Exception("No supported platform")
-
-
-# Set the Platform directory
-path_virtual = os.path.join(path, "ovd_shells", "Platform")
-path_real    = os.path.join(path, "ovd_shells", "Platform."+platform_dir)
-if os.path.exists(path_virtual):
-    shutil.rmtree(path_virtual)
-shutil.copytree(path_real, path_virtual)
-
-
 f = file(os.path.join(path, "setup.py.in"), "r")
 content = f.read()
 f.close()

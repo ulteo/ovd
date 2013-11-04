@@ -38,7 +38,7 @@ setup_args["version"] = "@VERSION@"
 
 # OS detection
 if sys.platform == "linux2":
-    setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform']
+    setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform', 'ovd_shells.Platform.Linux']
     setup_args["data_files"] = [('/usr/bin', \
         ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
 
