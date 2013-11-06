@@ -354,6 +354,8 @@ class UserDB_sql extends UserDB  {
 	
 	public function update($user_){
 		if ($this->isOK($user_)){
+			$SQL = SQL::getInstance();
+			
 			$attributes = $user_->getAttributesList();
 			$query = 'UPDATE #1 SET ';
 			foreach ($attributes as $key){
@@ -373,11 +375,10 @@ class UserDB_sql extends UserDB  {
 				else
 					$value = $user_->getAttribute($key);
 
-				$query .=  '`'.$key.'` = \''.$value.'\' , ';
+				$query .=  '`'.$key.'` = '.$SQL->Quote($value).' , ';
 			}
 			$query = substr($query, 0, -2); // del the last ,
-			$query .= ' WHERE `login` = \''.$user_->getAttribute('login').'\'';
-			$SQL = SQL::getInstance();
+			$query .= ' WHERE `login` = '.$SQL->Quote($user_->getAttribute('login'));
 			return $SQL->DoQuery($query, self::table);
 		}
 		return false;
