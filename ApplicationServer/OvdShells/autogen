@@ -29,10 +29,10 @@ path = os.path.dirname( os.path.realpath( __file__ ) )
 
 # Detect the version
 if os.environ.has_key("OVD_VERSION"):
-    version = os.environ["OVD_VERSION"]
+	version = os.environ["OVD_VERSION"]
 else:
-    version = file("VERSION", "r").readline().strip()
-    version += "~dev"
+	version = file("VERSION", "r").readline().strip()
+	version += "~dev"
 
 version_strict = ".".join([p for p in (re.split("[^\d\.]", version)[0]+".0"*4).split(".")  if p.isdigit()][:4])
 
