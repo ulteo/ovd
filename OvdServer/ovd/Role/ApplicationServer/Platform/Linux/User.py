@@ -79,7 +79,7 @@ class User(AbstractUser):
 		
 		cmd = u"useradd -m -d '%s' -k '%s'"%(home_dir, Config.linux_skel_directory)
 		if self.infos.has_key("displayName"):
-			cmd+= u" --comment '%s,,,'"%(self.infos["displayName"])
+			cmd+= u""" --comment "%s,,," """%(self.infos["displayName"].replace('"', ""))
 		
 		groups = ["video", "audio", "pulse", "pulse-access", Config.linux_fuse_group]
 		if self.infos.has_key("groups"):
