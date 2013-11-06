@@ -46,6 +46,10 @@ elif sys.platform == "win32":
     import py2exe
     sys.argv.append("py2exe")
 
+    # Force the include of ApS because of dynamic imports
+    sys.argv.append("-p")
+    sys.argv.append("ovd_shells.Platform.Windows")
+
     try:
         import modulefinder
         import win32com,sys
