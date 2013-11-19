@@ -41,11 +41,6 @@ upbuilder:
            files: {"libWindowsPaths.dll": "required_libraries/libPCSC/32/libWindowsPaths.dll"}
       archs: $(consts.ANY_ARCH)
       env: $(consts.JAVA_ENV)
-    settings:
-      src: "ApplicationServer/desktop"
-      module: "ovd-desktop-settings"
-      builder: autotools
-      archs: $(consts.ANY_ARCH)
     launcher:
       src: "client/OVDIntegratedLauncher"
       module: "ovd-integrated-launcher"
@@ -73,9 +68,11 @@ upbuilder:
       archs: $(consts.ALL_ARCH)
     desktop:
       module: "ovd-desktop"
-      archs: $(consts.ALL_ARCH)
-      builder: tar
-      meta: True
+      builder: autotools
+      src: "ApplicationServer/desktop"
+      archs: $(consts.ANY_ARCH)
+      clones:
+        - { dest: "icons/theme", orig: "/ulteo/artwork", source: "icon-theme", branch: "master" }
     easy:
       module: "ovd-easy-install"
       archs: $(consts.ALL_ARCH)

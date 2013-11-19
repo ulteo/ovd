@@ -1,19 +1,19 @@
-Source: ovd-desktop-settings
+Source: ovd-desktop
 Section: x11
 Priority: extra
 Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
  libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
- xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev
+ xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev,
+ librsvg2-bin
 Standards-Version: 3.7.3
 
-Package: ulteo-ovd-desktop-settings
+Package: ulteo-ovd-desktop
 Architecture: all
-Depends: gnome-icon-theme, dmz-cursor-theme, gtk2-engines-xfce 
-Recommends: gnome-icon-theme-crystal, xfce4-icon-theme, gtk2-engines-mythbuntu
-Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings,
- thunar-settings (<< 0.9.0-4ulteo2)
-Replaces: thunar-data, xfce4-utils
+Depends: ulteo-ovd-desktop-gtk-theme, dmz-cursor-theme, ulteo-xfce4-restricted-menu-plugin,
+ xfce4-session, xfwm4, xfdesktop4, xfce4-panel
+Recommends: xfce4-utils, thunar
+Conflicts: xfce (< 4.6)
 Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
  This package provides:
  * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
@@ -21,7 +21,7 @@ Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
  Desktop application server.
 
 Package: ulteo-plymouth-theme
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, plymouth, plymouth-label
 Provides: plymouth-theme
 Description: Ulteo plymouth theme: graphical boot animation theme
@@ -37,3 +37,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Restricted menu for the xfce4 panel
  This plugin for the Xfce panel allows the administrateur to restrict the
  access to the available applications.
+
+Package: ulteo-ovd-desktop-gtk-theme
+Architecture: all
+Depends: libgtk2.0-bin, gtk2-engines-xfce
+Description: Ulteo Open Virtual Desktop
