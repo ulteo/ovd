@@ -48,7 +48,7 @@ function parse_logout_XML($xml_, $mode_) {
 	if (is_null($node))
 		return false;
 
-	if (! $node->hasAttribute('mode')) {
+	if ($node->hasAttribute('mode')) {
 		$mode_ = $node->getAttribute('mode');
 	}
 
@@ -66,7 +66,7 @@ if (! $ret)
 
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (is_object($session)) {
-	if (! in_array($ret, array('suspend', 'logout'))) {
+	if (! in_array($mode, array('suspend', 'logout'))) {
 		if ($session->settings['persistent'] == 1) {
 			$mode = 'suspend';
 		}
