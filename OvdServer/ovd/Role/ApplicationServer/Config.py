@@ -29,6 +29,7 @@ class Config:
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
 	linux_skel_directory = "/dev/null"
+	linux_fuse_group = "fuse"
 	linux_profile_filters_filename = "/etc/ulteo/ovd/profiles_filter.conf"
 	
 	OVERRIDE_PASSWORD_METHOD_UNIX = 0x01
@@ -64,6 +65,9 @@ class Config:
 		
 		if infos.has_key("linux_skel_directory"):
 			cls.linux_skel_directory = infos["linux_skel_directory"]
+		
+		if infos.has_key("linux_fuse_group"):
+			cls.linux_fuse_group = infos["linux_fuse_group"]
 		
 		if infos.has_key("linux_profile_filters_filename"):
 			cls.linux_profile_filters_filename = infos["linux_profile_filters_filename"]
