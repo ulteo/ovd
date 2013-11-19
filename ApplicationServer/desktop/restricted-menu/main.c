@@ -168,12 +168,14 @@ rm_read (RmPlugin *rm)
     rm->icon_normal = g_strdup (xfce_rc_read_entry (rc, "icon_normal", DEFAULT_ICON));
     rm->icon_hover = g_strdup (xfce_rc_read_entry (rc, "icon_hover", DEFAULT_ICON));
     tmp = g_strdup (xfce_rc_read_entry (rc, "from_env", NULL));
-    if (!tmp)
+    if (tmp)
+    {
+        rm->ddir = getenv (tmp);
+    }
+    if (!rm->ddir)
     {
         tmp = g_strdup (xfce_rc_read_entry (rc, "spool_tpl", DEFAULT_TPL));
         rm->ddir = build_ddir (tmp);
-    } else {
-        rm->ddir = getenv (tmp);
     }
 
     rm->cdir = g_strdup (xfce_rc_read_entry (rc, "spool_common", DEFAULT_CDIR));
