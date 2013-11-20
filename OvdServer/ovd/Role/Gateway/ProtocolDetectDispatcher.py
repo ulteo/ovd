@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -98,9 +99,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			# HTTP case
 			elif http:
 				client = HttpClientCommunicator(self.socket, self.f_ctrl, self.ssl_ctx)
-				client._buffer = self._buffer
-				if client.make_http_message() is not None:
-					client._buffer = client.process()
+				client.handle_read(self._buffer)
 			
 			# protocol error
 			else:

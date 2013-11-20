@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011-2012 Ulteo SAS
+# Copyright (C) 2011-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import socket
+import re
 from urlparse import urlparse
 
 from ovd.Logger import Logger
@@ -47,6 +49,7 @@ class Config:
 	root_redirection = None
 	http_keep_alive = True
 	disable_sslv2 = False
+	force_buffering = ["/ovd/client/start", "/ovd/client/start.php"]
 
 	@classmethod
 	def init(cls, infos):
@@ -138,5 +141,9 @@ class Config:
 				cls.disable_sslv2 = True
 			else:
 				Logger.error("Invalid value for 'disable_sslv2' option")
+
+		if infos.has_key("force_buffering"):
+			cls.force_buffering = re.findall("(\S+)", infos["force_buffering"])
+
 		
 		return True
