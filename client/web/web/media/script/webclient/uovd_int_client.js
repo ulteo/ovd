@@ -481,6 +481,8 @@ function initialize_framework() {
 	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* applications launcher */
 	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer");
+	/* applications taskbar */
+	framework.listeners.seamless_taskbar = new SeamlessTaskbar(framework.session_management, "#appsContainer");
 	/* news display */
 	framework.listeners.news = new News(framework.session_management, "#newsList");
 	/* webapps launcher */

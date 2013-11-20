@@ -148,6 +148,8 @@ function initialize_framework() {
 	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
+	/* applications taskbar */
+	framework.listeners.seamless_taskbar = new SeamlessTaskbar(framework.session_management, "#appsContainer");
 	/* window manager */
 	framework.listeners.seamless_window_manager = new uovd.provider.rdp.html5.SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 	/* Session-based start_app support */
