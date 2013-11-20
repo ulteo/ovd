@@ -194,12 +194,101 @@ class RdpServerCommunicator(ServerCommunicator):
 HTTP Communicators
 """
 
-class HttpMetaCommunicator(object):
+class HttpClientCommunicator(SSLCommunicator):
 	
-	def __init__(self):
-		super(HttpMetaCommunicator, self).__init__()
+	def __init__(self, sock, ctrl=None, ssl_ctx=None):
+		self.f_ctrl = ctrl
+		self.ssl_ctx = ssl_ctx
 		self.http = HttpMessage()
+
+		SSLCommunicator.__init__(self, sock)
+
+
+	def handle_read(self):
+		if self.http.is_body():
+			if self._buffer == '':
+				self.http = HttpMessage()
+				self.fragmented = False
+			else:
+				if not self.fragmented:
+					return
+		
+		SSLCommunicator.handle_read(self)
+		if self.make_http_message() is not None:
+			self._buffer = self.process()
+			self.fragmented = False
+			return
+		
+		# The packet seams to be fragmented
+		self.fragmented = True
 	
+	
+	def make_http_message(self):
+		if not self.http.is_headers():
+			res = self._buffer.partition("\r\n\r\n")
+			if res[1] is not '':
+				self.http.put_headers(res[0] + "\r\n")
+				if self.http.path is not '':
+					Logger.debug("Gateway:: HTTP request: " + self.http.path)
+				self._buffer = res[2]
+			else:
+				return None
+		
+		if not self.http.is_body():
+			self.http.put_body(self._buffer)
+			self._buffer = ''
+			#TODO: prefer this way (implement later)
+			#self._buffer = self._buffer[len_buf:]
+			if not self.http.is_body():
+				return None
+		
+		return self.http
+
+	
+	def process(self):
+		# test path permission
+		http_code = self.http.auth()
+		if http_code is not httplib.OK:
+			host = self.http.get_header("Host")
+			if host is None:
+				host = "%s:%d" % (self.socket.getsockname())
+			
+			self.send(page_error(http_code, addr=host))
+			self.socket.sock_shutdown(socket.SHUT_WR)
+			self.handle_close()
+			return ''
+
+		# path redirection
+		if self.communicator is None:
+			addr = None
+		else:
+			addr = self.communicator.getpeername()[0]
+		redirection = self.http.redirect(addr)
+		if redirection is not None:
+			(protocol, addr) = redirection
+			if self.communicator is not None:
+				self.communicator.close()
+			if protocol is Protocol.HTTP:
+				self.communicator = HttpServerCommunicator(addr, self.f_ctrl, communicator=self)
+			elif protocol is Protocol.HTTPS:
+				self.communicator = HttpsServerCommunicator((addr, self.ssl_ctx), self.f_ctrl, communicator=self)
+		
+		# gateway header's tag
+		self.http.set_header('OVD-Gateway', 'on')
+		
+		# keep alive header handle
+		if not Config.http_keep_alive:
+			self.http.set_header('Connection', 'close')
+		
+		return self.http.show()
+
+
+class HttpServerCommunicator(ServerCommunicator):
+	
+	def __init__(self, addr, ctrl, communicator=None):
+		self.f_ctrl = ctrl
+		self.http = HttpMessage()
+		ServerCommunicator.__init__(self, addr, communicator=communicator)
 	
 	def handle_read(self):
 		if self.http.is_body():
@@ -210,7 +299,7 @@ class HttpMetaCommunicator(object):
 				if not self.fragmented:
 					return
 		
-		super(HttpMetaCommunicator, self).handle_read()
+		ServerCommunicator.handle_read(self) # Call parent's read method
 		if self.make_http_message() is not None:
 			self._buffer = self.process()
 			self.fragmented = False
@@ -243,72 +332,6 @@ class HttpMetaCommunicator(object):
 	
 	
 	def process(self):
-		raise NotImplemented()
-
-
-
-class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
-	
-	def __init__(self, sock, ctrl=None, ssl_ctx=None):
-		self.f_ctrl = ctrl
-		self.ssl_ctx = ssl_ctx
-
-		HttpMetaCommunicator.__init__(self)
-		SSLCommunicator.__init__(self, sock)
-	
-	
-	def process(self):
-		
-		# test path permission
-		http_code = self.http.auth()
-		if http_code is not httplib.OK:
-			host = self.http.get_header("Host")
-			if host is None:
-				host = "%s:%d" % (self.socket.getsockname())
-			
-			self.send(page_error(http_code, addr=host))
-			self.socket.sock_shutdown(socket.SHUT_WR)
-			self.handle_close()
-			return ''
-
-		# path redirection
-		if self.communicator is None:
-			addr = None
-		else:
-			addr = self.communicator.getpeername()[0]
-		redirection = self.http.redirect(addr)
-		if redirection is not None:
-			(protocol, addr) = redirection
-			if self.communicator is not None:
-				self.communicator.close()
-			if protocol is Protocol.HTTP:
-				self.communicator = HttpServerCommunicator(
-					addr, self.f_ctrl, communicator=self)
-			elif protocol is Protocol.HTTPS:
-				self.communicator = HttpsServerCommunicator(
-					(addr, self.ssl_ctx), self.f_ctrl, communicator=self)
-		
-		# gateway header's tag
-		self.http.set_header('OVD-Gateway', 'on')
-		
-		# keep alive header handle
-		if not Config.http_keep_alive:
-			self.http.set_header('Connection', 'close')
-		
-		return self.http.show()
-
-
-
-class HttpMetaServerCommunicator(HttpMetaCommunicator):
-	
-	def __init__(self, ctrl):
-		self.f_ctrl = ctrl
-
-		HttpMetaCommunicator.__init__(self)
-	
-	
-	def process(self):
-		
 		# in any case of redirection with HTTP protocol use
 		if self.http.is_redirection():
 			location = self.http.get_header("Location")
@@ -362,18 +385,104 @@ class HttpMetaServerCommunicator(HttpMetaCommunicator):
 
 
 
-class HttpServerCommunicator(HttpMetaServerCommunicator, ServerCommunicator):
-	
-	def __init__(self, addr, ctrl, communicator=None):
-		HttpMetaServerCommunicator.__init__(self, ctrl)
-		ServerCommunicator.__init__(self, addr, communicator=communicator)
-
-
-
-class HttpsServerCommunicator(HttpMetaServerCommunicator, SecureServerCommunicator):
+class HttpsServerCommunicator(SecureServerCommunicator):
 	
 	def __init__(self, remote, ctrl, communicator=None):
 		(addr, self.ssl_ctx) = remote
-
-		HttpMetaServerCommunicator.__init__(self, ctrl)
+		self.f_ctrl = ctrl
+		self.http = HttpMessage()
 		SecureServerCommunicator.__init__(self, addr, communicator=communicator)
+
+
+	def handle_read(self):
+		if self.http.is_body():
+			if self._buffer == '':
+				self.http = HttpMessage()
+				self.fragmented = False
+			else:
+				if not self.fragmented:
+					return
+		
+		SecureServerCommunicator.handle_read(self) # Call parent's read method
+		if self.make_http_message() is not None:
+			self._buffer = self.process()
+			self.fragmented = False
+			return
+		
+		# The packet seams to be fragmented
+		self.fragmented = True
+	
+	
+	def make_http_message(self):
+		if not self.http.is_headers():
+			res = self._buffer.partition("\r\n\r\n")
+			if res[1] is not '':
+				self.http.put_headers(res[0] + "\r\n")
+				if self.http.path is not '':
+					Logger.debug("Gateway:: HTTP request: " + self.http.path)
+				self._buffer = res[2]
+			else:
+				return None
+		
+		if not self.http.is_body():
+			self.http.put_body(self._buffer)
+			self._buffer = ''
+			#TODO: prefer this way (implement later)
+			#self._buffer = self._buffer[len_buf:]
+			if not self.http.is_body():
+				return None
+		
+		return self.http
+	
+	
+	def process(self):
+		# in any case of redirection with HTTP protocol use
+		if self.http.is_redirection():
+			location = self.http.get_header("Location")
+			if location is not None and location.startswith("http://"):
+				location = location.replace("http", "https", 1)
+				self.http.set_header("Location", location)
+		
+		# XML rewriting on start.php request
+		if self.communicator.http.path == "/ovd/client/start.php" and \
+		   not self.communicator.http.xml_rewrited:
+			is_zipped = (self.http.get_header('Content-Encoding') == 'gzip')
+			if is_zipped:
+				self.http.body = gunzip(self.http.body)
+			
+			xml = self.rewrite_xml()
+			if xml is not None:
+				if is_zipped:
+					xml = gzip(xml)
+				self.http.set_body(xml)
+				self.http.xml_rewrited = True
+		
+		return self.http.show()
+	
+	
+	def rewrite_xml(self):
+		try:
+			session = parser.XML(self.http.body)
+			if session.tag.lower() != 'session':
+				raise Exception("not a 'session' XML response")
+		except Exception, e:
+			Logger.error("Gateway:: parsing XML session failed: %s" % e)
+			return None
+		
+		session.set('mode_gateway', 'on')
+		for server in session.findall('server'):
+			port = Protocol.RDP
+			
+			if server.attrib.has_key("port"):
+				try:
+					port = int(server.attrib["port"])
+				except ValueError,err:
+					Logger.warn("Gateway:: Invalid protocol: server port attribute is not a digit (%s)"%(server.attrib["port"]))
+			
+			token = self.f_ctrl.send(('insert_token', (server.attrib['fqdn'], port)))
+			server.set('token', token)
+			del server.attrib['fqdn']
+			if server.attrib.has_key("port"):
+				del server.attrib["port"]
+		
+		return parser.tostring(session)
