@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Yann Hodique <y.hodique@ulteo.com> 2012
+ * Abraham Macías Paredes <amacias@solutia-it.es> 2013
  *
  * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -530,12 +531,18 @@ JNIEXPORT jbyteArray JNICALL Java_org_ulteo_pcsc_PCSC_SCardControl
 {
 	SCARDHANDLE card = (SCARDHANDLE)jCard;
 	LONG rv;
-	jbyte* sendBuffer = (*env)->GetByteArrayElements(env, jSendBuffer, NULL);
-	jint sendBufferLength = (*env)->GetArrayLength(env, jSendBuffer);
+	jbyte* sendBuffer = NULL;
+	jint sendBufferLength = 0;
 	jbyte receiveBuffer[MAX_STACK_BUFFER_SIZE];
 	jint receiveBufferLength = MAX_STACK_BUFFER_SIZE;
 	ULONG returnedLength = 0;
 	jbyteArray jReceiveBuffer;
+
+	/* Be carefull with NULL values */
+	if (jSendBuffer != NULL) {
+		sendBuffer = (*env)->GetByteArrayElements(env, jSendBuffer, NULL);
+		sendBufferLength = (*env)->GetArrayLength(env, jSendBuffer);
+	}
 
 #ifdef PCSC_DEBUG
 {
@@ -552,7 +559,10 @@ JNIEXPORT jbyteArray JNICALL Java_org_ulteo_pcsc_PCSC_SCardControl
 	rv = CALL_SCardControl(card, jControlCode, sendBuffer, sendBufferLength,
 		receiveBuffer, receiveBufferLength, &returnedLength);
 
-	(*env)->ReleaseByteArrayElements(env, jSendBuffer, sendBuffer, JNI_ABORT);
+	if (jSendBuffer != NULL) {
+		(*env)->ReleaseByteArrayElements(env, jSendBuffer, sendBuffer, JNI_ABORT);
+	}
+
 	if (handleRV(env, rv)) {
 		return NULL;
 	}
