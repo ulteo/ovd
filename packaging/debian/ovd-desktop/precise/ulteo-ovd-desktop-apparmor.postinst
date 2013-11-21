@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+    APP_PROFILE="/etc/apparmor.d/ulteo-ovd-kiosk"
+    if [ -f "$APP_PROFILE" ]; then
+        if aa-status --enabled 2>/dev/null; then
+            apparmor_parser -r -T -W "$APP_PROFILE" || true
+        fi
+    fi
+fi
+

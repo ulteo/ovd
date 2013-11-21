@@ -126,3 +126,17 @@ Requires: xfce4-panel
 %{_libdir}/xfce4/*
 /usr/share/xfce4/*
 /usr/share/locale/*
+
+###########################################
+%package -n ulteo-ovd-desktop-apparmor
+###########################################
+BuildArch: noarch
+Group: Applications/System
+Summary: Ulteo Open Virtual Desktop
+
+%description -n ulteo-ovd-desktop-apparmor
+ Ulteo Open Virtual Desktop
+
+%files -n ulteo-ovd-desktop-apparmor
+%defattr(-,root,root)
+%config /etc/apparmor.d/*

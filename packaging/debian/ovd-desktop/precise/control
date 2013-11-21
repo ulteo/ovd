@@ -12,7 +12,7 @@ Package: ulteo-ovd-desktop
 Architecture: all
 Depends: ulteo-ovd-desktop-gtk-theme, dmz-cursor-theme, ulteo-xfce4-restricted-menu-plugin,
  xfce4-session, xfwm4, xfdesktop4, xfce4-panel
-Recommends: xfce4-utils, thunar
+Recommends: ulteo-ovd-desktop-apparmor, xfce4-utils, thunar
 Conflicts: xfce (< 4.6)
 Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
  This package provides:
@@ -41,4 +41,9 @@ Description: Restricted menu for the xfce4 panel
 Package: ulteo-ovd-desktop-gtk-theme
 Architecture: all
 Depends: libgtk2.0-bin, gtk2-engines-xfce
+Description: Ulteo Open Virtual Desktop
+
+Package: ulteo-ovd-desktop-apparmor
+Architecture: all
+Depends: apparmor
 Description: Ulteo Open Virtual Desktop

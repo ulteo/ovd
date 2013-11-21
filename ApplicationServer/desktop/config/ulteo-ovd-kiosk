@@ -1,0 +1,148 @@
+# Copyright (C) 2013 Ulteo SAS
+# http://www.ulteo.com
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+#include <tunables/global>
+
+/usr/bin/startovdapp {
+  #include <abstractions/base>
+
+  capability sys_ptrace,
+
+  network inet dgram,
+  network inet stream,
+  network inet6 dgram,
+  network inet6 stream,
+
+  /bin/* rPix,
+  /etc/** r,
+  /run/** r,
+  /sys/** r,
+  /tmp/ r,
+  /tmp/** rwk,
+  /usr/bin/* rPix,
+  /usr/include/** r,
+  /usr/lib/** rix,
+  /usr/lib{,32,64}/** mrw,
+  /usr/local/lib/python2.7/dist-packages/ r,
+  /usr/share/ r,
+  /usr/share/** r,
+  /var/cache/fontconfig/* r,
+  /var/lib/**/ r,
+  /var/lib/dbus/machine-id r,
+  /var/lib/gconf/** r,
+  /var/spool/** w,
+  /var/spool/ulteo/ovd/** rw,
+  /var/tmp/ r,
+  /var/tmp/** rwk,
+  /dev/** rw,
+  owner @{HOME}/ rwlk,
+  owner @{HOME}/** rwlk,
+  @{PROC}/ r,
+  @{PROC}/** r,
+}
+
+/usr/bin/XHook {
+  #include <abstractions/base>
+
+  /etc/ImageMagick/coder.xml r,
+  /etc/ImageMagick/magic.xml r,
+  /etc/ImageMagick/policy.xml r,
+  /etc/xrdp/seamrdp.conf r,
+  /etc/xrdp/vchannel.ini r,
+  /usr/bin/XHook mr,
+  /usr/lib{,32,64}/** mr,
+  /usr/share/X11/XErrorDB r,
+}
+
+/usr/bin/{OvdDesktop,OvdRemoteApps} {
+  #include <abstractions/base>
+
+  capability sys_ptrace,
+  network inet stream,
+
+  deny / r,
+
+  /bin/* rix,
+  /dev/snd/* rw,
+  /etc/** r,
+  /etc/xdg/ulteo/xinitrc rix,
+  /etc/xrdp/startwm.sh rix,
+  /run/shm/ r,
+  /run/shm/* rw,
+  /run/udev/** r,
+  /sys/** r,
+  /tmp/** rwk,
+  /usr/bin/OvdDesktop r,
+  /usr/bin/OvdRemoteApps r,
+  /usr/bin/seamlessrdpshell rix,
+  /usr/bin/XHook Pix,
+  /usr/bin/Thunar rix,
+  /usr/bin/dbus-launch rix,
+  /usr/bin/env ix,
+  /usr/bin/exo-desktop-item-edit rix,
+  /usr/bin/iceauth rix,
+  /usr/bin/pactl rix,
+  /usr/bin/pulseaudio rix,
+  /usr/bin/python* rCix,
+  /usr/bin/start-pulseaudio-x11 rix,
+  /usr/bin/startovdapp rPix,
+  /usr/bin/xfce4-panel rix,
+  /usr/bin/xfce4-session rix,
+  /usr/bin/xfce4-session-logout rix,
+  /usr/bin/xfce4-settings-helper rix,
+  /usr/bin/xfce4-volumed rix,
+  /usr/bin/xfdesktop rix,
+  /usr/bin/xfsettingsd rix,
+  /usr/bin/xfwm4 rix,
+  /usr/bin/xrdb rix,
+  /usr/bin/xrdp-disconnect rix,
+  /usr/bin/xsetroot rix,
+  /usr/include/** r,
+  /usr/lib/** rix,
+  /usr/lib/gvfs/gvfsd rix,
+  /usr/lib/gvfs/gvfsd-trash rix,
+  /usr/lib/i386-linux-gnu/gconf/gconfd-2 rix,
+  /usr/lib{,32,64}/** mrw,
+  /usr/local/lib/python2.7/dist-packages/ r,
+  /usr/share/alsa/** r,
+  /usr/share/dbus-1/services/ r,
+  /usr/share/dbus-1/services/* r,
+  /usr/share/fonts/** r,
+  /usr/share/gvfs/mounts/ r,
+  /usr/share/gvfs/mounts/* r,
+  /usr/share/icons/ r,
+  /usr/share/icons/** r,
+  /usr/share/mime/* r,
+  /usr/share/pixmaps/ r,
+  /usr/share/pixmaps/** r,
+  /usr/share/pulseaudio/** r,
+  /usr/share/pyshared/** r,
+  /usr/share/themes/** r,
+  /usr/share/wallpapers/* r,
+  /usr/share/xfce4/** r,
+  /usr/share/xfwm4/** r,
+  /var/cache/fontconfig/* r,
+  /var/lib/**/ r,
+  /var/lib/dbus/machine-id r,
+  /var/spool/menus-common/ r,
+  /var/spool/menus-common/** r,
+  /var/spool/ulteo/ovd/** rw,
+  owner @{HOME}/ rwlk,
+  owner @{HOME}/** rwlk,
+  @{PROC}** r,
+}
