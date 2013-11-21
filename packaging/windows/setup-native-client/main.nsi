@@ -63,7 +63,7 @@
   VIAddVersionKey FileVersion "${FILE_VERSION}"
   VIAddVersionKey FileDescription "Ulteo OVD Native Client"
   VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
-  VIProductVersion "${PRODUCT_VERSION}"
+  VIProductVersion "${FILE_VERSION}"
 
 ;--------------------------------
 ;Interface Settings
