@@ -140,3 +140,17 @@ Summary: Ulteo Open Virtual Desktop
 %files -n ulteo-ovd-desktop-apparmor
 %defattr(-,root,root)
 %config /etc/apparmor.d/*
+
+###########################################
+%package -n ulteo-ovd-logout-dialog
+###########################################
+BuildArch: noarch
+Requires: python-gtk2
+Summary: Ulteo Open Virtual Desktop - Logout dialog
+
+%description -n ulteo-ovd-logout-dialog
+ Ulteo Open Virtual Desktop
+
+%files -n ulteo-ovd-logout-dialog
+%defattr(-,root,root)
+/usr/bin/ulteo-logout-dialog

@@ -18,7 +18,7 @@
 			<item name="restricted-menu" id="1"/>
 			<item name="tasklist" id="2"/>
 			<item name="clock" id="3"/>
-			<item name="actions" id="4"/>
+			<item name="launcher" id="4"/>
 		</items>
 	</panel>
 </panels>

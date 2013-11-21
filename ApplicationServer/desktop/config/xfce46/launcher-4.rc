@@ -1,0 +1,10 @@
+[Entry 0]
+Name=Logout
+Icon=system-log-out
+Exec=ulteo-logout-dialog
+Terminal=false
+StartupNotify=false
+
+[Global]
+MoveFirst=false
+ArrowPosition=0

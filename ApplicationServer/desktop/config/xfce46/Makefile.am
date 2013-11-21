@@ -20,7 +20,7 @@
 XFCE4DIR = $(sysconfdir)/ulteo/xdg/xfce4
 
 xfce4paneldir = $(XFCE4DIR)/panel
-xfce4panel_DATA = panels.xml tasklist-2.rc clock-3.rc
+xfce4panel_DATA = panels.xml tasklist-2.rc clock-3.rc launcher-4.rc
 
 xfce4conf_DATA = xfce4-desktop.xml xfce4-panel.xml xfce4-session.xml xfwm4.xml xsettings.xml
 xfce4confdir = $(XFCE4DIR)/xfconf/xfce-perchannel-xml

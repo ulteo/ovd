@@ -35,9 +35,10 @@
     <property name="plugin-3" type="string" value="clock">
       <property name="show-frame" type="bool" value="false"/>
     </property>
-    <property name="plugin-4" type="string" value="actions">
-      <property name="first-action" type="uint" value="1"/>
-      <property name="second-action" type="uint" value="0"/>
+    <property name="plugin-4" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="/var/spool/menus-common/quit.desktop"/>
+      </property>
     </property>
   </property>
 </channel>

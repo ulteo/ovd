@@ -11,7 +11,7 @@ Standards-Version: 3.7.3
 Package: ulteo-ovd-desktop
 Architecture: all
 Depends: ulteo-ovd-desktop-gtk-theme, dmz-cursor-theme, ulteo-xfce4-restricted-menu-plugin,
- xfce4-session, xfwm4, xfdesktop4, xfce4-panel
+ xfce4-session, xfwm4, xfdesktop4, xfce4-panel, ulteo-ovd-logout-dialog
 Recommends: ulteo-ovd-desktop-apparmor, xfce4-utils, thunar
 Conflicts: xfce (< 4.6)
 Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
@@ -47,3 +47,8 @@ Package: ulteo-ovd-desktop-apparmor
 Architecture: all
 Depends: apparmor
 Description: Ulteo Open Virtual Desktop
+
+Package: ulteo-ovd-logout-dialog
+Architecture: all
+Depends: python-gtk2
+Description: Ulteo Open Virtual Desktop - Logout dialog

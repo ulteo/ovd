@@ -6,5 +6,6 @@ GenericName=Logout
 GenericName[fr]=Quitter
 Comment=Logout from the session
 Comment[fr]=Quitter la session
-Exec=ulteo-logout-dialog
+Exec=xfce4-session-logout
 Icon=system-log-out
+

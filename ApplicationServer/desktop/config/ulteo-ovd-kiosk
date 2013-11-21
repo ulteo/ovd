@@ -104,6 +104,7 @@
   /usr/bin/xfce4-panel rix,
   /usr/bin/xfce4-session rix,
   /usr/bin/xfce4-session-logout rix,
+  /usr/bin/ulteo-logout-dialog rix,
   /usr/bin/xfce4-settings-helper rix,
   /usr/bin/xfce4-volumed rix,
   /usr/bin/xfdesktop rix,
