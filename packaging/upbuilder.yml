@@ -154,3 +154,10 @@ upbuilder:
       module: "setup-native-client-standalone"
       builder: tar
       archs: $(consts.ALL_ARCH)
+    wnos:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/wnos"
+      module: "ovd-wnos"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
