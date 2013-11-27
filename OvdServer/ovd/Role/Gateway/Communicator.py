@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
@@ -8,6 +8,7 @@
 # Author David LECHEVALIER <david@ulteo.com> 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
 # Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,13 +27,12 @@
 import asyncore
 import httplib
 import socket
+import re
 import xml.etree.ElementTree as parser
 
 from HttpMessage import HttpMessage, Protocol, page_error
 from Config import Config
 from ovd.Logger import Logger
-from Utils import gunzip, gzip
-
 from OpenSSL import SSL
 
 __all__ = ['SSLCommunicator', 'RdpClientCommunicator', 'RdpServerCommunicator',
@@ -48,7 +48,6 @@ class Communicator(asyncore.dispatcher):
 		self.communicator = communicator
 		self._buffer = ''
 		self.closed = False
-		self.fragmented = False
 		asyncore.dispatcher.__init__(self, sock=sock)
 	
 	
@@ -69,9 +68,6 @@ class Communicator(asyncore.dispatcher):
 		_writable = len(self.communicator._buffer) > 0
 		if _writable is False and self.communicator.closed is True:
 			self.close()
-		
-		if self.communicator.fragmented:
-			return False
 		
 		return _writable
 	
@@ -194,71 +190,79 @@ class RdpServerCommunicator(ServerCommunicator):
 HTTP Communicators
 """
 
-class HttpMetaCommunicator(object):
-	
-	def __init__(self):
-		super(HttpMetaCommunicator, self).__init__()
-		self.http = HttpMessage()
-	
-	
-	def handle_read(self):
-		if self.http.is_body():
-			if self._buffer == '':
-				self.http = HttpMessage()
-				self.fragmented = False
-			else:
-				if not self.fragmented:
-					return
-		
-		super(HttpMetaCommunicator, self).handle_read()
-		if self.make_http_message() is not None:
-			self._buffer = self.process()
-			self.fragmented = False
-			return
-		
-		# The packet seams to be fragmented
-		self.fragmented = True
-	
-	
-	def make_http_message(self):
-		if not self.http.is_headers():
-			res = self._buffer.partition("\r\n\r\n")
-			if res[1] is not '':
-				self.http.put_headers(res[0] + "\r\n")
-				if self.http.path is not '':
-					Logger.debug("Gateway:: HTTP request: " + self.http.path)
-				self._buffer = res[2]
-			else:
-				return None
-		
-		if not self.http.is_body():
-			self.http.put_body(self._buffer)
-			self._buffer = ''
-			#TODO: prefer this way (implement later)
-			#self._buffer = self._buffer[len_buf:]
-			if not self.http.is_body():
-				return None
-		
-		return self.http
-	
-	
-	def process(self):
-		raise NotImplemented()
-
-
-
-class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
+class HttpClientCommunicator(SSLCommunicator):
 	
 	def __init__(self, sock, ctrl=None, ssl_ctx=None):
 		self.f_ctrl = ctrl
 		self.ssl_ctx = ssl_ctx
-
-		HttpMetaCommunicator.__init__(self)
+		self.http = HttpMessage(self)
+		self.http_history = []
 		SSLCommunicator.__init__(self, sock)
+
+
+	def handle_read(self, data=None):
+		if data is None:
+			# Read data from socket
+			SSLCommunicator.handle_read(self)
+		else:
+			# Data has already been read by ProtocolDetectDispatcher
+			self._buffer = data
+
+		if not self.http.is_ready():
+			# Parse it until ready
+			if self.make_http_message():
+				# Now it is ready
+				self.http_history.append(self.http) # Push http object in history
+				self._buffer = self.process() # Stream it
+		else:
+			# Data is streamed "on-the-fly"
+			self._buffer = self._buffer # Stream it
+
+		if self.http.is_complete() :
+			self.http = HttpMessage(self)
 	
+	
+	def make_http_message(self):
+		# Do we have headers ?
+		if not self.http.have_headers():
+			if self.http.put_headers() is None:
+				return False
+
+		# Now we have valid headers
+
+		# Push data
+		self.http.put_body()
+
+		return self.http.is_ready()
+
 	
 	def process(self):
-		
+		# Rewrite GET on /ovd/guacamole/ovdlogin
+		if self.http.path.startswith("/ovd/guacamole/ovdlogin"):
+			match = re.search("(?P<separator>[?&])token=(?P<token>[^&]*)", self.http.path)
+
+			if match is not None:
+				token = match.group("token")
+				address = self.f_ctrl.send(("digest_token", token))
+
+				if not address or type(address) != tuple or len(address)<2:
+					raise Exception('token authorization failed for: ' + token)
+
+				host, port = address
+				path = self.http.path[0:match.start("separator")]
+				path+= match.group("separator")+"server="+host
+				path+= self.http.path[match.end("token"):]
+
+				match = HttpMessage.http_req_ptn.search(self.http.headers)
+
+				if match is not None:
+					headers = self.http.headers[0:match.start("url")]
+					headers+= path
+					headers+= self.http.headers[match.end("url"):]
+
+					self.http.path = path
+					self.http.headers = headers
+
 		# test path permission
 		http_code = self.http.auth()
 		if http_code is not httplib.OK:
@@ -298,44 +302,75 @@ class HttpClientCommunicator(HttpMetaCommunicator, SSLCommunicator):
 		return self.http.show()
 
 
+class HttpServerCommunicator(ServerCommunicator):
 
-class HttpMetaServerCommunicator(HttpMetaCommunicator):
-	
-	def __init__(self, ctrl):
+	def __init__(self, addr, ctrl, communicator=None):
 		self.f_ctrl = ctrl
+		self.http = HttpMessage(self)
+		self.http_communicator = None
+		ServerCommunicator.__init__(self, addr, communicator=communicator)
 
-		HttpMetaCommunicator.__init__(self)
+
+	def handle_read(self):
+		# Read data in buffer
+		ServerCommunicator.handle_read(self)
+
+		# Fetch the Http request from parent communicator
+		if (self.http_communicator is None) and (len(self.communicator.http_history) > 0):
+			self.http_communicator = self.communicator.http_history.pop(0)
+
+			if self.http_communicator.path in Config.force_buffering:
+				Logger.debug("Force buffering : "+self.http_communicator.path)
+				self.http.force_full_buffering = True
+
+		if not self.http.is_ready():
+			# Parse it until ready
+			if self.make_http_message():
+				# Now it is ready
+				self._buffer = self.process() # Stream it
+				self.http_communicator = None
+		else:
+			# Data is streamed "on-the-fly"
+			self._buffer = self._buffer # Stream it
+
+		if self.http.is_complete() :
+			self.http = HttpMessage(self)
 	
 	
-	def process(self):
+	def make_http_message(self):
+		# Do we have headers ?
+		if not self.http.have_headers():
+			if self.http.put_headers() is None:
+				return False
 		
+		# Now we have valid headers
+
+		# Push data
+		self.http.put_body()
+
+		return self.http.is_ready()
+
+
+	def process(self):
 		# in any case of redirection with HTTP protocol use
-		if self.http.is_redirection():
+		if self.http.have_redirection():
 			location = self.http.get_header("Location")
 			if location is not None and location.startswith("http://"):
 				location = location.replace("http", "https", 1)
 				self.http.set_header("Location", location)
 		
 		# XML rewriting on start.php request
-		if self.communicator.http.path == "/ovd/client/start.php" and \
-		   not self.communicator.http.xml_rewrited:
-			is_zipped = (self.http.get_header('Content-Encoding') == 'gzip')
-			if is_zipped:
-				self.http.body = gunzip(self.http.body)
-			
-			xml = self.rewrite_xml()
-			if xml is not None:
-				if is_zipped:
-					xml = gzip(xml)
-				self.http.set_body(xml)
-				self.http.xml_rewrited = True
-		
+		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start.php"):
+			body = self.http.get_body()
+			xml = self.rewrite_xml(body)
+			self.http.set_body(xml)
+
 		return self.http.show()
 	
 	
-	def rewrite_xml(self):
+	def rewrite_xml(self, body):
 		try:
-			session = parser.XML(self.http.body)
+			session = parser.XML(body)
 			if session.tag.lower() != 'session':
 				raise Exception("not a 'session' XML response")
 		except Exception, e:
@@ -362,18 +397,100 @@ class HttpMetaServerCommunicator(HttpMetaCommunicator):
 
 
 
-class HttpServerCommunicator(HttpMetaServerCommunicator, ServerCommunicator):
-	
-	def __init__(self, addr, ctrl, communicator=None):
-		HttpMetaServerCommunicator.__init__(self, ctrl)
-		ServerCommunicator.__init__(self, addr, communicator=communicator)
+class HttpsServerCommunicator(SecureServerCommunicator):
 
-
-
-class HttpsServerCommunicator(HttpMetaServerCommunicator, SecureServerCommunicator):
-	
 	def __init__(self, remote, ctrl, communicator=None):
 		(addr, self.ssl_ctx) = remote
-
-		HttpMetaServerCommunicator.__init__(self, ctrl)
+		self.f_ctrl = ctrl
+		self.http = HttpMessage(self)
+		self.http_communicator = None
 		SecureServerCommunicator.__init__(self, addr, communicator=communicator)
+
+		self.parent_http = None
+		if communicator is not None:
+			self.parent_http = self.communicator.http
+
+
+	def handle_read(self):
+		# Read data in buffer
+		SecureServerCommunicator.handle_read(self)
+
+		# Fetch the Http request from parent communicator
+		if (self.http_communicator is None) and (len(self.communicator.http_history) > 0):
+			self.http_communicator = self.communicator.http_history.pop(0)
+
+			if self.http_communicator.path in Config.force_buffering:
+				Logger.debug("Force buffering : "+self.http_communicator.path)
+				self.http.force_full_buffering = True
+
+		if not self.http.is_ready():
+			# Parse it until ready
+			if self.make_http_message():
+				# Now it is ready
+				self._buffer = self.process() # Stream it
+				self.http_communicator = None
+		else:
+			# Data is streamed "on-the-fly"
+			self._buffer = self._buffer # Stream it
+
+		if self.http.is_complete() :
+			self.http = HttpMessage(self)
+
+
+	def make_http_message(self):
+		# Do we have headers ?
+		if not self.http.have_headers():
+			if self.http.put_headers() is None:
+				return False
+
+		# Now we have valid headers
+
+		# Push data
+		self.http.put_body()
+
+		return self.http.is_ready()
+
+
+	def process(self):
+		# in any case of redirection with HTTP protocol use
+		if self.http.have_redirection():
+			location = self.http.get_header("Location")
+			if location is not None and location.startswith("http://"):
+				location = location.replace("http", "https", 1)
+				self.http.set_header("Location", location)
+
+		# XML rewriting on start.php request
+		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start.php"):
+			body = self.http.get_body()
+			xml = self.rewrite_xml(body)
+			self.http.set_body(xml)
+
+		return self.http.show()
+
+
+	def rewrite_xml(self, body):
+		try:
+			session = parser.XML(body)
+			if session.tag.lower() != 'session':
+				raise Exception("not a 'session' XML response")
+		except Exception, e:
+			Logger.error("Gateway:: parsing XML session failed: %s" % e)
+			return None
+
+		session.set('mode_gateway', 'on')
+		for server in session.findall('server'):
+			port = Protocol.RDP
+
+			if server.attrib.has_key("port"):
+				try:
+					port = int(server.attrib["port"])
+				except ValueError,err:
+					Logger.warn("Gateway:: Invalid protocol: server port attribute is not a digit (%s)"%(server.attrib["port"]))
+
+			token = self.f_ctrl.send(('insert_token', (server.attrib['fqdn'], port)))
+			server.set('token', token)
+			del server.attrib['fqdn']
+			if server.attrib.has_key("port"):
+				del server.attrib["port"]
+
+		return parser.tostring(session)

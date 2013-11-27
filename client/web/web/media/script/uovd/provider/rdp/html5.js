@@ -52,7 +52,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 	/* Load server */
 	var url = "/ovd/guacamole/ovdlogin?"
 	url+="id=0&";
-	url+="server="+server.fqdn+"&";
+	if(server.token) {
+		url+="token="+server.token+"&";
+	} else {
+		url+="server="+server.fqdn+"&";
+	}
 	url+="username="+server.login+"&";
 	url+="password="+server.password+"&";
 	url+="width="+width+"&";
@@ -135,7 +139,11 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 	/* Load server */
 	var url = "/ovd/guacamole/ovdlogin?"
 	url+="id=0&";
-	url+="server="+server.fqdn+"&";
+	if(server.token) {
+		url+="token="+server.token+"&";
+	} else {
+		url+="server="+server.fqdn+"&";
+	}
 	url+="username="+server.login+"&";
 	url+="password="+server.password+"&";
 	url+="width="+width+"&";
@@ -250,7 +258,11 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 
 		var url = "/ovd/guacamole/ovdlogin?"
 		url+="id="+index+"&";
-		url+="server="+server.fqdn+"&";
+		if(server.token) {
+			url+="token="+server.token+"&";
+		} else {
+			url+="server="+server.fqdn+"&";
+		}
 		url+="username="+server.login+"&";
 		url+="password="+server.password+"&";
 		url+="width="+self.session_management.parameters["width"]+"&";

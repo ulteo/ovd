@@ -301,8 +301,10 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		/* Applet startSession handler */
 		self.applet_sessionReady = function() {
 			var success = true;
-			if(self.session_management.session.mode_gateway == true) {
-				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.token, server.login, server.password);
+			if(server.token) {
+				var fqdn = window.location.hostname;
+				var port = window.location.port !=  '' ? window.location.port : 443;
+				success = self.main_applet[0].serverConnect(0, fqdn, port, server.token, server.login, server.password);
 			} else {
 				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password);
 			}
@@ -478,8 +480,10 @@ uovd.provider.Java.prototype.connectApplications = function() {
 				self.main_applet[0].serverPrepare(i, serialized);
 
 				var success = true;
-				if(self.session_management.session.mode_gateway == true) {
-					success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password);
+				if(server.token) {
+					var fqdn = window.location.hostname;
+					var port = window.location.port !=  '' ? window.location.port : 443;
+					success = self.main_applet[0].serverConnect(i, fqdn, port, server.token, server.login, server.password);
 				} else {
 				  success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password);
 				}
