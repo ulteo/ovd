@@ -51,16 +51,13 @@
 input[type=text], input[type=password], select {
 	background-color: #FFF;
 	border: 1px solid #BBB;
-	color: grey;
+	color: 808080;
 	border: 1px solid #CCCCCC;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
 	transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
 	border-radius: 4px 4px 4px 4px;
-	color: #555555;
 	display: inline-block;
 	font-size: 1.3em;
-	/*height: 20px;
-	line-height: 20px;*/
 	margin-bottom: 10px;
 	padding: 4px 6px;
 	vertical-align: middle;	
@@ -84,6 +81,7 @@ input[type=button] {
 	font-size: 14px;
 	padding: 6px 13px;
 	cursor: pointer;
+	color: #808080;
 }
 
 input[type=submit] {
@@ -99,7 +97,7 @@ input[type=submit] {
 	border-width: 1px;
 	border-style: solid;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-	color: #333333;
+	color: #808080;
 	display: inline-block;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
 }
@@ -113,7 +111,7 @@ input[type=submit]:active {
 input[type=submit]:focus, input[type=submit]:hover {
 	background-position: 0 -15px;
 	background-image: none;
-	color: #333333;
+	color: #808080;
 	transition: background-position 0.1s linear 0s;
 }
 
@@ -162,7 +160,7 @@ input[type=radio]:checked + label {
 	border: 1px solid #CCCCCC;
 	border-radius: 4px 4px 4px 4px;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-	color: #555555;
+	color: #808080;
 	display: inline-block;
 	font-size: 1.3em;
 	font-style: normal;
