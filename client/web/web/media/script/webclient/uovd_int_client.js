@@ -324,18 +324,32 @@ function initialize_ui() {
 		} else {                if (jQuery(this).val() == '') jQuery('#sessionmanager_host').css('color', 'grey').val(example); }
 		settings.sessionmanager = jQuery(this).val();
 	});
+	
 	jQuery('#session_language').on('change keyup', function() {
 		settings.language = jQuery(this).val();
-
+		
+		var url = jQuery('#session_language').find(":selected").css("background-image");
+		if (! url) {
+			url = "";
+		}
+		
 		/* Update flag */
-		jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
-
+		jQuery('#session_language').css({"background-image": url});
+		
 		/* Translate UI */
 		translateInterface(settings.language);
 		set_component_orientation(settings.language);
-
+		
 		validate_settings();
 	});
+	
+	var url = jQuery('#session_language').find(":selected").css("background-image");
+	if (! url) {
+		url = "";
+	}
+	
+	/* Init flag flag */
+	jQuery('#session_language').css({"background-image": url});
 
 	/* Initialize the SM Host field */
 	if (jQuery('#sessionmanager_host').val() == '') { jQuery('#sessionmanager_host').css('color', 'grey').val(i18n['sessionmanager_host_example']); }
@@ -356,9 +370,6 @@ function initialize_ui() {
 	/* Translate text */
 	applyTranslations(i18n_tmp);
 	set_component_orientation(settings.language);
-
-	/* Initial flag */
-	jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png');
 }
 
 function initialize_framework() {

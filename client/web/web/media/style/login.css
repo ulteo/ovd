@@ -172,3 +172,16 @@ input[type=radio]:checked + label {
 	vertical-align: middle;
 	width: 230px;
 }
+
+
+#session_language {
+	padding-left: 30px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+#session_language option {
+	padding-left: 30px;
+	background-repeat: no-repeat;
+	background-position: 7px center;
+}
