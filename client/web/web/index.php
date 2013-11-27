@@ -230,6 +230,7 @@ if ($gateway_first) {
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/menu_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_taskbar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
