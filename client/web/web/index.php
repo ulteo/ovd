@@ -166,6 +166,7 @@ if ($gateway_first) {
 		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
 		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/menu.css" />
 <?php } ?>
 <?php if (!$big_image_map) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
@@ -201,6 +202,8 @@ if ($gateway_first) {
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_keyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/clipboard_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/print_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_manager.js" charset="utf-8"></script>
@@ -224,6 +227,7 @@ if ($gateway_first) {
 		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/menu_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
@@ -386,6 +390,7 @@ if ($gateway_first) {
 			</div>
 			<div id="desktopContainer"></div>
 			<div id="windowsContainer"></div>
+			<div id="menuContainer"></div>
 		</div>
 
 		<div id="main">
