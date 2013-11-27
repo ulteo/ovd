@@ -38,50 +38,54 @@ setup_args["version"] = "@VERSION@"
 
 # OS detection
 if sys.platform == "linux2":
-    setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform']
-    setup_args["data_files"] = [('/usr/bin', \
-        ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
+	setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform', 'ovd_shells.Platform.Linux']
+	setup_args["data_files"] = [('/usr/bin', \
+		['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
 
 elif sys.platform == "win32":
-    import py2exe
-    sys.argv.append("py2exe")
-
-    try:
-        import modulefinder
-        import win32com,sys
-        for p in win32com.__path__[1:]:
-            modulefinder.AddPackagePath("win32com", p)
-        for extra in ["win32com.shell","win32com.mapi"]:
-            __import__(extra)
-            m = sys.modules[extra]
-            for p in m.__path__[1:]:
-                modulefinder.AddPackagePath(extra, p)
-    except ImportError:
-        # no build path setup, no worries.
-        pass
-
-    class Target:
-        def __init__(self, script, description):
-            self.script = script
-            self.description = description
-            self.company_name = "Ulteo SAS"
-            self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
-            self.name = "Ulteo OVD"
-            self.icon_resources = [(0, "media\\ulteo.ico")]
-            self.version = "@VERSION_STRICT@"
-            self.product_version = "@VERSION@"
-
-
-    setup_args["zipfile"] = "lib/shared.zip"
-    setup_args["windows"] = [
+	import py2exe
+	sys.argv.append("py2exe")
+	
+	# Force the include of ApS because of dynamic imports
+	sys.argv.append("-p")
+	sys.argv.append("ovd_shells.Platform.Windows")
+	
+	try:
+		import modulefinder
+		import win32com,sys
+		for p in win32com.__path__[1:]:
+			modulefinder.AddPackagePath("win32com", p)
+		for extra in ["win32com.shell","win32com.mapi"]:
+			__import__(extra)
+			m = sys.modules[extra]
+			for p in m.__path__[1:]:
+				modulefinder.AddPackagePath(extra, p)
+	except ImportError:
+		# no build path setup, no worries.
+		pass
+	
+	class Target:
+		def __init__(self, script, description):
+			self.script = script
+			self.description = description
+			self.company_name = "Ulteo SAS"
+			self.copyright = "Copyright (C) @YEAR@ Ulteo SAS"
+			self.name = "Ulteo OVD"
+			self.icon_resources = [(0, "media\\ulteo.ico")]
+			self.version = "@VERSION_STRICT@"
+			self.product_version = "@VERSION@"
+	
+	
+	setup_args["zipfile"] = "lib/shared.zip"
+	setup_args["windows"] = [
 		Target("OvdDesktop", "Desktop OVD session shell"),
 		Target("OvdRemoteApps", "RemoteApps OVD session shell"),
 		Target("startovdapp", "OVD application wrapper"),
-    ]
-    setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
+	]
+	setup_args["options"] = {"py2exe": {"dll_excludes": ["w9xpopen.exe"]}}
 
 else:
-   raise Exception("No supported platform")
+	raise Exception("No supported platform")
 
 if __name__ == "__main__":
-    setup(**setup_args)
+	setup(**setup_args)
