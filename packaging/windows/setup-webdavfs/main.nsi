@@ -61,7 +61,7 @@
   VIAddVersionKey FileVersion "${FILE_VERSION}"
   VIAddVersionKey FileDescription "${PRODUCT_NAME}"
   VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
-  VIProductVersion "${PRODUCT_VERSION}"
+  VIProductVersion "${FILE_VERSION}"
 
 ;--------------------------------
 ;Interface Settings
