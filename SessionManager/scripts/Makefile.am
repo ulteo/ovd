@@ -7,11 +7,13 @@ sm-config:
 	sed -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
 		-e "s,@LOCALSTATEDIR@,$(localstatedir)," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
+		-e "s,@CHROOT_URL@,$(chrooturl)," \
 			< $(srcdir)/sm-config.in > $@
 
 sm-config.8:
 	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
+		-e "s,@CHROOT_URL@,$(chrooturl)," \
 		< $(srcdir)/sm-config.8.in > $@
 
 clean-local:

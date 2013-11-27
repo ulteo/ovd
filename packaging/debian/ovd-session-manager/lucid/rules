@@ -10,6 +10,9 @@ install/ulteo-ovd-session-manager::
 	A2USER=www-data ; \
 	sed -i "s/@APACHE_USER@/$${A2USER}/" debian/ulteo-ovd-session-manager/etc/ulteo/sessionmanager/sessionmanager.cron
 	
+	URL=$(shell grep PROPOSED_URL= scripts/sm-config | awk '{ print substr($$1, 15, length($$1) - 15); }') ; \
+	sed -i "s,@CHROOT_URL@,$${URL},g" debian/ulteo-ovd-session-manager.templates
+	
 	# remove sm-config (useless on Debian OS) and var folders create later
 	rm -rf debian/ulteo-ovd-session-manager/var
 	rm -rf debian/ulteo-ovd-session-manager/usr/bin

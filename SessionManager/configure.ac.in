@@ -28,6 +28,9 @@ AC_INIT([@MODULE@], [@VERSION@], [http://bugs.ulteo.com])
 AM_INIT_AUTOMAKE([1.9 tar-pax])
 AC_PROG_INSTALL
 
+chrooturl=@CHROOT_URL@
+AC_SUBST([chrooturl])
+
 # change libdir for HA OCF resource
 libdir='${prefix}/lib'
 

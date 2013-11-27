@@ -24,13 +24,15 @@ args="--without-libchart"
 
 # get module
 module=ovd-session-manager
-set -- $(getopt -u m:p "$@")
+url=''
+set -- $(getopt -u m:pu: "$@")
 [ $# -lt 1 ] && exit 1
 while [ $# -gt 0 ]
 do
     case "$1" in
         -m) module="$2" ; shift ;;
         -p) args="$args --enable-premium" ;;
+        -u) url="$2" ; shift ;;
         --) shift; break ;;
         *)  break ;;
     esac
@@ -53,6 +55,7 @@ fi
 sed -e "s/@MODULE@/${module}/g" \
     -e "s/@VERSION@/${version}/g" \
     -e "s,@PREMIUM_MK@,${premium_mk},g" \
+    -e "s,@CHROOT_URL@,${url},g" \
     configure.ac.in > configure.ac
 
 autoreconf -vfi && ./configure $args

@@ -21,7 +21,7 @@ _Description: Password input error
 
 Template: ulteo-ovd-session-manager/tarball_url
 Type: string
-Default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=trunk
+Default: @CHROOT_URL@
 _Description: Applications chroot URL:
  Application servers will need to retrieve an applications tarball, hosted on
  this session manager. A default tarball can be downloaded and stored for you.
