@@ -5,6 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2013
  * Author Omar AKHAM <oakham@ulteo.com> 2011
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -163,7 +164,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '</div>';
 
     $str.= '<div class="section">';
-    $str.= '<h3>'._('Administrator account').'</h3>';
+    $str.= '<h3>'._('Authentication (require a user with read right on the tree)').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Login:').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
     $str.= '<tr><td>'._('Password:').'</td><td><input type="password" name="admin_password" value="'.$form['admin_password'].'" /></td></tr>';
