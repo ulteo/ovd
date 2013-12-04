@@ -30,7 +30,7 @@ from Config import Config
 from ovd.Logger import Logger
 from SessionsRepository import SessionsRepository
 from headers_utils import *
-from Utils import replace_params, exec_sql
+from Utils import replace_params
 from ntlm import HTTPNtlmAuthHandler
 
 import mechanize
@@ -46,8 +46,7 @@ class Filter(object):
     def __init__(self, app_config, options):
         for opt in options.keys():
             if isinstance(options[opt], basestring):
-                if not options[opt].startswith('EXECUTE_SQL: '):
-                    options[opt] = replace_params(options[opt], app_config)
+                options[opt] = replace_params(options[opt], app_config)
                 
         self.config = app_config
         self.options = options
@@ -65,7 +64,6 @@ class Filter(object):
         
     def get_value(self, value, session):
         value = replace_params(value, self.config)
-        value = exec_sql(value, self.config, session)
         return value.format(**session.credentials())
         
 

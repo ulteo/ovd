@@ -65,8 +65,6 @@ def setup_app(config, app_id, app_name):
                 app_config[key] = '{USE_CURRENT_USER_LOGIN}'
             elif config['Configuration'][key]['type'] == 'user_passwd':
                 app_config[key] = '{USE_CURRENT_USER_PASSWD}'
-            elif config['Configuration'][key]['type'] == 'dbvalue':
-                app_config[key] = 'EXECUTE_SQL: ' + config['Configuration'][key]['value']
             else:
                 app_config[key] = config['Configuration'][key]['value']
         

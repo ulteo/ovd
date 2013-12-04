@@ -26,48 +26,12 @@ import pycurl
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
-from ovd.SMRequestManager import SMRequestManager as GenericSMRequestManager
 from Config import Config
 from SessionsRepository import SessionsRepository
 
 
 RE_PARAM = re.compile('\$\(([^)]*)\)')
-
-
-class SMRequestManager(GenericSMRequestManager):
-    def run_sql(self, app_id, query, params):
-        doc = Document()
-        rootNode = doc.createElement("run-sql")
-        rootNode.setAttribute("app_id", app_id)
-        rootNode.setAttribute("query", query)
-        
-        for param, value in params.items():
-            paramNode = doc.createElement('param')
-            paramNode.setAttribute('name', param)
-            textNode = doc.createTextNode(value)
-            paramNode.appendChild(textNode)
-            rootNode.appendChild(paramNode)
-            
-        doc.appendChild(rootNode)
-        
-        response = self.send_packet("/run/sql", doc)
-        if response is False:
-            Logger.warn("SMRequest::run_sql Unable to send packet")
-            return None
-        
-        document = self.get_response_xml(response)
-        if document is None:
-            Logger.warn("SMRequest:run_sql not XML response")
-            return None
-        
-        rootNode = document.documentElement
-        Logger.warn("SMRequest:run_sql result: "+rootNode.nodeName)
-        
-        if rootNode.nodeName != "sql-result":
-            return None
-        
-        return rootNode
-        
+      
 
 def gzip(buf):
     zbuf = StringIO()
@@ -87,36 +51,10 @@ def gunzip(buf):
 def replace_params(text, params):
     def get_value(m):
         value = params.get(m.group(1), '')
-        if not value.startswith('EXECUTE_SQL: '):
-            value = replace_params(value, params)
+        value = replace_params(value, params)
         return value
         
     return RE_PARAM.sub(get_value, text)
-
-
-def exec_sql(value, app_config, session):
-    if not value.startswith('EXECUTE_SQL: '):
-        return value
-
-    query = value[13:]
-
-    result = session.get(query, None)
-    if result is None:
-        ## send query to SM, save result in session for later use
-        params = {}
-        for param in RE_PARAM.findall(query):
-            value = '$({0})'.format(param)
-            value = replace_params(value, app_config)
-            value = value.format(**session.credentials())
-            params[param] = value
-        
-        Logger.debug("Executing query {0} with params {1}".format(query, str(params)))
-        sm_request_manager = SMRequestManager()
-        sql_result_dom = sm_request_manager.run_sql(app_config['app_id'], query, params)
-        result = sql_result_dom.getAttribute('value')
-
-        session[query] = result
-    return result
 
 
 HTTP_200_connected = """
