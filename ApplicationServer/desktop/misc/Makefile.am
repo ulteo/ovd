@@ -1,4 +1,4 @@
-desktop_DATA = quit.desktop disconnect.desktop
+desktop_DATA = quit.desktop quit-legacy.desktop disconnect.desktop
 desktopdir =  $(localstatedir)/spool/menus-common/
 
 ulteoxdgconf_DATA = xinitrc

@@ -56,6 +56,11 @@ This daemon manages the Open Virtual Desktop servers.
 %{__ln_s} /usr/share/ulteo/ovd/slaveserver/ulteo-ovd-slaveserver.py %{buildroot}%{_sbindir}/ulteo-ovd-slaveserver
 %{__install} -T -D examples/ulteo-ovd-slaveserver.rhel.init %{buildroot}/%{_sysconfdir}/init.d/ulteo-ovd-slaveserver
 
+%if %{defined suse_version}
+# Change some default configuration related to OpenSUSE distribution
+sed -e "s/# linux_skel_directory = /linux_skel_directory = \/etc\/skel/" -i  %{buildroot}/%{_sysconfdir}/ulteo/ovd/slaveserver.conf
+sed -e "s/# linux_fuse_group = /linux_fuse_group = trusted/" -i %{buildroot}/%{_sysconfdir}/ulteo/ovd/slaveserver.conf
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -148,12 +153,22 @@ if [ "$1" = "1" ]; then
     service ulteo-ovd-slaveserver restart
 fi
 
+[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
+for i in icons pixmaps mime themes; do
+	[ -d /usr/share/$i -a ! -e /usr/share/ovd/$i ] && ln -s /usr/share/$i /usr/share/ovd/
+done
+
 
 %postun -n ulteo-ovd-slaveserver-role-aps
 if [ "$1" = "0" ]; then
     %{_sbindir}/ovd-slaveserver-role del ApplicationServer
     service ulteo-ovd-slaveserver restart
 fi
+
+for i in icons pixmaps mime themes; do
+	[ -L /usr/share/ovd/$i ] && rm /usr/share/ovd/$i
+done
+rmdir /usr/share/ovd || echo "Do not delete /usr/share/ovd"
 
 
 %files -n ulteo-ovd-slaveserver-role-aps

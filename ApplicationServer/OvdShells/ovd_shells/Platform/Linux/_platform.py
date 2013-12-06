@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -104,11 +104,15 @@ def getUserSessionDir():
 def startDesktop():
 	os.environ["XDG_DATA_DIRS"] = "/usr/share/ovd:"+os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
 	os.environ["OVD_APPS_DIR"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg", "applications")
+	if os.path.exists("/etc/ulteo/xdg"):
+		os.environ["XDG_CONFIG_DIRS"] = "/etc/ulteo/xdg"
 	
 	os.system("/etc/xrdp/startwm.sh")
 
 def startWM():
 	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
+	if os.path.exists("/etc/ulteo/xdg"):
+		os.environ["XDG_CONFIG_DIRS"] = "/etc/ulteo/xdg"
 	
 	launch("x-window-manager")
 

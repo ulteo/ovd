@@ -1,0 +1,181 @@
+#!/usr/bin/env python
+ 
+# Copyright (C) 2013 Ulteo SAS
+# http://www.ulteo.com
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+
+import os
+import sys
+import pygtk
+pygtk.require('2.0')
+import gtk
+import gettext
+import time
+import subprocess
+import tempfile
+import fcntl
+
+
+try:
+	_ = gettext.translation("xfce4-session", localedir=os.environ.get("LOCALEDIR"), codeset="utf-8").lgettext
+except:
+	print >>sys.stderr, "Unable to load translation"
+	_ = lambda(string): string
+
+
+class LogoutDialog:
+	FULLSCREEN_MASK = False
+	KILLALL = False
+	
+	def createButton(self, label=None, image=None):
+		_button = gtk.Button()
+		_box = gtk.VBox(False, 0)
+		_box.set_border_width(2)
+		_image = gtk.Image()
+		_image.set_from_icon_name(image, gtk.ICON_SIZE_DIALOG)
+		_label = gtk.Label(label)
+		_box.pack_start(_image, False, False, 3)
+		_box.pack_start(_label, False, False, 3)
+		_button.add(_box)
+		return _button
+	
+	
+	def draw_on_top(self, widget, event):
+		widget.window.draw_pixbuf(widget.style.bg_gc[gtk.STATE_NORMAL], self.screenshot, 0, 0, 0,0)
+	
+	
+	def __init__(self):
+		self.lock()
+
+		if self.FULLSCREEN_MASK:
+			width = gtk.gdk.screen_width()
+			height = gtk.gdk.screen_height()
+			self.screenshot = gtk.gdk.Pixbuf.get_from_drawable(
+				gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, width, height),
+				gtk.gdk.get_default_root_window(),
+				gtk.gdk.colormap_get_system(),
+				0, 0, 0, 0, width, height)
+			
+			self.screenshot.saturate_and_pixelate(self.screenshot, 0, False)
+			
+			self.top = gtk.Window(gtk.WINDOW_TOPLEVEL)
+			hbbox = gtk.HButtonBox()
+			self.top.add(hbbox)
+			hbbox.connect('expose-event', self.draw_on_top)
+			hbbox.show()
+			self.top.fullscreen()
+			self.top.show()
+		
+		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL | gtk.WINDOW_POPUP)
+		self.window.set_resizable(False)
+		self.window.set_modal(True)
+		self.window.set_can_focus(True);
+		if self.FULLSCREEN_MASK:
+			self.window.set_decorated(False);
+			self.window.set_transient_for(self.top);
+		
+		self.window.connect("destroy", self.destroy)
+		self.window.set_title(_("Logout"))
+		self.window.set_border_width(10)
+		
+		vbox = gtk.VBox(False, 5)
+		vbox.set_border_width(10)
+		self.window.add(vbox)
+		
+		align = gtk.Alignment(0.5, 0.5, 0, 0)
+		vbox.pack_start(align, False, False, 5)
+		
+		self.label = gtk.Label("<b>%s</b>" % _("Are you sure you want to log out?"))
+		self.label.set_use_markup(True)
+		align.add(self.label)
+
+		align = gtk.Alignment(0.5, 0.5, 0, 0)
+		vbox.pack_start(align, False, False, 5)
+		
+		btn_vbox = gtk.HBox(True, 15)
+		
+		button_disconnect = self.createButton(label=_("Disconnect"), image="gnome-lockscreen")
+		button_logout = self.createButton(label=_("Logout"), image="system-log-out")
+		button_cancel = self.createButton(label=_("Cancel"), image="process-stop")
+		
+		button_disconnect.connect("clicked", self.disconnect)
+		button_logout.connect("clicked", self.logout)
+		button_cancel.connect("clicked", self.destroy)
+		
+		vbox.add(btn_vbox)
+		btn_vbox.pack_start(button_disconnect)
+		btn_vbox.pack_start(button_logout)
+		btn_vbox.pack_start(button_cancel)
+
+		self.window.set_focus(button_cancel)
+		self.window.set_icon_name("system-log-out")
+		self.window.set_position(gtk.WIN_POS_CENTER)
+		self.window.show_all()
+		
+		
+	def destroy(self, widget, data=None):
+		self.unlock()
+		gtk.main_quit()
+	   
+	
+	def logout(self, widget):
+		self.unlock()
+		proc = subprocess.Popen(["xfce4-session-logout", ], shell=True)
+		if self.KILLALL:
+			start = time.time()
+			while proc.poll() == None:
+				time.sleep(0.5)
+				if time.time() - start > 10:
+					subprocess.call("kill -9 -1", shell=True)
+		
+		gtk.main_quit()
+	
+	
+	def disconnect(self, widget):
+		self.unlock()
+		subprocess.call("xrdp-disconnect", shell=True)
+		gtk.main_quit()
+	
+	
+	def lock(self):
+		self.lockfile = os.path.join(tempfile.gettempdir(), "%s.%d.lock" % (os.path.basename(sys.argv[0]), os.getuid()))
+		self.fp = open(self.lockfile, 'w')
+		try:
+				fcntl.lockf(self.fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+		except IOError:
+				print "Another instance is already running, quitting."
+				sys.exit(-1)
+		self.locked = True
+	
+	
+	def unlock(self):
+		if not self.locked:
+				return
+		
+		try:
+			fcntl.lockf(self.fp, fcntl.LOCK_UN)
+			if os.path.isfile(self.lockfile):
+				os.unlink(self.lockfile)
+			self.locked = False
+		except Exception as e:
+			print("Error: %s" % e)
+
+
+if __name__ == "__main__":
+	LogoutDialog()
+	gtk.main()

@@ -46,6 +46,7 @@ class Logger:
 	def __init__(self, name, loglevel, filename = None, stdout = False):
 		self.logging = None
 		self.loglevel = loglevel
+		self.running = False
 		
 		self.fileHandler = None
 		self.consoleHandler = None
@@ -97,9 +98,11 @@ class Logger:
 				self.thread.start()
 		else:
 			if self.isThreaded():
+				self.running = False
+				self.thread.join()
+				
 				self.lock.acquire()
 				self.queue.close()
-				self.thread.join()
 				self.queue = None
 				self.lock.release()
 	
@@ -109,7 +112,8 @@ class Logger:
 	
 	
 	def run(self):
-		while not self.queue._closed:
+		self.running = True
+		while not self.queue._closed and self.running:
 			# Python 2.6: raise Empty even when queue is closed.
 			
 			try:

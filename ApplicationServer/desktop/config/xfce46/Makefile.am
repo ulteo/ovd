@@ -1,8 +1,7 @@
-#!/bin/sh -e
-
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,19 +17,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# get version
-if [ -n "$OVD_VERSION" ]; then
-    version="$OVD_VERSION"
-else
-    version=$(cat VERSION | head -n 1)~dev
-fi
+XFCE4DIR = $(sysconfdir)/ulteo/xdg/xfce4
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in2 > configure.ac
+xfce4paneldir = $(XFCE4DIR)/panel
+xfce4panel_DATA = panels.xml tasklist-2.rc clock-3.rc launcher-4.rc
 
+xfce4conf_DATA = xfce4-desktop.xml xfce4-panel.xml xfce4-session.xml xfwm4.xml xsettings.xml
+xfce4confdir = $(XFCE4DIR)/xfconf/xfce-perchannel-xml
 
-pushd icons && ./autogen.py && popd
-
-xdt-autogen $@
-
-# hack for certain intltoolize version that doesn't create these files
-touch intltool-extract.in intltool-merge.in intltool-update.in
+EXTRA_DIST = $(xfce4conf_DATA) $(xfce4panel_DATA)
