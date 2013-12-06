@@ -36,7 +36,7 @@ Description: Ulteo Open Virtual Desktop - file server role for slave server
 
 Package: ulteo-ovd-slaveserver-role-web
 Architecture: all
-Depends: ${python:Depends}, openssl, python-openssl, debconf, ulteo-ovd-slaveserver, python-ntlm, python-mechanize
+Depends: ${python:Depends}, openssl, python-openssl, debconf, ulteo-ovd-slaveserver, python-ntlm, python-mechanize, python-pycurl
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - web gateway role for slave server
  Web gateway role for the Ulteo OVD slave server

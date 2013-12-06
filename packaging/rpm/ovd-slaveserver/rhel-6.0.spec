@@ -208,9 +208,9 @@ fi
 Summary: Ulteo Open Virtual Desktop - web gateway role for slave server
 Group: Applications/System
 %if %{defined rhel}
-Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL, python-ntlm, python-mechanize
+Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL, python-ntlm, python-mechanize, python-pycurl
 %else
-Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-ntlm, python-mechanize
+Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-ntlm, python-mechanize, python-curl
 %endif
 
 
