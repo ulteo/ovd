@@ -144,7 +144,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<meta http-equiv="X-UA-Compatible" content="IE=9" />
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
@@ -427,7 +427,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									<select id="user_login">
 									<?php
 										foreach ($users as $login => $displayname)
-											echo '<option value="'.$login.'"'.(($login == $wi_user_login)?'selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
+											echo '<option value="'.$login.'"'.(($login == $wi_user_login)?' selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
 									?>
 									</select>
 									<?php
