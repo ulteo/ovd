@@ -24,8 +24,6 @@
 
 import re
 
-from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
-	HttpClientCommunicator, SSLCommunicator
 from Config import Config
 from ovd.Logger import Logger
 
@@ -37,6 +35,9 @@ import time
 class ProtocolException(Exception):
 	pass
 
+# Load Communicator after ProtocolException definition (Avoid cyclic dependancies)
+from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
+	HttpClientCommunicator, SSLCommunicator
 
 class ProtocolDetectDispatcher(SSLCommunicator):
 	

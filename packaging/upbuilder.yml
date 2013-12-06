@@ -9,6 +9,16 @@ upbuilder:
       builder: autotools
       archs: $(consts.ALL_ARCH)
       autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
+    smp:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "SessionManager"
+      module: "ovd-session-manager-premium"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+      autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz' -p -m ovd-session-manager-premium"
+      clones:
+        - { source: "SessionManager", dest: "web/premium", orig: "/ulteo/premium"}
     ac:
       src: "AdminConsole"
       module: "ovd-administration-console"
@@ -100,6 +110,8 @@ upbuilder:
         sdist_source: ovd-native-client
       builder: ant
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     ha:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -116,6 +128,8 @@ upbuilder:
       autogen_args: "--gateway"
       builder: python
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "Gateway", dest: "ovd/Role/Gateway/premium", orig: "/ulteo/premium"}
     hyp:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -144,6 +158,8 @@ upbuilder:
       module: "setup-native-client"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     nativews:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -151,6 +167,8 @@ upbuilder:
       module: "setup-native-client-standalone"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     wnos:
       premium: true
       repo: "ovd-private/$(branch)"

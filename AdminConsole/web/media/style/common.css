@@ -216,6 +216,34 @@ html[dir="rtl"] ul {
 	font-weight: bold;
 }
 
+.msg_ok > a {
+	color: #05a305;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_error > a {
+	color: #a30505;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_warn > a {
+	color: #ff6600;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_unknown > a {
+	color: blue;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_ok > a:hover, .msg_error > a:hover, .msg_warn > a:hover, .msg_unknown > a:hover {
+	color: #963;
+}
+
 .role_enabled {
 	list-style-type: disc;
 	font-weight: bold;

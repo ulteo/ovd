@@ -30,6 +30,8 @@ import socket
 import re
 import xml.etree.ElementTree as parser
 
+from ProtocolDetectDispatcher import ProtocolException
+from premium.Licensing import Licensing
 from HttpMessage import HttpMessage, Protocol, page_error
 from Config import Config
 from ovd.Logger import Logger
@@ -178,12 +180,21 @@ RDP Communicators
 """
 
 class RdpClientCommunicator(SSLCommunicator):
-	pass
 
+	def __init__(self, socket=None, communicator=None):
+		SSLCommunicator.__init__(self, socket, communicator)
+
+		if Licensing.check_license() is not True:
+			raise ProtocolException("No valid license")
 
 
 class RdpServerCommunicator(ServerCommunicator):
-	pass
+
+	def __init__(self, remote=None, communicator=None):
+		ServerCommunicator.__init__(self, remote, communicator)
+
+		if Licensing.check_license() is not True:
+			raise ProtocolException("No valid license")
 
 
 """
@@ -240,6 +251,9 @@ class HttpClientCommunicator(SSLCommunicator):
 		# Rewrite GET on /ovd/guacamole/ovdlogin
 		if self.http.path.startswith("/ovd/guacamole/ovdlogin"):
 			match = re.search("(?P<separator>[?&])token=(?P<token>[^&]*)", self.http.path)
+
+			if Licensing.check_license() is not True:
+				raise ProtocolException("No valid license")
 
 			if match is not None:
 				token = match.group("token")

@@ -35,6 +35,7 @@ scripts_DATA = actions.php \
                configuration-sumup.php \
                error.php \
                index.php \
+               licensing.php \
                login.php \
                logout.php \
                logs.php \

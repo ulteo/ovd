@@ -899,6 +899,37 @@
 			<output message="urn:Any"/>
 		</operation>
 		
+		<operation name="has_valid_license">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+
+		<operation name="licenses_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+
+		<operation name="licenses_limits">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="license_add">
+			<documentation>Add a license file (base64 encoded)</documentation>
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="license_del">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="license_reset_named_users">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
 		<operation name="log_preview">
 			<input message="urn:voidRequest"/>
 			<output message="urn:Any"/>
@@ -2110,6 +2141,66 @@
 		
 		<operation name="session_simulate">
 			<soap:operation soapAction="urn:OvdAdmin#session_simulate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="has_valid_license">
+			<soap:operation soapAction="urn:OvdAdmin#has_valid_license"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="licenses_list">
+			<soap:operation soapAction="urn:OvdAdmin#licenses_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="licenses_limits">
+			<soap:operation soapAction="urn:OvdAdmin#licenses_limits"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="license_add">
+			<soap:operation soapAction="urn:OvdAdmin#license_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="license_del">
+			<soap:operation soapAction="urn:OvdAdmin#license_del"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="license_reset_named_users">
+			<soap:operation soapAction="urn:OvdAdmin#license_reset_named_users"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

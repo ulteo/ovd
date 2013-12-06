@@ -454,9 +454,11 @@ class Preferences {
 		$c = new ConfigElement_select('redirect_client_printers', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_smartcards_readers', 0);
-		$c->setContentAvailable(array(0, 1));
-		$this->add($c, 'general', 'session_settings_defaults');
+		if (class_exists("PremiumManager") && PremiumManager::is_premium()) {
+			$c = new ConfigElement_select('redirect_smartcards_readers', 0);
+			$c->setContentAvailable(array(0, 1));
+			$this->add($c, 'general', 'session_settings_defaults');
+		}
 		$c = new ConfigElement_select('rdp_bpp', 16);
 		$c->setContentAvailable(array(16, 24, 32));
 		$this->add($c,'general','session_settings_defaults');

@@ -441,3 +441,7 @@ function args2formargs($args, $blacklist = array(), $prev_parrtern = '') {
 	
 	return $ret;
 }
+
+function is_premium() {
+	return array_key_exists('premium', $_SESSION['configuration']) && $_SESSION['configuration']['premium'] === true;
+}

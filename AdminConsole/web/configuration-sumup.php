@@ -5,6 +5,7 @@
  * Author Laurent CLOUET  <laurent@ulteo.com> 2009-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,7 +124,7 @@ else
   </div>
   </td>
 
-  <td style="padding: 20px; vertical-align: top;" colspan="2">
+  <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
 <?php
@@ -138,6 +139,30 @@ echo $buf;
   </div>
   </div>
   </td>
+<?php if (is_premium()): ?>
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2><a href="licensing.php"><?php echo _("License"); ?></a></h2>
+<?php
+    $expirity = $_SESSION['service']->has_valid_license();
+    if ($expirity !== false) {
+      $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
+      if ($expirity > 0 && $expirity < 20) {
+        echo sprintf(_("Your Premium licence will expire in %d days"), $expirity);
+      } elseif ($expirity <= 0) {
+        echo _("Your Premium licence has expired.");
+      } else {
+        echo sprintf(_("Your Premium licence is valid for %d days."), $expirity);
+      }
+    } else {
+      echo _("You don't have any valid Premium licence.");
+    }
+?>
+  </div>
+  </div>
+  </td>
+<?php endif ?>
 
   </tr>
 </table>

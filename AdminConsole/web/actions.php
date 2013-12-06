@@ -4,11 +4,12 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -908,6 +909,68 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			}
 			redirect('appsgroup.php?action=manage&id='.$group->id);
 		}
+	}
+}
+
+
+if ($_REQUEST['name'] == 'License') {
+	if (! checkAuthorization('manageConfiguration'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (! array_key_exists('license', $_FILES)) {
+			popup_info(_("No license uploaded"));
+			redirect();
+		}
+		
+		$upload = $_FILES['license'];
+		if ($upload['error']) {
+			switch ($upload['error']) {
+				case 1: // UPLOAD_ERR_INI_SIZE
+					popup_error(_('Oversized file for server rules'));
+					break;
+				case 3: // UPLOAD_ERR_PARTIAL
+					popup_error(_('The file was corrupted while upload'));
+					break;
+				case 4: // UPLOAD_ERR_NO_FILE
+					popup_error(_('No file uploaded'));
+					break;
+			}
+			
+			redirect();
+		}
+		
+		$source_file = $upload['tmp_name'];
+		if (! is_readable($source_file)) {
+			popup_error(_('The file is not readable'));
+			redirect();
+		}
+
+		$content = @file_get_contents($source_file);
+		if (strlen($content) == 0) {
+			popup_error(_('The file is empty'));
+			redirect();
+		}
+		
+		$res = $_SESSION['service']->license_add(base64_encode($content));
+		if (! $res) {
+			popup_error(_('Uploaded file is not a valid license'));
+			redirect();
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (empty($_REQUEST['id'])) {
+			redirect();
+		}
+		
+		$_SESSION['service']->license_del($_REQUEST['id']);
+		redirect();
+	}
+
+	if ($_REQUEST['action'] == 'reset_named_users') {
+		$_SESSION['service']->license_reset_named_users();
+		redirect();
 	}
 }
 

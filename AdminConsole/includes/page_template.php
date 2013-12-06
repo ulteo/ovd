@@ -2,11 +2,13 @@
 /**
  * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012, 2013
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -229,6 +231,14 @@ if (isAuthorized('viewConfiguration')) {
 			  'name' => _('Change Administrator password'),
 			  'page' => 'password.php?action=change',
 			  'parent' => array('configuration'));
+
+	if (is_premium()) {
+		$menu['configuration_licensing'] = 
+			array('id' => 'configuration_licensing',
+				  'name' => _('Licensing'),
+				  'page' => 'licensing.php',
+				  'parent' => array('configuration'));
+	}
 }
 
 if (isAuthorized('viewStatus')) {
@@ -344,6 +354,21 @@ function page_header($params_=array()) {
   else
     $infos = array();
   
+  if (is_premium()) {
+    $link = array("<a href='/ovd/admin/licensing.php'>", "</a>");
+    $expirity = $_SESSION['service']->has_valid_license();
+    if ($expirity !== false) {
+      $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
+      if ($expirity > 0 && $expirity < 20) {
+	$errors[] = sprintf(_("Your %sPremium licence%s will expire in %d days"), $link[0], $link[1], $expirity);
+      } elseif ($expirity <= 0) {
+	$errors[] = sprintf(_("Your %sPremium licence%s has expired."), $link[0], $link[1]);
+      }
+    } else {
+      $errors[] = sprintf(_("You don't have any valid %sPremium licence%s."), $link[0], $link[1]);
+    }
+  }
+  
   global $html_dir;
   $html_dir = get_component_orientation();
 	
@@ -451,6 +476,10 @@ function page_footer() {
 	if (array_key_exists('version', $_SESSION['configuration']) && $_SESSION['configuration']['version'] != $version) {
 		$version = $_SESSION['configuration']['version'].' / '.$version;
 	}
+	if (is_premium()) {
+		$smtype = "Premium";
+	} else
+		$smtype = "Community";
 
   echo '</td>';
   echo '</tr>';
@@ -465,7 +494,7 @@ function page_footer() {
   echo '<div class="spacer"></div>';
 
   echo '<div id="footerWrap">'._('powered by');
-  echo ' <a href="http://www.ulteo.com"><img src="'.ROOT_ADMIN_URL.'/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.$version.'&nbsp;&nbsp;&nbsp;';
+  echo ' <a href="http://www.ulteo.com"><img src="'.ROOT_ADMIN_URL.'/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD '.$smtype.' Edition  v'.$version.'&nbsp;&nbsp;&nbsp;';
   echo '</div>';
   echo '</div>';
   echo '</body>';

@@ -8,6 +8,7 @@
  * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,6 +89,12 @@ if (! $sessionManagement->authenticate()) {
 
 unset($_SESSION['from_Client_start_XML']);
 
+if (class_exists("PremiumManager") && PremiumManager::is_premium()) {
+	if (!PremiumManager::can_start_session()) {
+		throw_response(SERVICE_NOT_AVAILABLE);
+	}
+}
+
 $user = $sessionManagement->user;
 
 $default_settings = $user->getSessionSettings('session_settings_defaults');
@@ -97,7 +104,11 @@ $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_drives = $default_settings['redirect_client_drives'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
-$redirect_smartcards_readers = $default_settings['redirect_smartcards_readers'];
+if (class_exists("PremiumManager") && PremiumManager::is_premium()) {
+	$redirect_smartcards_readers = $default_settings['redirect_smartcards_readers'];
+} else {
+	$redirect_smartcards_readers = 0;
+}
 $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];

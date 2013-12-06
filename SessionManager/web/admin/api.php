@@ -5,6 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -187,6 +188,12 @@ class OvdAdminSoap {
 		}
 		
 		$c['policy'] = $this->user_rights;
+		
+		if (class_exists("PremiumManager")) {
+			$c["premium"] = PremiumManager::is_premium();
+		} else {
+			$c["premium"] = False;
+		}
 		
 		return $c;
 	}
@@ -4689,6 +4696,74 @@ class OvdAdminSoap {
 		}
 		
 		return $ret;
+	}
+	
+	public function has_valid_license() {
+		if (class_exists("PremiumManager")) {
+			return PremiumManager::has_valid_license();
+		}
+		
+		return false;
+	}
+	
+	public function licenses_list() {
+		$this->check_authorized('manageConfiguration');
+
+		if (class_exists("PremiumManager")) {
+			return PremiumManager::licenses_list();
+		}
+		
+		return array();
+	}
+
+	public function licenses_limits() {
+		$this->check_authorized('manageConfiguration');
+
+		if (class_exists("PremiumManager")) {
+			return PremiumManager::licenses_limits();
+		}
+		
+		return array();
+	}
+	
+	public function license_add($content_) {
+		$this->check_authorized('manageConfiguration');
+		
+		if (class_exists("PremiumManager")) {
+			$result = PremiumManager::license_add($content_);
+			if ($result !== false) {
+				$this->log_action('license_add', array('id' => $result));
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function license_del($id_) {
+		$this->check_authorized('manageConfiguration');
+		
+		if (class_exists("PremiumManager")) {
+			$result = PremiumManager::license_del($id_);
+			if ($result !== false) {
+				$this->log_action('license_del', array('id' => $result));
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public function license_reset_named_users() {
+		$this->check_authorized('manageConfiguration');
+		
+		if (class_exists("PremiumManager")) {
+			PremiumManager::license_reset_named_users();
+			$this->log_action('license_reset_named_users');
+			return true;
+		}
+		
+		return false;
 	}
 }
 

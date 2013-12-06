@@ -45,7 +45,7 @@ f.close()
 
 if "--gateway" in sys.argv:
 	name = "ovd-slaveserver-gateway"
-	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway']"
+	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway', 'ovd.Role.Gateway.premium']"
 
 content = content.replace("@NAME@", name)
 content = content.replace("@VERSION@", str(version))

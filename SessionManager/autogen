@@ -24,12 +24,13 @@ args="--without-libchart"
 
 # get module
 module=ovd-session-manager
-set -- $(getopt -u m: "$@")
+set -- $(getopt -u m:p "$@")
 [ $# -lt 1 ] && exit 1
 while [ $# -gt 0 ]
 do
     case "$1" in
         -m) module="$2" ; shift ;;
+        -p) args="$args --enable-premium" ;;
         --) shift; break ;;
         *)  break ;;
     esac
@@ -43,8 +44,15 @@ else
     version=$(cat VERSION | head -n 1)~dev
 fi
 
+if [ -f web/premium/Makefile.am ]; then
+    premium_mk="web/premium/Makefile"
+else
+    premium_mk=""
+fi
+
 sed -e "s/@MODULE@/${module}/g" \
     -e "s/@VERSION@/${version}/g" \
+    -e "s,@PREMIUM_MK@,${premium_mk},g" \
     configure.ac.in > configure.ac
 
 autoreconf -vfi && ./configure $args

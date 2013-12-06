@@ -97,7 +97,7 @@ fi
 
 %files -n ulteo-ovd-slaveserver-role-gateway
 %defattr(-,root,root)
-%{python_sitelib}/ovd/Role/Gateway/*.py*
+%{python_sitelib}/ovd/Role/Gateway/*
 %{python_sitelib}/ovd_slaveserver_gateway-*.egg-info
 
 

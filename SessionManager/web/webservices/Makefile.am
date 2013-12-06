@@ -1,6 +1,7 @@
 scripts_DATA =  application_icon.php \
                 applications_static.php \
                 applications_webapps.php \
+                premium_sign.php \
                 server_monitoring.php \
                 server_name.php \
                 session_dump.php \

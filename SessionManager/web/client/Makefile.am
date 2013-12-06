@@ -6,6 +6,7 @@ scripts_DATA = applications.php \
                news.php \
                remote_apps.php \
                session_status.php \
+               sign.php \
                start.php \
                userlist.php
 

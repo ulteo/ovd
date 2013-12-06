@@ -31,6 +31,7 @@ $buf = @ini_get('include_path');
 
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
+define('PREMIUM_CLASSES_DIR', SESSIONMANAGER_ROOT.'/premium');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
 define('EVENTS_DIR', SESSIONMANAGER_ROOT.'/events');
@@ -56,6 +57,7 @@ function __autoload($class_name) { //what about NameSpaces ?
 	$class_files = array();
 
 	if (!class_exists($class_name)) {
+		$class_files []= PREMIUM_CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/configelements/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/events/'.$class_name.'.class.php';

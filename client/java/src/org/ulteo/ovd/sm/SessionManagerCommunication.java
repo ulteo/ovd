@@ -99,12 +99,12 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public static final String VALUE_HIDDEN_PASSWORD = "****";
 
-	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+	public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
 	private static final String CONTENT_TYPE_PNG = "image/png";
 
-	private static final String REQUEST_METHOD_POST = "POST";
-	private static final String REQUEST_METHOD_GET = "GET";
+	public static final String REQUEST_METHOD_POST = "POST";
+	public static final String REQUEST_METHOD_GET = "GET";
 
 	public static final String SESSION_STATUS_UNKNOWN = "unknown";
 	public static final String SESSION_STATUS_ERROR = "error";
@@ -436,7 +436,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	 * @throws SessionManagerException
 	 * 		generic exception for all failure during the Session manager communication
 	 */
-	private Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
+	public Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
 		try {
 			URL url = new URL(this.base_url + webservice);
 			return askWebservice(url, content_type, method, data, showLog, MAX_REDIRECTION_TRY);

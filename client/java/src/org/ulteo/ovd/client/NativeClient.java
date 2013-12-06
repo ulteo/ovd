@@ -53,6 +53,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JLabel;
 
 import javax.swing.JOptionPane;
@@ -756,6 +758,24 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		dialog.addCallbackListener(this);
 
 		this.loadingFrame.updateProgression(LoadingStatus.SM_CONNECTION, 0);
+		
+		try {
+			Class<?> licensing_class = Class.forName("org.ulteo.ovd.premium.Licensing");
+			Constructor<?> licensing_constructor = licensing_class.getConstructor(SessionManagerCommunication.class);
+			Object l = licensing_constructor.newInstance(dialog);
+			Logger.debug("Licensing system successfully loaded");
+			java.lang.reflect.Method licensing_check = licensing_class.getMethod("check");
+			licensing_check.invoke(l);
+		} catch (ClassNotFoundException e) {
+			Logger.debug("No licensing system found");
+		} catch (InvocationTargetException e) {
+			Logger.debug("Licensing error: " + e.getCause().getMessage());
+			throw new UnsupportedOperationException(I18n._("Unable to find a valid licence"));
+		} catch (Exception e) {
+			Logger.debug("Licensing system error: " + e.getClass().getName() + " " + e.getMessage());
+			throw new UnsupportedOperationException(I18n._("Unable to find a valid licence"));
+		}
+		
 		Properties request = new Properties(this.opts.sessionMode);
 		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
