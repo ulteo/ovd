@@ -1,6 +1,7 @@
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2010, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,11 +27,16 @@ Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: RHEL 6.0
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: java-1.6.0-openjdk-devel, ant, ant-nodeps, gettext
+Buildrequires: ant, ant-nodeps, gettext
+%if %{defined sles}
+Buildrequires: java-1_6_0-ibm-devel
+%else
+Buildrequires: java-1.6.0-openjdk-devel
+%endif
+Buildroot: %{buildroot}
 
 %description
 This application is used in the Open Virtual Desktop to display the user
@@ -42,7 +48,12 @@ session and launch applications via a native client.
 
 Summary: Ulteo Open Virtual Desktop - native client
 Group: Applications/System
-Requires: java-1.6.0-openjdk, xdg-utils
+Requires: xdg-utils
+%if %{defined sles}
+Requires: java-1_6_0-ibm-devel
+%else
+Requires: java-1.6.0-openjdk
+%endif
 
 %description -n ulteo-ovd-native-client
 This application is used in the Open Virtual Desktop to display the user
@@ -68,8 +79,4 @@ xdg-icon-resource uninstall --size 32 --mode system ulteo-ovd-native-client
 /usr/*
 
 %clean -n ulteo-ovd-native-client
-rm -rf $RPM_BUILD_ROOT
-
-%changelog -n ulteo-ovd-native-client
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release
+rm -rf %{buildroot}
