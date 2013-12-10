@@ -62,10 +62,10 @@ function show_default() {
 
 		echo '<td>';
 		if($license['concurrent_users'] !== null) {
-			echo _('Concurrent users').' : '.$license['concurrent_users'].'<br/>';
+			echo _('Connected users limit').' : '.$license['concurrent_users'].'<br/>';
 		}
 		if($license['named_users'] !== null) {
-			echo _('Named users').' : '.$license['named_users'].'<br/>';
+			echo _('Assigned users').' : '.$license['named_users'].'<br/>';
 		}
 		echo '</td>';
 
@@ -101,7 +101,7 @@ function show_default() {
 	
 	if ($can_manage_configuration) {
 		echo '<div>';
-		echo '<h2>'._('Upload an license').'</h2>';
+		echo '<h2>'._('Install a license').'</h2>';
 		echo '<table border="0" cellspacing="1" cellpadding="5">';
 		echo '<tr>';
 		echo '<td>';
@@ -109,7 +109,7 @@ function show_default() {
 		echo '<input type="hidden" name="name" value="License" />';
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<input type="file" name="license" /> ';
-		echo '<input type="submit" value="'._('Upload this license').'" />';
+		echo '<input type="submit" value="'._('Install this license').'" />';
 		echo '</form>';
 		echo '</td>';
 		echo '</tr>';
@@ -119,14 +119,14 @@ function show_default() {
 
 	if ($can_manage_configuration && ! in_array($licenses_limits["named_users_max"], array(0, null))) {
 		echo '<div>';
-		echo '<h2>'._('Reset named users list').'</h2>';
+		echo '<h2>'._('Assigned users list').'</h2>';
 		echo '<table border="0" cellspacing="1" cellpadding="5">';
 		echo '<tr>';
 		echo '<td>';
 		echo '<form action="actions.php" method="post" enctype="multipart/form-data" >';
 		echo '<input type="hidden" name="name" value="License" />';
 		echo '<input type="hidden" name="action" value="reset_named_users" />';
-		echo '<input type="submit" value="'._('Reset named users').'" />';
+		echo '<input type="submit" value="'._('Reset assigned users').'" />';
 		echo '</form>';
 		echo '</td>';
 		echo '</tr>';
@@ -181,7 +181,7 @@ function print_summary() {
 	if($limits['concurrent_users_max']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Concurrent users limit').'</span>';
+		echo '<span>'._('Connected users limit').'</span>';
 		echo '</td>';
 		if($limits['concurrent_users_current'] > $limits['concurrent_users_max']) {
 			echo '<td class="msg_error">';
@@ -197,7 +197,7 @@ function print_summary() {
 	if($limits['named_users_max']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Named users limit').'</span>';
+		echo '<span>'._('Assigned users limit').'</span>';
 		echo '</td>';
 		if($limits['named_users_current'] > $limits['named_users_max']) {
 			echo '<td class="msg_error">';
