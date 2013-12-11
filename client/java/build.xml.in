@@ -375,8 +375,6 @@
           todir="build/resources/WindowsLibs/32" failonerror="false" />
     <copy file="required_libraries/librdp/64/librdp.so"
           todir="build/resources/LinuxLibs/64" failonerror="false" />
-    <copy file="required_libraries/libjpeg.so.62"
-          todir="build/resources/LinuxLibs/64" failonerror="false" />
     <copy file="required_libraries/librdp/64/librdp.dll"
           todir="build/resources/WindowsLibs/64" failonerror="false" />
     <copy file="required_libraries/librdp/32/librdp.so"
