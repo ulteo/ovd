@@ -62,6 +62,8 @@ bool Rsync_sync(RSync* rsync) {
 	list_add(args, (Any)str_dup(RSYNC_PATH));
 	list_add(args, (Any)str_dup("-rltD"));
 	list_add(args, (Any)str_dup("--safe-links"));
+	list_add(args, (Any)str_dup("--delete"));
+	list_add(args, (Any)str_dup("--delete-excluded"));
 
 	if (rsync->filter && fs_exist(rsync->filter)) {
 		char arg[PATH_MAX];

@@ -21,9 +21,12 @@
 #include <stdlib.h>
 #include "memory.h"
 #include "log.h"
+#include "str.h"
+#include "error.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <unistd.h>
 
 
 void sys_exit(int status) {

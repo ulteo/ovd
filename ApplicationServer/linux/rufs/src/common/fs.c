@@ -24,13 +24,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <string.h>
 #include "log.h"
 #include "list.h"
 #include "str.h"
 #include "error.h"
 #include "sys.h"
 #include "xdg_user_dir.h"
+#include "memory.h"
 #include <sys/mount.h>
 
 
@@ -88,7 +88,7 @@ size_t file_size(char* filename) {
 }
 
 bool file_readLine(int fd, char* line) {
-	byte buffer[MAX_LINE_SIZE];
+	char buffer[MAX_LINE_SIZE];
 	off_t offset = 0;
 	off_t initialOffset = file_getOffset(fd);
 	size_t sizeRead = file_read(fd, buffer, MAX_LINE_SIZE);
@@ -97,7 +97,7 @@ bool file_readLine(int fd, char* line) {
 		return false;
 
 	while (offset < sizeRead) {
-		byte b = buffer[offset];
+		char b = buffer[offset];
 		if (b == '\r' || b == '\n') {
 			break;
 		}
@@ -129,21 +129,21 @@ bool fs_expandPath(const char* source, char* destination) {
 	char* res;
 	char* pos;
 	char* end;
-	size_t len = strlen(source);
-	strncpy(destination, source, len);
+	size_t len = str_len(source);
+	str_ncpy(destination, source, len);
 	destination[len] = '\0';
 
 	// We are searching for XDG constant
-	if (strncmp(destination, "%{", 2) == 0) {
+	if (str_ncmp(destination, "%{", 2) == 0) {
 		size_t len;
 
-		pos = strchr(destination, '}');
+		pos = str_chr(destination, '}');
 		if (pos != NULL) {
 			len = pos - destination + 1;
-			strncpy(keyString, destination, len);
+			str_ncpy(keyString, destination, len);
 			keyString[len] = '\0';
 
-			strncpy(key, keyString + 2, len - 2);
+			str_ncpy(key, keyString + 2, len - 2);
 			key[len - 3] = '\0';
 
 			res = xdg_user_dir_lookup(key);
@@ -158,16 +158,16 @@ bool fs_expandPath(const char* source, char* destination) {
 	}
 
 	pos = destination;
-	while((pos = strstr(pos, "${")) != NULL) {
-		end = strchr(pos, '}');
+	while((pos = str_str(pos, "${")) != NULL) {
+		end = str_chr(pos, '}');
 		if (end == NULL)
 			break;
 
 		len = end - pos + 1;
 
-		strncpy(keyString, pos, len);
-		keyString[len] = 0;
-		strncpy(key, keyString + 2, len - 2);
+		str_ncpy(keyString, pos, len);
+		keyString[len] = '\0';
+		str_ncpy(key, keyString + 2, len - 2);
 		key[len - 3] = '\0';
 
 		res = sys_getEnv(key);
@@ -242,7 +242,7 @@ char* fs_getRoot(const char* path) {
 		path++;
 
 	res = str_dup(path);
-	p = strchr(res, '/');
+	p = str_chr(res, '/');
 
 	if (p != NULL)
 		*p = '\0';
@@ -253,14 +253,31 @@ char* fs_getRoot(const char* path) {
 
 char* fs_join(const char* p1, const char* p2) {
 	char path[PATH_MAX];
+	int pos;
 
 	if (p1 == NULL || p2 == NULL)
 		return NULL;
 
-	if (p1[str_len(p1) - 1] == '/')
-		str_sprintf(path, "%s%s", p1, p2);
-	else
-		str_sprintf(path, "%s/%s", p1, p2);
+	while (p2[0] == '/') {
+		p2++;
+	}
+	
+	str_ncpy(path, p1, sizeof(path)-1);
+	path[sizeof(path)-1] = '\0';
+
+	pos = str_len(path) - 1;
+	while (path[pos] == '/' && pos > 0) {
+		pos--;
+	}
+
+	path[pos+1] = '\0';
+
+	if (str_len(p2) == 0) {
+		return str_dup(path);
+	}
+
+	str_cat(path, "/");
+	str_cat(path, p2);
 
 	return str_dup(path);
 }
@@ -283,7 +300,7 @@ long long fs_getDirectorySize(const char* path) {
 	}
 
 	while ((dirnt = readdir (dir)) != NULL) {
-		if ((strcmp (dirnt->d_name, ".") == 0) || (strcmp (dirnt->d_name, "..") == 0))
+		if ((str_cmp (dirnt->d_name, ".") == 0) || (str_cmp (dirnt->d_name, "..") == 0))
 			continue;
 
 		p = fs_join(path, dirnt->d_name);
@@ -324,13 +341,13 @@ bool fs_mkdirs(const char* file) {
 	char* cpy = str_dup(file);
 	struct stat st;
 
-	pos = strchr(cpy,'/');
+	pos = str_chr(cpy,'/');
 	if (pos == NULL) {
 		memory_free(cpy);
 		return false;
 	}
 
-	pos = strchr(pos+1,'/');
+	pos = str_chr(pos+1,'/');
 	while (pos != NULL) {
 		*pos = 0;
 		mkdir(cpy, S_IRWXU);
@@ -340,7 +357,7 @@ bool fs_mkdirs(const char* file) {
 		}
 
 		*pos = '/';
-		pos = strchr(pos+1,'/');
+		pos = str_chr(pos+1,'/');
 	}
 
 	memory_free(cpy);

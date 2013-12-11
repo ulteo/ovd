@@ -22,6 +22,7 @@
 #define _GNU_SOURCE
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <errno.h>
 #include "memory.h"
@@ -51,6 +52,9 @@ char* str_cpy(char* dst, const char* src) {
 }
 
 char* str_ncpy(char* dst, const char* src, size_t len) {
+	if (src == NULL || dst == NULL)
+		return 0;
+
 	return strncpy(dst, src, len);
 }
 
@@ -219,9 +223,10 @@ int str_toInt(const char* str) {
 
 
 int str_toOct(const char* str) {
+	char* end;
 	if (str == 0)
 		return 0;
-	return strtol(str, str, 8);
+	return strtol(str, &end, 8);
 }
 
 

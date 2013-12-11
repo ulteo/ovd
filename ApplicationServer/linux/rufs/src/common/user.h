@@ -24,7 +24,7 @@
 #include "types.h"
 
 
-bool user_getINFO(const char* user, int* gid, int* uid, char* shell, char* dir);
+bool user_getINFO(const char* user, gid_t* gid, uid_t* uid, char* shell, char* dir);
 bool user_switch(const char* user, const char* pass);
 bool user_setGroup(const char* user, gid_t gid);
 bool user_setGID(gid_t gid);

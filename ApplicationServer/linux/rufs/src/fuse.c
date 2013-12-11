@@ -184,7 +184,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	Regexp* reg;
 	Union* u;
 	int i = 0;
-	int a = 0;
 	int r = 0;
 
 	transformPathIn(path, trpath);
@@ -192,7 +191,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	// Firstly, check if it already exist somewhere
 	for(i = 0 ; i < config->unions->size ; i++) {
 		u = (Union*)list_get(config->unions, i);
-		List* reject;
 
 		if (!u) {
 			continue;
@@ -334,7 +332,6 @@ static int rufs_readlink(const char *path, char *buf, size_t size)
 
 static int rufs_opendir(const char *path, struct fuse_file_info *fi)
 {
-	int res;
 	char trpath[PATH_MAX];
 
 	if (! authorized(path))
@@ -775,7 +772,6 @@ static int rufs_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
 {
 	int res;
-	char trpath[PATH_MAX];
 
 	if (! authorized(path))
 		return -EPERM;
@@ -1144,7 +1140,6 @@ bool processRsync(Configuration* conf, bool start) {
 
 bool processDeleteOnEnd(Configuration* conf) {
 	int i = 0;
-	RSync* rsync;
 
 	if (conf == NULL) {
 		logWarn("Configuration is NULL");
