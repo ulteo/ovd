@@ -30,12 +30,15 @@
 #include <shlobj.h> 
 
 
+static int registry_hooked = false;
 
 // original hooked function pointer
 PtrNtCreateFile OriginNtCreateFile = (PtrNtCreateFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateFile");
 PtrNtOpenFile OriginNtOpenFile = (PtrNtOpenFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtOpenFile");
 PtrNtQueryAttributesFile OriginNtQueryAttributesFile = (PtrNtQueryAttributesFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryAttributesFile");
 PtrNtSetInformationFile OriginNtSetInformationFile = (PtrNtSetInformationFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetInformationFile");
+PtrNtQueryDirectoryFile OriginNtQueryDirectoryFile = (PtrNtQueryDirectoryFile)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQueryDirectoryFile");
+PtrNtClose OriginNtClose = (PtrNtClose)GetProcAddress(GetModuleHandle(L"ntdll"), "NtClose");
 
 PtrNtCreateKey OriginNtCreateKey = (PtrNtCreateKey)GetProcAddress(GetModuleHandle(L"ntdll"), "NtCreateKey");
 PtrNtOpenKey OriginNtOpenKey = (PtrNtOpenKey)GetProcAddress(GetModuleHandle(L"ntdll"), "NtOpenKey");
@@ -69,8 +72,10 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtCreateFile");
+		std::wstring p = std::wstring(ObjectAttributes->ObjectName->Buffer, 0, ObjectAttributes->ObjectName->Length>>1);
 
+		log_debug(L"myNtCreateFile %s", p.c_str());
+		NTSTATUS res;
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
 
@@ -80,8 +85,14 @@ NTSTATUS WINAPI myNtCreateFile(	PHANDLE FileHandle,
 
 		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
 
-		return OriginNtCreateFile(FileHandle, DesiredAccess, &out, IoStatusBlock, AllocationSize,
+		res = OriginNtCreateFile(FileHandle, DesiredAccess, &out, IoStatusBlock, AllocationSize,
 						FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
+
+		if (SUCCEEDED(res)) {
+			log_debug(L"add %lu => %s", *FileHandle, p.c_str());
+			vf.addHandle(*FileHandle, p);
+		}
+		return res;
 	}
 		
 	return OriginNtCreateFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize,
@@ -103,10 +114,12 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtOpenFile");
+		std::wstring p = std::wstring(ObjectAttributes->ObjectName->Buffer, 0, ObjectAttributes->ObjectName->Length>>1);
+		log_debug(L"myNtOpenFile %s", p.c_str());
 
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
+		NTSTATUS res;
 
 		uni.Buffer = (PWSTR)result.c_str();
 		uni.Length = (USHORT)result.length() * 2;
@@ -114,7 +127,13 @@ NTSTATUS NTAPI myNtOpenFile(PHANDLE FileHandle,
 
 		InitializeObjectAttributes(&out, &uni, ObjectAttributes->Attributes, 0, ObjectAttributes->SecurityDescriptor);
 
-		return OriginNtOpenFile(FileHandle, DesiredAccess, &out, IoStatusBlock, ShareAccess, OpenOptions);
+		res = OriginNtOpenFile(FileHandle, DesiredAccess, &out, IoStatusBlock, ShareAccess, OpenOptions);
+
+		if (SUCCEEDED(res)) {
+			log_debug(L"add %lu => %s", *FileHandle, p.c_str());
+			vf.addHandle(*FileHandle, p);
+		}
+		return res;
 	}
 
 	return OriginNtOpenFile(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, ShareAccess, OpenOptions);
@@ -130,7 +149,7 @@ NTSTATUS NTAPI myNtQueryAttributesFile(	POBJECT_ATTRIBUTES ObjectAttributes,
 	std::wstring result;
 
 	if (vf.redirectFilePath(ObjectAttributes, result)) {
-		Logger::getSingleton().debug(L"myNtQueryAttributesFile");
+		log_debug(L"myNtQueryAttributesFile");
 
 		OBJECT_ATTRIBUTES out;
 		UNICODE_STRING uni;
@@ -161,7 +180,7 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 
 	//FileRename
 	if(FileInformationClass == FileRenameInformation) {
-		Logger::getSingleton().debug(L"myNtSetInformationFile");
+		log_debug(L"myNtSetInformationFile");
 
 		PFILE_RENAME_INFORMATION pFileRename = (PFILE_RENAME_INFORMATION)FileInformation;
 		std::wstring path = std::wstring(pFileRename->FileName, 0, pFileRename->FileNameLength>>1);
@@ -183,6 +202,283 @@ NTSTATUS NTAPI myNtSetInformationFile(	HANDLE FileHandle,
 	return OriginNtSetInformationFile(FileHandle, IoStatusBlock, FileInformation, FileInformationLength, FileInformationClass);
 
 }
+
+
+void dumpDirectoryList(PVOID FileInformation, FILE_INFORMATION_CLASS FileInformationClass) {
+	LPBYTE buffer = (LPBYTE) FileInformation;
+	ULONG nextOffset = 0;
+	wchar_t* data;
+	ULONG length;
+
+
+	do {
+		switch (FileInformationClass)
+		{
+		case FileBothDirectoryInformation:
+			data = &((PFILE_BOTH_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_BOTH_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_BOTH_DIR_INFORMATION)buffer)->NextEntryOffset;
+			break;
+
+		case FileDirectoryInformation1:
+			data = &((PFILE_DIRECTORY_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_DIRECTORY_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_DIRECTORY_INFORMATION)buffer)->NextEntryOffset;
+			break;
+
+		case FileFullDirectoryInformation:
+			data = &((PFILE_FULL_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_FULL_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_FULL_DIR_INFORMATION)buffer)->NextEntryOffset;
+			break;
+
+		case FileIdBothDirectoryInformation:
+			data = &((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->NextEntryOffset;
+			break;
+
+		case FileNameInformation:
+			data = &((PFILE_NAMES_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_NAMES_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_NAMES_INFORMATION)buffer)->NextEntryOffset;
+			break;
+		default:
+			log_error(L"Wrong FileInformationClass value");
+			nextOffset = 0;
+			data = NULL;
+			length = 0;
+			break;
+		}
+
+		if (length > 1) {
+			std::wstring filename(data, length>>1);
+			log_error(L"Filename %s", filename.c_str());
+		}
+
+		buffer += nextOffset;
+	}
+	while(nextOffset != 0);
+
+}
+
+
+// This function return the content removing doublon
+int finalizeDirectoryListing(PVOID FileInformation, ULONG Length, FILE_INFORMATION_CLASS FileInformationClass, std::map<std::wstring, int>& content) {
+	LPBYTE buffer = (LPBYTE) FileInformation;
+	LPBYTE lastBuffer = (LPBYTE) FileInformation;
+	ULONG nextOffset = 0;
+	PULONG lastNextOffsetPtr = NULL;
+	wchar_t* data;
+	ULONG length;
+	int count = 0;
+	ULONG currentLength = Length;
+
+	do {
+		currentLength -= nextOffset;
+
+		switch (FileInformationClass)
+		{
+		case FileBothDirectoryInformation:
+			data = &((PFILE_BOTH_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_BOTH_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_BOTH_DIR_INFORMATION)buffer)->NextEntryOffset;
+			lastNextOffsetPtr = &((PFILE_BOTH_DIR_INFORMATION)lastBuffer)->NextEntryOffset;
+			break;
+
+		case FileDirectoryInformation1:
+			data = &((PFILE_DIRECTORY_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_DIRECTORY_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_DIRECTORY_INFORMATION)buffer)->NextEntryOffset;
+			lastNextOffsetPtr = &((PFILE_DIRECTORY_INFORMATION)lastBuffer)->NextEntryOffset;
+			break;
+
+		case FileFullDirectoryInformation:
+			data = &((PFILE_FULL_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_FULL_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_FULL_DIR_INFORMATION)buffer)->NextEntryOffset;
+			lastNextOffsetPtr = &((PFILE_FULL_DIR_INFORMATION)lastBuffer)->NextEntryOffset;
+			break;
+
+		case FileIdBothDirectoryInformation:
+			data = &((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_ID_BOTH_DIR_INFORMATION)buffer)->NextEntryOffset;
+			lastNextOffsetPtr = &((PFILE_ID_BOTH_DIR_INFORMATION)lastBuffer)->NextEntryOffset;
+			break;
+
+		case FileNameInformation:
+			data = &((PFILE_NAMES_INFORMATION)buffer)->FileName[0];
+			length = ((PFILE_NAMES_INFORMATION)buffer)->FileNameLength;
+			nextOffset = ((PFILE_NAMES_INFORMATION)buffer)->NextEntryOffset;
+			lastNextOffsetPtr = &((PFILE_NAMES_INFORMATION)lastBuffer)->NextEntryOffset;
+			break;
+		default:
+			log_error(L"Wrong FileInformationClass value");
+			nextOffset = 0;
+			length = 0;
+			break;
+		}
+
+		if (length > 1) {
+			std::wstring filename(data, length>>1);
+			if (content.find(filename) == content.end()) {
+				content[filename] = 0;
+				count++;
+			}
+			else {
+				if (nextOffset != 0) {
+					memmove((char*)buffer, (char*)buffer + nextOffset, currentLength - nextOffset);
+					continue;
+				}
+				else {
+					*lastNextOffsetPtr = 0;
+					return count;
+				}
+			}
+		}
+
+		lastBuffer = buffer;
+		buffer += nextOffset;
+	}
+	while(nextOffset != 0);
+
+	return count;
+}
+
+
+
+NTSTATUS NTAPI myNtQueryDirectoryFile(	HANDLE FileHandle,
+										HANDLE Event,
+										PVOID ApcRoutine,
+										PVOID ApcContext,
+										PIO_STATUS_BLOCK IoStatusBlock,
+										PVOID FileInformation,
+										ULONG Length,
+										FILE_INFORMATION_CLASS FileInformationClass,
+										BOOLEAN ReturnSingleEntry,
+										PUNICODE_STRING FileName,
+										BOOLEAN RestartScan)
+{
+	if(Logger::getSingleton().isLogging()) {
+		return OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock, FileInformation, Length,
+				FileInformationClass, ReturnSingleEntry, FileName, RestartScan);
+	}
+
+	if (FileInformationClass ==  FileReparsePointInformation  || FileInformationClass == FileObjectIdInformation)
+		OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock, FileInformation, Length,
+					FileInformationClass, ReturnSingleEntry, FileName, RestartScan);
+
+
+	// are we interrested by this directory ??
+	if (vf.containHandle(FileHandle)) {
+		DirEntry& entry = vf.getHandle(FileHandle);
+		log_debug(L"MyNtQueryDirectoryFile %s, buffer size %lu", entry.path.c_str(), Length);
+
+		NTSTATUS st;
+		IO_STATUS_BLOCK status;
+		std::list<std::wstring> res;
+		std::list<std::wstring>::iterator it;
+		std::list<HANDLE>::iterator it2;
+
+		// Generating repos list if it is empty
+		if (entry.repos.empty()) {
+			vf.getSubstitutedRepositoriesPath(entry.path, res);
+			for (it = res.begin() ; it != res.end() ; it++) {
+				HANDLE handle;
+				OBJECT_ATTRIBUTES obj;
+				UNICODE_STRING uni;
+
+				// We check if it is a directory
+				uni.Buffer = (PWSTR)(*it).c_str();
+				uni.Length = (USHORT)(*it).length() * 2;
+				uni.MaximumLength = uni.Length;
+
+				InitializeObjectAttributes(&obj, &uni, OBJ_CASE_INSENSITIVE, 0, NULL);
+
+				NTSTATUS st = OriginNtOpenFile(&handle, GENERIC_READ | SYNCHRONIZE, &obj, &status, FILE_SHARE_READ, FILE_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
+				if (FAILED(st)) {
+					log_debug(L"\tFailed to open directory %s 0x%x", (*it).c_str(), st);
+					continue;
+				}
+				entry.repos.push_back(handle);
+
+				log_debug(L"\t=> HANDLE %s => %lu", (*it).c_str(), (handle));
+
+			}
+
+			if (entry.repos.empty()) {
+				return OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock, FileInformation, Length,
+								FileInformationClass, ReturnSingleEntry, FileName, RestartScan);
+			}
+		}
+
+		if (RestartScan)
+			entry.content.clear();
+
+		// We list all the repositories content
+		for (it2 = entry.repos.begin() ; it2 != entry.repos.end() ; it2++) {
+			log_debug(L"\tlisting the content of %lu, need one entry: %d", (*it2), ReturnSingleEntry);
+			if (FileName)
+				log_debug(L"\tlisting the content with filter %s", FileName->Buffer);
+
+			st = OriginNtQueryDirectoryFile((*it2), Event, ApcRoutine, ApcContext, IoStatusBlock, FileInformation, Length,
+										FileInformationClass, ReturnSingleEntry, FileName, RestartScan);
+
+			log_debug(L"\tstatus 0x%x", st);
+
+			if (st == STATUS_NO_MORE_FILES) {
+				log_debug(L"\tno more file in the repos");
+				continue;
+			}
+
+			if (FAILED(st)) {
+				log_error(L"\tfunction failed to list directory with status 0x%x", st);
+				IoStatusBlock->Status = st;
+				return st;
+			}
+
+			if (finalizeDirectoryListing(FileInformation, Length, FileInformationClass, entry.content) == 0) {
+				log_debug(L"\tthere is an empty listing", st);
+				continue;
+			}
+
+			log_debug(L"============ Result listing ================");
+			dumpDirectoryList(FileInformation, FileInformationClass);
+			return st;
+		}
+
+		log_debug(L"\tno more file in all repositories");
+		IoStatusBlock->Status = STATUS_NO_MORE_FILES;
+		return STATUS_NO_MORE_FILES;
+	}
+
+	return OriginNtQueryDirectoryFile(FileHandle, Event, ApcRoutine, ApcContext, IoStatusBlock, FileInformation, Length,
+			FileInformationClass, ReturnSingleEntry, FileName, RestartScan);
+}
+
+
+NTSTATUS NTAPI myNtClose(HANDLE FileHandle)
+{
+	if(Logger::getSingleton().isLogging())
+			return OriginNtClose(FileHandle);
+
+	if (vf.containHandle(FileHandle)) {
+		log_debug(L"myNtClose %lu", FileHandle);
+
+		DirEntry& entry = vf.getHandle(FileHandle);
+		std::list<HANDLE>::iterator it;
+
+		entry.content.clear();
+		for (it = entry.repos.begin() ; it != entry.repos.end() ; it++)
+			OriginNtClose(*it);
+
+		vf.rmHandle(FileHandle);
+	}
+
+	return OriginNtClose(FileHandle);
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 //	Intercept Registry API
@@ -272,13 +568,11 @@ void setupHooks() {
 
 	// Get the environment variable which contain profile source
 	if (! reg.exist()) {
-		Logger::getSingleton().debug(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
 		log_error(L"Registry key %s do not exist", REGISTRY_PATH_KEY);
 		return;
 	}
 
 	if (! reg.get(L"ProfileSrc", src)) {
-		Logger::getSingleton().debug(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
 		log_error(L"Failed to get registry key variable %s", REGISTRY_PATH_KEY);
 		return;
 	}
@@ -313,6 +607,8 @@ void setupHooks() {
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenFile, myNtOpenFile, "NtOpenFile");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryAttributesFile, myNtQueryAttributesFile, "NtQueryAttributesFile");
 	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtSetInformationFile, myNtSetInformationFile, "NtSetInformationFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtQueryDirectoryFile, myNtQueryDirectoryFile, "NtQueryDirectoryFile");
+	HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtClose, myNtClose, "NtClose");
 	/*
 		NtSetVolumeInformationFile 
 		NtQueryFullAttributesFile
@@ -325,13 +621,13 @@ void setupHooks() {
 
 	//Intercept Reg API
 	if (conf.supportHookRegistry()) {
+		registry_hooked = true;
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtCreateKey, myNtCreateKey, "NtCreateKey");
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKey, myNtOpenKey, "NtOpenKey");
 		HOOK_AND_LOG_FAILURE((PVOID*)&OriginNtOpenKeyEx, myNtOpenKeyEx, "NtOpenKeyEx");
 	}
 
-	log_error(L"Hooked success");
-	Logger::getSingleton().debug(L"Hooked success");
+	log_debug(L"Hooked success");
 }
 
 void releaseHooks() {
@@ -340,10 +636,14 @@ void releaseHooks() {
 	Mhook_Unhook((PVOID*)&OriginNtOpenFile);	
 	Mhook_Unhook((PVOID*)&OriginNtQueryAttributesFile);	
 	Mhook_Unhook((PVOID*)&OriginNtSetInformationFile);	
+	Mhook_Unhook((PVOID*)&OriginNtQueryDirectoryFile);
+	Mhook_Unhook((PVOID*)&OriginNtClose);
 	
 	//Reg API
-	Mhook_Unhook((PVOID*)&OriginNtCreateKey);	
-	Mhook_Unhook((PVOID*)&OriginNtOpenKey);	
-	Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
-	log_error(L"Un-Hooked program");
+	if (registry_hooked) {
+		Mhook_Unhook((PVOID*)&OriginNtCreateKey);
+		Mhook_Unhook((PVOID*)&OriginNtOpenKey);
+		Mhook_Unhook((PVOID*)&OriginNtOpenKeyEx);
+	}
+	log_debug(L"Un-Hooked program");
 }

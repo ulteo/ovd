@@ -53,11 +53,7 @@ def main():
 	folders.registerShares()
 	
 	# Synchronize Shortcuts
-	profile = None
-	if folders.shares.has_key("profile"):
-		profile = folders.shares["profile"]
-	
-	shortcuts = Shortcuts(profile)
+	shortcuts = Shortcuts()
 	shortcuts.synchronize(os.path.join(user_sdir, "Shortcuts"))
 	
 	Util.loadUserEnv(user_sdir)

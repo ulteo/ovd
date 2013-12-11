@@ -26,8 +26,19 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
 #include <Winternl.h>	//Nt
+#include <Winerror.h>
 #include "VFSRule.h"
+
+
+
+typedef struct _DirEntry {
+	std::wstring path;
+	std::list<HANDLE> repos;
+	std::map<std::wstring, int> content;
+} DirEntry;
+
 
 
 class VirtualFileSystem
@@ -76,6 +87,14 @@ public:
 	// _IN_OUT_ result: transformed path
 	// Return True if path has redirected, False otherwise.
 	bool redirectFilePath(POBJECT_ATTRIBUTES ObjectAttributesPtr, std::wstring& result);
+
+
+
+	// Get the list of redirected repository path relative to szPathRef.
+	// _IN_ szPathRef: Origin path
+	// _IN_OUT_ result: repository path list relative to szPathRef
+	// Return void.
+	void getSubstitutedRepositoriesPath(const std::wstring& szPathRef, std::list<std::wstring>& result);
 
 
 	// Redirect file path.
@@ -165,6 +184,25 @@ public:
 	// Return folder path without UserProfile path
 	// Example: getCSIDLFolderName(CSIDL_DESKTOP) returns "Desktop"
 	std::wstring _getCSIDLFolderName(const int csidl);
+
+
+	std::map<HANDLE, DirEntry> handleList;
+
+	void addHandle(HANDLE handle, std::wstring path) {
+		this->handleList[handle].path = path;
+	}
+
+	bool containHandle(HANDLE handle) {
+		return (this->handleList.find(handle) != this->handleList.end());
+	}
+
+	DirEntry& getHandle(HANDLE handle) {
+		return this->handleList[handle];
+	}
+
+	void rmHandle(HANDLE handle) {
+		this->handleList.erase(handle);
+	}
 
 private:
 	//---------------------------------------------------------------------------//
