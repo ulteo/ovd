@@ -2,6 +2,7 @@
  * Copyright (C) 2010-2012 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,9 @@ package net.propero.rdp.compress;
 
 import java.util.Arrays;
 import net.propero.rdp.RdpPacket_Localised;
+import net.propero.rdp.Bitmap;
+
+
 import org.apache.log4j.Logger;
 
 public class MPPCDecompressor extends RdpDecompressor {
@@ -202,12 +206,10 @@ public class MPPCDecompressor extends RdpDecompressor {
 	private int walker_len;
 	private int walker;
 	private int match_off;
-	
 	private int[] copyOffsetCache = null;
 
 	public MPPCDecompressor(MPPCType type) throws RdpCompressionException {
 		int dictSize;
-		
 		switch (type) {
 			case mppc4:
 				dictSize = MPPC_8K_DICT_SIZE;
@@ -248,9 +250,17 @@ public class MPPCDecompressor extends RdpDecompressor {
 		byte[] compressedDatas = new byte[length];
 		compressedPacket.copyToByteArray(compressedDatas, 0, compressedPacket.getPosition(), length);
 
-		byte[] decompressedDatas;
+		byte[] decompressedDatas = null;
 
-		switch (ctype) {
+		if (Bitmap.jniAvailable()) {
+			try {
+				decompressedDatas = MPPCDecompressor.nMPPCDecompress(compressedDatas, length, compressionType);
+			} catch (UnsatisfiedLinkError e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			switch (ctype) {
 			case mppc4:
 			case mppc5:
 				decompressedDatas = this.expand(compressedDatas, length, compressionType);
@@ -260,8 +270,8 @@ public class MPPCDecompressor extends RdpDecompressor {
 				break;
 			default:
 				throw new RdpCompressionException("Failed to decompress packet: Compression type "+String.format("0x%x", ctype.value())+" is not supported.");
+			}
 		}
-		
 		RdpPacket_Localised decompressedPacket = new RdpPacket_Localised(decompressedDatas.length);
 		decompressedPacket.copyFromByteArray(decompressedDatas, 0, 0, decompressedDatas.length);
 		decompressedPacket.setPosition(0);
@@ -875,4 +885,6 @@ public class MPPCDecompressor extends RdpDecompressor {
 		
 		return raw_data;
 	}
+
+	public native static byte[] nMPPCDecompress(byte[] compressedDatas, int clen, int ctype);
 }

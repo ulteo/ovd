@@ -41,6 +41,7 @@ import javax.swing.UIManager;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,6 +80,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.pcsc.PCSC;
+import net.propero.rdp.Bitmap;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
@@ -134,6 +136,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
 			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_WINDOWS);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
+			}
 		}
 		else if(OSTools.isLinux()) {
 			try {
@@ -143,6 +152,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			} catch (FileNotFoundException ex) {
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
+			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_UNIX);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
 			}
 		}
 

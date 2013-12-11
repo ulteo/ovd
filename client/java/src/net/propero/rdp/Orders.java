@@ -11,6 +11,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  *
  * Purpose: Encapsulates an RDP order
  */
@@ -610,12 +611,25 @@ public class Orders {
             else
                 logger.warn("Failed to decompress bitmap");
         } else {
-            int[] pixel = bmp.decompressInt(width, height, size, data, Bpp);
-            if (pixel != null)
-            	this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(pixel, width,
-                        height, 0, 0, this.opt), 0);
-            else
-                logger.warn("Failed to decompress bitmap");
+        	int[] pixel;
+        	if (Bitmap.jniAvailable()) {
+        		try {
+        			byte[] compressed_pixel = new byte[size];
+        			data.copyToByteArray(compressed_pixel, 0, data.getPosition(), size);
+        			data.incrementPosition(size);
+        			pixel = bmp.nRLEDecompress(width, height, size, compressed_pixel, Bpp);
+        		} catch (UnsatisfiedLinkError e) {
+        			logger.error("Unable to use jni method to decompress image");
+        			pixel = bmp.decompressInt(width, height, size, data, Bpp);
+        		}
+        	} else {
+        		pixel = bmp.decompressInt(width, height, size, data, Bpp);
+        	}
+        	if (pixel != null)
+        		this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(pixel, width,
+        			height, 0, 0, this.opt), 0);
+        	else
+        		logger.warn("Failed to decompress bitmap");
         }
     }
 
@@ -658,24 +672,29 @@ public class Orders {
             cache_idx_low = data.get8(); // in_uint8(s, cache_idx_low);
             cache_idx = ((cache_idx ^ LONG_FORMAT) << 8) + cache_idx_low;
         }
+        
         logger.debug("JPEGCACHE(compr=" + compressed + ",flags=" + flags
                 + ",cx=" + width + ",cy=" + height + ",id=" + cache_id
                 + ",idx=" + cache_idx + ",Bpp=" + Bpp + ",bs=" + bufsize + ")");
         
-        int[] bmpdataInt = new int[width * height];
-		byte[] compressed_pixel = new byte[bufsize];
-		
-		data.copyToByteArray(compressed_pixel, 0, data.getPosition(), bufsize);
-		data.incrementPosition(bufsize);
-		
-        ByteArrayInputStream bais = new ByteArrayInputStream(compressed_pixel);
-        BufferedImage bi = ImageIO.read(bais);
-        bmpdataInt = bi.getRGB(0, 0, width, height, null, 0, width);
-        bais.close();
-        bais = null;
-        
-        bitmap = new Bitmap(bmpdataInt, width, height, 0, 0, this.opt);
-        this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
+        int[] bmpdataInt = null;
+        byte[] compressed_pixel = new byte[bufsize];
+        data.copyToByteArray(compressed_pixel, 0, data.getPosition(), bufsize);
+        data.incrementPosition(bufsize);
+        if (Bitmap.jniAvailable()) {
+          bmpdataInt = Bitmap.nJpegDecompress(compressed_pixel, bufsize, width, height);
+        } else {
+          bmpdataInt = new int[width * height];
+          ByteArrayInputStream bais = new ByteArrayInputStream(compressed_pixel);
+          BufferedImage bi = ImageIO.read(bais);
+          bmpdataInt = bi.getRGB(0, 0, width, height, null, 0, width);
+          bais.close();
+          bais = null;
+        }
+        if (bmpdataInt != null) {
+          bitmap = new Bitmap(bmpdataInt, width, height, 0, 0, this.opt);
+          this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
+        }
     }
 
     /* Process a bitmap cache v2 order */
@@ -739,8 +758,24 @@ public class Orders {
 		    bmpdataInt = bmp.convertImage(bmpdata, Bpp);
 	    }
             else {
-                bmpdataInt = bmp.decompressInt(width, height, bufsize, data,
-                        Bpp);
+            	if (Bitmap.jniAvailable()) {
+            		try {
+            			byte[] compressed_pixel = new byte[bufsize];
+            			data.copyToByteArray(compressed_pixel, 0, data.getPosition(), bufsize);
+            			data.incrementPosition(bufsize);
+            			bmpdataInt = bmp.nRLEDecompress(width, height, bufsize, compressed_pixel, Bpp);
+            		} catch (UnsatisfiedLinkError e) {
+            			logger.error("Unable to use jni method to decompress image");
+            			bmpdataInt = bmp.decompressInt(width, height, bufsize, data, Bpp);
+            		}
+            	} else {
+            		bmpdataInt = bmp.decompressInt(width, height, bufsize, data, Bpp);
+            	}
+            	if (bmpdataInt != null)
+            		this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(bmpdataInt, width,
+            			height, 0, 0, this.opt), 0);
+            	else
+            		logger.warn("Failed to decompress bitmap");
 		
 		for (int i = 0; i < bmpdataInt.length; i ++) {
 			if (Bpp == 1)

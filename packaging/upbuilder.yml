@@ -49,6 +49,10 @@ upbuilder:
            files: {"libPCSC.dll": "required_libraries/libPCSC/32/libPCSC.dll"}
           ovd-java-jni:
            files: {"libWindowsPaths.dll": "required_libraries/libPCSC/32/libWindowsPaths.dll"}
+          ovd-jni-rdp-32:
+           files: {"libRDP.dll": "required_libraries/librdp/32/librdp.dll"}
+          ovd-jni-rdp-64:
+           files: {"libRDP.dll": "required_libraries/librdp/64/librdp.dll"}
       archs: $(consts.ANY_ARCH)
       env: $(consts.JAVA_ENV)
     launcher:
