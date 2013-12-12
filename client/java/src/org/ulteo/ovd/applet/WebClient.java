@@ -180,7 +180,6 @@ public class WebClient extends Applet implements FocusListener {
 				PCSC.disableLibraryLoading();
 			}
 			try {
-				File jarLib = FilesOp.exportJarResource(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX + "/64/libjpeg.so.62");
 				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_RDP_UNIX);
 				Bitmap.libraryLoaded();
 			} catch (FileNotFoundException ex) {
