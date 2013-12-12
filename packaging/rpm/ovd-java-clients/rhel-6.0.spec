@@ -30,7 +30,12 @@ URL: http://www.ulteo.com
 Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
-Buildrequires: ulteo-ovd-cert, java-1.6.0-openjdk-devel, ant, ant-nodeps
+Buildrequires: ulteo-ovd-cert, ant, ant-nodeps
+%if %{defined sles}
+Buildrequires: java-1_6_0-ibm-devel
+%else
+Buildrequires: java-1.6.0-openjdk-devel
+%endif
 Buildroot: %{buildroot}
 
 %description
