@@ -80,6 +80,7 @@ upbuilder:
       module: "ovd-subsystem"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
     desktop:
       module: "ovd-desktop"
       builder: autotools

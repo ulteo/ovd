@@ -40,7 +40,7 @@ usage ()
     echo "  --no-download        don't get the chroot, assume it is already installed"
     echo "  --chroot-uri url     get the chroot from 'uri'"
     echo "                       recognised protocoles are http://, ftp:// and file://"
-    echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0)"
+    echo "                       (default: @CHROOT_URL@)"
     echo "  --chroot-url url     same as --chroot-uri, for backward compatibility"
     echo "  --copy               if the chroot is a file, copy it in the Session Manager dir"
     echo "                       (a symlink is created by default)"

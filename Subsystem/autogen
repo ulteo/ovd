@@ -25,5 +25,18 @@ else
     version=$(cat VERSION | head -n 1)~dev
 fi
 
+url=''
+set -- $(getopt -u u: "$@")
+[ $# -lt 1 ] && exit 1
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        -u) url="$2" ; shift ;;
+        --) shift; break ;;
+        *)  break ;;
+    esac
+    shift
+done
+
 sed "s/@PKG_VERSION@/${version}/g" setup.py.in > setup.py
-sed "s/@PKG_VERSION@/${version}/g" script/ovd-subsystem-config.in > script/ovd-subsystem-config
+sed -e "s/@PKG_VERSION@/${version}/g" -e "s,@CHROOT_URL@,${url},g" script/ovd-subsystem-config.in > script/ovd-subsystem-config
