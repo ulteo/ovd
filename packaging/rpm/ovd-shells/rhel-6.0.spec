@@ -1,6 +1,7 @@
 # Copyright (C) 2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,7 +27,6 @@ Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: Julien LANGLOIS <julien@ulteo.com>
-Distribution: RHEL 6.0
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
@@ -42,7 +42,7 @@ Ulteo Open Virtual Desktop - shell
 
 Summary: Ulteo Open Virtual Desktop - shells
 Group: Applications/System
-Requires: python xrdp-python
+Requires: python uxda-server-python
 
 %description -n ulteo-ovd-shells
 These scripts handle the Open Virtual Desktop user sessions.
@@ -67,7 +67,3 @@ These scripts handle the Open Virtual Desktop user sessions.
 %{_bindir}/OvdDesktop
 %{_bindir}/OvdRemoteApps
 %{_bindir}/startovdapp
-
-%changelog -n ulteo-ovd-shells
-* Thu Mar 19 2013 Julien LANGLOIS <julien@ulteo.com> 99.99.svn8667
-- Initial release

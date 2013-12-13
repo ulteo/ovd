@@ -136,10 +136,11 @@ fi
 
 Summary: Ulteo Open Virtual Desktop - application server role for slave server
 Group: Applications/System
+Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, uxda-server-python, uxda-server-seamrdp, uxda-server-rdpdr, uxda-server-printer, uxda-server-sound, uxda-server-clipboard, ImageMagick, cifs-utils, rsync
 %if %{defined rhel}
-Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard, ImageMagick, passwd, rsync, cifs-utils, pyxdg
+Requires: passwd, pyxdg
 %else
-Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard, ImageMagick, pwdutils, rsync, cifs-utils, python-xdg
+Requires: pwdutils, python-xdg
 %endif
 
 

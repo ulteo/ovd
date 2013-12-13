@@ -1,6 +1,7 @@
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,8 +26,7 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: RHEL 6.0
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
@@ -41,7 +41,7 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 Summary: Ulteo Open Virtual Desktop - Session Manager
 Group: Applications/System
 Requires: curl
-Conflicts: ulteo-ovd-slaveserver, samba, xrdp
+Conflicts: ulteo-ovd-slaveserver, samba, uxda-server
 
 %description -n ulteo-ovd-subsystem
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
@@ -52,7 +52,11 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 %install -n ulteo-ovd-subsystem
 install -D conf/default.conf %buildroot/etc/default/ulteo-ovd-subsystem
 install -D conf/subsystem.conf %buildroot/etc/ulteo/subsystem.conf
+%if %{defined rhel}
 install -D init/redhat/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
+%else
+install -D init/suse/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
+%endif
 install -D script/ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
 install -D script/uchroot %buildroot/usr/sbin/uchroot
 
@@ -79,7 +83,3 @@ rm -rf %buildroot
 %defattr(744,root,root)
 /etc/init.d/ulteo-ovd-subsystem
 /usr/sbin/*
-
-%changelog -n ulteo-ovd-subsystem
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release
