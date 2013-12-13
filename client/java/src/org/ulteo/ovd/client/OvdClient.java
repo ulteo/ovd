@@ -164,8 +164,6 @@ public abstract class OvdClient implements RdpListener {
 
 		Logger.info("Session is terminated");
 		
-		this.runSessionTerminated();
-
 		this.connectionIsActive = false;
 
 		if (! this.getWaitSession() && this.sessionStatusMonitoringThread != null) {
