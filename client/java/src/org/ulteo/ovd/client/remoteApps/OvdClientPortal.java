@@ -191,6 +191,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		for (Application app : ovdAppChannel.getApplicationsList()) {
 			this.portal.getApplicationPanel().toggleAppButton(app, false);
 		}
+
+		this.portal.setVisible(false);
+		this.portal.dispose();
 		
 		this.unpublish(rc);
 	}
