@@ -38,6 +38,7 @@ def perform_transform(content):
 		version = file("VERSION", "r").readline().strip()
 		version += "~dev"
 	transform_vars["VERSION"] = version
+	transform_vars["VERSIONNOTILD"] = version.replace("~", "-")
 	
 	if os.environ.has_key("BASE_URI"):
 		base_uri = os.environ["BASE_URI"]
