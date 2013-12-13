@@ -302,8 +302,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	@Override
-	public void disconnect() {
+	public void disconnect(boolean logout) {
 		this.is_user_disconnection = true;
+		this.persistent = logout;
 		this.disconnection();
 	}
 

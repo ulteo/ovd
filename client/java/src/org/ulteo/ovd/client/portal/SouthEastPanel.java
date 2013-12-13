@@ -73,7 +73,7 @@ public class SouthEastPanel extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					parentFrame.setDisconnectionMode(OvdClient.DisconnectionMode.SUSPEND);
-					rdpActions.disconnect();
+					rdpActions.disconnect(true);
 				}
 			});
 		}
@@ -83,7 +83,7 @@ public class SouthEastPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				parentFrame.setDisconnectionMode(OvdClient.DisconnectionMode.LOGOFF);
-				rdpActions.disconnect();
+				rdpActions.disconnect(false);
 			}
 		});
 		

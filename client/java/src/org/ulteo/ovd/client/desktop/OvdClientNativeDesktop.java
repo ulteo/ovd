@@ -163,8 +163,9 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	}
 
 	@Override
-	public void disconnect() {
+	public void disconnect(boolean disconnect) {
 		this.is_user_disconnection = true;
+		this.persistent = disconnect;
 		this.disconnection();
 	}
 	

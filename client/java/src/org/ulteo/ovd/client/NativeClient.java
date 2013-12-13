@@ -676,7 +676,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame) {
 			if (this.client_actions != null)
-				this.client_actions.disconnect();
+				this.client_actions.disconnect(false);
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.start();
@@ -871,7 +871,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			((OvdClientPerformer) client).perform();
 		}
 		else
-			this.client_actions.disconnect();
+			this.client_actions.disconnect(false);
 		
 		boolean exit = this.client_actions.haveToQuit();
 		boolean is_user_deconnection = this.client_actions.isUserDisconnection();
