@@ -68,7 +68,7 @@ do_start() {
     mount -t tmpfs none $CHROOTDIR/dev/shm 2>/dev/null
 
     uchroot service cups start && \
-    uchroot service xrdp start && \
+    uchroot service uxda-server start && \
     uchroot service smbd start && \
     uchroot service apache2 start && \
     uchroot service ulteo-ovd-slaveserver start
@@ -80,7 +80,7 @@ do_stop() {
     uchroot service ulteo-ovd-slaveserver stop
     uchroot service apache2 stop
     uchroot service smbd stop
-    uchroot service xrdp stop
+    uchroot service uxda-server stop
     uchroot service cups stop
 
     umount $CHROOTDIR/dev/shm 2>/dev/null
