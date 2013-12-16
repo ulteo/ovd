@@ -44,6 +44,10 @@ class Role:
 	
 	def order_stop(self):
 		Logger.info("%s role::stop"%(self.getName()))
+		if self.status == Role.STATUS_INIT:
+			self.status = Role.STATUS_STOP
+			return
+		
 		self.status = Role.STATUS_STOPPING
 		
 	def force_stop(self):
