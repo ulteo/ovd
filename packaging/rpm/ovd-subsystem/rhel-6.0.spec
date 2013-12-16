@@ -30,6 +30,7 @@ Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
+Buildroot: %{buildroot}
 
 %description
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
@@ -50,15 +51,15 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 %setup -q
 
 %install -n ulteo-ovd-subsystem
-install -D conf/default.conf %buildroot/etc/default/ulteo-ovd-subsystem
-install -D conf/subsystem.conf %buildroot/etc/ulteo/subsystem.conf
+install -D conf/default.conf %{buildroot}/etc/default/ulteo-ovd-subsystem
+install -D conf/subsystem.conf %{buildroot}/etc/ulteo/subsystem.conf
 %if %{defined rhel}
-install -D init/redhat/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
+install -D init/redhat/ulteo-ovd-subsystem %{buildroot}/etc/init.d/ulteo-ovd-subsystem
 %else
-install -D init/suse/ulteo-ovd-subsystem %buildroot/etc/init.d/ulteo-ovd-subsystem
+install -D init/suse/ulteo-ovd-subsystem %{buildroot}/etc/init.d/ulteo-ovd-subsystem
 %endif
-install -D script/ovd-subsystem-config %buildroot/usr/sbin/ovd-subsystem-config
-install -D script/uchroot %buildroot/usr/sbin/uchroot
+install -D script/ovd-subsystem-config %{buildroot}/usr/sbin/ovd-subsystem-config
+install -D script/uchroot %{buildroot}/usr/sbin/uchroot
 
 %preun -n ulteo-ovd-subsystem
 if [ "$1" = "0" ]; then
@@ -74,7 +75,7 @@ if [ "$1" = "0" ]; then
 fi
 
 %clean -n ulteo-ovd-subsystem
-rm -rf %buildroot
+rm -rf %{buildroot}
 
 %files -n ulteo-ovd-subsystem
 %defattr(-,root,root)
