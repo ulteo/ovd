@@ -17,8 +17,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import glob
+import win32api
+import pythoncom
+import win32com.client
 from win32com.shell import shell, shellcon
 import win32file
+import threading
+import time
 import pywintypes
 import os
 
@@ -32,9 +37,22 @@ class Shortcuts(AbstractShortcuts):
 	
 	
 	def synchronize(self, path):
+		if Platform.getVersion() > 6.1:
+			self.defaultProgram = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_PROGRAMS, 0, 0)
+			desktopLNKFile = os.path.join(self.windowsProgramsDir, "desktop.lnk")
+			
+			try:
+				if not os.path.exists(desktopLNKFile):
+					win32file.CopyFile(os.path.join(self.defaultProgram,"desktop.lnk"), desktopLNKFile, True)
+			except Exception, e:
+				print "Failed to copy file: ", str(e)
+			
+			threading.Thread(target=self.server2012Integration, args=(path,)).start()
+			return
+
 		for p in glob.glob(os.path.join(path, "*")):
 			self.install(os.path.join(path, p))
-	
+			
 	
 	def install(self, shortcut):
 		shortcut = Platform.toUnicode(shortcut)
@@ -68,3 +86,17 @@ class Shortcuts(AbstractShortcuts):
 			# other error
 			print "Session::Windows::install_shortcut error on copy of '%s' to '%s', wintypes error %s"%(shortcut, dstFile, err[0])
 			return
+	
+	
+	def server2012Integration(self, path):
+		time.sleep(2)
+		pythoncom.CoInitialize()
+			
+		for p in glob.glob(os.path.join(path, "*")):
+			self.pinToStart(os.path.join(path, p))
+		
+	
+	def pinToStart(self, lnkPath):
+		sh = win32com.client.Dispatch('Shell.Application')
+		sh.ShellExecute(lnkPath, None, None, "pintostartscreen", 10)
+	

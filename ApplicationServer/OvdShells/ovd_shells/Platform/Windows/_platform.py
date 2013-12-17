@@ -25,6 +25,7 @@ import locale
 import os
 import time
 
+import platform
 import pythoncom
 import pywintypes
 import win32api
@@ -244,3 +245,12 @@ def toUnicode(str):
 		encoding = "UTF-8"
 	
 	return unicode(str, encoding)
+	
+
+def getVersion():
+	varray = platform.version().split(".")
+	
+	if len(varray) == 1:
+		return int(varray(0))
+       
+	return float(varray[0]+"."+varray[1])
