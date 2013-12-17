@@ -1001,16 +1001,6 @@ static int rufs_removexattr(const char *path, const char *name)
 }
 #endif /* HAVE_SETXATTR */
 
-static int rufs_lock(const char *path, struct fuse_file_info *fi, int cmd,
-		    struct flock *lock)
-{
-	if (! authorized(path))
-		return -EPERM;
-
-	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
-			   sizeof(fi->lock_owner));
-}
-
 
 static struct fuse_operations rufs_oper = {
 	.getattr	= rufs_getattr,
@@ -1047,7 +1037,6 @@ static struct fuse_operations rufs_oper = {
 	.listxattr	= rufs_listxattr,
 	.removexattr	= rufs_removexattr,
 #endif
-	.lock		= rufs_lock,
 };
 
 
