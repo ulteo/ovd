@@ -31,10 +31,10 @@ from ovd.Logger import Logger
 
 def disableActiveSetup(rootPath):
 	path = r"Software\Microsoft\Active Setup"
-	hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ALL_ACCESS)
+	hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	
 	path = r"%s\%s"%(rootPath, path)
-	hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+	hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	
 	try:
 		CopyTree(hkey_src, "Installed Components", hkey_dst)
@@ -53,8 +53,8 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 	try:
 		win32api.RegCreateKey(KeyDest, SubKey)
 		
-		hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS)
-		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
+		hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
+		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	except Exception, err:
 		if err[0] == 5:     #Access denied
 			Logger.debug("Unable to open key in order to proceed CopyTree of %s: Access denied"%SubKey)
@@ -127,10 +127,10 @@ def CreateKeyR(hkey, path):
 		(parents, name) = path.rsplit("\\", 1)
 		
 		try:
-			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE | win32con.KEY_WOW64_64KEY)
 		except Exception, err:
 			CreateKeyR(hkey, parents)
-			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE)
+			hkey2 = win32api.RegOpenKey(hkey, parents, 0, win32con.KEY_SET_VALUE | win32con.KEY_WOW64_64KEY)
 	else:
 		name = path
 		hkey2 = hkey
@@ -140,7 +140,7 @@ def CreateKeyR(hkey, path):
 
 
 def ProcessActiveSetupEntry(BaseKey, Entry, Username, LocaleValue):
-	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
+	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	
 	version = False
 	try:
@@ -175,7 +175,7 @@ def GetLocaleValue(hkey_src):
 	while flag_continue:
 		try:
 			entry = win32api.RegEnumKey(hkey_src, index)
-			hkey = win32api.RegOpenKey(hkey_src, entry, 0, win32con.KEY_ALL_ACCESS)
+			hkey = win32api.RegOpenKey(hkey_src, entry, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 			try:
 				(string, type) = win32api.RegQueryValueEx(hkey, "Locale")
 				if not (string == "*" ):
@@ -198,9 +198,9 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	hkey_dst = None
 	
 	try:
-		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, active_setup_path, 0, win32con.KEY_ALL_ACCESS)
+		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, active_setup_path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 		CreateKeyR(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path))
-		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path), 0, win32con.KEY_ALL_ACCESS)
+		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path), 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 		CopyTree(hkey_src, "Installed Components", hkey_dst)
 		
 	except Exception:
@@ -213,7 +213,7 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 			win32api.RegCloseKey(hkey_src)
 	
 	components_path = r"%s\%s\%s"%(hiveName,active_setup_path, "Installed Components")
-	hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, components_path, 0, win32con.KEY_ALL_ACCESS)
+	hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, components_path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	keyToRemove = []
 	
 	localeValue = GetLocaleValue(hkey_src)
@@ -237,7 +237,7 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 
 def DeleteTree(key, subkey, deleteRoot = True):
 	try:
-		hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
+		hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	except:
 		# subkey already doesn't exist
 		return
@@ -282,7 +282,7 @@ def TreeSearchExpression(hive, subpath, motif):
 	flag_continue = True
 	
 	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	except Exception, err:
 		pass
 	if hkey is None:
@@ -329,7 +329,7 @@ def TreeReplace(hive, subpath, src, dest):
 	path = hive+"\\"+subpath
 	
 	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	except Exception, err:
 		pass
 	if hkey is None:
@@ -367,7 +367,7 @@ def TreeReplace(hive, subpath, src, dest):
 
 def LsTree(key, subkey, nb=0):
 	print "%s * Node %s"%(" "*(nb*2), subkey)
-	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
+	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	
 	index = 0
 	flag_continue = True
@@ -398,7 +398,7 @@ def getActiveSetupKeys():
 	
 	keys = {}
 	
-	hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ENUMERATE_SUB_KEYS|win32con.KEY_QUERY_VALUE)
+	hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ENUMERATE_SUB_KEYS|win32con.KEY_QUERY_VALUE | win32con.KEY_WOW64_64KEY)
 	index = 0
 	while True:
 		try:
@@ -413,7 +413,7 @@ def getActiveSetupKeys():
 	
 	for k in keys.keys():
 		p = r"%s\%s"%(path, k)
-		hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, p, 0, win32con.KEY_QUERY_VALUE)
+		hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, p, 0, win32con.KEY_QUERY_VALUE | win32con.KEY_WOW64_64KEY)
 		
 		try:
 			(version, _) = win32api.RegQueryValueEx(hkey, "Version")
@@ -431,7 +431,7 @@ def getActiveSetupKeys():
 
 def disableActiveSetup22(rootPath):
 	path = r"%s\Software\Microsoft\Active Setup"%(rootPath)
-	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	
 	DeleteTree(hkey, "Installed Components", False)
 	win32api.RegCloseKey(hkey)
@@ -442,12 +442,12 @@ def disableActiveSetup22(rootPath):
 		version = v
 		
 		path = r"%s\Software\Microsoft\Active Setup\Installed Components"%(rootPath)
-		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 		win32api.RegCreateKey(hkey, k)
 		win32api.RegCloseKey(hkey)
 		
 		path = r"%s\%s"%(path, k)
-		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 		win32api.RegSetValueEx(hkey, "Version", 0, win32con.REG_SZ, version)
 		win32api.RegCloseKey(hkey)
 
@@ -458,7 +458,7 @@ def setTimezone(rootPath, tz):
 	path = r"Software\Microsoft\Windows NT\CurrentVersion\Time Zones\%s"%(tz)
 	hkey = None
 	try:
-		hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_QUERY_VALUE)
+		hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_QUERY_VALUE | win32con.KEY_WOW64_64KEY)
 		(std, _) = win32api.RegQueryValueEx(hkey, "std")
 		(dlt, _) = win32api.RegQueryValueEx(hkey, "dlt")
 		(tzi, _) = win32api.RegQueryValueEx(hkey, "TZI")
@@ -481,7 +481,7 @@ def setTimezone(rootPath, tz):
 	
 	path = r"%s\SYSTEM\CurrentControlSet\Control\TimeZoneInformation"%(rootPath)
 	CreateKeyR(win32con.HKEY_USERS, path)
-	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
+	hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS | win32con.KEY_WOW64_64KEY)
 	if hkey is None:
 		Logger.error("setTimezone, unable to open "+path)
 		return False
