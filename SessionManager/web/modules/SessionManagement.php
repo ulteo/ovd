@@ -566,12 +566,36 @@ abstract class SessionManagement extends Module {
 			return false;
 		}
 		
+		$windows_applications_count = 0;
+		$linux_applications_count = 0;
+		$all_applications = $this->user->applications();
+		
+		foreach($all_applications as $application) {
+			if($application->getAttribute('type') == Server::SERVER_TYPE_LINUX) {
+				$linux_applications_count++;
+			}
+			
+			if($application->getAttribute('type') == Server::SERVER_TYPE_WINDOWS) {
+				$windows_applications_count++;
+			}
+			
+		}
+
 		$servers = $this->getAvailableApplicationServers();
 		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
 		
 		if (array_key_exists('desktop_type', $remote_desktop_settings) && $remote_desktop_settings['desktop_type'] != 'any') {
 			foreach ($servers as $id => $server) {
 				if ($server->getAttribute('type') != $remote_desktop_settings['desktop_type'])
+					unset($servers[$id]);
+			}
+		}
+		else {
+			foreach ($servers as $id => $server) {
+				if ($server->getAttribute('type') == Server::SERVER_TYPE_LINUX && $linux_applications_count == 0)
+					unset($servers[$id]);
+				
+				if ($server->getAttribute('type') == Server::SERVER_TYPE_WINDOWS && $windows_applications_count == 0)
 					unset($servers[$id]);
 			}
 		}
