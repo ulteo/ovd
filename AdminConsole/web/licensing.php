@@ -164,19 +164,23 @@ function print_summary() {
 	echo '</td>';
 	echo '</tr>';
 
-	echo '<tr class="content'.($color++ % 2 +1).'">';
-	echo '<td style="width: 200px;">';
-	echo '<span>'._('License valid from').'</span>';
-	echo '</td>';
-	echo '<td>'.date('m/d/Y H:i:s', $limits['global_from']).'</td>';
-	echo '</tr>';
+	if($limits['global_from']) {
+		echo '<tr class="content'.($color++ % 2 +1).'">';
+		echo '<td style="width: 200px;">';
+		echo '<span>'._('License valid from').'</span>';
+		echo '</td>';
+		echo '<td>'.date('m/d/Y H:i:s', $limits['global_from']).'</td>';
+		echo '</tr>';
+	}
 
-	echo '<tr class="content'.($color++ % 2 +1).'">';
-	echo '<td style="width: 200px;">';
-	echo '<span>'._('License valid until').'</span>';
-	echo '</td>';
-	echo '<td>'.date('m/d/Y H:i:s', $limits['global_to']).'</td>';
-	echo '</tr>';
+	if($limits['global_to']) {
+		echo '<tr class="content'.($color++ % 2 +1).'">';
+		echo '<td style="width: 200px;">';
+		echo '<span>'._('License valid until').'</span>';
+		echo '</td>';
+		echo '<td>'.date('m/d/Y H:i:s', $limits['global_to']).'</td>';
+		echo '</tr>';
+	}
 
 	if($limits['concurrent_users_max']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
