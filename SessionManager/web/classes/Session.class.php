@@ -207,7 +207,13 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_READY:
 				$all_ready = true;
-				$all_servers = array_merge($this->servers[Server::SERVER_ROLE_APS], $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				$all_servers = array();
+				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
+					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+				
+				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
+					 array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				
 				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
 						$all_ready = false;
@@ -242,7 +248,13 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_DESTROYED:
 				$all_destroyed = true;
-				$all_servers = array_merge($this->servers[Server::SERVER_ROLE_APS], $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				$all_servers = array();
+				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
+					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+				
+				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
+					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+				
 				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
 						$all_destroyed = false;
@@ -502,23 +514,25 @@ class Session {
 			$this->setStatus(Session::SESSION_STATUS_DESTROYED, $reason_);
 		else
 			$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
-
-		foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
-			$session_server = Abstract_Server::load($server_id);
-			if (! $session_server) {
-				Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server_id.'\'');
-				return false;
-			}
-
-			if (is_array($session_server->roles)) {
-				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_server->roles)) {
-					$buf = $session_server->orderSessionDeletion($this->id, 'webapps');
-					if (! $buf) {
-						Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
-						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED);
-						$destroyed++;
-					} else
+		
+		if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_server->roles)) {
+			foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+				$session_server = Abstract_Server::load($server_id);
+				if (! $session_server) {
+					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server_id.'\'');
+					return false;
+				}
+				
+				if (is_array($session_server->roles)) {
+					if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_server->roles)) {
+						$buf = $session_server->orderSessionDeletion($this->id, 'webapps');
+						if (! $buf) {
+							Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$session_server->fqdn.'\'');
+							$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYED);
+							$destroyed++;
+						} else
 						$this->setServerStatus($session_server->id, Session::SESSION_STATUS_DESTROYING);
+					}
 				}
 			}
 		}
