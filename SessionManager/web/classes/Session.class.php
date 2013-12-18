@@ -122,40 +122,44 @@ class Session {
 
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
-		foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
-			$server = Abstract_Server::load($server_id);
-			if (! $server) {
-				Logger::error('main', 'Session::getStatus failed to load server (server='.$server_id.')');
-				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
-				continue;
-			}
+		if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers)) {
+			foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+				$server = Abstract_Server::load($server_id);
+				if (! $server) {
+					Logger::error('main', 'Session::getStatus failed to load server (server='.$server_id.')');
+					$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+					continue;
+				}
 
-			$ret = $server->getSessionStatus($this->id);
-			if (! $ret) {
-				Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
-				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
-				continue;
-			}
+				$ret = $server->getSessionStatus($this->id);
+				if (! $ret) {
+					Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
+					$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+					continue;
+				}
 
-			$this->setServerStatus($server_id, $ret);
+				$this->setServerStatus($server_id, $ret);
+			}
 		}
+		
+		if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers)) {
+			foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+				$server = Abstract_Server::load($server_id);
+				if (! $server) {
+					Logger::error('main', 'Session::getStatus failed to load webapp server (server='.$server_id.')');
+					$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+					continue;
+				}
 
-		foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
-			$server = Abstract_Server::load($server_id);
-			if (! $server) {
-				Logger::error('main', 'Session::getStatus failed to load webapp server (server='.$server_id.')');
-				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
-				continue;
+				$ret = $server->getSessionStatus($this->id, 'webapps');
+				if (! $ret) {
+					Logger::error('main', 'Session::getStatus('.$this->id.') - WebappS answer is incorrect');
+					$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
+					continue;
+				}
+
+				$this->setServerStatus($server_id, $ret, NULL, Server::SERVER_ROLE_WEBAPPS);
 			}
-
-			$ret = $server->getSessionStatus($this->id, 'webapps');
-			if (! $ret) {
-				Logger::error('main', 'Session::getStatus('.$this->id.') - WebappS answer is incorrect');
-				$this->setServerStatus($server_id, Session::SESSION_STATUS_ERROR);
-				continue;
-			}
-
-			$this->setServerStatus($server_id, $ret, NULL, Server::SERVER_ROLE_WEBAPPS);
 		}
 
 		return $this->getAttribute('status');
