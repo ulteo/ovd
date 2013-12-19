@@ -93,6 +93,8 @@ def setup_app(config, app_id, app_name):
     except KeyError, e:
         Logger.error("Key %s not found. Correct your configuration file" % e)
         return
+    except Exception, exception:
+        Logger.error("Failed to configure web app: %s" % exception)
 
     app_request_processor = ApplicationRequestProcessor(app_req_proc_config)
     app = ApplicationDefinition(app_id, app_name, re.compile('^' + app_name + '\.'), '',
