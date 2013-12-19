@@ -96,7 +96,8 @@ class Role(AbstractRole):
 	
 	
 	def force_stop(self):
-		self.server.shutdown()
+		if self.server is not None:
+			self.server.shutdown()
 		self.sessions_repo.stop()
 		self.apps_repo.stop()
 		for pid in list(self.processes):
