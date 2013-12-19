@@ -40,7 +40,8 @@ uovd.provider.applications.Html5.prototype.applicationStart_implementation = fun
 		var server = this.session_management.session.servers[server_id];
 
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) {
-			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+";");
+			var ovdapp_message = opcode+""+appToken+""+appId;
+			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", ovdapp_message);
 			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
 		}
 	} else {
@@ -81,7 +82,8 @@ uovd.provider.applications.Html5.prototype.applicationStartWithArgs_implementati
 		var server = this.session_management.session.servers[server_id];
 
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) {
-			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", opcode+""+appToken+""+appId+""+dir_type+""+share_len+""+share+""+path_len+""+path+";");
+			var ovdapp_message = opcode+""+appToken+""+appId+""+dir_type+""+share_len+""+share+""+path_len+""+path;
+			this.connections[server_id].guac_tunnel.sendMessage("ovdapp", ovdapp_message);
 			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
 		}
 	} else {
