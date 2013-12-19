@@ -360,12 +360,12 @@ function page_header($params_=array()) {
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-	$errors[] = sprintf(_("Your %sPremium licence%s will expire in %d days"), $link[0], $link[1], $expirity);
+	$errors[] = sprintf(_("Your %sPremium license%s will expire in %d days"), $link[0], $link[1], $expirity);
       } elseif ($expirity <= 0) {
-	$errors[] = sprintf(_("Your %sPremium licence%s has expired."), $link[0], $link[1]);
+	$errors[] = sprintf(_("Your %sPremium license%s has expired."), $link[0], $link[1]);
       }
     } else {
-      $errors[] = sprintf(_("You don't have any valid %sPremium licence%s."), $link[0], $link[1]);
+      $errors[] = sprintf(_("You don't have any valid %sPremium license%s."), $link[0], $link[1]);
     }
   }
   

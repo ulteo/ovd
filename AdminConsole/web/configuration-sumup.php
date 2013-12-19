@@ -149,14 +149,14 @@ echo $buf;
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-        echo sprintf(_("Your Premium licence will expire in %d days"), $expirity);
+        echo sprintf(_("Your Premium license will expire in %d days"), $expirity);
       } elseif ($expirity <= 0) {
-        echo _("Your Premium licence has expired.");
+        echo _("Your Premium license has expired.");
       } else {
-        echo sprintf(_("Your Premium licence is valid for %d days."), $expirity);
+        echo sprintf(_("Your Premium license is valid for %d days."), $expirity);
       }
     } else {
-      echo _("You don't have any valid Premium licence.");
+      echo _("You don't have any valid Premium license.");
     }
 ?>
   </div>
