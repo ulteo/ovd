@@ -11,21 +11,23 @@
   <xsl:param name="figure.note">img/dialog-information.png</xsl:param>
   
   
-  <xsl:template name="copyright2">
-    <xsl:param name="node"/>
-    <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="'Copyright'"/>
-    </xsl:call-template>
-    <xsl:call-template name="gentext.space"/>
-    <xsl:call-template name="dingbat">
-      <xsl:with-param name="dingbat">copyright</xsl:with-param>
-    </xsl:call-template>
-
-    <xsl:call-template name="gentext.space"/>
-    <xsl:value-of select="$node/year"/>
-    <xsl:call-template name="gentext.space"/>
-    <xsl:value-of select="$node/holder"/>
-  </xsl:template>
+	<xsl:template match="copyright" mode="titlepage.mode">
+	 <xsl:text>\noindent </xsl:text>
+	 <xsl:call-template name="dingbat">
+		<xsl:with-param name="dingbat">copyright</xsl:with-param>
+	 </xsl:call-template>
+	 <xsl:call-template name="gentext.space"/>
+	 <xsl:apply-templates select="holder" mode="titlepage.mode"/>	 
+	 <xsl:call-template name="gentext.space"/>
+	 <xsl:call-template name="copyright.years">
+		<xsl:with-param name="years" select="year"/>
+		<xsl:with-param name="print.ranges" select="$make.year.ranges"/>
+		<xsl:with-param name="single.year.ranges" select="$make.single.year.ranges"/>
+	 </xsl:call-template>
+	 <xsl:if test="following-sibling::copyright">
+	 <xsl:text>\par&#10;</xsl:text>
+	 </xsl:if>
+	</xsl:template>
 
   <xsl:template match="book|article">
     <xsl:variable name="info" select="bookinfo|articleinfo|artheader|info"/>
@@ -62,7 +64,7 @@
 
     <xsl:variable name="title">
       <xsl:text>
-  	\textbf{\huge{
+  	\flushright{\uppercase{\normalfont\fontsize{26pt}{26pt}\selectfont\textcolor[rgb]{127,127,127}{
       </xsl:text>
       <xsl:call-template name="normalize-scape">
   	<xsl:with-param name="string">
@@ -79,7 +81,7 @@
 
       <xsl:choose>
   	<xsl:when test="$info/subtitle">
-  	  <xsl:text>}\\[1cm]}</xsl:text>
+  	  <xsl:text>}\\[1cm]}}</xsl:text>
   	</xsl:when>
   	<xsl:otherwise>
   	  <xsl:text>}\\[4cm]}</xsl:text>
@@ -90,7 +92,7 @@
     <xsl:variable name="subtitle">
       <xsl:if test="$info/subtitle">
   	<xsl:text>
-  	  \textbf{\LARGE{
+  	  \flushright{\uppercase{\fontsize{12pt}{14pt}\selectfont\textcolor[rgb]{87,87,87}{
   	</xsl:text>
   	<xsl:call-template name="normalize-scape">
   	  <xsl:with-param name="string">
@@ -98,19 +100,9 @@
   	  </xsl:with-param>
   	</xsl:call-template>
   	<xsl:text>
-  	  }\\[3cm]}
+  	  }}\\[3cm]}
   	</xsl:text>
       </xsl:if>
-    </xsl:variable>
-
-
-    <xsl:variable name="copyright">
-
-      <xsl:call-template name="copyright2">
-  	<xsl:with-param name="node" select="$info/copyright"/>
-      </xsl:call-template>
-
-
     </xsl:variable>
 
     <xsl:text>
@@ -119,17 +111,18 @@
     </xsl:text>
     <xsl:value-of select="$title"/>
     <xsl:value-of select="$subtitle"/>
-    <xsl:apply-templates select="$info/graphic"/>
+<!--    <xsl:apply-templates select="$info/graphic"/> -->
     <xsl:text>
+	
       \end{center}
     </xsl:text>
 
-    <xsl:text>
+ <!--   <xsl:text>
       \textbf{}\\[4cm]
       \begin{flushright}
       \textit{\DBKcopyright}
       \end{flushright}
-    </xsl:text>
+    </xsl:text> -->
     <xsl:text>
       \end{titlepage}
     </xsl:text>
@@ -155,37 +148,7 @@
     <xsl:if test="*//indexterm|*//keyword">
       <xsl:text>\printindex&#10;</xsl:text>
     </xsl:if>
-    <xsl:text>
-      \newpage
-      \pagestyle{empty}
-      \vspace*{\fill}
-      \begin{center}
 
-      \begin{minipage}{10cm}
-      \begin{center}
-      <!-- \DBKtitle -->
-      {\LARGE \THETITLE}
-
-      \vspace{0.3cm}
-      
-
-      {\Large \DBKsubtitle}
-      \normalsize
-      \vspace{0.4cm}
-    </xsl:text>
-    <xsl:apply-templates select="colophon"/>
-    <xsl:text>
-      \vspace{0.1cm}
-      
-
-      \DBKcopyright
-      \end{center}
-
-      
-      \end{minipage}
-      \end{center}      
-      \vspace*{\fill}
-    </xsl:text>
     <xsl:call-template name="lang.document.end">
       <xsl:with-param name="lang" select="$lang"/>
     </xsl:call-template>
@@ -199,7 +162,7 @@
   <xsl:template match="colophon">
     <xsl:call-template name="section.unnumbered">
       <xsl:with-param name="tocdepth" select="number($colophon.tocdepth)"/>
-      <xsl:with-param name="title">
+      <xsl:with-param name="title">		  
 	<!-- <xsl:call-template name="gentext"> -->
 	<!--   <xsl:with-param name="key" select="'Colophon'"/> -->
 	<!-- </xsl:call-template> -->
@@ -217,10 +180,10 @@
     <xsl:choose>
       <xsl:when test="$level &lt; 6">
 	<xsl:choose>
-	  <xsl:when test='$level=1'>\newpage \section</xsl:when>
-	  <xsl:when test='$level=2'>\subsection</xsl:when>
-	  <xsl:when test='$level=3'>\subsubsection</xsl:when>
-	  <xsl:when test='$level=4'>\paragraph</xsl:when>
+	  <xsl:when test='$level=1'>\newpage \setlength{\leftskip}{0mm}\section</xsl:when>
+	  <xsl:when test='$level=2'>\setlength{\leftskip}{0mm}\subsection</xsl:when>
+	  <xsl:when test='$level=3'>\setlength{\leftskip}{5mm}\subsubsection</xsl:when>
+	  <xsl:when test='$level=4'>\setlength{\leftskip}{15mm}\paragraph</xsl:when>
 	  <xsl:when test='$level=5'>\subparagraph</xsl:when>
 	  <!-- rare case -->
 	  <xsl:when test='$level=0'>\chapter</xsl:when>

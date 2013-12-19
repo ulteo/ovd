@@ -48,13 +48,13 @@
       The supported operating systems are:
       <itemizedlist>
         <listitem>
-          <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 SP2 x86/x64
+          <para>            
+            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008R2 SP1
           </para>
         </listitem>
         <listitem>
           <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008R2 SP1
+			<trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 SP2 x86/x64
           </para>
         </listitem>
       </itemizedlist>
@@ -163,6 +163,9 @@
     </screenshot>
 
     <para>
+	  Now, you can fulfill the <emphasis>Display name</emphasis> field and also the <emphasis>Redirection name</emphasis> field.
+	</para>
+	<para>
       The next step is to add some <trademark>Windows</trademark>
       applications to an existing Application Group so that users get
       authorized to run those your <trademark>Windows</trademark>
@@ -174,7 +177,7 @@
 
 
   <section>
-    <title>Lauch a session</title>
+    <title>Launch a session</title>
     <para>
       If you launch a session, you should be able to access to your
       <trademark>Windows</trademark> applications from the application

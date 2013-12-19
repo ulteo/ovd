@@ -119,18 +119,5 @@
     </para>
   </section>
 
-  <section>
-    <title>High Availability / Failover</title>
-
-    <para>
-      As the Session Manager is the main piece of the Ulteo OVD farm,
-      it requires to have a failover solution to avoid having a broken farm
-      when the Session Manager has a problem.
-    </para>
-    <para>
-      This High Availability solution uses Heartbeat, a solution used by the Linux HA
-      project.
-    </para>
-  </section>
   <xi:include href="colophon.xml" />
 </article>

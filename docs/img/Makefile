@@ -2,7 +2,9 @@ SUBDIRS=\
 	admin-console \
 	iso \
 	native \
-	windows
+	windows \
+	virtualappliance \
+	premium \
 
 DATA=\
 	aps_win_event.png \

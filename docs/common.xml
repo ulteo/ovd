@@ -3,15 +3,15 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <important id="gold">
-    <para>
+    <para>	  
       The Ulteo OVD @gold_product_name@ is a <emphasis
       role="strong">@GOLD_NAME@ module</emphasis>. @GOLD_NAME@ modules are
       commercial Open-Source modules that are not available in the
-      free download section. To access executable @GOLD_NAME@ modules, you
-      need a dedicated login and password.
+      OVD Community Edition. To access executable @GOLD_NAME@ modules, you
+      need an OVD Premium license and a dedicated login and password.       
     </para>
     <para>
-      In order to get access to @GOLD_NAME@ modules, contact us at <ulink
+      In order to migrate to OVD Premium Edition and get access to @GOLD_NAME@ modules, contact us at <ulink
       url="http://www.ulteo.com/home/contact-us" />.
     </para>
   </important>

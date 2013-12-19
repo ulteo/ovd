@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="lucid"/>
+  <transform_var name="distrib_dvd_url" value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
+  <transform_var name="gold_edition" value="OVD Premium Edition"/>
+  <articleinfo id="header">
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Premium Edition</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+  
+  <section id="intro">
+    <title id="intro_title">Introduction</title>
+
+    <para>
+     The purpose of this document is to describe how to enable @gold_edition@.
+    </para>
+   </section>
+   <section>
+	   <title>@gold_edition@</title>
+	   <para>		   
+		<emphasis>@gold_edition@</emphasis> is a comprehensive platform designed to deliver solutions for workforce mobility, BYO initiatives, desktop virtual projects and more. It comprises advanced features such
+		as an SSL VPN and two factor authentication support for enhanced security and integration to Microsoft SharePoint and Alfresco. It delivers seamless applications and desktop sessions
+		from Windows and Linux servers to native Windows and Linux clients, HTML5 enabled browsers and mobile devices. A fully featured administrator web console provides for configuration of
+		server settings, user management, application publishing and server monitoring along with server load balancing for optimum	performance and scalability.
+		 <section id="pmodule">
+			<title id="intro_pmodule">OVD Premium Modules</title>
+			<para>
+				The <emphasis>@gold_edition@</emphasis>emphasis> allows to enable premium features such as SmartCard feature and allows communication between 
+				the <emphasis>OVD Session Manager</emphasis> and <emphasis>OVD Premium Modules</emphasis> such as
+				<itemizedlist>
+				<listitem>
+				<para><ulink url="NativeClient.html">Native Client</ulink></para>
+				</listitem>
+				<listitem>
+				 <para><ulink url="Installation_Gateway_Precise.html">Gateway SSL</ulink></para>				 
+				</listitem>
+				 <listitem>
+				 <para>iOS client</para>
+				</listitem>
+				<listitem>
+				 <para>Android client</para>
+				</listitem>
+				</itemizedlist>
+			</para>
+		  </section>
+	   </para>
+   </section>
+    <section id="community">
+    <title id="intro_community">Installation</title>
+    <para>
+     Once logged on the OVD Administration console, you will have a message which notifies you that you don't have any Premium license.
+    </para>
+    <screenshot>
+      <screeninfo>Installation of Premium license</screeninfo>
+      <graphic fileref="img/premium/sm_install_premium.png"></graphic>
+    </screenshot>
+    <para>
+    Then, go to configuration and licencing tab.
+    </para>
+     <screenshot>
+      <screeninfo>Add Premium license</screeninfo>
+      <graphic fileref="img/premium/sm_add_license.png"></graphic>
+    </screenshot>
+    <para>
+    You have to install your license you received.
+    Once done, you will have details of this license and its status
+    </para>
+     <screenshot>
+      <screeninfo>Premium license activated</screeninfo>
+      <graphic fileref="img/premium/sm_license_valid.png"></graphic>
+    </screenshot>
+    
+  </section>
+ 
+  
+
+  <xi:include href="colophon.xml" />
+</article>

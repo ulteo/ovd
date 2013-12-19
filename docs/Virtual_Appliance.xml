@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Virtual Appliance</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <section id="introduction">
+   <title>Introduction</title>
+   <para>
+    The purpose of this documentation is to describe how to use the virtual appliance which embeds
+    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, WebClient Java/HTML5, FileServer, 
+  </para>
+  </section>
+  <section id="runt it">
+    <title>Run it !</title>
+    <para>
+		Quite easy to use, the OVD Virtual appliance allows you to quickly get an idea of what is OVD and how this works.
+		Check you shell console to get the IP		
+	</para>
+	<screenshot>
+        <screeninfo>Virtual appliance shell</screeninfo>
+		<graphic fileref="img/virtualappliance/shell.png"></graphic>
+	</screenshot>
+	<para>
+		Once run, you should have access on an OVD demo farm.
+		Go to http://iporfqdn
+	</para>	
+	<screenshot>
+        <screeninfo>Welcome on OVD !</screeninfo>
+		<graphic fileref="img/virtualappliance/welcome.png"></graphic>
+	</screenshot>
+	
+  </section>
+  <xi:include href="colophon.xml" />
+</article>

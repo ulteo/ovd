@@ -4,10 +4,12 @@
           [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="gold_product_name" value="Gateway"/>
-
+  <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="lucid"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Gateway on Ubuntu 10.04 (Lucid Lynx) installation</subtitle>
+    <subtitle>Gateway on @distrib_pretty_name@ installation</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -18,19 +20,18 @@
 
   <para>
     The purpose of this document is to install a Ulteo OVD Gateway
-    on a Ubuntu 10.04 (Lucid Lynx).
+    on a @distrib_pretty_name@.
   </para>
   
   <xi:include href="common.xml" xpointer="gold" />
   
-  <section>
+  <section id="prerequisites_gw">
     <title>Prerequisites</title>
 
     <itemizedlist>
       <listitem>
         <para>
-          A installed <emphasis role="strong">Ubuntu 10.04 (Lucid
-          Lynx)</emphasis> system (x86 or amd64).
+          A installed <emphasis role="strong">@distrib_pretty_name@</emphasis> system (x86 or amd64).
         </para>
       </listitem>
       
@@ -74,7 +75,7 @@
   </section>
 
 
-  <section>
+  <section id="configuration_gw">
     <title>Ubuntu packages configuration</title>
       
      <section id="repository_online">
@@ -90,8 +91,8 @@
             </para>
           </important>
           <screen>
-<![CDATA[deb @BASE_URI@/ubuntu lucid main
-deb @BASE_URI_GOLD@/ubuntu lucid main]]>
+<![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main
+deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -106,10 +107,10 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
          <para id="repository_offline_step2_para">
            The OVD offline repository is made of two archives. The
            first one can be found <ulink
-           url="@BASE_URI@/offline/ovd-@VERSION@-lucid.tar.gz">here</ulink>
+           url="@BASE_URI@/offline/ovd-@VERSION@-@distrib_version@.tar.gz">here</ulink>
            or from the Ulteo OVD DVD. The second one is only available
            <ulink
-           url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-lucid.tar.gz">online</ulink>,
+           url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_version@.tar.gz">online</ulink>,
            using your @GOLD_NAME@ account credentials.
          </para>
          <para>
@@ -123,7 +124,7 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
             Uncompress the archive:
           </para>
           <screen>
-<![CDATA[# for f in ovd-@VERSION@-*-lucid.tar.gz; do tar xzf $f; done]]>
+<![CDATA[# for f in ovd-@VERSION@-*-@distrib_version@.tar.gz; do tar xzf $f; done]]>
           </screen>
         </listitem>
 
@@ -134,8 +135,8 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
             file and add these lines:
           </para>
           <screen>
-<![CDATA[deb file:///root/ovd-@VERSION@-lucid lucid main
-deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
+<![CDATA[deb file:///root/ovd-@VERSION@-@distrib_name@ @distrib_version@ main
+deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
      </itemizedlist>
@@ -144,7 +145,7 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
     <xi:include href="&base;" xpointer="repository_common" />
 </section>
 
-  <section>
+  <section id="installation_gw">
     <title>Packages installation</title>
 
     <itemizedlist>
@@ -185,7 +186,7 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
     Manager.
   </para>
   </section>
-  <section>
+  <section id="webclient_gw">
 	<title>WebClient configuration</title>
 	<para>Due to security reasons, the Gateway doesn't deliver communications with the web client by default. If you want access to the web client through the Gateway, you have to change the default configuration.</para>	 
         <para>

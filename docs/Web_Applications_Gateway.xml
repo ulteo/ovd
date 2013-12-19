@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Web Applications Gateway - Configuration File Syntax</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <section id="introduction">
+   <title>Introduction</title>
+   <para>
+    This documentation aims to describe how to configure the Web Applications Gateway which is a new feature in
+    <emphasis>Ulteo Open Virtual Desktop 4.0</emphasis>
+    This configuration file should be in YAML format. More details of this format can be found in Wikipedia: <ulink url="http://en.wikipedia.org/wiki/YAML"></ulink>
+    One YAML file should define one web application. Upload of YAML config file should be done in Admin Console. There is also possible to customize some of parameters.
+  </para>
+  </section>
+  <section id="main section">
+    <title>Main section</title>
+    <para>
+		Main section (first level) defines application name. This name is used in virtual host name as prefix. 
+		For example: if WebAppGW is configured to work on domain <emphasis>wgw.example.com</emphasis> and main section key is <emphasis>app1</emphasis> than when user will click application icon that he will see this application on domain <emphasis>app1.wgw.example.com</emphasis>. When administrator adds new web application, he should be sure that application name (first key of YAML file) is unique and configure subdomain (DNS entry).
+   </para>		
+   <para>
+		This section has following subsections:
+		<itemizedlist>
+        <listitem>
+			Configuration
+        </listitem>
+        <listitem>
+			Handlers
+        </listitem>
+		</itemizedlist>		
+	</para>
+	<section id="configuration" >
+		<title>Configuration</title>
+		<para>
+			Parameters described in this section are variables which are configurable in Admin Console. They can be used in handlers and filters on any nesting level. Usage of this variable is $(VARNAME).	
+		</para>
+		<para>
+			There are five types of variable:
+			<itemizedlist>
+        <listitem>
+			<emphasis>string</emphasis> – text input field in Admin Console
+		</listitem>
+		<listitem>
+			<emphasis>boolean</emphasis> – checkbox input field in Admin Console
+		</listitem>
+		<listitem>
+			<emphasis>user_login</emphasis> – login of current logged in user
+		</listitem>
+		<listitem>
+			<emphasis>user_passwd</emphasis> – password of current logged in user
+		</listitem>
+		<listitem>
+			<emphasis>dbvalue</emphasis> – value from SQL database
+		</listitem>               
+		</itemizedlist>		
+		</para>
+		<para>
+			Any other type used in YAML file will be displayed in Admin Console as read-only text input field.
+		</para>
+		<para>
+			Optional parameter <emphasis>title</emphasis> is used in Admin Console as label for input field.
+		</para>
+		<para>
+			Variable <emphasis>check_ssl_certificates</emphasis> has special usage – it defines how WebAppGW should handle SSL errors. If <emphasis>check_ssl_certificates</emphasis> is set to true than if web application’s certificate is incorrect (self-signed, expired etc.) that WebAppGW will show error page (error page file location should be configured in <emphasis>slaveserver.conf</emphasis>, parameter <emphasis>invalid_cert_page</emphasis>). 
+		</para>
+		<para>
+			If <emphasis>check_ssl_certificates</emphasis> is set to false WebAppGW will ignore SSL errors.
+		</para>
+		
+	</section>
+	</section>
+	<section id="handlers">
+		<title>Handlers</title>
+		<para>
+			This section defines what handlers and in which order should be used to handle traffic between user’s browser and web application.
+		</para>
+		<para>
+			Each handler should have unique name (key). Parameter <emphasis>type</emphasis> is obligatory and defines type of handlers. Optional parameter filters describes filters that should be proceed during request handling.
+		</para>
+		<section id="ServerHandler">
+			<title>ServerHandler</title>
+			<para>
+				ServerHandler - manages basic configuration of target web application
+			</para>
+			<para>
+			Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>baseURI</emphasis> – (obligatory) – address of web application
+					</listitem>
+					<listitem>
+						<emphasis>next_handler</emphasis> – (obligatory) – name of next handler
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ Server:
+  type: "ServerHandler"
+  baseURI: "http://$(TARGETIP)"
+  next_handler: "Dispatch"]]>
+				</screen>
+			</para>
+		</section>
+		<section id="ClientHandler">
+			<title>ClientHandler</title>
+			<para>
+				ClientHandler opens connection to target web application, download requested date and returns it to user’s browser.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ Client:
+  type: "ClientHandler"]]>
+				</screen>
+			</para>
+		</section>
+		<section id="DispatchHandler">
+			<title>DispatchHandler</title>
+			<para>
+				DispatchHandler chains the query to others handlers, based on rules.
+			</para>
+			<para>
+				Parameters <emphasis>bindings</emphasis> (mandatory) defines list of conditions and <emphasis>next_handler</emphasis> (handler to execute if no condition is fulfilled).
+			</para>
+			<para>
+			Condition parameter:
+				<itemizedlist>
+					<listitem>
+						<emphasis>cond</emphasis> – (mandatory) – valid python expression.
+					</listitem>
+					<listitem>
+						<emphasis>next_handler</emphasis> (mandatory) - name of handler executed if condition is fulfilled
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+			Variables available in cond expression:
+				<itemizedlist>
+					<listitem>
+						<emphasis>request_path</emphasis> – (string) – path of requested resource
+					</listitem>
+					<listitem>
+						<emphasis>request_headers</emphasis> – (list) – list of request headers
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ Dispatch:
+  type: "DispatchHandler"
+  bindings:
+    condition1:
+      cond: "request_path.startswith(‘/manage’)"
+      next_handler: "Unauthorized"
+    condition2:
+      cond: "’login_form’ in request_path"
+      next_handler: "LoginForm"
+    next_handler: "Client"]]>
+				</screen>
+			</para>
+		</section>	
+		<section id="ChainHandler">
+			<title>ChainHandler</title>
+			<para>
+				ChainHandler basic connector between two handlers, used mainly to add filters between two handlers.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ Example:
+Chain:
+  type: "ChainHandler"
+  next_handler: "Client"]]>
+				</screen>
+			</para>
+		</section>
+		<section id="RedirectHandler">
+			<title>RedirectHandler</title>
+			<para>
+				RedirectHandler redirects to given location. Parameter <emphasis>location</emphasis> (mandatory) can define URL or path to which user should be redirected.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ Example:
+Chain:
+  type: "ChainHandler"
+  next_handler: "Client"]]>
+				</screen>
+			</para>
+		</section>
+	
+  </section>
+  <xi:include href="colophon.xml" />
+</article>

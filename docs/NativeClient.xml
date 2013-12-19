@@ -3,7 +3,9 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="gold_product_name" value="Native Client"/>
-
+  <transform_var name="distrib_pretty_name" value="Ubuntu 12.04 (Precise Pangolin)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="precise"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Native Client</subtitle>
@@ -32,7 +34,7 @@
       The OVD Native client can be installed on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> XP or newer.
     </para>
     <para>
-      It can also be installed on Ubuntu 10.04 (Lucid Lynx)
+      It can also be installed on @distrib_pretty_name@
     </para>
 
     <xi:include href="common.xml" xpointer="system_requirements_client" />
@@ -76,11 +78,10 @@
   </section>
   
   <section id="installation_linux">
-    <title id="installation_linux_title">Installation on Ubuntu 10.04</title>
-
-    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_online" />
-    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_offline" />
-    <xi:include href="Installation_Gateway_Lucid.xml" xpointer="repository_common" />
+    <title id="installation_linux_title">Installation on @distrib_pretty_name@</title>
+    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_online" />
+    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_offline" />
+    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_common" />
 
     <section id="package_install">
       <title>Package installation</title>
