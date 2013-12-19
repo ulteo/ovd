@@ -83,8 +83,8 @@ def setup_app(config, app_id, app_name):
                             if key not in ['filters', 'type']])
             filters = []
             filters_dict = handler_dict.get('filters')
-            filter_items = filters_dict and filters_dict.items() or []
-            for f_name, f_dict in filter_items:
+            filter_items = filters_dict or []
+            for f_dict in filter_items:
                 f_params = dict([(key, val) for key, val in f_dict.items()
                                 if key != 'type'])
                 filters.append(locals()[f_dict['type']](app_config, f_params))
