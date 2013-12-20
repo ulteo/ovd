@@ -8,18 +8,23 @@
     <graphic fileref="img/ovd.png" align="center"/>
     <copyright>
       <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+      <holder>Ulteo SAS</holder>
     </copyright>
   </articleinfo>
-
   <section id="introduction">
    <title>Introduction</title>
    <para>
     The purpose of this documentation is to describe how to use the virtual appliance which embeds
-    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, WebClient Java/HTML5, FileServer, 
+    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, WebClient Java/HTML5, FileServer and Linux Application Server
   </para>
   </section>
-  <section id="runt it">
+  <section id="installation">
+	 <title>Installation</title>
+	 <para>
+		OVD Virtual appliance works with both <ulink url="http://www.vmware.com/">VMware</ulink> or <ulink url="https://www.virtualbox.org/">VirtualBox</ulink>. For easy setup, use a dhcp network with a bridged interface on your host machine configuration.
+	 </para>
+  </section>
+  <section id="run it">
     <title>Run it !</title>
     <para>
 		Quite easy to use, the OVD Virtual appliance allows you to quickly get an idea of what is OVD and how this works.

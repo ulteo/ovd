@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+	  [<!ENTITY parent "Support_Ubuntu_Lucid.xml">]>
+<article xmlns:xi="http://www.w3.org/2001/XInclude">  
+  <transform_var name="distrib_pretty_name" value="Debian Wheezy (7.0)"/>
+  <transform_var name="distrib_name" value="debian" />
+  <transform_var name="distrib_version" value="wheezy"/>
+  <transform_var name="distrib_dvd_url" value="http://www.debian.org/CD/"/>
+
+  <xi:include href="&parent;" xpointer="header" />
+  <xi:include href="&parent;" xpointer="first_para" />
+
+  <section id="prerequisites">
+    <xi:include href="&parent;" xpointer="prerequisites_title" />
+
+    <para>
+      @distrib_pretty_name@ is the latest stable version of Debian. It can
+      be downloaded <ulink url="http://www.debian.org/">here</ulink>.     
+    </para>
+
+    <para id="prerequisites_root">
+      All operation have to be done as super user (root).
+    </para>
+
+    <xi:include href="&parent;" xpointer="system_requirements" />
+    <xi:include href="&parent;" xpointer="warning_name_examples" />
+  </section>
+
+  <xi:include href="&parent;" xpointer="repository" />
+
+  <xi:include href="&parent;" xpointer="sm" />
+  <xi:include href="&parent;" xpointer="subsystem" />
+  <xi:include href="&parent;" xpointer="wc" />
+  <xi:include href="colophon.xml" />
+</article>
