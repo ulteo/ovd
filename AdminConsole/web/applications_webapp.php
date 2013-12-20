@@ -449,6 +449,10 @@ function display_webapp_configuration($application_id) {
 		foreach($parsed_config['Configuration'] as $name => $params) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			$value = '';
+			
+			if (! is_array($config['values']))
+				continue;
+			
 			if (array_key_exists($name, $config['values'])) {
 				$value = $config['values'][$name];
 			} elseif (array_key_exists('value', $params)) {

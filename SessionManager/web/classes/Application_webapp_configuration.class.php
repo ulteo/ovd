@@ -50,14 +50,7 @@ class Application_webapp_configuration extends Application_webapp {
 	public function getUpdatedConfguration() {
 		$raw_configuration = $this->getAttribute('raw_configuration');
 		$url_prefix = $this->getAttribute('url_prefix');
-		$values = $this->getAttribute('values');
 		$parsed_config = json_decode($raw_configuration, True);
-		
-		foreach ($values as $key => $value) {
-			if (array_key_exists($key, $parsed_config['Configuration'])) {
-				$parsed_config['Configuration'][$key]['value'] = $value;
-			}
-		}
 		$parsed_config = array($url_prefix => $parsed_config);
 		return json_encode($parsed_config);
 	}
