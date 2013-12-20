@@ -31,7 +31,7 @@
 	</screenshot>
 	<para>
 		Once run, you should have access on an OVD demo farm.
-		Go to http://iporfqdn
+		Go to http://vapp.test.demo
 	</para>	
 	<screenshot>
         <screeninfo>Welcome on OVD !</screeninfo>

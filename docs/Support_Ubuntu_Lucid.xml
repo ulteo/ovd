@@ -176,7 +176,7 @@
        <listitem id="repository_offline_step1">
          <para id="repository_offline_step1_para">
            Get this
-           <emphasis>ovd-@VERSION@-@distrib_name@-@distrib_version@.tar.gz</emphasis>
+           <emphasis>ovd-@VERSION@-@distrib_version@.tar.gz</emphasis>
            archive from <ulink
            url="@BASE_URI@/offline/">the Ulteo
            website</ulink> or from the Ulteo OVD DVD and copy it in
@@ -189,7 +189,7 @@
             Uncompress the archive:
           </para>
           <screen>
-<![CDATA[# tar xzf ovd-@VERSION@-@distrib_name@-@distrib_version@.tar.gz]]>
+<![CDATA[# tar xzf ovd-@VERSION@-@distrib_version@.tar.gz]]>
           </screen>
         </listitem>
 
@@ -200,7 +200,7 @@
             file and add these lines:
           </para>
           <screen>
-<![CDATA[deb file:///root/ovd-@VERSION@-@distrib_name@-@distrib_version@ @distrib_version@ main]]>
+<![CDATA[deb file:///root/ovd-@VERSION@-@distrib_version@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>

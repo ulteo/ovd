@@ -20,11 +20,9 @@ SRC=\
 	Protocol.xml \
 	StartASession.xml \
 	Virtual_Appliance.xml \
-	Support_Debian_Lenny.xml \
 	Support_Debian_Squeeze.xml \
-	Support_RHEL_5.5.xml \
+	Support_Debian_Wheezy.xml \
 	Support_RHEL_6.0.xml \
-	Support_openSUSE_11.2.xml \
 	Support_openSUSE_11.3.xml \
 	Support_SLES_11.SP1.xml \
 	Support_Ubuntu_Precise.xml \
