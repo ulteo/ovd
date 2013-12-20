@@ -7,6 +7,7 @@
   <transform_var name="distrib_name" value="debian" />
   <transform_var name="distrib_version" value="squeeze"/>
   <transform_var name="distrib_dvd_url" value="http://www.debian.org/CD/"/>
+  <transform_var name="distrib_new_version_pretty_name" value="Debian Wheezy (7.0)"/>
 
   <xi:include href="&parent;" xpointer="header" />
   <xi:include href="&parent;" xpointer="first_para" />
