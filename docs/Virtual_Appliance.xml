@@ -23,12 +23,107 @@
 	 <para>
 		OVD Virtual appliance works with both <ulink url="http://www.vmware.com/">VMware</ulink> or <ulink url="https://www.virtualbox.org/">VirtualBox</ulink>. For easy setup, use a dhcp network with a bridged interface on your host machine configuration.
 	 </para>
+	 <section id="vmware">
+	 <title>VMWare Installation</title>
+	 <para>
+		 You can use for demo VMWare Player.
+	</para>
+	 <screenshot>
+        <screeninfo>VmWare1</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-1.png"></graphic>
+	 </screenshot>
+	 <para>
+		 Once launched, import your ova file into VMWare Player
+	 </para>
+	 <screenshot>
+        <screeninfo>VmWare2</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-3.png"></graphic>
+	 </screenshot>
+	 
+	 <para>
+		 Import in progress ...
+	 </para>
+	 <screenshot>
+        <screeninfo>VmWare3</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-4.png"></graphic>
+	 </screenshot>
+	
+	<para>
+		OVD Virtual appliance is now running !
+	</para>
+	<screenshot>
+        <screeninfo>VmWare4</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-5.png"></graphic>
+	</screenshot>	
+	
+	</section>
+	<section id="vbox">
+	 <title>VirtualBox Installation</title>
+	 <para>
+		You can use for demo VirtualBox.
+	 </para>
+	 <para>
+		Once launched, import your ova file into VirtualBox
+	 </para>
+	  <screenshot>
+        <screeninfo>vbox1</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox1.png"></graphic>
+	 </screenshot>
+	 <para> 
+		Click on "Reinitialize the MAC address..."
+	 </para>
+	 <screenshot>
+        <screeninfo>vbox2</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox2.png"></graphic>
+	 </screenshot>
+	 <para> 
+		Accept License agreement
+	 </para>
+	 
+	 <screenshot>
+        <screeninfo>vbox3</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox3.png"></graphic>
+	 </screenshot>
+	 
+	 <para> 
+		 
+		By default, VirtualBox fails to assign an network interface. You need to update it into the Virtual Machine settings
+	 </para>
+	 <screenshot>
+        <screeninfo>vbox4</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox4.png"></graphic>
+	 </screenshot>	
+	
+	<para>
+		Open the settings box and validate by clicking on OK
+	</para>
+	
+	<screenshot>
+        <screeninfo>vbox5</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox5.png"></graphic>
+	</screenshot>	
+	
+	
+	<para>
+		OVD Virtual appliance is now running !
+	</para>
+	
+	<screenshot>
+        <screeninfo>vbox6</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox6.png"></graphic>
+	</screenshot>	
+	</section>
+	
+	
   </section>
   <section id="run it">
     <title>Run it !</title>
     <para>
 		Quite easy to use, the OVD Virtual appliance allows you to quickly get an idea of what is OVD and how this works.
-		Check you shell console to get the IP		
+		Check you shell console to get the IP	
+	</para>
+	<para>
+		Web client settings and how to use it is available <ulink url="WebClient.html">here</ulink>	
 	</para>
 	<screenshot>
         <screeninfo>Virtual appliance shell</screeninfo>
