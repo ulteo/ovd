@@ -54,8 +54,13 @@ def perform_transform(content):
 	base_uri_gold = list(urlparse.urlsplit(base_uri + "/" + gold_name))
 	base_uri_gold[1] = "LOGIN:PASSWORD@" + base_uri_gold[1]
 	base_uri_gold = urlparse.urlunsplit(base_uri_gold)
-	
-	transform_vars["BASE_URI"] = base_uri
+		
+	# added for private beta 4
+	base_uri = list(urlparse.urlsplit(base_uri))
+	base_uri[1] = "LOGIN:PASSWORD@" + base_uri[1]
+	base_uri = urlparse.urlunsplit(base_uri)
+		
+	transform_vars["BASE_URI"] = base_uri 
 	transform_vars["GOLD_NAME"] = gold_name
 	transform_vars["BASE_URI_GOLD"] = base_uri_gold
 	
