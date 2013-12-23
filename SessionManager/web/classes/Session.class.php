@@ -519,7 +519,7 @@ class Session {
 		else
 			$this->setStatus(Session::SESSION_STATUS_DESTROYING, $reason_);
 		
-		if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_server->roles)) {
+		if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers)) {
 			foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
 				$session_server = Abstract_Server::load($server_id);
 				if (! $session_server) {
