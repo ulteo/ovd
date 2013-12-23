@@ -340,8 +340,16 @@ if (isset($old_session_id)) {
 		
 		$random_server = $sessionManagement->desktop_server->id;
 	}
-	else
+	else if (! empty($servers[Server::SERVER_ROLE_APS])) {
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
+	}
+	else if (! empty($servers[Server::SERVER_ROLE_WEBAPPS])) {
+		$random_server = array_rand($servers[Server::SERVER_ROLE_WEBAPPS]);
+	}
+	else {
+		Logger::error('main', '(client/start) No server for this session');
+		$random_server = '';
+	}
 
 	$random_session_id = gen_unique_string();
 
