@@ -3,9 +3,9 @@
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
 	   [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
+  <transform_var name="distrib_pretty_name" value="Ubuntu 12.04 (Precise Pangolin)"/>
   <transform_var name="distrib_name" value="ubuntu" />
-  <transform_var name="distrib_version" value="lucid"/>
+  <transform_var name="distrib_version" value="precise"/>
   <transform_var name="distrib_dvd_url" value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
   <transform_var name="gold_edition" value="OVD Premium Edition"/>
   <articleinfo id="header">
@@ -57,7 +57,9 @@
 	   </para>
    </section>
     <section id="community">
-    <title id="intro_community">Installation</title>          
+    <title id="intro_community">Installation</title>     
+     <section id="ubuntu">  
+		 <title>@distrib_pretty_name@</title>   
       <itemizedlist>
         <listitem id="repository_step1">
           <xi:include href="&base;" xpointer="repository_online_step1_para" />
@@ -79,6 +81,16 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
 <![CDATA[# apt-get update
 # apt-get install ulteo-ovd-session-manager-premium]]>
         </screen>
+        </section>
+        <note>
+			You'll find here @BASE_URI_GOLD@ repositories for other installations
+			<itemizedlist>
+				<listitem>Debian</listitem>
+				<listitem>RHEL</listitem>
+				<listitem>SLES</listitem>
+				<listitem>OpenSUSE</listitem>
+			</itemizedlist>
+        </note>
     <para>
      Go to the OVD Administration console, you will have a message which notifies you that you don't have any Premium license.
     </para>
