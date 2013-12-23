@@ -626,6 +626,7 @@ abstract class SessionManagement extends Module {
 	}
 
 	public function chooseApplicationServers() {
+		$have_webapp = false;
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::chooseApplicationServers - User is not authenticated, aborting');
 			return false;
@@ -639,11 +640,16 @@ abstract class SessionManagement extends Module {
 			if(in_array($application->getAttribute('type'), array(Server::SERVER_TYPE_LINUX, Server::SERVER_TYPE_WINDOWS))){
 				array_push($applications, $application);
 			}
+			if($application->getAttribute('type') == 'webapp')
+				$have_webapp = true;
 		}
 
 		$nb_application_to_publish = count($applications);
 		
 		if ($nb_application_to_publish == 0) {
+			if ($have_webapp == true)
+				return array();
+			
 			$event = new SessionStart(array('user' => $this->user));
 			$event->setAttribute('ok', false);
 			$event->setAttribute('error', 'No available application');
