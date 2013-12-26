@@ -39,65 +39,65 @@ class ProtocolException(Exception):
 
 
 class HttpProtocolDetectDispatcher(Communicator):
-    http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
-    
-    def __init__(self, conn, f_ctrl):
-        Communicator.__init__(self, conn)
-        self.f_ctrl = f_ctrl
-        self.lastPacketTime = time.time()
-    
-    
-    def writable(self):
-        # This class doesn't have to write anything,
-        # It's just use to detect the protocol
-        return False
-    
-    def readable(self):
-        if time.time() - self.lastPacketTime > Config.connection_timeout:
-            Logger.error("HttpProtocolDetectDispatcher::connection timeout")
-            self.handle_close()
-            return False
-        
-        return True
-    
-    def handle_read(self):
-        try:
-            if Communicator.handle_read(self) is -1:
-                return
-        except Exception, e:
-            raise
-            # TODO: check exceptions that could be raised and handle them
+	http_ptn = re.compile('((?:HEAD)|(?:GET)|(?:POST)) (.*) HTTP/(.\..)')
+	
+	def __init__(self, conn, f_ctrl):
+		Communicator.__init__(self, conn)
+		self.f_ctrl = f_ctrl
+		self.lastPacketTime = time.time()
+	
+	
+	def writable(self):
+		# This class doesn't have to write anything,
+		# It's just use to detect the protocol
+		return False
+	
+	def readable(self):
+		if time.time() - self.lastPacketTime > Config.connection_timeout:
+			Logger.error("HttpProtocolDetectDispatcher::connection timeout")
+			self.handle_close()
+			return False
+		
+		return True
+	
+	def handle_read(self):
+		try:
+			if Communicator.handle_read(self) is -1:
+				return
+		except Exception, e:
+			raise
+			# TODO: check exceptions that could be raised and handle them
 
-            # empty connection opened (chrome for example)
-            #if e.args[0][0][1] in ['SSL23_READ', 'SSL3_READ_BYTES']:
-            #   self.handle_close()
-            #   return
-            #else:
-            #   raise
-        
-        self.lastPacketTime = time.time()
-        request = self._buffer.split('\n', 1)[0]
-        request = request.rstrip('\n\r').decode("utf-8", "replace")
-        
-        # find protocol
-        http = self.http_ptn.match(request)
-        try:
-            if http:
-                client = HttpClientCommunicator(self.socket)
-                client._buffer = self._buffer
-                if client.make_http_message() is not None:
-                    client._buffer = client.process()
-            
-            # protocol error
-            else:
-                # Check if the packet size is larger than a common HTTP first line
-                if len(self._buffer) > Config.http_max_header_size:
-                    raise ProtocolException('bad first request line: ' + request)
-                return
-        
-        except ProtocolException:
-            Logger.exception("HttpProtocolDetectDispatcher::handle_read")
-            self.handle_close()
+			# empty connection opened (chrome for example)
+			#if e.args[0][0][1] in ['SSL23_READ', 'SSL3_READ_BYTES']:
+			#	self.handle_close()
+			#	return
+			#else:
+			#	raise
+		
+		self.lastPacketTime = time.time()
+		request = self._buffer.split('\n', 1)[0]
+		request = request.rstrip('\n\r').decode("utf-8", "replace")
+		
+		# find protocol
+		http = self.http_ptn.match(request)
+		try:
+			if http:
+				client = HttpClientCommunicator(self.socket)
+				client._buffer = self._buffer
+				if client.make_http_message() is not None:
+					client._buffer = client.process()
+			
+			# protocol error
+			else:
+				# Check if the packet size is larger than a common HTTP first line
+				if len(self._buffer) > Config.http_max_header_size:
+					raise ProtocolException('bad first request line: ' + request)
+				return
+		
+		except ProtocolException, err:
+			Logger.error("HttpProtocolDetectDispatcher::handle_read: %s" % repr(err))
+			self.handle_close()
 
 
 class ProtocolDetectDispatcher(SSLCommunicator):

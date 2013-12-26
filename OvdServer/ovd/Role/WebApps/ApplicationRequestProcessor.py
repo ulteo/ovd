@@ -24,8 +24,8 @@ from ovd.Logger import Logger
 class ApplicationRequestProcessor:
 	def __init__(self, handlers):
 		self.handlers = handlers
-
-
+	
+	
 	def process(self, context):
 		next_handler = 'Start'
 		post_processors = []
