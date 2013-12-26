@@ -51,7 +51,7 @@ class SMRequestManager(GenericSMRequestManager):
 		return rootNode
 
 
-def setup_app(config, app_id, app_name):
+def setup_app(config, app_id, app_name, mode):
 	from ApplicationsDispatcher import ApplicationsDispatcher
 	from ApplicationsRepository import ApplicationDefinition
 	from handlers import ClientHandler, ServerHandler, DispatchHandler, ChainHandler, RedirectHandler
@@ -97,8 +97,11 @@ def setup_app(config, app_id, app_name):
 		Logger.error("Failed to configure web app: %s" % exception)
 	
 	app_request_processor = ApplicationRequestProcessor(app_req_proc_config)
-	app = ApplicationDefinition(app_id, app_name, re.compile('^' + app_name + '\.'), '',
-		app_request_processor, app_config['start_path'])
+	base_path = ''
+	if Config.mode == Config.MODE_PATH:
+		base_path = '/webapps/'+app_name
+	app = ApplicationDefinition(app_id, app_name, re.compile('^' + app_name + '\.'), base_path,
+	app_request_processor, app_config['start_path'], mode)
 	return app
 
 
@@ -124,7 +127,7 @@ def setup_apps(reset=False):
 		app_id = webapp_dom.getAttribute('id')
 		app_name = config.keys()[0]
 		try:
-			appl = setup_app(config, app_id, app_name)
+			appl = setup_app(config, app_id, app_name, Config.mode)
 		except:
 			Logger.exception("Setting up an application failed. Correct its configuration.")
 			continue
@@ -144,7 +147,10 @@ class Protocol:
 
 class Config:
 
+	MODE_PATH = "path"
+	MODE_DOMAIN = "domain"
 	general = None
+	mode = 'path'
 	address = "0.0.0.0"
 	port = 8443
 	max_process = 10
@@ -178,6 +184,9 @@ class Config:
 	def init(cls, infos):
 		if infos.has_key("address"):
 			cls.address = infos["address"]
+		
+		if infos.has_key("mode"):
+			cls.mode = infos["mode"]
 		
 		if infos.has_key("port") and infos["port"].isdigit():
 			try:

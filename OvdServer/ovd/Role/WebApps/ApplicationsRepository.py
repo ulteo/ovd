@@ -30,16 +30,28 @@ from Utils import HTTP_403
 
 
 class ApplicationDefinition(object):
-	def __init__(self, app_id, name, rule, base_path, request_processor, start_path):
+	def __init__(self, app_id, name, rule, base_path, request_processor, start_path, mode):
 		self.id = app_id
 		self.name = name
 		self.rule = rule
 		self.base_path = base_path
 		self.request_processor = request_processor
 		self.start_path = start_path
+		self.mode = mode
 	
 	
 	def handles(self, communicator):
+		if Config.mode == Config.MODE_PATH:
+			components = communicator.http.path.split("/")
+			
+			if len(components) < 3:
+				return False
+			
+			if(self.rule.match(components[2]+'.')):
+				return True
+			return False
+			
+		# mode domain
 		host = communicator.http.get_header("X-Forwarded-Host") or \
 				communicator.http.get_header("Host")
 		if(self.rule.match(host)):
@@ -60,6 +72,11 @@ class ApplicationDefinition(object):
 			return
 		
 		path = communicator.http.path[len(self.base_path):]
+		index = path.find("$ROOT$");
+		if index != -1:
+			index += len("$ROOT$")
+			path = path[index:]
+		
 		context = Context(communicator, session, path)
 		self.request_processor.process(context)
 		SessionsRepository.set(sess_id, session)

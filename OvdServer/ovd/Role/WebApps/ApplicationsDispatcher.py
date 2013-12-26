@@ -28,7 +28,7 @@ from ApplicationsRepository import ApplicationsRepository
 from Context import Context
 from Config import Config
 from SessionsRepository import SessionsRepository, Session
-from Utils import HTTP_301, HTTP_200_status_header, HTTP_200_status_content
+from Utils import HTTP_200_status_header, HTTP_200_status_content
 
 
 class ApplicationsDispatcher(object):
@@ -36,9 +36,27 @@ class ApplicationsDispatcher(object):
 	class EDispatchError(Exception):
 		pass
 	
+	
+	@staticmethod
+	def redirect(communicator, location, cookieName = None, cookieValue = None, cookieDomain = None, cookiePath = None):
+		data = '<html><head><title>Moved</title></head><body><h1>Moved</h1></body></html>'
+		buffer = 'HTTP/1.1 301 Moved Permanently\r\n'
+		buffer += 'Location: %s\r\n'%(location)
+		
+		if cookieName is not None:
+			buffer += 'Set-Cookie: %s="%s"; Domain=%s; Path=%s; HttpOnly\r\n'%(cookieName, cookieValue, cookieDomain, cookiePath)
+		
+		buffer += 'Content-Type: text/html\r\n'
+		buffer += 'Content-Length: %i\r\n\r\n'%(len(data))
+		buffer += data
+		
+		communicator.send(buffer)
+	
+	
 	@staticmethod
 	def process(communicator):
 		path = communicator.http.path
+		referer = communicator.http.get_header("Referer")
 		host = communicator.http.get_header("X-Forwarded-Host") or \
 				communicator.http.get_header("Host")
 		Logger.debug("[WebApps] Client requested " + host + path)
@@ -46,6 +64,17 @@ class ApplicationsDispatcher(object):
 			if app_def.handles(communicator):
 				app_def.process(communicator)
 				return
+		
+		# check referer
+		if Config.mode == Config.MODE_PATH and referer is not None:
+			url = urlparse.urlparse(referer)
+			for app_def in ApplicationsRepository.list():
+				if url.path.startswith(app_def.base_path):
+					# redirect
+					new_location = (url.path+'$ROOT$'+path).replace("//", "/")
+					ApplicationsDispatcher.redirect(communicator, new_location)
+					return
+		
 		
 		if path.startswith('/disconnect?'):
 			qs = urlparse.parse_qs(path[12:])
@@ -104,11 +133,18 @@ class ApplicationsDispatcher(object):
 								Logger.info('[WebApps] session id={0} for user {1} activated'.format(sess_id, user))
 								
 								prot = Config.connection_secure and 'https' or 'http'
-								new_host = '{0}://{1}.{2}{3}'.format(prot, app_name, host, ApplicationsRepository.get_by_id(app_id).start_path)
-								host_wo_port = host.split(':')[0]
-								send_buffer = HTTP_301.format(new_host, Config.ulteo_session_cookie, sess_id, "."+host_wo_port, "/")
-								communicator.send(send_buffer)
-								return
+								
+								if Config.mode == Config.MODE_DOMAIN:
+									new_host = '{0}://{1}.{2}{3}'.format(prot, app_name, host, ApplicationsRepository.get_by_id(app_id).start_path)
+									host_wo_port = host.split(':')[0]
+									ApplicationsDispatcher.redirect(communicator, new_host, Config.ulteo_session_cookie, sess_id, "."+host_wo_port, "/")
+									return
+								else: # mode path
+									new_host = '{0}://{1}/webapps/{2}{3}'.format(prot, host, app_name, ApplicationsRepository.get_by_id(app_id).start_path)
+									cookie_path = '/webapps/%s%s'%(app_name, ApplicationsRepository.get_by_id(app_id).start_path)
+									host_wo_port = host.split(':')[0]
+									ApplicationsDispatcher.redirect(communicator, new_host, Config.ulteo_session_cookie, sess_id, host_wo_port, cookie_path)
+									return
 							else:
 								Logger.warn('[WebApps] user {0} is not allowed to open {1}'.format(user, app_id))
 						else:

@@ -68,23 +68,6 @@ HTTP_200_status_content = """
 <webapp_server_status server="{0}" status="{1}" />
 """.strip()
 
-HTTP_301 = """
-HTTP/1.1 301 Moved Permanently
-Location: {0}
-Set-Cookie: {1}="{2}"; Domain=.{3}; Path=/; HttpOnly
-Content-Type: text/html
-Content-Length: 80
-
-<html>
-<head>
-<title>Moved</title>
-</head>
-<body>
-<h1>Moved</h1>
-</body>
-</html>
-""".strip()
-
 HTTP_403 = """
 HTTP/1.1 403 Forbidden
 Content-Type: text/html

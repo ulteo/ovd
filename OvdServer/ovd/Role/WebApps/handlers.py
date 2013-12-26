@@ -204,7 +204,11 @@ class ClientHandler(Handler):
 		"""
 		Remove domains from links.
 		"""
-		return self.links_re.sub('/', body)
+		if Config.mode == Config.MODE_PATH:
+			return self.links_re.sub('/webapps/'+self.config['app_name']+'/', body)
+		else:
+			return self.links_re.sub('/', body)
+	
 	
 	def close_connection(self, conn, communicator):
 		if conn:

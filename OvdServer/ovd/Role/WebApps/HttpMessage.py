@@ -105,6 +105,9 @@ class HttpMessage():
 		else:
 			return None
 	
+	def get_cookie(self, cookie_name):
+		cookie = self.get_header("Cookie")
+	
 	
 	def set_header(self, header, value):
 		new_header = "%s: %s\r" % (header, value)
