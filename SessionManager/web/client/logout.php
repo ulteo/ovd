@@ -31,7 +31,7 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-function parse_logout_XML($xml_, $mode_) {
+function parse_logout_XML($xml_, &$mode_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
 
@@ -60,7 +60,7 @@ if (! array_key_exists('session_id', $_SESSION)) {
 	die();
 }
 
-$ret = parse_logout_XML(@file_get_contents('php://input'), &$mode);
+$ret = parse_logout_XML(@file_get_contents('php://input'), $mode);
 if (! $ret)
 	return_error(2, 'Client does not send a valid XML');
 
