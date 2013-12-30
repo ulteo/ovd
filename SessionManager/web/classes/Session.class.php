@@ -589,7 +589,7 @@ class Session {
 		// Search for new instances
 		foreach ($running_apps_ as $instance_id => $application_id) {
 			if (array_key_exists($instance_id, $this->running_applications))
-				continue
+				continue;
 			
 			$instance = array();
 			$instance['id'] = $instance_id;
