@@ -329,6 +329,17 @@ class Profile(AbstractProfile):
 			
 			shareNum+= 1
 		
+		if self.profile is not None:
+			# Redirect the Shell Folders to the remote profile
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, r"U:\Data\%s"%(self.DesktopDir))
+			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, r"U:\Data\%s"%(self.DocumentsDir))
+			win32api.RegSetValueEx(key, "AppData", 0, win32con.REG_SZ, r"%ProgramData%\ulteo\profile\%USERNAME%\CSIDL_APPDATA")
+			win32api.RegSetValueEx(key, "Local AppData", 0, win32con.REG_SZ, r"%ProgramData%\ulteo\profile\%USERNAME%\CSIDL_APPDATA")
+			win32api.RegCloseKey(key)
+			
 	
 	def getFreeLetter(self):
 		# ToDo: manage a global LOCK system to avoid two threads get the same result
