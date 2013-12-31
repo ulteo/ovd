@@ -236,7 +236,6 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			/* Share it among all connections */
 			for(var i=0 ; i<self.connections.length ; ++i) {
 				self.connections[i].keyboard = keyboard;
-				self.connections[i].guac_keyboard = self.connections[0].guac_keyboard;
 			}
 
 			/* /!\ The mouse is not handled per connection but per window /!\ */

@@ -1,5 +1,6 @@
 uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 	this.rdp_provider = rdp_provider;
+	this.guac_keyboard = null;
 	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.end = function() {}; /* destructor */
 
@@ -29,45 +30,45 @@ uovd.provider.rdp.html5.Keyboard.prototype.attach = function(connection) {
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	var self = this; /* closure */
+
 	/* Keyboard instance */
-	var keyboard = new Guacamole.NativeKeyboard();
-	this.connection.guac_keyboard = keyboard;
+	this.guac_keyboard = new Guacamole.NativeKeyboard();
 
 	/* Insert the hidden textfield with the canvas */
-	jQuery(this.connection.guac_display).append(keyboard.getNode());
+	jQuery(this.connection.guac_display).append(this.guac_keyboard.getNode());
 
 	/* Keydown */
-	keyboard.onkeydown = function (keysym) {
+	this.guac_keyboard.onkeydown = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(1, keysym);
 	};
 
 	/* Keyup */
-	keyboard.onkeyup = function (keysym) {
+	this.guac_keyboard.onkeyup = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(0, keysym);
 	};
 
 	/* Unicode input */
-	keyboard.onunicode = function (keysym) {
+	this.guac_keyboard.onunicode = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(2, keysym);
 	};
 
 	/* Enable on keyevent */
 	function auto_activate(e) {
-		if( ! keyboard.active()) {
-			keyboard.enable();
+		if( ! self.guac_keyboard.active()) {
+			self.guac_keyboard.enable();
 		}
 	}
 	jQuery("body").on("keydown", auto_activate);
 
 	/* Toggle on touchscreen "threefingers" gesture */
 	function touchscreen_toggle() {
-		keyboard.toggle();
+		self.guac_keyboard.toggle();
 	}
 	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.gesture.threefingers", touchscreen_toggle);
 
 	/* Set destructor */
 	this.end = function() {
-		jQuery(keyboard.getNode()).remove();
+		jQuery(self.guac_keyboard.getNode()).remove();
 		jQuery("body").off("keydown", auto_activate);
 		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.threefingers", touchscreen_toggle);
 	};
@@ -75,17 +76,17 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 
 uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 	var self = this; /* closure */
+
 	/* Keyboard instance */
-	var keyboard = new Guacamole.Keyboard(document);
-	this.connection.guac_keyboard = keyboard;
+	this.guac_keyboard = new Guacamole.Keyboard(document);
 
 	/* Keydown */
-	keyboard.onkeydown = function (keysym) {
+	this.guac_keyboard.onkeydown = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(1, keysym);
 	};
 
 	/* Keyup */
-	keyboard.onkeyup = function (keysym) {
+	this.guac_keyboard.onkeyup = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(0, keysym);
 	};
 
@@ -114,8 +115,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
 uovd.provider.rdp.html5.Keyboard.prototype.handleOrders = function(opcode, parameters) {
 	if(opcode == "imestate") {
 		var state = parseInt(parameters[1]);
-		var keyboard = this.connection.guac_keyboard;
-		keyboard.setIme(state);
+		this.guac_keyboard.setIme(state);
 	}
 }
 
