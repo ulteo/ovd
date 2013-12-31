@@ -84,7 +84,6 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 		var guac_client   = connection.guac_client;
 		var guac_canvas   = connection.guac_canvas
 		var guac_tunnel   = connection.guac_tunnel
-		var guac_mouse    = connection.guac_mouse
 
 		/* Context params for windows */
 		var params = {};

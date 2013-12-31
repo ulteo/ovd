@@ -5,10 +5,9 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 
 	var client = this.connection.guac_client;
 	var canvas = this.connection.guac_canvas;
-	var mouse = new Guacamole.TabletMouse(canvas);
 
-	/* Set mouse in connection */
-	this.connection.guac_mouse = mouse;
+	/* Set this.guac_mouse in connection */
+	this.guac_mouse = new Guacamole.TabletMouse(canvas);
 
 	/* Zoom and gesture data */
 	this.zoom = 1.0;
@@ -43,14 +42,14 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 
 		/* Allow scroll with two fingers swipe when Zoom == 1 */
 		if (self.zoom == 1.0) {
-			mouse.onmousepan = null;
+			self.guac_mouse.onmousepan = null;
 		} else {
-			mouse.onmousepan = self.pan_function;
+			self.guac_mouse.onmousepan = self.pan_function;
 		}
 	}
 
 	/* Mouse motion and clicks */
-	mouse.onmousedown = mouse.onmouseup = mouse.onmousemove = function(mouseState) {
+	this.guac_mouse.onmousedown = this.guac_mouse.onmouseup = this.guac_mouse.onmousemove = function(mouseState) {
 		var offset = jQuery(canvas).offset();
 		var newState = new Guacamole.TabletMouse.State();
 		newState.x = parseInt(mouseState.x/self.zoom)+(-1*parseInt(offset.left));
@@ -64,7 +63,7 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 	};
 
 	/* Pinch gesture */
-	mouse.onmousepinch = function(amount, center_x, center_y, first) {
+	this.guac_mouse.onmousepinch = function(amount, center_x, center_y, first) {
 		if (first) {
 			self.initial_zoom = self.zoom;
 
@@ -90,7 +89,7 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 	};
 
 	/* Pan gesture */
-	mouse.onmousepan = self.pan_function = function(x, y) {
+	this.guac_mouse.onmousepan = this.pan_function = function(x, y) {
 		self.pan_x += parseInt(x)/self.zoom;
 		self.pan_y += parseInt(y)/self.zoom;
 		updateZoomAndPan();
@@ -102,12 +101,12 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 		self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.panning", canvas, params);
 	};
 
-	mouse.ontwofingers = function() {
+	this.guac_mouse.ontwofingers = function() {
 		/* Send event */
 		self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.twofingers", canvas, {});
 	};
 
-	mouse.onthreefingers = function() {
+	this.guac_mouse.onthreefingers = function() {
 		/* Send event */
 		self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.threefingers", canvas, {});
 	};
