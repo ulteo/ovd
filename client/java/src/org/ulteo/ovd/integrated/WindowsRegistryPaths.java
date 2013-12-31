@@ -44,9 +44,6 @@ public class WindowsRegistryPaths extends WindowsPaths {
 						homedir = homedir.replaceAll("\\\\", "\\\\\\\\");
 						desktopdir = desktopdir.replaceFirst("%USERPROFILE%", homedir);
 					}
-					else {
-						desktopdir = "U:"+desktopdir.substring(desktopdir.lastIndexOf("\\"), desktopdir.length());
-					}
 
 					Logger.debug("desktopdir: "+desktopdir);
 
