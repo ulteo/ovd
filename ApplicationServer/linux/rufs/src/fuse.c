@@ -613,6 +613,15 @@ static int rufs_chmod(const char *path, mode_t mode)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+	{
+		// if the umask is forced, we do not want to override it
+		if (fs_isdir(trpath))
+			mode |= (0777 & ~config->umask);
+		else
+			mode |= (0666 & ~config->umask);
+	}
+
 	res = chmod(trpath, mode);
 	if (res == -1)
 		return -errno;
