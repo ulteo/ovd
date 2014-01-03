@@ -2,6 +2,9 @@ uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 	this.rdp_provider = rdp_provider;
 	this.guac_keyboard = null;
 	this.handler = jQuery.proxy(this.handleEvents, this);
+	this.focus = function() {};
+	this.blur = function() {};
+	this.toggle = function() {};
 	this.end = function() {}; /* destructor */
 
 	this.attach(connection);
@@ -52,25 +55,23 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 		self.connection.guac_client.sendKeyEvent(2, keysym);
 	};
 
-	/* Enable on keyevent */
-	function auto_activate(e) {
-		if( ! self.guac_keyboard.active()) {
-			self.guac_keyboard.enable();
-		}
+	/* Activation */
+	if(! ('ontouchstart' in window)) {
+		/* Automatically if using a physical keyboard */
+		this.focus = function() { if (!self.guac_keyboard.active()) self.guac_keyboard.enable(); }
+		this.blur = function() { if (self.guac_keyboard.active()) self.guac_keyboard.disable(); }
+		jQuery(this.connection.guac_display).on("click.keyboard_autostart", this.focus);
+	} else {
+		/* On touchscreen, aclivate on "threefingers" gesture */
+		this.toggle = function() { if (self.guac_keyboard.active()) { self.guac_keyboard.disable(); } else { self.guac_keyboard.enable(); } }
+		this.rdp_provider.session_management.addCallback("ovd.rdpProvider.gesture.threefingers", this.toggle);
 	}
-	jQuery("body").on("keydown", auto_activate);
-
-	/* Toggle on touchscreen "threefingers" gesture */
-	function touchscreen_toggle() {
-		self.guac_keyboard.toggle();
-	}
-	this.rdp_provider.session_management.addCallback("ovd.rdpProvider.gesture.threefingers", touchscreen_toggle);
 
 	/* Set destructor */
 	this.end = function() {
+		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.threefingers", this.toggle);
+		jQuery(self.connection.guac_display).off("click.keyboard_autostart");
 		jQuery(self.guac_keyboard.getNode()).remove();
-		jQuery("body").off("keydown", auto_activate);
-		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.threefingers", touchscreen_toggle);
 	};
 }
 
@@ -78,7 +79,10 @@ uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 	var self = this; /* closure */
 
 	/* Keyboard instance */
-	this.guac_keyboard = new Guacamole.Keyboard(document);
+	this.guac_keyboard = new Guacamole.Keyboard(this.connection.guac_display);
+
+	/* Ensure the element can takes focus (Hack !) */
+	jQuery(this.connection.guac_display).attr("tabindex", "0");
 
 	/* Keydown */
 	this.guac_keyboard.onkeydown = function (keysym) {
@@ -90,7 +94,16 @@ uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 		self.connection.guac_client.sendKeyEvent(0, keysym);
 	};
 
-	/* No destructor */
+	this.focus = function() { if (!self.guac_keyboard.active()) jQuery(self.connection.guac_display).focus(); };
+	this.blur = function() { if (self.guac_keyboard.active()) jQuery(self.connection.guac_display).blur(); };
+	jQuery(this.connection.guac_display).on("click.keyboard_autostart", this.focus);
+
+	/* Set destructor */
+	this.end = function() {
+		jQuery(self.connection.guac_display).off("click.keyboard_autostart");
+		jQuery(self.guac_keyboard.getNode()).remove();
+	};
+
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {

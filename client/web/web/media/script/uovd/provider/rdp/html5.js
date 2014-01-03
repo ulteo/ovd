@@ -298,6 +298,9 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				/* Add it to the display */
 				display.append(connection.guac_canvas);
 
+				/* Unwrap from jQuery */
+				connection.guac_display = connection.guac_display[0];
+
 				/* Call next chainLoader iteration */
 				chainLoader(parseInt(index)+1);
 				return;

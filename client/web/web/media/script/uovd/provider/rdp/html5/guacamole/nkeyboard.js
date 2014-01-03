@@ -203,5 +203,8 @@ Guacamole.NativeKeyboard.prototype.setIme = function(value) {
 	}
 
 	/* Close the keyboard to refresh the layout */
-	this.disable();
+	if(this.active()) {
+		this.disable();
+		this.enable();
+	}
 };

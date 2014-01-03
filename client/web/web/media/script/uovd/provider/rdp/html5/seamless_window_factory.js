@@ -353,6 +353,9 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 		});
 
+		this.node.on("mousedown.keyboard_focus", function(e) {
+			self.connection.keyboard.focus();
+		});
 
 		/* /!\ The keyboard is not handled per window but per connection /!\ */
 	}
@@ -440,10 +443,16 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 
 		/* Bind keyboard events */
 		this.connection.keyboard.attach(this.connection);
+
+		/* Focus keyboard */
+		this.connection.keyboard.focus();
 	}
 
 	this.SeamlessWindow.prototype.blur = function() {
 		this.focused = false;
+
+		/* Blur keyboard */
+		this.connection.keyboard.blur();
 	}
 
 	this.SeamlessWindow.prototype.isFocused = function() {
@@ -491,6 +500,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		/* Remove node */
 		this.hide();
 		this.node.off("mousedown.window_client_events");
+		this.node.off("mousedown.keyboard_focus");
 		this.node.remove();
 
 		/* Unregister handlers */

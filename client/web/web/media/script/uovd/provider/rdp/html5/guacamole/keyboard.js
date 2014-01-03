@@ -248,6 +248,12 @@ Guacamole.Keyboard = function(element) {
 
     var keydownChar = new Array();
 
+    /**
+     * Activation state
+     */
+
+    var focus = false;
+
     // ID of routine repeating keystrokes. -1 = not repeating.
     var repeatKeyTimeoutId = -1;
     var repeatKeyIntervalId = -1;
@@ -538,9 +544,17 @@ Guacamole.Keyboard = function(element) {
 
     // When focus is lost, clear modifiers.
     element.onblur = function() {
+        focus = false;
         guac_keyboard.modifiers.alt = false;
         guac_keyboard.modifiers.ctrl = false;
         guac_keyboard.modifiers.shift = false;
     };
 
+    element.onfocus = function() {
+        focus = true;
+    };
+
+    this.active = function() {
+        return focus;
+    };
 };

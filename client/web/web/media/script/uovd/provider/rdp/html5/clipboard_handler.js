@@ -78,6 +78,8 @@ uovd.provider.rdp.html5.ClipboardHandler.prototype.handleEvents = function(type,
 			})(i);
 		}
 
+		this.textarea.off("change");
+		this.textarea.off("blur");
 		this.textarea = null;
 
 		this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.clipboard.*", this.handler);
