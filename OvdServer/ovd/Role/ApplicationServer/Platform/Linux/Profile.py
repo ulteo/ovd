@@ -221,6 +221,9 @@ class Profile(AbstractProfile):
 		if self.profile is not None and self.profileMounted:
 			self.copySessionStop()
 		
+		for sharedFolder in self.sharedFolders:
+			self.delGTKBookmark(sharedFolder["local_path"])
+		
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
 			
@@ -385,6 +388,25 @@ class Profile(AbstractProfile):
 				errno.EHOSTUNREACH
 				]
 		return err in networkError
+	
+	def delGTKBookmark(self, url):
+		url = self.transformToLocaleEncoding(url)
+		url = urllib.pathname2url(url)
+		buffer = ''
+		
+		path = os.path.join(self.homeDir, ".gtk-bookmarks")
+		if not os.path.exists(path):
+			return
+		
+		f = file(path, "r")
+		for line in f.readlines():
+			if line != "file://%s\n"%(url):
+				buffer += line
+		f.close()
+		
+		f = file(path, "w+")
+		f.write(buffer)
+		f.close()
 	
 	
 	def addGTKBookmark(self, url):
