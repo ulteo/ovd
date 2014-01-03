@@ -63,6 +63,7 @@ Guacamole.ExtHTTPTunnel = function(rdp_provider, tunnelURL, index) {
     // Default to polling - will be turned off automatically if not needed
     var pollingMode = POLLING_ENABLED;
 
+    var instruction_seq = (new Date()).getTime();
     var sendingMessages = false;
     var outputMessageBuffer = "";
 
@@ -129,7 +130,7 @@ Guacamole.ExtHTTPTunnel = function(rdp_provider, tunnelURL, index) {
             sendingMessages = true;
 
             var message_xmlhttprequest = new XMLHttpRequest();
-            message_xmlhttprequest.open("POST", TUNNEL_WRITE + tunnel_uuid);
+            message_xmlhttprequest.open("POST", TUNNEL_WRITE + tunnel_uuid + ":" + (instruction_seq++));
             message_xmlhttprequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             // Once response received, send next queued event.
@@ -391,7 +392,7 @@ Guacamole.ExtHTTPTunnel = function(rdp_provider, tunnelURL, index) {
 
         // Download self
         var xmlhttprequest = new XMLHttpRequest();
-        xmlhttprequest.open("POST", TUNNEL_READ + tunnel_uuid);
+        xmlhttprequest.open("POST", TUNNEL_READ + tunnel_uuid + ":" + (instruction_seq++));
         xmlhttprequest.send(null);
 
         return xmlhttprequest;
