@@ -323,11 +323,6 @@ uovd.provider.rdp.Html5.prototype.disconnect_implementation = function() {
 uovd.provider.rdp.Html5.prototype.testCapabilities = function(onsuccess, onfailure) {
 	var success = true;
 	
-	/* Test Internet Explorer */
-	if (navigator.userAgent.indexOf("MSIE") != -1) {
-		success = false;
-	}
-
 	/* Test canvas support */
 	var elem = document.createElement("canvas");
 	if (elem != "[object HTMLCanvasElement]") {
