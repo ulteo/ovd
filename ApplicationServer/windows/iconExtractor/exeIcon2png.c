@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -220,7 +221,7 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
             char r,g,b,a;
 	
             if (argbColors == TRUE) {
-                int pos = (bm.bmHeight - y) * bm.bmWidth + x;
+                int pos = (bm.bmHeight - y - 1) * bm.bmWidth + x;
 	  
                 a = pixels[pos * 4 + 3];
                 r = pixels[pos * 4 + 2];
