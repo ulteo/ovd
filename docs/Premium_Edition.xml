@@ -99,6 +99,21 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
       <graphic fileref="img/premium/sm_install_premium.png"></graphic>
     </screenshot>
     <para>
+	By browsing, you should have an error. This means that you have to finish the installation.
+	</para>
+     <screenshot>
+      <screeninfo>SOAP Error</screeninfo>
+      <graphic fileref="img/premium/sm_soap_error.png"></graphic>
+    </screenshot>
+    <para>
+		
+	You have to validate again the database settings in order to complete the installation
+	</para>
+	 <screenshot>
+      <screeninfo>Save database settings</screeninfo>
+      <graphic fileref="img/premium/sm_save_database.png"></graphic>
+    </screenshot>
+	<para>
     Then, go to configuration and licensing tab.
     </para>
      <screenshot>
