@@ -172,6 +172,14 @@
         The Linux subsystem archive does not support any other language
         than English on a new install.
       </para>
+       <important>
+        Go into the OVD chroot (if command fails, this means you haven't any chroot)
+        <screen>
+        <![CDATA[
+# uchroot ]]>
+      </screen>
+      
+      </important>
       <para>
         To install a language support, you have to install some
         packages.
