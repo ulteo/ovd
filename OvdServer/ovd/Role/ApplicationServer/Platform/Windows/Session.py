@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -229,11 +230,7 @@ class Session(AbstractSession):
 			
 			# Transform the drive letter into a bit value according to
 			# http://technet.microsoft.com/en-us/library/cc959437.aspx
-			d = drive.lower()[0].encode("hex")
-			d = int(d) - 61 # a in ascii
-			d = pow(2, d)
-			
-			value+= d
+			value += 2 << (ord(drive.lower()[0]) - 98)
 		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)
 		try:
