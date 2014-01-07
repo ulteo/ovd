@@ -42,7 +42,7 @@ install: all
 	done
 
 update-pot:
-	find ../../SessionManager/web -name "*.php" |sort >POTFILES.in
+	find ../../AdminConsole -name "*.php" |sort >POTFILES.in
 
 	$(XGETTEXT) --files-from=POTFILES.in  --output=en.pot
 	sed -i "s/$(TRANSFORM_RULES_1)/" en.pot
