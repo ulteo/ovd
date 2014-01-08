@@ -354,7 +354,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		});
 
 		this.node.on("mousedown.keyboard_focus", function(e) {
-			self.connection.keyboard.focus();
+			self.main_canvas.click();
 		});
 
 		/* /!\ The keyboard is not handled per window but per connection /!\ */
