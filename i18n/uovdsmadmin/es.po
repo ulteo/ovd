@@ -46,7 +46,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "Ocurrio un error añadiendo la aplicación '%APPLICATION%' al servidor '%"
@@ -1784,7 +1784,7 @@ msgstr "Fallo en"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "¡Ha ocurrido un error al leer el archivo de configuración, no se encontraron "
 "valores!"
@@ -1795,7 +1795,7 @@ msgstr "¡No se pudieron extraer los valores del archivo de configuración!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "¡Ocurrió un error al actualizar la IP virtual!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1827,7 +1827,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "¡¡servidor(es) %s eliminado(s) correctamente!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "¡Ocurrió un error, no se borraron servidores sin registrar!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1844,7 +1844,7 @@ msgid "Host has been enabled!"
 msgstr "¡El host ha sido habilitado!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "¡Ocurrió un error durante la activación, no se puede habilitar el host!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1852,7 +1852,7 @@ msgid "Host has been disabled!"
 msgstr "¡El host ha sido deshabilitado!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr ""
 "¡Ocurrió un error al deshabilitar el host, no se puede deshabilitar el host!"
 
@@ -1946,7 +1946,7 @@ msgstr ""
 # 90%
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr ""
 "¡Ocurrió un error en la desactivación, no se puede desactivar la máquina!"
 
@@ -2010,7 +2010,7 @@ msgid "Host activation has been done successfully!"
 msgstr "¡El host se ha activado correctamente!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "¡Ocurrió un error en la petición POST para la activación!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2097,7 +2097,7 @@ msgstr "En espera"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "¡A ocurrido un error, por favor contacte con su administrador!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

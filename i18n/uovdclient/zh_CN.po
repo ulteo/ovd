@@ -210,7 +210,7 @@ msgstr "系统处于维护模式，联系系统管理员获取更多信息"
 
 #: ../../client/web/web/translate.php:124
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr "发生内部错误，请联系管理员"
 
 #: ../../client/web/web/translate.php:125
@@ -286,7 +286,7 @@ msgid "Do not close this Ulteo OVD window!"
 msgstr "请不要关闭Ulteo OVD窗口！"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr "发生错误，请联系管理员"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
@@ -534,7 +534,7 @@ msgid "Text file (*.txt)"
 msgstr "文本文件(*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr "发生一个错误。请重试。"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105

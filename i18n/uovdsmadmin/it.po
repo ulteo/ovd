@@ -43,7 +43,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "E' avvenuto un errore inserendo l'applicativo '%APPLICATION%' sul server '%"
@@ -1759,7 +1759,7 @@ msgstr "Non riuscito"
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "E' avvenuto un errore leggendo il file di configurazione, nessun valore  "
 "stato trovato!"
@@ -1774,7 +1774,7 @@ msgstr "Non riesco ad estrarre valori di configurazione dal file!"
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "E' successo un errore durante l'aggiornamento dell'IP virtuale!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1808,7 +1808,7 @@ msgstr "La cancellazione del server '%s' è avvenuta corretamente!"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr ""
 "E' avvenuto un errore: non è stato cancellato alcun server non registrato !"
 
@@ -1834,7 +1834,7 @@ msgstr "L'host è stato abilitato!"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr ""
 "E' avvenuto un errore durante l'attivazione, non posso abilitare l'host!"
 
@@ -1847,7 +1847,7 @@ msgstr "L'host è stato disabilitato!"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr ""
 "E' avvenuto un errore durante la disabilitazione dell'host, non si può "
 "disabilitarlo!"
@@ -1947,7 +1947,7 @@ msgstr "L'host %s è stato messo in attesa ed il master %s verrà riavviato!"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr ""
 "E' capitato un errore durante la disabilitazione, non si può disabilitare "
 "l'host!"
@@ -2019,7 +2019,7 @@ msgstr "L'attivazione dell'host è avvenuta correttamente!"
 # 97%
 # 100%
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "C'è stato un errore nella richiesta di attivazione di POST!"
 
 # 97%
@@ -2112,7 +2112,7 @@ msgstr "Attesa"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "E' avvenuto un errore, contatta l'amministratore!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176
@@ -5153,7 +5153,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "get Preferences failed"
 #~ msgstr "impossibile ottenere le Preferenze"
 
-#~ msgid "An error occured during reading configuration file, no values found !"
+#~ msgid "An error occurred during reading configuration file, no values found !"
 #~ msgstr ""
 #~ "E' avvenuto un errore leggendo il file di configurazione, nessun valore  "
 #~ "stato trovato !"
@@ -5161,7 +5161,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "Could not extract configuration values from file !"
 #~ msgstr "Non riesco ad estrarre valori di configurazione dal file !"
 
-#~ msgid "An error occured during update of the virtual IP !"
+#~ msgid "An error occurred during update of the virtual IP !"
 #~ msgstr "E' successo un errore durante l'aggiornamento dell'IP virtuale !"
 
 #~ msgid ""
@@ -5175,7 +5175,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "%s server(s) has been successfully removed !"
 #~ msgstr "Riuscita la cancellazione del server '%s'"
 
-#~ msgid "An error occured, no unregistered server deleted !"
+#~ msgid "An error occurred, no unregistered server deleted !"
 #~ msgstr ""
 #~ "E' successo un errore: non è stato cancellato alcun server non registrato !"
 
@@ -5188,14 +5188,14 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "Host has been enabled !"
 #~ msgstr "L'host è stato abilitato !"
 
-#~ msgid "An error occured during activation, can not enable host !"
+#~ msgid "An error occurred during activation, can not enable host !"
 #~ msgstr ""
 #~ "E' avvenuto un errore durante l'attivazione, non posso abilitare l'host !"
 
 #~ msgid "Host has been disabled !"
 #~ msgstr "L'host è stato disabilitato !"
 
-#~ msgid "An error occured during disabling host, cannot disable host !"
+#~ msgid "An error occurred during disabling host, cannot disable host !"
 #~ msgstr ""
 #~ "E' avvenuto un errore durante la disabilitazione dell'host, non posso "
 #~ "disabilitarlo !"
@@ -5233,7 +5233,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
 #~ msgstr "L'host %s è stato messo in attesa ed il master %s verrà riavviato !"
 
-#~ msgid "An error occured during disabling, can not disable host !"
+#~ msgid "An error occurred during disabling, can not disable host !"
 #~ msgstr ""
 #~ "E' capitato un errore durante la disabilitazione, non riesco a disabilitare "
 #~ "l'host !"
@@ -5250,7 +5250,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "Host activation has been done successfully !"
 #~ msgstr "L'attivazione dell'host è avvenuta correttamente !"
 
-#~ msgid "An error occured in POST request activation !"
+#~ msgid "An error occurred in POST request activation !"
 #~ msgstr "C'è stato un errore nella richiesta di attivazione di POST !"
 
 #~ msgid "Deleting host has been done successfully !"
@@ -5282,7 +5282,7 @@ msgstr "Errore nell'ottenimento dell'elenco degli utenti"
 #~ msgid "ressources errors"
 #~ msgstr "errori delle risorse"
 
-#~ msgid "An error has occured, please call your administrator !"
+#~ msgid "An error has occurred, please call your administrator !"
 #~ msgstr "E' avvenuto un errore, contattare l'amministratore !"
 
 #~ msgid ""

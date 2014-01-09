@@ -205,7 +205,7 @@ msgstr ""
 
 #: ../../client/web/web/translate.php:126
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr "Sisäinen virhe tapahtunut, ota yhteyttä pääkäyttäjään"
 
 #: ../../client/web/web/translate.php:127
@@ -303,7 +303,7 @@ msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr "Virhe tapahtunut, ota yhteyttä pääkäyttäjään"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
@@ -473,7 +473,7 @@ msgid "Text file (*.txt)"
 msgstr "Teksti tiedosto (*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr "Virhe tapahtunut. Ole hyvä ja yritä uudelleen."
 
 # 90%

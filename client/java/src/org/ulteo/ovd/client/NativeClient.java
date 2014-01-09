@@ -496,7 +496,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			else if (key.equals(ERROR_IN_MAINTENANCE))
 				return I18n._("The system is on maintenance mode, please contact your administrator for more information");
 			else if (key.equals(ERROR_INTERNAL))
-				return I18n._("An internal error occured, please contact your administrator");
+				return I18n._("An internal error occurred, please contact your administrator");
 			else if (key.equals(ERROR_INVALID_USER))
 				return I18n._("You specified an invalid login, please double-check and try again");
 			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
@@ -506,7 +506,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			else if (key.equals(ERROR_ACTIVE_SESSION))
 				return I18n._("You already have an active session");
 			
-			return I18n._("An error occured, please contact your administrator");
+			return I18n._("An error occurred, please contact your administrator");
 		}
 		public static boolean has(String key) {
 			if (key.equals(ERROR_AUTHENTICATION_FAILED))

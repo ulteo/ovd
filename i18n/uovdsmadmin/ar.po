@@ -39,7 +39,7 @@ msgstr "تم إضافة التطبيق '%APPLICATION%' بنجاح على الخ�
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr "وقع خطأ أثناء إضافة التطبيق '%APPLICATION%' على الخادم '%SERVER%'"
 
@@ -1756,7 +1756,7 @@ msgstr "فشل في"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr "وقع خطأ أثناء قراءة ملف التكوينات، لم يتم العثور على أي قيمة!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:120
@@ -1765,7 +1765,7 @@ msgstr "لا يمكن استخراج قيم الإعدادات من الملف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "وقع خطأ أثناء تحديث الـ IP الإفتراضية!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1794,7 +1794,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "تم حذف %s خادم بنجاح!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "وقع خطأ، لم يتم حذف أي خادم غير مسجل!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1811,7 +1811,7 @@ msgid "Host has been enabled!"
 msgstr "تم تفعيل المضيف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "وقع خطأ أثناء التفعيل، لا يمكن تفعيل المضيف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1819,7 +1819,7 @@ msgid "Host has been disabled!"
 msgstr "تم تعطيل المضيف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "وقع خطأ أثناء التعطيل، لا يمكن تعطيل المضيف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1905,7 +1905,7 @@ msgstr ""
 "القلب!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "وقع خطأ اثناء التعطيل، لا يمكن تعطيل المضيف!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:443
@@ -1968,7 +1968,7 @@ msgid "Host activation has been done successfully!"
 msgstr "تم تفعيل المضيف بنجاح!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "وقع خطأ في تفعيل إستعلام POST!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2051,7 +2051,7 @@ msgid "Standby"
 msgstr "مستعد"
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "وقع خطأ، يرجى الأتصال بمدير النظام!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

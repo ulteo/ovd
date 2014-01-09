@@ -206,7 +206,7 @@ msgstr "Системата е в сервизен режим, свържете �
 
 #: ../../client/web/web/translate.php:124
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr "Системна грешка, свържете се със системният администратор"
 
 #: ../../client/web/web/translate.php:125
@@ -284,7 +284,7 @@ msgid "Do not close this Ulteo OVD window!"
 msgstr "Не затваряйте прозореца Ulteo OVD!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr "Възникна грешка, свържете се със системният администратор"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
@@ -510,7 +510,7 @@ msgid "Text file (*.txt)"
 msgstr "Текстови документ (*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr "Възникна грешка. Мола пробвайте отново."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105

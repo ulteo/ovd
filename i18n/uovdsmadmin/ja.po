@@ -37,7 +37,7 @@ msgstr "サーバー '%SERVER%' に、アプリケーション '%APPLICATION%' �
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr "サーバー '%SERVER%' へアプリケーション '%APPLICATION%' を追加する際にエラーが発生しました。"
 
@@ -1697,7 +1697,7 @@ msgstr "失敗:"
 # 91%
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr "設定ファイルを読み込み中にエラーが発生しました。値が見つかりません！"
 
 # 98%
@@ -1708,7 +1708,7 @@ msgstr "ファイルから設定値を抽出できませんでした！"
 # 80%
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "バーチャルIPの更新中にエラーが発生しました！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1737,7 +1737,7 @@ msgstr "%s サーバーが削除されました。"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "未登録のサーバーは、削除できません。エラーが存在します。"
 
 # 92%
@@ -1758,7 +1758,7 @@ msgstr "ホストが有効になりました。"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "アクティベーション中にエラーが存在するため、有効に出来ませんでした！"
 
 # 95%
@@ -1768,7 +1768,7 @@ msgstr "ホストは、無効になりました！"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "ホストを無効中にエラーが存在しました。ホストを無効に出来ません！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1856,7 +1856,7 @@ msgstr "ホスト %s はスタンバイ中です。マスター %s が、ハー�
 
 # 98%
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "無効中にエラーが発生しました。ホストを無効に出来ません！"
 
 # 96%
@@ -1917,7 +1917,7 @@ msgid "Host activation has been done successfully!"
 msgstr "ホストの有効化が成功しました！"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "POST送信中にエラーが発生しました！"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2000,7 +2000,7 @@ msgstr "スタンバイ"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "エラーが発生しています。管理者へ連絡してください！"
 
 #: ../../SessionManager/web/admin/ha/status.php:176
@@ -4942,13 +4942,13 @@ msgstr "ユーザーリストの取得に失敗しました。"
 #~ msgid "get Preferences failed"
 #~ msgstr "初期設定に失敗しました。"
 
-#~ msgid "An error occured during reading configuration file, no values found !"
+#~ msgid "An error occurred during reading configuration file, no values found !"
 #~ msgstr "設定ファイルを読み込み中にエラーが発生しました。値が見つかりません。"
 
 #~ msgid "Could not extract configuration values from file !"
 #~ msgstr "ファイルから設定値を抽出できませんでした。"
 
-#~ msgid "An error occured during update of the virtual IP !"
+#~ msgid "An error occurred during update of the virtual IP !"
 #~ msgstr "バーチャルIPの更新中にエラーが発生しました。"
 
 #~ msgid ""
@@ -4960,7 +4960,7 @@ msgstr "ユーザーリストの取得に失敗しました。"
 #~ msgid "%s server(s) has been successfully removed !"
 #~ msgstr "サーバー '%s'は、削除されました。"
 
-#~ msgid "An error occured, no unregistered server deleted !"
+#~ msgid "An error occurred, no unregistered server deleted !"
 #~ msgstr "未登録のサーバーは、削除できません。エラーが存在します。"
 
 #~ msgid "Cannot enable host because one already enabled !"
@@ -4972,13 +4972,13 @@ msgstr "ユーザーリストの取得に失敗しました。"
 #~ msgid "Host has been enabled !"
 #~ msgstr "ホストが有効になりました。"
 
-#~ msgid "An error occured during activation, can not enable host !"
+#~ msgid "An error occurred during activation, can not enable host !"
 #~ msgstr "アクティベーション中にエラーが存在するため、有効に出来ませんでした。"
 
 #~ msgid "Host has been disabled !"
 #~ msgstr "ホストは、無効になりました！"
 
-#~ msgid "An error occured during disabling host, cannot disable host !"
+#~ msgid "An error occurred during disabling host, cannot disable host !"
 #~ msgstr "ホストを無効中にエラーが存在しました。ホストを無効に出来ません。"
 
 #~ msgid ""
@@ -5011,7 +5011,7 @@ msgstr "ユーザーリストの取得に失敗しました。"
 #~ msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
 #~ msgstr "ホスト %sはスタンバイ中です。マスター %s が、ハートビートで再起動します。"
 
-#~ msgid "An error occured during disabling, can not disable host !"
+#~ msgid "An error occurred during disabling, can not disable host !"
 #~ msgstr "無効中にエラーが発生しました。無効に出来ません。"
 
 #~ msgid "Changing configuration... Please wait few seconds"

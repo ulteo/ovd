@@ -130,7 +130,7 @@ public abstract class Profile {
 			byte[] data = Profile.crypto.encrypt(password.getBytes());
 			encryptedPassword = new BASE64Encoder().encode(data);
 		} catch (GeneralSecurityException e) {
-			Logger.error("An error occured while crypting password: " + e.getMessage());
+			Logger.error("An error occurred while crypting password: " + e.getMessage());
 		}
 		
 		return encryptedPassword;
@@ -142,7 +142,7 @@ public abstract class Profile {
 			byte[] data = Profile.crypto.decrypt(new BASE64Decoder().decodeBuffer(hash));
 			password = new String(data);
 		} catch (Exception e) {
-			Logger.error("An error occured while decrypting password:" + e.getMessage());
+			Logger.error("An error occurred while decrypting password:" + e.getMessage());
 		}
 		return password;
 	}

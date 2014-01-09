@@ -208,7 +208,7 @@ msgstr ""
 
 #: ../../client/web/web/translate.php:126
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:471
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr "خطای داخلی روی داد،لطفا با مدیر خود تماس بگیرید"
 
 #: ../../client/web/web/translate.php:127
@@ -306,7 +306,7 @@ msgid "Disconnect"
 msgstr "قطع"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:481
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr "خطایی روی داد،لطفا با مدیریت خود تماس بگیرید"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:647
@@ -476,7 +476,7 @@ msgid "Text file (*.txt)"
 msgstr "فایل تکست(*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr "خطایی روی داد.لطفا دوباره امتحان کنید."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105

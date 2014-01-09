@@ -2058,7 +2058,7 @@ msgstr ""
 
 #: ../../AdminConsole/web/actions.php:92
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 

@@ -89,7 +89,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 					$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'');
 					popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 				} else {
-					$msg = _('An error occured while adding application \'%APPLICATION%\' to server \'%SERVER%\'');
+					$msg = _('An error occurred while adding application \'%APPLICATION%\' to server \'%SERVER%\'');
 					popup_error(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 				}
 			} elseif ($_REQUEST['action'] == 'del') {

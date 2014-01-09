@@ -190,7 +190,7 @@ BOOL hicon2pngfile(HICON ico, LPCTSTR png_filename) {
 
     if (setjmp(png_ptr->jmpbuf)) {
         png_destroy_write_struct(&png_ptr, &info_ptr);
-        fprintf(stderr, "PNG jump, an error has occured\n");
+        fprintf(stderr, "PNG jump, an error has occurred\n");
         return FALSE;
     }
   

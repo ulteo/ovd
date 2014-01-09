@@ -141,7 +141,7 @@ public class BugReport {
 			writer.flush();
 			writer.close();
 		} catch (IOException ex) {
-			Logger.error("[toTxtFile] An error occured while writing file '"+file.getPath()+"': "+ex.getMessage());
+			Logger.error("[toTxtFile] An error occurred while writing file '"+file.getPath()+"': "+ex.getMessage());
 			return;
 		}
 	}

@@ -261,7 +261,7 @@ function get_available_translations($lang) {
 
 		'auth_failed'					=>	_('Authentication failed: please double-check your password and try again'),
 		'in_maintenance'				=>	_('The system is on maintenance mode, please contact your administrator for more information'),
-		'internal_error'				=>	_('An internal error occured, please contact your administrator'),
+		'internal_error'				=>	_('An internal error occurred, please contact your administrator'),
 		'invalid_user'					=>	_('You specified an invalid login, please double-check and try again'),
 		'service_not_available'			=>	_('The service is not available, please contact your administrator for more information'),
 		'unauthorized'					=>	_('You are not authorized to launch a session. Please contact your administrator for more information'),

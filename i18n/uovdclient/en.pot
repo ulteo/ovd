@@ -226,7 +226,7 @@ msgstr ""
 
 #: ../../client/web/web/includes/functions.inc.php:264
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr ""
 
 #: ../../client/web/web/includes/functions.inc.php:265
@@ -341,7 +341,7 @@ msgid "Disable desktop integration"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:651
@@ -507,7 +507,7 @@ msgid "Text file (*.txt)"
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr ""
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105

@@ -41,7 +41,7 @@ msgstr "Aplikácia '%APPLICATION%' bola úspešne pridaná na server '%SERVER%' 
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "Vyskytla sa chyba pri doplnení aplikácie '%APPLICATION%' na server '%SERVER%"
@@ -1680,7 +1680,7 @@ msgstr "Zlyhal na"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "Vyskytla sa chyba pri čítaní konfiguračného súbora, žiadne hodnoty neboli "
 "nájdené!"
@@ -1691,7 +1691,7 @@ msgstr "Nemôžem vyextrahovať konfiguračné hodnoty zo súbora!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "Vyskytla sa chyba pri aktualizácii virtuálnej IP!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1720,7 +1720,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "%s server(y) bol(i) odstránený(é)!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "Vyskytla sa chyba, žiadny neregistrovaný server nebol zmazaný!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1737,7 +1737,7 @@ msgid "Host has been enabled!"
 msgstr "\"Host\" bol sprístupnený!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "Vyskytla sa chyba počas aktivácie, nemôžem sprístupniť \"hosta\"!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1745,7 +1745,7 @@ msgid "Host has been disabled!"
 msgstr "\"Host\" bol zneprístupnený!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "Vyskytla sa chyba počas deaktivácie, nemôžem zneprístupniť \"hosta\"!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1829,7 +1829,7 @@ msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
 msgstr "\"Host\" %s bol nastavený do režimu standby a master %s sa obnoví!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "Chyba počas zneprístupňovania, nemôžem zneprístupniť hosta!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:443
@@ -1887,7 +1887,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Aktivácia hosta bola úspešne ukončená!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "Vyskytla sa chyba v POST request aktivácii!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -1970,7 +1970,7 @@ msgid "Standby"
 msgstr "Standby"
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "Vyskytla sa chyba, prosím kontaktujte administrátora!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

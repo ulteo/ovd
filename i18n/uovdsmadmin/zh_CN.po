@@ -32,7 +32,7 @@ msgid "Application '%APPLICATION%' successfully added to server '%SERVER%'"
 msgstr "程序 '%APPLICATION%' 成功添加到服务器 '%SERVER%'"
 
 #: ../../SessionManager/web/admin/actions.php:104
-msgid "An error occured while adding application '%APPLICATION%' to server '%SERVER%'"
+msgid "An error occurred while adding application '%APPLICATION%' to server '%SERVER%'"
 msgstr "添加程序'%APPLICATION%'到服务器 '%SERVER%'时发生错误"
 
 #: ../../SessionManager/web/admin/actions.php:110
@@ -1626,7 +1626,7 @@ msgstr "失败于"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr "读取配置文件时发生错误，找不到数值！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:120
@@ -1635,7 +1635,7 @@ msgstr "无法从配置文件中读取数值！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "更新虚拟IP时发生错误！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1660,7 +1660,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "成功移除服务器'%s'！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "发生错误，无非注册服务器被删除！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1677,7 +1677,7 @@ msgid "Host has been enabled!"
 msgstr "主机被激活！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "激活进程发生错误，无法激主机！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1685,7 +1685,7 @@ msgid "Host has been disabled!"
 msgstr "主机被禁止！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "禁止主机进程发生错误，无法禁止主机！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1757,7 +1757,7 @@ msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
 msgstr "主机%s已被设置成待机，控制机%s将重启Heartbeat集群服务！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "禁止进程出错，无法禁止主机！"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:443
@@ -1812,7 +1812,7 @@ msgid "Host activation has been done successfully!"
 msgstr "主机成功激活！"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "POST激活过程中发生错误！"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -1891,7 +1891,7 @@ msgid "Standby"
 msgstr "待机"
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "发生错误，请联系管理员！"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

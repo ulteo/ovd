@@ -42,7 +42,7 @@ msgstr "Application '%APPLICATION% ajoutée au serveur '%SERVER%'"
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "Une erreur est apparue pendant l'ajout de l'application '%APPLICATION%' sur "
@@ -1768,7 +1768,7 @@ msgstr "Echec sur"
 # 91%
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "Une erreur est survenue lors de la lecture du fichier de configuration, pas "
 "de valeurs trouvées !"
@@ -1781,7 +1781,7 @@ msgstr "Impossible de charger les valeurs depuis le fichier de configuration"
 # 80%
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr ""
 "Une erreur est survenue lors de la mise à jour de l'adresse IP virtuelle !"
 
@@ -1814,7 +1814,7 @@ msgstr "Le serveur %s a été supprimé !"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "Une erreur est apparue, aucun serveur non enregistré supprimé !"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1831,7 +1831,7 @@ msgid "Host has been enabled!"
 msgstr "L'hôte a été activé !"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr ""
 "Une erreur est survenue pendant l'activation, impossible d'activer l'hôte !"
 
@@ -1840,7 +1840,7 @@ msgid "Host has been disabled!"
 msgstr "L'hôte a été désactivé !"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr ""
 "Une erreur est survenue lors de la désactivation de l'hôte, impossible de le "
 "désactiver !"
@@ -1931,7 +1931,7 @@ msgstr ""
 "L'hôte %s a été placé en standby et le maître %s va redémarrer Heartbeat !"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr ""
 "Une erreur est survenue pendant la désactivation de l'hôte. Impossible de le "
 "redémarrer !"
@@ -1995,7 +1995,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Activation du serveur réussie !"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "Une erreur est survenue dans la requête POST !"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2080,7 +2080,7 @@ msgstr "Standy"
 
 # 98%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "Une erreur est survenue, merci d'appeller votre administrateur !"
 
 #: ../../SessionManager/web/admin/ha/status.php:176
@@ -5132,7 +5132,7 @@ msgstr "Samedi"
 #~ msgid "get Preferences failed"
 #~ msgstr "La récupération des préférences a échoué"
 
-#~ msgid "An error occured during reading configuration file, no values found !"
+#~ msgid "An error occurred during reading configuration file, no values found !"
 #~ msgstr ""
 #~ "Une erreur est apparue pendant la lecture du fichier de configuration, "
 #~ "aucune valeurs trouvées !"
@@ -5140,7 +5140,7 @@ msgstr "Samedi"
 #~ msgid "Could not extract configuration values from file !"
 #~ msgstr "Impossible de charger les valeurs depuis le fichier de configuration"
 
-#~ msgid "An error occured during update of the virtual IP !"
+#~ msgid "An error occurred during update of the virtual IP !"
 #~ msgstr ""
 #~ "Une erreur est apparue pendant la mise à jour de l'adresse IP virtuelle !"
 
@@ -5149,7 +5149,7 @@ msgstr "Samedi"
 #~ msgid "%s server(s) has been successfully removed !"
 #~ msgstr "Le serveur %s a été supprimé !"
 
-#~ msgid "An error occured, no unregistered server deleted !"
+#~ msgid "An error occurred, no unregistered server deleted !"
 #~ msgstr "Une erreur est apparue, aucun serveur non enregistré supprimé !"
 
 #~ msgid "The system is in maintenance mode ! Cannot apply changes."

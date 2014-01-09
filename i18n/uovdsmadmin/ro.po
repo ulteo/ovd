@@ -43,7 +43,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "S-a produs o eroare în cursul adăugării aplicației „%APPLICATION%” pe "
@@ -1693,7 +1693,7 @@ msgstr "Eșec pe"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "S-a produs o eroare în cursul citirii fișierului de configurare, nu s-au "
 "găsit valori!"
@@ -1704,7 +1704,7 @@ msgstr "Nu se pot extrage valorile de configurare din fișier!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "S-a produs o eroare în cursul actualizării adresei IP virtuale!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1733,7 +1733,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "Serverul %s a fost înlăturat cu succes!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "S-a produs o eroare, nu s-a șters nici un server neînregistrat!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1750,7 +1750,7 @@ msgid "Host has been enabled!"
 msgstr "Gazda a fost activată!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "S-a produs o eroare în cursul activării, gazda nu poate fi activată!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1758,7 +1758,7 @@ msgid "Host has been disabled!"
 msgstr "Gazda a fost dezactivată!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr ""
 "S-a produs o eroare în cursul dezactivării, gazda nu poate fi dezactivată!"
 
@@ -1846,7 +1846,7 @@ msgstr ""
 "Heartbeat!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr ""
 "S-a produs o eroare în cursul dezactivării, gazda nu poate fi dezactivată!"
 
@@ -1906,7 +1906,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Activarea gazdei a fost efectuată cu succes!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "S-a produs o eroare la activarea cererii POST!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -1989,7 +1989,7 @@ msgid "Standby"
 msgstr "În așteptare"
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "S-a produs o eroare, contactați administratorul!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

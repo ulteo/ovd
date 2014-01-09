@@ -95,7 +95,7 @@ public class SystemWindows extends SystemAbstract {
 			Logger.error("This file does not exists: "+e.getMessage());
 			return;
 		} catch(IOException e) {
-			Logger.error("An error occured during the shortcut '"+shortcutName+"' copy: "+e.getMessage());
+			Logger.error("An error occurred during the shortcut '"+shortcutName+"' copy: "+e.getMessage());
 			return;
 		}
 	}

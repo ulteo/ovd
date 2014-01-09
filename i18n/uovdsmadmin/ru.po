@@ -44,7 +44,7 @@ msgstr "Приложение '%APPLICATION%' успешно добавлено �
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr "Ошибка добавления приложения '%APPLICATION%' на сервер '%SERVER%'"
 
@@ -1734,7 +1734,7 @@ msgstr "Неисправен"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr "Ошибка чтения конфигурационного файла, значения не найдены!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:120
@@ -1743,7 +1743,7 @@ msgstr "Не удается извлечь конфигурационные зн
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "Ошибка получения виртуального IP-адреса!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1774,7 +1774,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "Сервер(ы) '%s' успешно удалены!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "Обнаружена ошибка. Незарегистрированные серверы не удалены!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1791,7 +1791,7 @@ msgid "Host has been enabled!"
 msgstr "Сервер включен!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "В процессе активации обнаружена ошибка. Включить сервер не удалось!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1799,7 +1799,7 @@ msgid "Host has been disabled!"
 msgstr "Сервер выключен!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "Пии выключении произошла ошибка. Сервер не выключен!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1885,7 +1885,7 @@ msgstr ""
 "перезапускает функции кластера (Heartbeat)!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "Не удается выключить сервер из-за ошибки!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:443
@@ -1948,7 +1948,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Активация сервера успешно завершена!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "Обнаружена ошибка в POST-запросе при активации!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2035,7 +2035,7 @@ msgstr "Резервный"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "Обнаружена ошибка. Пожалуйста, обратитесь к системному администратору!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

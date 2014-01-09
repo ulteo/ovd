@@ -1388,7 +1388,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:98
 #: ../../SessionManager/web/admin/ha/configuration.php:147
-msgid "An error occured during reading configuration file, no values found !"
+msgid "An error occurred during reading configuration file, no values found !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:118
@@ -1397,7 +1397,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:133
 #: ../../SessionManager/web/admin/ha/configuration.php:137
-msgid "An error occured during update of the virtual IP !"
+msgid "An error occurred during update of the virtual IP !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:171
@@ -1425,7 +1425,7 @@ msgid "%s server(s) has been successfully removed !"
 msgstr "Server '%s' berhasil dimodifikasi"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:208
-msgid "An error occured, no unregistered server deleted !"
+msgid "An error occurred, no unregistered server deleted !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:217
@@ -1442,7 +1442,7 @@ msgid "Host has been enabled !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:242
-msgid "An error occured during activation, can not enable host !"
+msgid "An error occurred during activation, can not enable host !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:257
@@ -1450,7 +1450,7 @@ msgid "Host has been disabled !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:260
-msgid "An error occured during disabling host, cannot disable host !"
+msgid "An error occurred during disabling host, cannot disable host !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:267
@@ -1532,7 +1532,7 @@ msgid "Host %s has been set in standby and master %s will restart Heartbeat !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:430
-msgid "An error occured during disabling, can not disable host !"
+msgid "An error occurred during disabling, can not disable host !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/configuration.php:441
@@ -1588,7 +1588,7 @@ msgid "Host activation has been done successfully !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:87
-msgid "An error occured in POST request activation !"
+msgid "An error occurred in POST request activation !"
 msgstr ""
 
 #: ../../SessionManager/web/admin/ha/registration.php:92
@@ -1674,7 +1674,7 @@ msgstr ""
 
 #: ../../SessionManager/web/admin/ha/status.php:172
 #, fuzzy
-msgid "An error has occured, please call your administrator !"
+msgid "An error has occurred, please call your administrator !"
 msgstr "Anda telah memiliki sesi, silahkan hubungi administrator anda"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

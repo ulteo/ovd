@@ -41,7 +41,7 @@ msgstr "A '%APPLICATION%' alkalmazás a '%SERVER%' szerverre sikeresen hozzáadv
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "Hiba lépett fel '%APPLICATION%' alkalmazás a '%SERVER%' szerverhez adás "
@@ -1667,7 +1667,7 @@ msgstr "Sikertelen a"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr "Hiba történt konfiguráció olvasása közben, érték nem található!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:120
@@ -1676,7 +1676,7 @@ msgstr "A fájlból konfigurációs értékek kibontása sikertelen!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "Hiba történt a virtuális IP frissítése közben!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1705,7 +1705,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "'%s' szerver(ek) sikeresen törölve!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "Hiba történt, nem regisztrált szerverek törlése sikertelen!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1722,7 +1722,7 @@ msgid "Host has been enabled!"
 msgstr "Host aktiválva!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr "Hiba történt az aktiválás alatt, host aktiválása sikertelen!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:259
@@ -1730,7 +1730,7 @@ msgid "Host has been disabled!"
 msgstr "Host kikapcsolva!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr "Hiba történt a host kikapcsolása alatt, host kikapcsolás sikertelen!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:269
@@ -1815,7 +1815,7 @@ msgstr ""
 "%s host alvó állapotra átállítva, %s master újraindítja a Heartbeat-et! "
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr "Probléma adódott a host leállításnál, leállítás sikertelen! "
 
 #: ../../SessionManager/web/admin/ha/configuration.php:443
@@ -1874,7 +1874,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Host aktívásása sikeres!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "Hiba történt a POST kérelem elküldésében!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -1957,7 +1957,7 @@ msgid "Standby"
 msgstr "Alvó állapot"
 
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "Hiba történt, kérem értesítse a rendszergazdát!"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

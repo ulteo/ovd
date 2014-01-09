@@ -48,7 +48,7 @@ Description: SSL configuration error
 Template: ulteo-ovd-session-manager/download_error
 Type: error
 _Description: chroot tarball error
- An error occured while downloading the chroot tarball from this address: ${URL}.
+ An error occurred while downloading the chroot tarball from this address: ${URL}.
  .
  You need to download it manually as /var/cache/ulteo/sessionmanager/base.tar.gz
  or can reconfigure this package to get the subsystem tarball later.

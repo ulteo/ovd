@@ -41,7 +41,7 @@ msgstr "Applicatie '%APPLICATION%' is toegevoegd op server '%SERVER%'"
 
 #: ../../SessionManager/web/admin/actions.php:104
 msgid ""
-"An error occured while adding application '%APPLICATION%' to server '%SERVER"
+"An error occurred while adding application '%APPLICATION%' to server '%SERVER"
 "%'"
 msgstr ""
 "Er is een fout opgetreden tijdens het toevoegen van applicatie '%APPLICATION"
@@ -1810,7 +1810,7 @@ msgstr "Mislukt op"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:100
 #: ../../SessionManager/web/admin/ha/configuration.php:149
-msgid "An error occured while reading configuration file, no values found!"
+msgid "An error occurred while reading configuration file, no values found!"
 msgstr ""
 "Er is een fout opgetreden tijdens het lezen van het configuratie bestand, "
 "geen gegevens gevonden!"
@@ -1821,7 +1821,7 @@ msgstr "Kan geen gegevens lezen uit het configuratie bestand!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:135
 #: ../../SessionManager/web/admin/ha/configuration.php:139
-msgid "An error occured when updating the virtual IP!"
+msgid "An error occurred when updating the virtual IP!"
 msgstr "Fout opgetreden tijdens het wijzigen van het virtueel IP nummer!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:173
@@ -1854,7 +1854,7 @@ msgid "%s server(s) has been successfully removed!"
 msgstr "Server '%s' bijgewerkt"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:210
-msgid "An error occured, no unregistered server deleted!"
+msgid "An error occurred, no unregistered server deleted!"
 msgstr "Er is een fout opgetreden, geen ongeregistreerde server verwijderd!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:219
@@ -1871,7 +1871,7 @@ msgid "Host has been enabled!"
 msgstr "Host is uitgezet"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:244
-msgid "An error occured during activation, can not enable host!"
+msgid "An error occurred during activation, can not enable host!"
 msgstr ""
 "Er is een fout opgetreden tijdens het actieveren, kan host niet aanzetten!"
 
@@ -1880,7 +1880,7 @@ msgid "Host has been disabled!"
 msgstr "Host is uitgezet"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:262
-msgid "An error occured during disabling host, cannot disable host!"
+msgid "An error occurred during disabling host, cannot disable host!"
 msgstr ""
 "Er is een fout opgetreden tijdens het actieveren, kan host niet uitzetten!"
 
@@ -1966,7 +1966,7 @@ msgid "Host %s has been set in standby and master %s will restart Heartbeat!"
 msgstr "Host %s staat op standby en master %s zal Heartbeat opnieuw starten!"
 
 #: ../../SessionManager/web/admin/ha/configuration.php:432
-msgid "An error occured during disabling, can not disable host!"
+msgid "An error occurred during disabling, can not disable host!"
 msgstr ""
 "Er is een fout opgetreden tijdens het actieveren, kan host niet uitzetten!"
 
@@ -2031,7 +2031,7 @@ msgid "Host activation has been done successfully!"
 msgstr "Host is succesvol geactiveerd!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:88
-msgid "An error occured in POST request activation!"
+msgid "An error occurred in POST request activation!"
 msgstr "Er is een fout opgetreden tijdens het versturen van het activeren!"
 
 #: ../../SessionManager/web/admin/ha/registration.php:93
@@ -2118,7 +2118,7 @@ msgstr "Standby"
 # 98%
 # 100%
 #: ../../SessionManager/web/admin/ha/status.php:172
-msgid "An error has occured, please call your administrator!"
+msgid "An error has occurred, please call your administrator!"
 msgstr "Je hebt al een sessie, neem contact op met uw systeem beheerder"
 
 #: ../../SessionManager/web/admin/ha/status.php:176

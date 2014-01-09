@@ -295,7 +295,7 @@ Routine Description:
 		
 		if (!NT_SUCCESS(status) || status ==  STATUS_WAIT_0) {
 			DDbgPrint("  DokanTimeoutThread catched KillEvent\n");
-			// KillEvent or something error is occured
+			// KillEvent or something error has occurred
 			break;
 		}
 

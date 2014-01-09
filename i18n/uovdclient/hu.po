@@ -212,7 +212,7 @@ msgstr ""
 
 #: ../../client/web/web/translate.php:124
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
-msgid "An internal error occured, please contact your administrator"
+msgid "An internal error occurred, please contact your administrator"
 msgstr "Belső hiba, kérem forduljon a rendszergazdához"
 
 #: ../../client/web/web/translate.php:125
@@ -288,7 +288,7 @@ msgid "Do not close this Ulteo OVD window!"
 msgstr "Ne zárja be ezt az Ulteo OVD ablakot!"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occured, please contact your administrator"
+msgid "An error occurred, please contact your administrator"
 msgstr "Hiba történt, forduljon a rendszergazdához"
 
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
@@ -514,7 +514,7 @@ msgid "Text file (*.txt)"
 msgstr "Szöveges dokumentum (*.txt)"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occured. Please try again."
+msgid "An error occurred. Please try again."
 msgstr "Hiba lépett fel. Kérem próbálja újra."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
