@@ -14,7 +14,7 @@ uovd.provider.http.Direct.prototype.sessionStart_implementation = function(callb
 	var parameters = this.session_management.parameters;
 
   jQuery.ajax({
-		url: "/ovd/client/start.php",
+		url: "/ovd/client/start",
 		type: "POST",
 		dataType: "xml",
 		contentType: "text/xml",
@@ -30,7 +30,7 @@ uovd.provider.http.Direct.prototype.sessionStart_implementation = function(callb
 
 uovd.provider.http.Direct.prototype.sessionStatus_implementation = function(callback) {
   jQuery.ajax({
-		url: "/ovd/client/session_status.php",
+		url: "/ovd/client/session_status",
 		type: "GET",
 		dataType: "xml",
 		success: function(xml) {
@@ -46,7 +46,7 @@ uovd.provider.http.Direct.prototype.sessionEnd_implementation = function(callbac
 	var parameters = this.session_management.parameters;
 
   jQuery.ajax({
-		url: "/ovd/client/logout.php",
+		url: "/ovd/client/logout",
 		type: "POST",
 		dataType: "xml",
 		contentType: "text/xml",
@@ -64,7 +64,7 @@ uovd.provider.http.Direct.prototype.sessionSuspend_implementation = function(cal
 	var parameters = this.session_management.parameters;
 
   jQuery.ajax({
-		url: "/ovd/client/logout.php",
+		url: "/ovd/client/logout",
 		type: "POST",
 		dataType: "xml",
 		contentType: "text/xml",

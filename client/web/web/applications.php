@@ -34,7 +34,7 @@ else
 	$sm = $_SESSION['ovd-client']['sessionmanager'];
 
 $sm = $_SESSION['ovd-client']['sessionmanager'];
-$xml = $sm->query('applications.php?user='.$_REQUEST['user']);
+$xml = $sm->query('applications?user='.$_REQUEST['user']);
 if (! $xml) {
 	die($xml);
 }

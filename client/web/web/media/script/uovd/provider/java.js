@@ -145,7 +145,7 @@ uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/start.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/start";
 	var data = this.build_sessionStart(parameters, "txt");
 
 	var self = this; /* closure */
@@ -168,7 +168,7 @@ uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
 	var sessionmanager = this.session_management.parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/session_status.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/session_status";
 	var data = "";
 
 	var self = this; /* closure */
@@ -192,7 +192,7 @@ uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout";
 	var data = this.build_sessionEnd(parameters, "txt");
 
 	var self = this; /* closure */
@@ -216,7 +216,7 @@ uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) 
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout";
 	var data = this.build_sessionSuspend(parameters, "txt");
 
 	var self = this; /* closure */

@@ -23,7 +23,7 @@ require_once('config.inc.php');
 
 
 function getApplications($user) {
-	$socket = curl_init('https://'.ULTEO_OVD_SM_HOST.'/ovd/client/applications.php?user='.$user); /*?token=token');*/
+	$socket = curl_init('https://'.ULTEO_OVD_SM_HOST.'/ovd/client/applications?user='.$user); /*?token=token');*/
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 15);
@@ -75,7 +75,7 @@ function getApplications($user) {
 function getIcon($app_id) {
 	$ret = array();
 	
-	$socket = curl_init('https://'.ULTEO_OVD_SM_HOST.'/ovd/client/icon.php?id='.$app_id); /*?token=token');*/
+	$socket = curl_init('https://'.ULTEO_OVD_SM_HOST.'/ovd/client/icon?id='.$app_id); /*?token=token');*/
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 15);

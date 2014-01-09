@@ -88,7 +88,7 @@ function do_login($tr, $sessionmanager_url) {
 	$dom->appendChild($session_node);
 	
 	$cookies = array();
-	$xml = query_sm($sessionmanager_url.'/start.php', $dom->saveXML(), $cookies);
+	$xml = query_sm($sessionmanager_url.'/start', $dom->saveXML(), $cookies);
 	if (! $xml) {
 		error($tr['unable_to_reach_sm']);
 	}
@@ -196,7 +196,7 @@ function wait_ready($tr, $sessionmanager_url, $cookie) {
 	
 	while ($count-- > 0) {
 		$cookies = array('PHPSESSID' => $cookie);
-		$xml = query_sm($sessionmanager_url.'/session_status.php', "", $cookies);
+		$xml = query_sm($sessionmanager_url.'/session_status', "", $cookies);
 		if (! $xml) {
 			error($tr['unable_to_reach_sm']);
 		}
@@ -260,7 +260,7 @@ function perform_signoff($tr, $sessionmanager_url) {
 
 	$xml = $dom->saveXML();
 	$cookies = array('PHPSESSID'=>$_GET['cookie']);
-	$sm->query_sm($sessionmanager_url.'/logout.php', $xml, $cookies);
+	$sm->query_sm($sessionmanager_url.'/logout', $xml, $cookies);
 	
 	die();
 }

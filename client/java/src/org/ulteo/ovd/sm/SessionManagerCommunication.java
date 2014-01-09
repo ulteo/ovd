@@ -77,13 +77,13 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
-	private static final String WEBSERVICE_ICON = "icon.php";
-	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon.php";
-	private static final String WEBSERVICE_START_SESSION = "start.php";
-	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps.php";
-	private static final String WEBSERVICE_SESSION_STATUS = "session_status.php";
-	private static final String WEBSERVICE_NEWS = "news.php";
-	private static final String WEBSERVICE_LOGOUT = "logout.php";
+	private static final String WEBSERVICE_ICON = "icon";
+	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon";
+	private static final String WEBSERVICE_START_SESSION = "start";
+	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps";
+	private static final String WEBSERVICE_SESSION_STATUS = "session_status";
+	private static final String WEBSERVICE_NEWS = "news";
+	private static final String WEBSERVICE_LOGOUT = "logout";
 
 	public static final String FIELD_LOGIN = "login";
 	public static final String FIELD_PASSWORD = "password";

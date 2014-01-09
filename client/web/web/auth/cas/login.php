@@ -94,7 +94,7 @@ phpCAS::setFixedCallbackURL($CAS_callback_url); //HTTPS required, and Apache's C
 
 phpCAS::forceAuthentication();
 
-if (! phpCAS::serviceWeb($_SESSION['ovd-client']['sessionmanager_url'].'/start.php', $errno, $output)) {
+if (! phpCAS::serviceWeb($_SESSION['ovd-client']['sessionmanager_url'].'/start', $errno, $output)) {
 	$_SESSION['ovd-client']['from_SM_start_XML'] = 'ERROR';
 	finish();
 	die();

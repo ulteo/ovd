@@ -327,7 +327,7 @@ function get_users_list() {
 	global $sessionmanager_url;
 
 	$sm = new SessionManager($sessionmanager_url);
-	$ret = $sm->query('userlist.php');
+	$ret = $sm->query('userlist');
 
 	$dom = new DomDocument('1.0', 'utf-8');
 	$buf = @$dom->loadXML($ret);

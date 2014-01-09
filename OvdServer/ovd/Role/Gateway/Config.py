@@ -49,7 +49,7 @@ class Config:
 	root_redirection = None
 	http_keep_alive = True
 	disable_sslv2 = False
-	force_buffering = ["/ovd/client/start", "/ovd/client/start.php"]
+	force_buffering = ["/ovd/client/start"]
 
 	@classmethod
 	def init(cls, infos):

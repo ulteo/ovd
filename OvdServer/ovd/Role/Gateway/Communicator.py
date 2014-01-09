@@ -373,8 +373,8 @@ class HttpServerCommunicator(ServerCommunicator):
 				location = location.replace("http", "https", 1)
 				self.http.set_header("Location", location)
 		
-		# XML rewriting on start.php request
-		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start.php"):
+		# XML rewriting on start request
+		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start"):
 			body = self.http.get_body()
 			xml = self.rewrite_xml(body)
 			self.http.set_body(xml)
@@ -473,8 +473,8 @@ class HttpsServerCommunicator(SecureServerCommunicator):
 				location = location.replace("http", "https", 1)
 				self.http.set_header("Location", location)
 
-		# XML rewriting on start.php request
-		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start.php"):
+		# XML rewriting on start request
+		if (self.http_communicator is not None) and (self.http_communicator.path == "/ovd/client/start"):
 			body = self.http.get_body()
 			xml = self.rewrite_xml(body)
 			self.http.set_body(xml)

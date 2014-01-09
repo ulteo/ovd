@@ -302,8 +302,8 @@ class HttpMetaServerCommunicator(HttpMetaCommunicator):
                 location = location.replace("http", "https", 1)
                 self.http.set_header("Location", location)
         
-        # XML rewriting on start.php request
-        if self.communicator.http.path == "/ovd/client/start.php" and \
+        # XML rewriting on start request
+        if self.communicator.http.path == "/ovd/client/start" and \
            not self.communicator.http.xml_rewrited:
             is_zipped = (self.http.get_header('Content-Encoding') == 'gzip')
             if is_zipped:
