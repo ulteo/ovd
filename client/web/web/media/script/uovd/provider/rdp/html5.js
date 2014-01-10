@@ -103,9 +103,6 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 				if(connection.guac_display.mozRequestFullScreen)    { connection.guac_display.mozRequestFullScreen(); return ; }
 			};
 
-			/* Hide display */
-			jQuery(connection.guac_display).hide();
-
 			/* Notify main panel insertion */
 			self.session_management.fireEvent("ovd.rdpProvider.desktopPanel", self, {"type":"Fullscreen", "node":connection.guac_display});
 		},
