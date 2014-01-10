@@ -131,6 +131,7 @@ function language_is_supported($languages_list, $lang) {
 function detectBrowserLanguage($languages_list) {
 	$languages = array();
 	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$languagesQ = array();
 		$languageList = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 		$languageRanges = explode(',', trim($languageList));
 		foreach ($languageRanges as $languageRange) {
