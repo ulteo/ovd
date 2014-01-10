@@ -90,6 +90,10 @@
 	clear: left;
 }
 
+#appsContainer ul:last-child {
+    padding-top: 6px;
+}
+
 #appsContainer li {
 	margin: 0 0 2px 2px;
 	padding: 5px;
@@ -159,6 +163,7 @@
 	right: 0;
 	top: 90px;
 	width: 69%;
+	width: calc(70% - 5px);
 }
 
 #fileManagerContainer h2 {
