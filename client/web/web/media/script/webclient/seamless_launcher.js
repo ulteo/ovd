@@ -1,5 +1,6 @@
-SeamlessLauncher = function(session_management, node) {
+SeamlessLauncher = function(session_management, node, logo) {
 	this.node = jQuery(node);
+	this.logo = jQuery(logo);
 	this.session_management = session_management;
 	this.applications = {}; /* application id as index */
 	this.content = {}; /* application id as index */
@@ -7,6 +8,16 @@ SeamlessLauncher = function(session_management, node) {
 
 	/* Do NOT remove ovd.session.starting in destructor as it is used as a delayed initializer */
 	this.session_management.addCallback("ovd.session.starting", this.handler);
+}
+
+SeamlessLauncher.prototype.showLauncher = function() {
+	this.menuToggled = true;
+	this.node.parent().addClass("menuToggled");
+}
+
+SeamlessLauncher.prototype.hideLauncher = function() {
+	this.menuToggled = false;
+	this.node.parent().removeClass("menuToggled");
 }
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
@@ -18,6 +29,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.session.server.statusChanged",       this.handler);
 			this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
+			this.session_management.addCallback("ovd.rdpProvider.seamless.in.windowPropertyChanged", this.handler);
 			this.session_management.addCallback("ovd.session.destroying",                 this.handler);
 
 			var servers = session.servers;
@@ -63,6 +75,15 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			}
 
 			this.node.append(ul);
+			
+			this.logo.on("click.menuToggle", function() {
+				if (this.menuToggled) {
+					this.hideLauncher();
+				} else {
+					this.showLauncher();
+				}
+			}.bind(this));
+
 		}
 	}
 
@@ -84,6 +105,16 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				}
 				item["node"].click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
+			}
+		}
+	}
+	
+	if(type == "ovd.rdpProvider.seamless.in.windowPropertyChanged") {
+		if(params["property"] == "state") {
+			var state = params["value"];
+
+			if(state == "Normal" || state == "Maximized" || state == "Fullscreen") {
+				this.hideLauncher();
 			}
 		}
 	}
@@ -109,6 +140,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				node.html(next);
 				node.parent().addClass("launched");
 			}
+			this.hideLauncher();
 		}
 
 		if(to == uovd.APPLICATION_STOPPED) {
@@ -141,9 +173,12 @@ SeamlessLauncher.prototype.end = function() {
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);
 		this.session_management.removeCallback("ovd.applicationsProvider.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.seamless.in.windowPropertyChanged", this.handler);
 		this.session_management.removeCallback("ovd.session.destroying",                 this.handler);
 
 		this.applications = {};
 		this.content = {};
+		this.hideLauncher();
+		this.logo.off("click.menuToggle");
 	}
 }

@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2012-2013 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -492,7 +492,7 @@ function initialize_framework() {
 	/* handle menu insertion */
 	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* applications launcher */
-	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer");
+	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer", "#headerLogo");
 	/* applications taskbar */
 	framework.listeners.seamless_taskbar = new SeamlessTaskbar(framework.session_management, "#appsContainer");
 	/* news display */
