@@ -64,7 +64,8 @@ Ajaxplorer.prototype._show_ajaxplorer_ui = function() {
 
 Ajaxplorer.prototype.end = function() {
 	if(this.session_management.session.mode == uovd.SESSION_MODE_APPLICATIONS) {
-		this.node.remove(this.div);
+		this.div.remove();
+		this.node.hide();
 		this.appnode.removeClass("withFileManager")
 		/* Do NOT remove ovd.session.started as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.destroying", this.handler);
