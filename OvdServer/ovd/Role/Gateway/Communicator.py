@@ -208,6 +208,7 @@ class HttpClientCommunicator(SSLCommunicator):
 		self.ssl_ctx = ssl_ctx
 		self.http = HttpMessage(self)
 		self.http_history = []
+		self.last_service = None
 		SSLCommunicator.__init__(self, sock)
 
 
@@ -277,6 +278,13 @@ class HttpClientCommunicator(SSLCommunicator):
 					self.http.path = path
 					self.http.headers = headers
 
+		# Check last service. If different, a new serverCommunicator must be created
+		reconnect = False
+		if self.last_service is not None and self.last_service != self.http.service :
+			names = ['SESSION_MANAGER', 'ADMINISTRATION', 'WEB_CLIENT', 'ROOT']
+			Logger.debug("Gateway:: Client service type switched from "+names[self.last_service]+" to "+names[self.http.service])
+			reconnect = True
+
 		# test path permission
 		http_code = self.http.auth()
 		if http_code is not httplib.OK:
@@ -290,15 +298,22 @@ class HttpClientCommunicator(SSLCommunicator):
 			return ''
 
 		# path redirection
-		if self.communicator is None:
+		if self.communicator is None or reconnect is True :
 			addr = None
 		else:
 			addr = self.communicator.getpeername()[0]
+
 		redirection = self.http.redirect(addr)
+
 		if redirection is not None:
 			(protocol, addr) = redirection
+
+			# Update service
+			self.last_service = self.http.service
+
 			if self.communicator is not None:
 				self.communicator.close()
+
 			if protocol is Protocol.HTTP:
 				self.communicator = HttpServerCommunicator(
 					addr, self.f_ctrl, communicator=self)
