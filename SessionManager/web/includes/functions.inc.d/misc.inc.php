@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
  * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -101,7 +101,8 @@ function locale2unix($locale_) {
 		'de'	=>	'de_DE',
 		'es'	=>	'es_ES',
 		'pt'	=>	'pt_PT',
-		'it'	=>	'it_IT'
+		'it'	=>	'it_IT',
+		'ja'	=>	'ja_JP'
 	);
 
 	if (preg_match('/([a-z]+_[A-Z]+)\.[a-zA-Z-0-9]+/', $locale_, $matches))
