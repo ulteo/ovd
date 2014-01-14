@@ -500,7 +500,7 @@ Guacamole.Keyboard = function(element) {
         }
 
         // Release super if implicitly released
-        if (guac_keyboard.modifiers.super && state.super === false) {
+        if (guac_keyboard.modifiers.super_ && state.super_ === false) {
             release_key(0xFFEB); // Left super
             release_key(0xFFEC); // Right super
         }
@@ -546,7 +546,7 @@ Guacamole.Keyboard = function(element) {
             var keypress_unlikely =  guac_keyboard.modifiers.ctrl
                                   || guac_keyboard.modifiers.alt
                                   || guac_keyboard.modifiers.meta
-                                  || guac_keyboard.modifiers.super;
+                                  || guac_keyboard.modifiers.super_;
 
             if (keypress_unlikely && e.keyIdentifier)
                 keysym = keysym || keysym_from_key_identifier(
@@ -675,7 +675,7 @@ Guacamole.Keyboard.ModifierState = function() {
      * Whether super (windows key) is currently pressed.
      * @type Boolean
      */
-    this.super = false;
+    this.super_ = false;
     
 };
 
@@ -698,7 +698,7 @@ Guacamole.Keyboard.ModifierState.fromKeyboardEvent = function(e) {
 
     // Use DOM3 getModifierState() for others
     if (e.getModifierState) {
-        state.super = e.getModifierState("OS")
+        state.super_ = e.getModifierState("OS")
                    || e.getModifierState("Super")
                    || e.getModifierState("Hyper")
                    || e.getModifierState("Win");
