@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -46,8 +47,10 @@ import org.ulteo.ovd.integrated.shorcut.LinuxShortcut;
 import org.ulteo.utils.FilesOp;
 
 public class SystemLinux extends SystemAbstract {
+	private final String wm_detect_command = "xprop -root";
 	private final String ulteo_graphic_refresh_application = "xfdesktop --reload";
 	private final String desktop_refresh_application = "update-desktop-database";
+	private static enum windows_manager {xfce, gnome, kde, unknow};
 
 	private static String HOME_PATH;
 	static {
@@ -408,35 +411,66 @@ public class SystemLinux extends SystemAbstract {
 		return null;
 	}
 
-	public void refresh() {
-		XDGMime.updateDatabase();
-
-		File issueFile = new File("/etc/issue");
-		String issue = "";
-		boolean ulteoSystem = false;
-		String xdg_dir = Constants.PATH_XDG_APPLICATIONS;
+	private windows_manager getWM() {
+		String line = null;
+		Runtime runtime = Runtime.getRuntime();
+		Process process = null;
 		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(issueFile));
-			issue = br.readLine();
-			issue = issue.toLowerCase();
-			if (issue.startsWith(Constants.OVD_ISSUE.toLowerCase())) {
-				xdg_dir = Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS;
-				ulteoSystem = true;
+			process = runtime.exec(this.wm_detect_command);
+			if (process == null) {
+				Logger.warn("Unable to detect windows manager. Internal error");
+				return windows_manager.unknow;
+			}
+			
+			process.waitFor();
+			if (process.exitValue() != 0) {
+				Logger.warn("Unable to detect windows manager, processus return error");
+				return windows_manager.unknow;
+			}
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ( (line = input.readLine()) != null) {
+				line = line.toLowerCase();
+				if (line.contains("xfce")) {
+					return windows_manager.xfce;
+				}
+				
+				if (line.contains("kde")) {
+					return windows_manager.kde;
+				}
+				
+				if (line.contains("gnome")) {
+					return windows_manager.gnome;
+				}
 			}
 		}
-		catch (FileNotFoundException e) {
-			Logger.debug("Unable to find the issue file at "+issueFile);
-		} catch (IOException e) {
-			Logger.warn("Failed to read the issue file: "+issueFile);
+		catch (SecurityException e) {
+			Logger.error("Unable to detect windows manager. This process is not allowed to start a process ["+e.getMessage()+"]");
 		}
+		catch (InterruptedException e) {
+			Logger.warn("Unable to detect windows manager. Operation stopped: "+e.getMessage());
+		}
+		catch (IOException e) {
+			Logger.error("Unable to detect windows manager. " +e.getMessage());
+		}
+		
+		return windows_manager.unknow;
+	}
+	
+	
+	public void refresh() {
+		XDGMime.updateDatabase();
+		String xdg_dir = Constants.PATH_XDG_APPLICATIONS;
 		
 		try {
 			Runtime runtime = Runtime.getRuntime();
 			
 			runtime.exec(this.desktop_refresh_application+" "+xdg_dir);
-			if (ulteoSystem)
+			windows_manager wm = this.getWM();
+			if (wm == windows_manager.xfce) {
 				runtime.exec(this.ulteo_graphic_refresh_application	);
+			}
 		}
 		catch (SecurityException e) {
 			Logger.error("Unable to refresh desktop, this process is not allowed to start a process ["+e.getMessage()+"]");
