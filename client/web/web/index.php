@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -357,7 +357,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 				<div id="headerLogo">
 					<div class="image_ulteo-small_png"></div>
 				</div>
-				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 				<div id="newsList"></div>
 				<a id="logout_link" href="javascript:;">
 					<div class="image_logout_png" style="display:inline-block"></div>
@@ -367,6 +366,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 					<div class="image_suspend_png" style="display:inline-block"></div>
 					<br /><span id="suspend_gettext">&nbsp;</span>
 				</a>
+				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
 				<div class="collapse"></div>
 			</div>
 

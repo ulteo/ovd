@@ -102,6 +102,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 					var appId = jQuery(this).prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
 					self.session_management.fireEvent("ovd.applicationsProvider.applicationStart", self, {"id":appId});
+					self.content[appId]["node"].addClass("launching");
 				}
 				item["node"].click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
@@ -139,6 +140,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			} else {
 				node.html(next);
 				node.parent().addClass("launched");
+				node.parent().removeClass("launching");
 			}
 			this.hideLauncher();
 		}

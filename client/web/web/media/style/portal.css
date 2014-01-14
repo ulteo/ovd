@@ -14,9 +14,9 @@
 }
 
 #applicationsHeader h1 {
-	float: left;
+	float: right;
 	margin: 20px;
-	color: #999999;
+	color: #808080;
 	font-size: 2em;
 }
 
@@ -107,11 +107,27 @@
 }
 
 #appsContainer li.applicationLauncherEnabled:hover {
-	background-color: #bdf;
+	background-color: #95BBFF;
+}
+
+#appsContainer li.launching, 
+#appsContainer li.applicationLauncherEnabled.launched:hover, 
+#appsContainer li.applicationLauncherEnabled.launching:hover {
+	background-color: #6EBB1B;
 }
 
 #appsContainer li.launched {
-	background-color: #C8AAEC;
+	background-color: #147400;
+	color: #FFF;
+}
+
+#appsContainer li.launching {
+	background-color: #6EBB1B;
+	color: #FFF;
+}
+
+#appsContainer li.launched {
+	background-color: #147400;
 }
 
 #appsContainer li.applicationLauncherDisabled {
