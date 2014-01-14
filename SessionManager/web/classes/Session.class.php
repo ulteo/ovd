@@ -213,10 +213,10 @@ class Session {
 				$all_ready = true;
 				$all_servers = array();
 				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
-					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
 				
 				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
-					 array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+					 $all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
 				
 				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
@@ -254,10 +254,10 @@ class Session {
 				$all_destroyed = true;
 				$all_servers = array();
 				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
-					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
 				
 				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
-					array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
 				
 				foreach ($all_servers as $server_id => $data) {
 					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
