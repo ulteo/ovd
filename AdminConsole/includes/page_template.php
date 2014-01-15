@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (C) 2009-2013 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012, 2013
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013-2014
  * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -81,12 +81,6 @@ if (isAuthorized('viewServers')) {
 		array('id' => 'servers_unregistered',
 			  'name' => _('Unregistered servers'),
 			  'page' => 'servers.php?view=unregistered',
-			  'parent' => array('servers'));
-
-	$menu['tasks'] = 
-		array('id' => 'tasks',
-			  'name' => _('Tasks'),
-			  'page' => 'tasks.php',
 			  'parent' => array('servers'));
 }
 
@@ -326,6 +320,12 @@ if (defined('EXPERT_MODE') && EXPERT_MODE === true && ! isset($_SESSION['admin_o
 		array('id' => 'checkup',
 			  'name' => _('Checkup'),
 			  'page' => 'checkup.php',
+			  'parent' => array('debug'));
+	
+	$menu['tasks'] = 
+		array('id' => 'tasks',
+			  'name' => _('Tasks'),
+			  'page' => 'tasks.php',
 			  'parent' => array('debug'));
 }
 

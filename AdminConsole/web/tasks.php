@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -209,6 +210,8 @@ function show_default() {
     echo '</table>';
     echo '</div>';
   }
+  
+  $can_do_action = False;
   
     if (count($servers)>0 && $can_do_action) {
     	echo '<h2>'._('Install an application from a package name').'</h2>';

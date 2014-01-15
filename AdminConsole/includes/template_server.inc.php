@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -189,7 +189,7 @@ function server_display_role_preparation_aps($server) {
 
 function server_display_role_aps($server, $var) {
 	$can_do_action = $var['can_do_action'];
-	$can_use_apt = $var['can_use_apt'];
+	$can_use_apt = false;
 	$server_online = $var['server_online'];
 	$applications = $var['applications'];
 	$applications_available = $var['applications_available'];

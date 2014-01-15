@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -46,13 +47,8 @@ class SlaveServer:
 		self.time_last_send_monitoring = 0
 		
 		self.ulteo_system = False
-		if os.path.exists("/etc/debian_chroot"):
-			f = file("/etc/debian_chroot", 'r')
-			buf = f.read()
-			f.close()
-			
-			if "OVD" in buf:
-				self.ulteo_system = True
+		if os.path.isfile("/usr/bin/apt-get"):
+			self.ulteo_system = True
 		
 		
 		self.dialog = Dialog(self)
