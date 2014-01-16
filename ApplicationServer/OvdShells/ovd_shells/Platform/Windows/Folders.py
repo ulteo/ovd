@@ -36,6 +36,8 @@ class Folders(AbstractFolders):
 	
 	
 	def registerShares(self):
+		alreadyAuthenticatedCIFSShares = {}
+		
 		for (name, share) in self.parseRegistry().items():
 			if not self.isShareValid(share):
 				print >>sys.stderr, "Unable to add share: %s (missing items)"%(str(share))
@@ -48,6 +50,10 @@ class Folders(AbstractFolders):
 			mount_uri = self.getMountURI(profile["uri"])
 			
 			if mount_uri is not None:
+				server = None
+				if mount_uri.startswith(r"\\"):
+					server = mount_uri.split('\\')[2]
+					
 				if profile.has_key("login"):
 					login = profile["login"]
 				else:
@@ -58,9 +64,15 @@ class Folders(AbstractFolders):
 				else:
 					password = None
 				
+				if alreadyAuthenticatedCIFSShares.has_key(server):
+					login = None
+					password = None
+				
 				try:
 					win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", mount_uri, None, login, password)
 					profile["local_path"] = "U:\\"
+					if login is not None:
+						alreadyAuthenticatedCIFSShares[server] = (login, password)
 				  
 				except Exception, err:
 					cmd = "net use U: %s"%(mount_uri)
@@ -89,6 +101,10 @@ class Folders(AbstractFolders):
 			if mount_uri is None:
 				continue
 			
+			server = None
+			if mount_uri.startswith(r"\\"):
+				server = mount_uri.split('\\')[2]
+			
 			if share.has_key("login"):
 				login = share["login"]
 			else:
@@ -99,9 +115,15 @@ class Folders(AbstractFolders):
 			else:
 				password = None
 			
+			if alreadyAuthenticatedCIFSShares.has_key(server):
+				login = None
+				password = None
+			
 			try:
 				win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, letter, mount_uri, None, login, password)
 				share["local_path"] = letter+"\\"
+				if login is not None:
+					alreadyAuthenticatedCIFSShares[server] = (login, password)
 			
 			except Exception, err:
 				cmd = "net use %s %s"%(letter, mount_uri)
