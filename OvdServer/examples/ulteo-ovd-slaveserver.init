@@ -122,6 +122,13 @@ do_force_stop () {
 	log_end_msg 0
 }
 
+
+if [ -r /etc/default/locale ]; then
+	. /etc/default/locale
+	export LANG=$LANG
+	export LC_ALL=$LANG
+fi
+
 case $1 in
 	start)
 		do_start;;

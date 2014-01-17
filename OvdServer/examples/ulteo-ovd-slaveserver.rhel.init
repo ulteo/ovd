@@ -68,6 +68,13 @@ do_force_stop() {
 	echo
 }
 
+
+if [ -r /etc/profile.d/lang.sh ]; then
+	. /etc/profile.d/lang.sh
+	export LANG=$LANG
+	export LC_ALL=$LANG
+fi
+
 case $1 in
 	start)
 		do_start
