@@ -60,6 +60,15 @@
 
 #define APP_NAME "SeamlessRDP Shell"
 
+/* Default values */
+#ifndef DEFAULT_MOVE_OFFSCREEN_FORBIDDEN
+	#define DEFAULT_MOVE_OFFSCREEN_FORBIDDEN FALSE
+#endif
+
+#ifndef DEFAULT_USE_ACTIVE_MONITORING
+	#define DEFAULT_USE_ACTIVE_MONITORING TRUE
+#endif
+
 /* Global data */
 static HINSTANCE g_instance;
 
@@ -70,7 +79,7 @@ static int g_startup_num_procs;
 static BOOL g_connected;
 static BOOL g_desktop_hidden;
 
-BOOL g_is_move_offscreen_forbidden = FALSE;
+BOOL g_is_move_offscreen_forbidden = DEFAULT_MOVE_OFFSCREEN_FORBIDDEN;
 
 typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
@@ -396,7 +405,7 @@ BOOL IsWow64() {
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 {
-	BOOL use_active_monitoring = TRUE;
+	BOOL use_active_monitoring = DEFAULT_USE_ACTIVE_MONITORING;
 	HMODULE hookdll;
 	MSG msg;
 	int check_counter;
