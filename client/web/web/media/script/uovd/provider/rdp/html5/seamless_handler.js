@@ -244,12 +244,12 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				break
 
 			case "state" :
-				var state = 0;
-				if(value == "Notmapped")  state = -1;
-				if(value == "Normal")     state =  0;
-				if(value == "Iconify")    state =  1;
-				if(value == "Maximized")  state =  2;
-				if(value == "Fullscreen") state =  3;
+				var state = "0x0";
+				if(value == "Notmapped")  state = "-1";
+				if(value == "Normal")     state = "0x0";
+				if(value == "Iconify")    state = "0x1";
+				if(value == "Maximized")  state = "0x2";
+				if(value == "Fullscreen") state = "0x3";
 				var seamless_message = "STATE,"+(this.message_id++)+","+id+","+state+",0x0\n";
 				guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 				break
