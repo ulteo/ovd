@@ -51,6 +51,8 @@ uovd.provider.rdp.html5.Mouse = function(rdp_provider, connection) {
 	/* Mouse motion and clicks */
 	this.guac_mouse.onmousedown = this.guac_mouse.onmouseup = this.guac_mouse.onmousemove = function(mouseState) {
 		var offset = jQuery(canvas).offset();
+		offset.top = offset.top - jQuery(document).scrollTop();
+		offset.left = offset.left - jQuery(document).scrollLeft();
 		var newState = new Guacamole.TabletMouse.State();
 		newState.x = parseInt(mouseState.x/self.zoom)+(-1*parseInt(offset.left));
 		newState.y = parseInt(mouseState.y/self.zoom)+(-1*parseInt(offset.top));

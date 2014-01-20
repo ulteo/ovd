@@ -79,7 +79,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null)[0];
 			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
 			/* Initialize inputs */
@@ -163,7 +163,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null)[0];
 			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
 			/* Initialize inputs */
@@ -287,7 +287,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 				connection.guac_display = display;
 
 				/* Canvas */
-				connection.guac_canvas = jQuery(connection.guac_client.getDisplay()).find("canvas")[0];
+				connection.guac_canvas = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null)[0];
 
 				/* Hide main canvas */
 				jQuery(connection.guac_canvas).hide();
