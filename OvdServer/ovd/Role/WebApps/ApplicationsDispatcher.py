@@ -32,7 +32,10 @@ from Utils import HTTP_200_status_header, HTTP_200_status_content
 
 
 class ApplicationsDispatcher(object):
-
+	CONNECT = '/webapps/connect?'
+	DISCONNECT = '/webapps/disconnect?'
+	OPEN = '/webapps/open?'
+	
 	class EDispatchError(Exception):
 		pass
 	
@@ -76,8 +79,8 @@ class ApplicationsDispatcher(object):
 					return
 		
 		
-		if path.startswith('/disconnect?'):
-			qs = urlparse.parse_qs(path[12:])
+		if path.startswith(ApplicationsDispatcher.DISCONNECT):
+			qs = urlparse.parse_qs(path[len(ApplicationsDispatcher.DISCONNECT):])
 			Logger.debug("DEBUG: {0}".format(qs))
 			if qs.get('user') and qs.get('pass') and qs.get('id'):
 				user = qs['user'][0]
@@ -95,8 +98,8 @@ class ApplicationsDispatcher(object):
 				else:
 					Logger.warn("[WebApps] no session for user {0}".format(user))
 		
-		if path.startswith('/connect?'):
-			qs = urlparse.parse_qs(path[9:])
+		if path.startswith(ApplicationsDispatcher.CONNECT):
+			qs = urlparse.parse_qs(path[len(ApplicationsDispatcher.CONNECT):])
 			if qs.get('user') and qs.get('pass') and qs.get('id'):
 				user = qs['user'][0]
 				session = SessionsRepository.find(user, qs['pass'][0])
@@ -116,8 +119,8 @@ class ApplicationsDispatcher(object):
 		
 		## if user is redirected from ovd client let check his credentials
 		## and redirect to domain when app works
-		if path.startswith('/open?'):
-			qs = urlparse.parse_qs(path[6:])
+		if path.startswith(ApplicationsDispatcher.OPEN):
+			qs = urlparse.parse_qs(path[len(ApplicationsDispatcher.OPEN):])
 			if qs.get('user') and qs.get('pass') and qs.get('id'):
 				app_id = qs['id'][0]
 				user = qs['user'][0]

@@ -143,8 +143,14 @@ function validate_settings() {
 
 	/* Update HTTP providers */
 	if(defaults.gateway) {
-		if(defaults.use_proxy) { settings.http_provider = "proxy"; }
-		else { settings.http_provider = "direct"; }
+		if(defaults.use_proxy) {
+			settings.http_provider = "proxy";
+			settings.webapps_provider = "proxy";
+		}
+		else {
+			settings.http_provider = "direct";
+			settings.webapps_provider = "direct";
+		}
 	}
 
 	if(defaults.force_use_local_credentials || settings.use_local_credentials) {
@@ -389,7 +395,8 @@ function initialize_framework() {
 
 	framework.webapps_providers = {
 		jsonp: new uovd.provider.webapps.Jsonp(),
-		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php")
+		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php"),
+		direct: new uovd.provider.webapps.Direct()
 	};
 
 	/* Setup Handlers */

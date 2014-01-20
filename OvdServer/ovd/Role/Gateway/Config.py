@@ -47,6 +47,7 @@ class Config:
 	http_max_header_size = 2048
 	web_client = None
 	admin_redirection = False
+	webapps_redirection = True
 	root_redirection = None
 	http_keep_alive = True
 	disable_sslv2 = False
@@ -123,6 +124,14 @@ class Config:
 				cls.admin_redirection = False
 			else:
 				Logger.error("Invalid value for 'admin_redirection' option")
+		
+		if infos.has_key("webapps_redirection"):
+			if infos["webapps_redirection"].lower() == "true":
+				cls.webapps_redirection = True
+			elif infos["webapps_redirection"].lower() == "false":
+				cls.webapps_redirection = False
+			else:
+				Logger.error("Invalid value for 'webapps_redirection' option")
 		
 		if infos.has_key("root_redirection") and infos["root_redirection"]:
 			cls.root_redirection = infos["root_redirection"].lstrip('/')
