@@ -1,0 +1,218 @@
+<html>
+	<head>
+		<title>Test</title>
+		<script type="text/javascript" src="jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="uovd.js" charset="utf-8"></script>
+		<style type="text/css">
+			.uovd_seamless_overlay_window {
+				z-index: 200;
+				position: fixed;
+				border: 1px solid rgba(0,100,250,0.1);
+				background: rgba(0,50,150,0.2);
+			}
+
+			.uovd_cursor_move               { cursor:move; }
+			.uovd_cursor_resize_top         { cursor:n-resize; }
+			.uovd_cursor_resize_bottom      { cursor:s-resize; }
+			.uovd_cursor_resize_left        { cursor:w-resize; }
+			.uovd_cursor_resize_right       { cursor:e-resize; }
+			.uovd_cursor_resize_topleft     { cursor:nw-resize; }
+			.uovd_cursor_resize_topright    { cursor:ne-resize; }
+			.uovd_cursor_resize_bottomleft  { cursor:sw-resize; }
+			.uovd_cursor_resize_bottomright { cursor:se-resize; }
+		</style>
+	</head>
+	<body>
+		<h1>Test OVD JS framework</h1>
+		
+		<form id="form">
+			Login: <input id="login" value="dpaul">
+			Password: <input id="password" type="password" value="dpaul">
+			Session Manager: <input id="sm" value="sm.ulteo.demo" />
+			<input type="submit" value="Start!">
+		</form>
+		<textarea id="log" rows="10" cols="98">== Logs ==
+		</textarea>
+		<div id="ovd_container" style="position: fixed; top:0; left:0; width:1px; height:1px; z-index: -1;"></div>
+		<div id="ovd_windows" style="position: fixed; top:0; left:0; width:1px; height:1px;"></div>
+		<div id="ovd_taskbar" style="margin: 5px; padding:5px;"></div>
+		<div id="ovd_launcher"></div>
+	
+
+	<script type="text/javascript">
+		/* Globals */
+		var session_management = new uovd.SessionManagement();
+		var ajax_provider = new uovd.provider.http.Proxy("proxy.php");
+		var rdp_provider = new uovd.provider.rdp.Html5();
+
+		/* Window manager (for html5 seamless windows) */
+		var wm = new uovd.provider.rdp.html5.SeamlessWindowManager(session_management, "#ovd_windows", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+
+		/* Framework events callbacks */
+
+		/* Logs */
+		session_management.addCallback("ovd.*", function(type, source, params) {
+			var message = "Event : "+type + "\n";
+			for(k in params) {
+				message = message + "\t" + k + " = " + params[k] + "\n";
+			}
+			jQuery("#log").val(jQuery("#log").val()+"\n"+message);
+			console.log(message);
+		});
+
+		/* Hidden session screen */
+		session_management.addCallback("ovd.rdpProvider.desktopPanel", function(type, source, params) {
+			jQuery('#ovd_container').append(params.node);
+		});
+
+		/* App launcher */
+		session_management.addCallback("ovd.session.started", function() {
+			var session = session_management.session;
+			var servers = session.servers;
+			var applications = {}; /* application id as index */
+
+			/* Get application list */
+			for(var i=0 ; i<servers.length ; ++i) {
+				var server = servers[i];
+				for(var j=0 ; j<server.applications.length ; ++j) {
+					applications[server.applications[j].id] = server.applications[j];
+				}
+			}
+
+			for(var id in applications) {
+				console.log("App ("+id+") : "+applications[id].name);
+				var node = jQuery("<a>");
+				node.prop("id", "application_"+id);
+				node.prop("href", "javascript:;");
+				node.html(applications[id].name);
+				node.click(function () {
+					var appId = jQuery(this).prop("id").split("_")[1];;
+					console.log("Start App "+appId);
+					session_management.fireEvent("ovd.applicationsProvider.applicationStart", document, {"id":appId});
+				});
+
+				jQuery("#ovd_launcher").append(node).append(jQuery("<br>"));
+			}
+		});
+
+		/* Taskbar */
+		session_management.addCallback("ovd.rdpProvider.seamless.in.windowCreate", function(type, source, params) {
+			var id = params["id"];
+			var attributes = params["attributes"];
+
+			/* Only create a taskbar entry for "real" windows (not popup or tooltips) */
+			if(attributes.indexOf("Popup") != -1 || attributes.indexOf("Tooltip") != -1) {
+				return;
+			}
+
+			/* We have a "real" window */
+			console.log("New window : "+id);
+			var node = jQuery("<a>");
+			node.prop("id", "window_"+id);
+			node.prop("href", "javascript:;");
+			node.css({ "padding":"2px", "border-width":"3px", "background":"#DDD" });
+			jQuery("#ovd_taskbar").append(node);
+
+			var setState = function(id, state) {
+				var params = {};
+				params["id"] = id;
+				params["server_id"] = window.wm.windows[id].getServerId();
+				params["property"] = "state";
+				params["value"] = state;
+				window.session_management.fireEvent("ovd.rdpProvider.seamless.out.windowPropertyChanged", document, params);
+	
+				/* !!! Hack to simulate an ack from seamless channel */
+				window.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", document, params);
+			};
+
+			var setFocus = function(id) {
+				var params = {};
+				params["id"] = id;
+				params["server_id"] = window.wm.windows[id].getServerId();
+				params["property"] = "focus";
+				params["value"] = true;
+				window.session_management.fireEvent("ovd.rdpProvider.seamless.out.windowPropertyChanged", document, params);
+
+				/* !!! Hack to simulate an ack from seamless channel */
+				window.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", document, params);
+			};
+
+			/* Handle clicks */
+			node.on("click.taskbar", function() {
+				var node = jQuery(this);
+				var id = node.prop("id").split("_")[1];
+
+				if(window.wm.windows[id].taskbar_state == "Iconify") {
+					setState(id, "Normal"); setFocus(id); return;
+				}
+
+				if(window.wm.windows[id].taskbar_focus) {
+					setState(id, "Iconify"); return;
+				} else {
+					setFocus(id); return;
+				}
+			});
+		});
+
+		session_management.addCallback("ovd.rdpProvider.seamless.in.windowDestroy", function(type, source, params) {
+			var id = params["id"];
+			console.log("Closing window : "+id);
+			jQuery("#window_"+id).remove();
+		});
+
+		session_management.addCallback("ovd.rdpProvider.seamless.in.windowPropertyChanged", function(type, source, params) {
+			var id = params["id"];
+			var property = params["property"];
+			var value = params["value"];
+
+			switch(property) {
+				case "title":
+					jQuery("#window_"+id).html(value);
+					break;
+				case "state":
+					/* Keep track of the window state */
+					window.wm.windows[id].taskbar_state = value;
+					break;
+				case "focus":
+					/* Keep track of the window state */
+					for(var i in window.wm.windows) {
+						if(i == id) { window.wm.windows[i].taskbar_focus = true; }
+						else        { window.wm.windows[i].taskbar_focus = false;}
+					}
+
+					jQuery("#ovd_taskbar > a").css("border-style", "outset");
+					jQuery("#window_"+id).css("border-style", "inset");
+					break;
+			}
+		});
+
+		/* Cleaning */
+		session_management.addCallback("ovd.session.destroyed", function() {
+			jQuery('#ovd_container').empty();
+			jQuery('#ovd_launcher').empty();
+			jQuery('#ovd_windows').empty();
+			jQuery('#ovd_taskbar').empty();
+		});
+
+		/* Submit form */
+		jQuery("#form").submit(function(e) {
+			e.preventDefault();
+
+			var options = {
+				login: jQuery("#login").val(),
+				password: jQuery("#password").val(),
+				mode: uovd.SESSION_MODE_APPLICATIONS,
+				sessionmanager: jQuery("#sm").val(),
+				width: jQuery(window).innerWidth(),
+				height: jQuery(window).innerHeight(),
+			};
+
+			session_management.setParameters(options);
+			session_management.setAjaxProvider(ajax_provider);
+			session_management.setRdpProvider(rdp_provider);
+			session_management.start();
+        return false; 
+		});
+	</script>
+
+</body></html>
