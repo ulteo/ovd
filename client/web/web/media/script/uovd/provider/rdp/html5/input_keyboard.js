@@ -59,6 +59,37 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	this.focus =  function() { if(!self.guac_keyboard.active()) self.guac_keyboard.enable(); };
 	this.blur =   function() { if(self.guac_keyboard.active())  self.guac_keyboard.disable(); };
 	this.toggle = function() { if(self.guac_keyboard.active()) { self.blur(); } else { self.focus(); } };
+	this.lastmode = null;
+
+	/* Focus mode */
+	var update_mode = function(type, source, params) {
+		var mode = params["mode"];
+
+		if(self.lastmode == mode) {
+			return;
+		}
+
+		switch(mode) {
+			case "click":
+				self.lastmode = "click";
+				self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
+				jQuery(self.connection.guac_display).on("click.keyboard_autostart", self.focus);
+				break;
+
+			case "gesture":
+				self.lastmode = "gesture";
+				jQuery(self.connection.guac_display).off("click.keyboard_autostart");
+				self.rdp_provider.session_management.addCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
+				break;
+
+			default:
+				self.lastmode = null;
+				self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
+				jQuery(self.connection.guac_display).off("click.keyboard_autostart");
+		}
+	};
+
+	this.rdp_provider.session_management.addCallback("ovd.wm.keyboard.focusMode", update_mode);
 
 	/* UI element */
 	this.ui = jQuery(document.createElement("div"));
@@ -70,49 +101,45 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 		"overflow": "auto"
 	});
 
-	var input0 = jQuery(document.createElement("input"));
-	input0.attr("type", "radio");
-	input0.attr("value", "0");
-	input0.attr("name", "keyboard_focus_mode");
-	input0.attr("id", "keyboard_focus_mode_0");
-	input0.prop("checked", "checked"); /* Default */
-	var label0 = jQuery(document.createElement("label"));
-	label0.attr("for", "keyboard_focus_mode_0");
-	label0.html("Mouse click");
-	this.ui.append(input0, label0, jQuery(document.createElement("br")));
+	var modes = [ {"name":"Mouse click", "id":"click"}, {"name":"Two fingers gesture", "id":"gesture"} ];
+	for(var i=0 ; i<modes.length ; ++i) {
+		var id = modes[i]["id"];
+		var name = modes[i]["name"];
 
-	var input1 = jQuery(document.createElement("input"));
-	input1.attr("type", "radio");
-	input1.attr("value", "1");
-	input1.attr("name", "keyboard_focus_mode");
-	input1.attr("id", "keyboard_focus_mode_1");
-	var label1 = jQuery(document.createElement("label"));
-	label1.attr("for", "keyboard_focus_mode_1");
-	label1.html("Two fingers gesture");
-	this.ui.append(input1, label1, jQuery(document.createElement("br")));
+		var input = jQuery(document.createElement("input"));
+		input.attr("type", "radio");
+		input.attr("value", id);
+		input.attr("name", "keyboard_focus_mode");
+		input.attr("id", "keyboard_focus_mode_"+id);
+		var label = jQuery(document.createElement("label"));
+		label.attr("for", "keyboard_focus_mode_"+id);
+		label.html(name);
+		this.ui.append(input, label, jQuery(document.createElement("br")));
+	}
 
-	/* Change event */
 	this.ui.find('input[type=radio][name=keyboard_focus_mode]').change(function() {
-		if(this.value == '0') {
-			/* Disable gesture mode */
-			self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
-			/* Enable click mode */
-			jQuery(self.connection.guac_display).on("click.keyboard_autostart", self.focus);
-		} else {
-			/* Disable click mode */
-			jQuery(self.connection.guac_display).off("click.keyboard_autostart");
-			/* Enable gesture mode */
-			self.rdp_provider.session_management.addCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
-		}
+		self.rdp_provider.session_management.fireEvent("ovd.wm.keyboard.focusMode", self, {"mode":this.value});
 	});
 
 	this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.menu", this, {"node":this.ui, "type":"Keyboard"});
 
+	var update_ui = function(type, source, params) {
+		self.ui.find("#keyboard_focus_mode_"+params["mode"]).attr("checked", "checked");
+	};
+
+	this.rdp_provider.session_management.addCallback("ovd.wm.keyboard.focusMode", update_ui);
+
 	/* Activation of default mode */
-	jQuery(self.connection.guac_display).on("click.keyboard_autostart", self.focus);
+	if("ontouchstart" in window) {
+		this.rdp_provider.session_management.fireEvent("ovd.wm.keyboard.focusMode", this, {"mode":"gesture"});
+	} else {
+		this.rdp_provider.session_management.fireEvent("ovd.wm.keyboard.focusMode", this, {"mode":"click"});
+	}
 
 	/* Set destructor */
 	this.end = function() {
+		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_mode);
+		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_ui);
 		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
 		jQuery(self.connection.guac_display).off("click.keyboard_autostart");
 		jQuery(self.guac_keyboard.getNode()).remove();
@@ -140,6 +167,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 
 	this.focus = function() { if (!self.guac_keyboard.active()) jQuery(self.connection.guac_display).focus(); };
 	this.blur = function() { if (self.guac_keyboard.active()) jQuery(self.connection.guac_display).blur(); };
+	this.toggle = function() { if(self.guac_keyboard.active()) { self.blur(); } else { self.focus(); } };
 	jQuery(this.connection.guac_display).on("click.keyboard_autostart", this.focus);
 
 	/* Set destructor */
