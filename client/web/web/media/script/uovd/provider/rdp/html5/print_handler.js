@@ -20,9 +20,37 @@ uovd.provider.rdp.html5.PrintHandler.prototype.handleOrders = function(server_id
 	if(opcode == "printjob") {
 		/* HACK ! Need to change the Guacamole message format */
 		var print_job_id = parameters[0].split("/").reverse()[1];
-		var url = 'guacamole/printer/get/'+print_job_id;
+		var url = '/ovd/guacamole/printer/get/'+print_job_id;
 
+		/* Notify job */
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.printing.job", this, {"id":print_job_id, "path":url});
+	}
+}
+
+uovd.provider.rdp.html5.PrintHandler.prototype.handleEvents = function(type, source, params) {
+	var self = this; /* closure */
+
+	if(type == "ovd.session.started") {
+		/* UI Menu */
+		this.ui = jQuery(document.createElement("div"));
+		this.ui.css({
+			"box-sizing": "border-box",
+			"width":"100%",
+			"height":"100%",
+			"background": "#FFF",
+			"overflow": "auto"
+		});
+
+		/* Append menu UI */
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.menu", this, {"node":this.ui, "type":"Printers"});
+
+		/* Register job handler for UI */
+		this.rdp_provider.session_management.addCallback("ovd.rdpProvider.printing.job", this.handler);
+	} else if(type == "ovd.rdpProvider.printing.job") {
 		if(this.ui != null) {
+			var job_id = params["id"];
+			var job_path = params["path"];
+
 			/* build node */
 			var br = jQuery(document.createElement("br"));
 
@@ -30,7 +58,7 @@ uovd.provider.rdp.html5.PrintHandler.prototype.handleOrders = function(server_id
 			text.html("&nbsp;- Print job : " +(new Date()).toLocaleString()+"&nbsp;-");
 
 			var a_get = jQuery(document.createElement("a"));
-			a_get.attr("href", url);
+			a_get.attr("href", job_path);
 			a_get.attr("target", "_blank");
 			a_get.html("&nbsp;&nbsp;&nbsp;get");
 
@@ -49,25 +77,6 @@ uovd.provider.rdp.html5.PrintHandler.prototype.handleOrders = function(server_id
 			/* Notify */
 			ovd.framework.session_management.fireEvent("ovd.rdpProvider.menu.notify", document, {"message":"&#9113;", "duration":10000, "interval":1000});
 		}
-	}
-}
-
-uovd.provider.rdp.html5.PrintHandler.prototype.handleEvents = function(type, source, params) {
-	var self = this; /* closure */
-
-	if(type == "ovd.session.started") {
-		/* Build menu UI element */
-		this.ui = jQuery(document.createElement("div"));
-		this.ui.css({
-			"box-sizing": "border-box",
-			"width":"100%",
-			"height":"100%",
-			"background": "#FFF",
-			"overflow": "auto"
-		});
-
-		/* Append UI elements */
-		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.menu", this, {"node":this.ui, "type":"Printers"});
 	} else if(type == "ovd.session.destroying") {
 		/* Remove instruction hook */
 		for(var i=0 ; i<this.connections.length ; ++i) {
@@ -78,7 +87,8 @@ uovd.provider.rdp.html5.PrintHandler.prototype.handleEvents = function(type, sou
 
 		this.ui = null;
 
-		this.rdp_provider.session_management.removeCallback("ovd.session.started",         this.handler);
-		this.rdp_provider.session_management.removeCallback("ovd.session.destroying",      this.handler);
+		this.rdp_provider.session_management.removeCallback("ovd.rdpProvider.printing.job", this.handler);
+		this.rdp_provider.session_management.removeCallback("ovd.session.started",          this.handler);
+		this.rdp_provider.session_management.removeCallback("ovd.session.destroying",       this.handler);
 	}
 }
