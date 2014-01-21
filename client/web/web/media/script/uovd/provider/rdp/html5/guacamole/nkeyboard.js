@@ -68,15 +68,10 @@ Guacamole.NativeKeyboard = function() {
 	input.attr("type", "text");
 	input.attr("autocorrect", "off");
 	input.attr("autocapitalize", "off");
-	input.css({
-		"width": "1px",
-		"height": "1px",
-		"font-size": "1%"
-	});
 
 	this.node = jQuery(document.createElement('div'));
 	this.node.css({
-		"position": "relative",
+		"position": "fixed",
 		"float":    "left",
 		"width":    "1px",
 		"height":   "1px",
