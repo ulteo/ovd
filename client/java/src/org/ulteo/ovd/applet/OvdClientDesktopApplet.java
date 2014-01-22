@@ -34,6 +34,7 @@ import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClientDesktop;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 import java.applet.Applet;
@@ -175,4 +176,7 @@ private ConcurrentHashMap<Integer, RdpConnectionOvd> matching = null;
 
 		co.connect();
 	}
+
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) { }
 }

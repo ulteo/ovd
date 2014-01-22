@@ -40,6 +40,7 @@ import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.sm.News;
@@ -73,6 +74,9 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		co.setShell("OvdDesktop");
 	}
 
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) { }
+	
 	@Override
 	public void display(RdesktopCanvas canvas) {
 		this.desktop.setCanvas(canvas);

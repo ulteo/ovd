@@ -49,6 +49,7 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.integrated.DesktopIntegrator;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -140,14 +141,22 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		for (Application app : co.getOvdAppChannel().getApplicationsList()) {
 			this.appsList.add(app);
 		}
+	}
+
+	
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) {
 		// Add shortcuts for web apps.
 		for (WebAppsServerAccess server : this.webAppsServers) {
 			for (Application app : server.getWebApplications()) {
 				this.appsList.add(app);
 			}
 		}
+		
+		super.customizeConnection(wasa);
 	}
 
+	
 	@Override
 	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
@@ -368,6 +377,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			rc.addRdpListener(this);
 		}
 		
+		for (WebAppsServerAccess wasa : this.webAppsServers) {
+			this.customizeConnection(wasa);
+		}
+		
+		this.desktopIntegrator.start();
+		
 		do
 		{
 			// Waiting for the session is resumed
@@ -408,6 +423,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			} catch (InterruptedException ex) {}
 			
 		} while (this.connectionIsActive);
+		
+		this.runSessionTerminated();
 	}
 
 	@Override
@@ -451,6 +468,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 						this.connect();
 						Logger.info("Session is ready");
 						((OvdClientPerformer)this).runSessionReady();
+						
+						if (this.connections.isEmpty()) {
+							this.portal.initLocalDesktopIntegrationButton(true);
+						}
 					}
 				}
 				else {

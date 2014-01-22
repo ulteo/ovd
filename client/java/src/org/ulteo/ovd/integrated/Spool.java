@@ -23,10 +23,14 @@ package org.ulteo.ovd.integrated;
 
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
+
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
@@ -159,6 +163,24 @@ public class Spool extends Thread {
 			this.logger.error("Can not start application (id: "+appId_+")");
 			return;
 		}
+		
+		if (app.isWebApp()) {
+			WebApplication wapp = (WebApplication) app;
+			this.logger.info("Opening web app " + wapp.getName());
+			final URI uri = ((WebApplication)app).getOpenURI();
+			
+			this.logger.info("URI " + uri.toString());
+
+			try {
+				Desktop.getDesktop().browse(uri);
+			} catch (IOException e) {
+				this.logger.error("Cannot open web app URI");
+				// Ignore the error. TODO: maybe display error message?
+				throw new RuntimeException(e);
+			}
+			return;
+		}
+		
 		ApplicationInstance ai = new ApplicationInstance(app, arg_, Integer.parseInt(token_));
 		ai.setLaunchedFromShortcut(true);
 		try {

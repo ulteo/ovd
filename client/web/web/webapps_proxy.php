@@ -48,7 +48,7 @@ if (is_array($headers) && array_key_exists($WEBAPPS_HEADER, $headers)) {
   die();
 }
 
-$request_url = $webapps_server.'/'.$service;
+$request_url = $webapps_server.'/webapps/'.$service;
 
 $separator = "?";
 foreach($_GET as $k => $v) {

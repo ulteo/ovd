@@ -32,6 +32,7 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.ovd.client.desktop.SessionStatus;
 
@@ -116,6 +117,10 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 			rc.addRdpListener(this);
 		}
 		
+		for (WebAppsServerAccess wasa : this.webAppsServers) {
+			this.customizeConnection(wasa);
+		}
+				
 		do
 		{
 			// Waiting for the session is resumed

@@ -87,6 +87,7 @@ public class MyApplicationPanel extends JPanel {
 				final WebApplicationListener listener = new WebApplicationListener((WebApplication)app, link);
 				link.addActionListener(listener);
 				link.setEnabled(true);
+				continue;
 			}
 			link.setEnabled(false);
 			
