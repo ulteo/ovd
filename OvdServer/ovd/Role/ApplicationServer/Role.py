@@ -183,6 +183,7 @@ class Role(AbstractRole):
 		Logger._instance.close()
 		for thread in self.threads:
 			thread.start()
+			thread.known_death = False
 		Logger._instance.lock.release()
 		
 		t0_update_app = time.time()
@@ -278,6 +279,10 @@ class Role(AbstractRole):
 				self.static_apps.synchronize()
 				self.setStaticAppsMustBeSync(False)
 			
+			for thread in self.threads:
+				if not thread.known_death and not thread.is_alive():
+					Logger.error("SessionManagement process (pid: %d, name: %s) is dead (return code: %d) while managed session '%s'"%(thread.pid, repr(thread.name), thread.exitcode, repr(thread.current_session_id.value)))
+					thread.known_death = True
 			
 			t1 = time.time()
 			if t1-t0_update_app > 30:

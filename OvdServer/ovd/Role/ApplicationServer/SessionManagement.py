@@ -30,6 +30,7 @@ from Platform.Session import Session
 from Platform.TS import TS
 
 from multiprocessing import Process
+import multiprocessing
 import Queue
 import signal
 
@@ -47,6 +48,8 @@ class SessionManagement(Process):
 		self.synchronizer = SingletonSynchronizer()
 		self.synchronizer.backup()
 		self.looping = True
+		
+		self.current_session_id = multiprocessing.Array("c", 30)
 	
 	
 	def run(self):
@@ -80,6 +83,7 @@ class SessionManagement(Process):
 		
 		Logger.debug("Starting SessionManager process")
 		while True:
+			self.current_session_id.value = ""
 			try:
 				(request, obj) = self.queue2.get_nowait()
 			except Queue.Empty:
@@ -95,14 +99,18 @@ class SessionManagement(Process):
 			
 			if request == "create":
 				session = obj
+				self.current_session_id.value = session.id
 				
 				Logger.registerHook(session.log)
 				self.create_session(session)
 				Logger.unregisterHook(session.log)
 				session.locked = False
+				Logger.info("Before put session %s in spool"%(session.id))
 				self.queue_sync.put(session)
+				Logger.info("After put session %s in spool"%(session.id))
 			elif request == "destroy":
 				session = obj
+				self.current_session_id.value = session.id
 				Logger.registerHook(session.log)
 				self.destroy_session(session)
 				session.locked = False
@@ -118,6 +126,7 @@ class SessionManagement(Process):
 				self.destroy_user(session.user)
 			elif request == "manage_new":
 				session = obj
+				self.current_session_id.value = session.id
 				Logger.registerHook(session.log)
 				self.manage_new_session(session)
 				session.locked = False
