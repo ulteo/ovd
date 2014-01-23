@@ -26,7 +26,7 @@ import os
 
 class Config:
 	general = None
-	thread_count = 1
+	thread_count = None
 	checkShell = False
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
