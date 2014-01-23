@@ -96,7 +96,7 @@ public class WebAppsServerAccess extends ServerAccess implements Runnable {
 		}
 	}
 	
-	private boolean activate() {
+	public boolean activate() {
 		final URL url = getConnectURL();
 		Logger.info("Connect URL " + url.toString());
 		

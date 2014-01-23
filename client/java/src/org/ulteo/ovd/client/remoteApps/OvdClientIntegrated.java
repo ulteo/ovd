@@ -23,18 +23,23 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.News;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.ovd.client.desktop.SessionStatus;
+import org.ulteo.ovd.client.portal.WebApplicationListener;
 
 
 public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClientPerformer {
@@ -120,7 +125,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 		for (WebAppsServerAccess wasa : this.webAppsServers) {
 			this.customizeConnection(wasa);
 		}
-				
+		
+		this.desktopIntegrator.start();
+		
 		do
 		{
 			// Waiting for the session is resumed
@@ -197,6 +204,11 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 					this.connect();
 					Logger.info("Session is ready");
 					((OvdClientPerformer)this).runSessionReady();
+					for (WebAppsServerAccess wasa: this.webAppsServers) {
+						wasa.activate();
+					}
+
+					this.togglePublications();
 					continue;
 				
 				} else if (oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE ) &&
