@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -99,10 +99,10 @@ class User(AbstractUser):
 				break
 			
 			Logger.debug("Add user :retry %i"%(6-retry))
-			if p.returncode == 2304: # user already exist
+			if p.returncode == 9: # user already exist
 				Logger.error("User %s already exist"%(self.name))
 				break;
-			if p.returncode == 256: # an other process is creating a user
+			if p.returncode == 1: # an other process is creating a user
 				Logger.error("An other process is creating a user")
 				retry -=1
 				time.sleep(0.2)
@@ -259,7 +259,7 @@ class User(AbstractUser):
 				return True
 			
 			Logger.debug("User delete of %s: retry %i"%(self.name, 6-retry))
-			if p.returncode == 256 or p.returncode == 2560: # an other process is creating a user
+			if p.returncode == 1 or p.returncode == 10: # an other process is creating a user
 				Logger.debug("An other process is creating a user")
 				retry -=1
 				time.sleep(0.2)

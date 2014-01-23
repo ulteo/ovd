@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -262,7 +263,7 @@ class System(AbstractSystem):
 		cmd = "userdel --force  --remove %s"%(name_)
 		
 		p = System.execute(cmd)
-		if p.returncode == 3072:
+		if p.returncode == 12:
 			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, p.returncode, p.stdout.read()))
 		elif p.returncode != 0:
 			Logger.error("userRemove return %d (%s)"%(p.returncode, p.stdout.read()))
