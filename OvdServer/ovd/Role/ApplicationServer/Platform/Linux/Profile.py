@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -98,7 +99,7 @@ class Profile(AbstractProfile):
 			f.write("%s %s %s\n"%(mount_uri, share["login"], share["password"]))
 			f.close()
 		
-		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,%s' '%s' %s"%(davfs_conf, self.session.user.name, DEFAULT_PERMISSION, mount_uri, dest)
+		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,%s' '%s' %s"%(davfs_conf, self.session.user.name, self.DEFAULT_PERMISSION, mount_uri, dest)
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
 		p = System.execute(cmd)
