@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -62,8 +63,8 @@ class User(AbstractUser):
 		
 		try:
 			win32net.NetUserAdd(None, 3, userData)
-		except Exception, e:
-			Logger.error("unable to create user: "+str(e))
+		except Exception:
+			Logger.exception("unable to create user")
 			return False
 		
 		self.post_create()
@@ -87,8 +88,8 @@ class User(AbstractUser):
 			
 			try:
 				shell_path = Util.get_from_PATH(shell)
-			except Exception, e:
-				Logger.error("unable to get path from '%s' [%s]"%(str(shell), str(e)))
+			except Exception:
+				Logger.exception("unable to get path from '%s'"%str(shell))
 			
 			if shell_path is None:
 				Logger.warn("'%s' can not be started"%(str(shell)))
@@ -98,8 +99,8 @@ class User(AbstractUser):
 			try:
 				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 				win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
-			except Exception, e:
-				Logger.error("Unable to configure user initial program [%s]"%(str(e)))
+			except Exception:
+				Logger.exception("Unable to configure user initial program")
 				return False
 	
 	
@@ -117,8 +118,8 @@ class User(AbstractUser):
 		try:
 			sid, _, _ = win32security.LookupAccountName(None, self.name)
 			sid = win32security.ConvertSidToStringSid(sid)
-		except Exception,e:
-			Logger.warn("Unable to get SID: %s"%(str(e)))
+		except Exception:
+			Logger.exception("Unable to get SID")
 			return None
 		
 		return sid
@@ -129,8 +130,8 @@ class User(AbstractUser):
 			# Unload user reg
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid)
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid+'_Classes')
-		except Exception, e:
-			Logger.warn("Unable to unload user reg: %s"%(str(e)))
+		except Exception:
+			Logger.exception("Unable to unload user reg")
 			return False
 		
 		return True
@@ -155,14 +156,14 @@ class User(AbstractUser):
 			try:
 				win32profile.DeleteProfile(sid)
 				succefulDelete = True
-			except Exception, e:
-				Logger.warn("Unable to unload user reg: %s"%(str(e)))
+			except Exception:
+				Logger.exception("Unable to unload user reg")
 				
 				try:
 					path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%s"%(sid)
 					Reg.DeleteTree(win32con.HKEY_LOCAL_MACHINE, path)
-				except Exception, err:
-					Logger.warn("RegDeleteTree of %s return: %s"%(path, str(err)))
+				except Exception:
+					Logger.exception("RegDeleteTree of %s return: "%path)
 					return False
 				
 				# Todo: remove the directory
@@ -170,8 +171,8 @@ class User(AbstractUser):
 		
 		try:
 			win32net.NetUserDel(None, self.name)
-		except Exception, err:
-			Logger.error("Unable to delete user: %s"%(str(err)))
+		except Exception:
+			Logger.exception("Unable to delete user")
 			return False
 		
 		return True

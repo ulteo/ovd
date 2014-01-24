@@ -121,8 +121,8 @@ class Session(AbstractSession):
 		
 		try:
 			shutil.rmtree(self.user_session_dir)
-		except Exception, e:
-			Logger.warn("Failed to remove spool directory '%s' : %s"%(self.user_session_dir, str(e)))
+		except Exception:
+			Logger.exception("Failed to remove spool directory '%s'"%self.user_session_dir)
 		
 		self.domain.onSessionEnd()
 		return True
@@ -358,9 +358,8 @@ class Session(AbstractSession):
 			if "PROGRAMW6432" in os.environ.keys():
 				Reg.UpdateActiveSetup(self.user.name, hiveName, r"Software\Wow6432Node\Microsoft\Active Setup")
 			
-		except Exception, err:
-			Logger.warn("Unable to reset ActiveSetup")
-			Logger.debug("Unable to reset ActiveSetup: "+str(err))
+		except Exception:
+			Logger.exception("Unable to reset ActiveSetup")
 		
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)

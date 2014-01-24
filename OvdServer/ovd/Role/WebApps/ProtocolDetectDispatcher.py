@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -94,8 +95,8 @@ class HttpProtocolDetectDispatcher(Communicator):
                     raise ProtocolException('bad first request line: ' + request)
                 return
         
-        except ProtocolException, err:
-            Logger.error("HttpProtocolDetectDispatcher::handle_read: %s" % repr(err))
+        except ProtocolException:
+            Logger.exception("HttpProtocolDetectDispatcher::handle_read")
             self.handle_close()
 
 
@@ -154,6 +155,6 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 					raise ProtocolException('bad first request line: ' + request)
 				return
 		
-		except ProtocolException, err:
-			Logger.error("ProtocolDetectDispatcher::handle_read: %s" % repr(err))
+		except ProtocolException:
+			Logger.exception("ProtocolDetectDispatcher::handle_read")
 			self.handle_close()

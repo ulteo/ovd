@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -165,8 +166,7 @@ class System:
 			st = os.stat(path)
 		except os.error, e:
 			if e[0] != 2:
-				Logger.error("Unable to check mount point %s"%(path))
-				Logger.debug("Unable to check mount point %s: %s"%(path, str(e)))
+				Logger.exception("Unable to check mount point %s"%path)
 			return False
 		return True
 

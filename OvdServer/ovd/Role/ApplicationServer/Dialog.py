@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -166,8 +167,8 @@ class Dialog(AbstractDialog):
 			for node in applicationNodes:
 				matching.append((node.getAttribute("id"), node.getAttribute("local_id")))
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -324,8 +325,8 @@ class Dialog(AbstractDialog):
 					if len(node.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -429,9 +430,8 @@ class Dialog(AbstractDialog):
 		
 		try:
 			ret = TS.getSessionID(login)
-		except Exception,err:
-			Logger.error("RDP server dialog failed ... ")
-			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
+		except Exception:
+			Logger.exception("RDP server dialog failed ... ")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "internalerror")
@@ -499,8 +499,8 @@ class Dialog(AbstractDialog):
 			for packageNode in packageNodes:
 				packages.append(packageNode.getAttribute("name"))
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -547,8 +547,8 @@ class Dialog(AbstractDialog):
 			else:
 				raise Exception("usage")
 			
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")

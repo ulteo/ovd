@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -83,8 +84,8 @@ class Role(AbstractRole):
 			
 			self.server.server_bind()
 			self.server.server_activate()
-		except socket.error, e:
-			Logger.error("Gateway:: socket init: %s" % e)
+		except socket.error:
+			Logger.exception("Gateway:: socket init")
 			return False
 		
 		Logger.info('Gateway:: running on (%s, %d)' % addr)

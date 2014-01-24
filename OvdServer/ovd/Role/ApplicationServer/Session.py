@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -204,8 +205,8 @@ class Session:
 		
 		try:
 			contents = os.listdir(path)
-		except Exception, err:
-			Logger.warn("Unable to list content of the directory %s (%s)"%(path, str(err)))
+		except Exception:
+			Logger.exception("Unable to list content of the directory %s"%path)
 			return
 		
 		for content in contents:
@@ -219,8 +220,8 @@ class Session:
 			
 			try:
 				target = ApplicationsDetection.getExec(l)
-			except Exception, e:
-				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
+			except Exception:
+				Logger.exception("Unable to get the desktop target of %s"%l)
 				target = None
 			
 			if target is None:
@@ -231,8 +232,8 @@ class Session:
 					Logger.debug("removing shortcut %s"%(target))
 					try:
 						os.remove(l)
-					except Exception, e:
-						Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
+					except Exception:
+						Logger.exception("Unable to delete the desktop target %s"%l)
 	
 	
 	def archive_shell_dump(self):

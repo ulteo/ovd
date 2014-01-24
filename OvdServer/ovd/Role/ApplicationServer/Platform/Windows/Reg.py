@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -37,12 +38,8 @@ def disableActiveSetup(rootPath):
 	
 	try:
 		CopyTree(hkey_src, "Installed Components", hkey_dst)
-	except Exception, err:
-		import traceback
-		import sys
-		exception_type, exception_string, tb = sys.exc_info()
-		trace_exc = "".join(traceback.format_tb(tb))
-		Logger.error("disableActiveSetup: %s => %s"%(exception_string, trace_exc))
+	except Exception:
+		Logger.exception("disableActiveSetup")
 	
 	if hkey_src is not None:
 		win32api.RegCloseKey(hkey_src)
@@ -60,9 +57,9 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 		hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	except Exception, err:
 		if err[0] == 5:     #Access denied
-			Logger.debug("Unable to open key in order to proceed CopyTree of %s: %s"%(SubKey, str(err)))
+			Logger.debug("Unable to open key in order to proceed CopyTree of %s: Access denied"%SubKey)
 		else:
-			Logger.warn("Unable to open key in order to proceed CopyTree of %s: %s"%(SubKey, str(err)))
+			Logger.exception("Unable to open key in order to proceed CopyTree of %s"%SubKey)
 		if hkey_src is not None:
 			win32api.RegCloseKey(hkey_src)
 		if hkey_dst is not None:
@@ -79,9 +76,9 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 			if err[0] == 259:   #No more data available
 				break
 			if err[0] == 5:     #Access denied
-				Logger.debug("Unable to copy value (%s)"%(str(err)))
+				Logger.debug("Unable to copy value: Access denied")
 			else:
-				Logger.warn("Unable to copy value (%s)"%(str(err)))
+				Logger.exception("Unable to copy value")
 		index+= 1
 	
 	index = 0
@@ -110,17 +107,16 @@ def CopyTree(KeySrc, SubKey, KeyDest, blacklist = []):
 			if err[0] == 259:   #No more data available
 				break
 			if err[0] == 5:     #Access denied
-				Logger.debug("Unable to copy key (%s)"%(str(err)))
+				Logger.debug("Unable to copy key: Access denied")
 			else:
-				Logger.warn("Unable to copy key (%s)"%(str(err)))
+				Logger.exception("Unable to copy key")
 		index+= 1
 	
 	try:
 		win32api.RegCloseKey(hkey_src)
 		win32api.RegCloseKey(hkey_dst)
-	except Exception, err:
-		Logger.warn("Unable to close key in order to proceed CopyTree")
-		Logger.error("Unable to close key in order to proceed CopyTree: %s"%(str(err)))
+	except Exception:
+		Logger.exception("Unable to close key in order to proceed CopyTree")
 
 
 def CreateKeyR(hkey, path):
@@ -207,9 +203,8 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path), 0, win32con.KEY_ALL_ACCESS)
 		CopyTree(hkey_src, "Installed Components", hkey_dst)
 		
-	except Exception, err:
-		Logger.warn("Unable to copy tree")
-		Logger.debug("Unable to copy tree: "+str(err))
+	except Exception:
+		Logger.exception("Unable to copy tree")
 		return
 	finally:
 		if hkey_dst is not None:
@@ -319,7 +314,7 @@ def TreeSearchExpression(hive, subpath, motif):
 			
 		except Exception, err:
 			if err[0] != 259:  #no more data available
-				Logger.error("TreeSearchExpression: %s"%(str(err)))
+				Logger.exception("TreeSearchExpression")
 			flag_continue = False
 	
 	win32api.RegCloseKey(hkey)
@@ -362,9 +357,9 @@ def TreeReplace(hive, subpath, src, dest):
 			
 			index+= 1
 			
-		except Exception, err:
+		except Exception:
 			if err[0] != 259:  #no more data available
-				Logger.error("TreeReplace: %s"%(str(err)))
+				Logger.exception("TreeReplace")
 			flag_continue = False
 	
 	win32api.RegCloseKey(hkey)
@@ -422,8 +417,8 @@ def getActiveSetupKeys():
 		
 		try:
 			(version, _) = win32api.RegQueryValueEx(hkey, "Version")
-		except Exception,e:
-			Logger.error("getActiveSetupKeys: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getActiveSetupKeys")
 			win32api.RegCloseKey(hkey)
 			continue
 		
@@ -467,8 +462,8 @@ def setTimezone(rootPath, tz):
 		(std, _) = win32api.RegQueryValueEx(hkey, "std")
 		(dlt, _) = win32api.RegQueryValueEx(hkey, "dlt")
 		(tzi, _) = win32api.RegQueryValueEx(hkey, "TZI")
-	except Exception, err:
-		Logger.error("setTimezone, Registry error "+str(err))
+	except Exception:
+		Logger.exception("setTimezone, Registry error")
 		return False
 	finally:
 		if hkey is not None:

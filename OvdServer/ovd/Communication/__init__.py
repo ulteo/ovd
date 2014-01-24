@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009,2011 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -70,9 +71,8 @@ class Communication:
 		if not util.isIP(buf):
 			try:
 				buf = socket.gethostbyname(buf)
-			except Exception, err:
-				Logger.error("Communication::isSessionManagerRequest: fail to get address info for '%s'"%(buf))
-				Logger.debug("gethostbyname: %s"%(err))
+			except Exception:
+				Logger.exception("Communication::isSessionManagerRequest: fail to get address info for '%s'"%buf)
 				return False
 		
 		return  request["client"] == buf

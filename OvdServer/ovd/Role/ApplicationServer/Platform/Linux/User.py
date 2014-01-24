@@ -45,14 +45,14 @@ class FileLock():
 			self.fp = open(self.path, 'w')
 			self.lock = fcntl.flock(self.fp.fileno(),fcntl.LOCK_EX)
 		except Exception, err:
-			Logger.error("Error while acquiring user lock(%s)"%(str(err)))
+			Logger.exception("Error while acquiring user lock")
 	
 	def release(self):
 		try:
 			self.lock = fcntl.flock(self.fp.fileno(),fcntl.LOCK_UN)
 			self.fp.close()
-		except Exception, err:
-			Logger.error("Error while releasing user lock(%s)"%(str(err)))
+		except Exception:
+			Logger.exception("Error while releasing user lock")
 
 
 

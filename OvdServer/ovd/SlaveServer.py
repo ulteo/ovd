@@ -100,8 +100,8 @@ class SlaveServer:
 					raise Exception()
 			except InterruptedException:
 				return False
-			except Exception, e:
-				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
+			except Exception:
+				Logger.exception("SlaveServer: unable to initialize role '%s'"%role.getName())
 				return False
 			
 			role.thread.start()
@@ -135,8 +135,8 @@ class SlaveServer:
 	def push_production(self):
 		try:
 			self.smRequestManager.initialize()
-		except Exception, e:
-			Logger.debug("smRequestManager initialize returned: %s" % e)
+		except Exception:
+			Logger.exception("smRequestManager initialize returned")
 			return False
 		
 		if not self.smRequestManager.switch_status(self.smRequestManager.STATUS_READY):

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -93,8 +93,8 @@ def setup_app(config, app_id, app_name):
     except KeyError, e:
         Logger.error("Key %s not found. Correct your configuration file" % e)
         return
-    except Exception, exception:
-        Logger.error("Failed to configure web app: %s" % exception)
+    except Exception:
+        Logger.exception("Failed to configure web app")
 
     app_request_processor = ApplicationRequestProcessor(app_req_proc_config)
     app = ApplicationDefinition(app_id, app_name, re.compile('^' + app_name + '\.'), '',

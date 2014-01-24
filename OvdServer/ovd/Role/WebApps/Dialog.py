@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -109,8 +110,8 @@ class Dialog(AbstractDialog):
             
             session['published_applications'] = published_apps
 
-        except Exception, err:
-            Logger.warn("Invalid xml input: "+str(err))
+        except Exception:
+            Logger.exception("Invalid xml input")
             doc = Document()
             root_node = doc.createElement('error')
             root_node.setAttribute("id", "usage")

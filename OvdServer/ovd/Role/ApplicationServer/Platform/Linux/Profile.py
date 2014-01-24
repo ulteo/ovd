@@ -143,10 +143,10 @@ class Profile(AbstractProfile):
 						os.makedirs(src)
 					except OSError, err:
 						if self.isNetworkError(err[0]):
-							Logger.warn("Unable to access profile: %s"%(str(err)))
+							Logger.exception("Unable to access profile")
 							return False
 						
-						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS)")
 						continue
 				
 			if not System.mount_point_exist(self.homeDir):
@@ -231,8 +231,8 @@ class Profile(AbstractProfile):
 			try:
 				if not self.ismount(d):
 					continue
-			except IOError, err:
-				Logger.error("Unable to check mount point %s :%s"%(d, str(err)))
+			except IOError:
+				Logger.exception("Unable to check mount point %s"%d)
 			
 			cmd = "umount \"%s\""%(d)
 			cmd = self.transformToLocaleEncoding(cmd)
@@ -255,8 +255,8 @@ class Profile(AbstractProfile):
 				
 				try:
 					os.rmdir(sharedFolder["mountdest"])
-				except OSError, e:
-					Logger.error("Unable to delete mount point (%s): %s"%(sharedFolder["mountdest"], str(e)))
+				except OSError:
+					Logger.exception("Unable to delete mount point (%s)"%sharedFolder["mountdest"])
 		
 		for fname in ("davfs.conf", "davfs.secret"):
 			path = os.path.join(self.cifs_dst, fname)
@@ -264,8 +264,8 @@ class Profile(AbstractProfile):
 				continue
 			try:
 				os.remove(path)
-			except OSError, e:
-				Logger.error("Unable to delete file (%s): %s"%(path, str(e)))
+			except OSError:
+				Logger.exception("Unable to delete file (%s)"%path)
 		
 		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
@@ -292,13 +292,13 @@ class Profile(AbstractProfile):
 			
 			try:
 				os.rmdir(self.profile_mount_point)
-			except OSError, e:
-				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point, str(e)))
+			except OSError:
+				Logger.exception("Unable to delete mount point (%s)"%self.profile_mount_point)
 		
 		try:		
 			os.rmdir(self.cifs_dst)
-		except OSError, e:
-			Logger.error("Unable to delete profile (%s): %s"%(self.cifs_dst, str(e)))
+		except OSError:
+			Logger.exception("Unable to delete profile (%s)"%self.cifs_dst)
 	
 	
 	def copySessionStart(self):
@@ -320,10 +320,10 @@ class Profile(AbstractProfile):
 				os.makedirs(d)
 			except OSError, err:
 				if self.isNetworkError(err[0]):
-					Logger.warn("Unable to access profile: %s"%(str(err)))
+					Logger.exception("Unable to access profile")
 					return
 				
-				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS)")
 				continue
 		
 	

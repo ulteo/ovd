@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2010-2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -100,8 +101,7 @@ class TS(AbstractTS):
 				if err[0] == 7022: # Session not found.
 					continue
 				else:
-					Logger.warn("Unable to list session %d"%(session["SessionId"]))
-					Logger.debug("WTSQuerySessionInformation returned %s"%(err))
+					Logger.exception("Unable to list session %d"%session["SessionId"])
 				continue
 			
 			return session["SessionId"]
@@ -164,8 +164,8 @@ class TS(AbstractTS):
 			Logger.debug("perform_logoff: start logoff %d"%(session_id))
 			ret = win32ts.WTSLogoffSession(None, session_id, True)
 			Logger.debug("perform_logoff: finish logoff %d ret: %s"%(session_id, str(ret)))
-		except Exception, e:
-			Logger.warn("perform_logoff: exception %s"%(e))
+		except Exception:
+			Logger.exception("perform_logoff")
 			return False
 		return True
 	
@@ -176,7 +176,7 @@ class TS(AbstractTS):
 			Logger.debug("perform_disconnect: start logoff %d"%(session_id))
 			ret = win32ts.WTSDisconnectSession(None, session_id, True)
 			Logger.debug("perform_disconnect: finish disconnect %d ret: %s"%(session_id, str(ret)))
-		except Exception, e:
-			Logger.warn("perform_disconnect: exception %s"%(e))
+		except Exception:
+			Logger.exception("perform_disconnect")
 			return False
 		return True

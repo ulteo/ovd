@@ -1,6 +1,9 @@
-# Copyright (C) 2013 Ulteo SAS
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -63,8 +66,7 @@ class HTAccess:
 			f.close()
 		
 		except IOError, err:
-			Logger.error("FS: unable to write .htaccess")
-			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(self.path, str(err)))
+			Logger.exception("FS: unable to write .htaccess '%s'"%self.path)
 			return False
 		
 		return True

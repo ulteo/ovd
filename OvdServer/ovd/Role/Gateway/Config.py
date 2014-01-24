@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011-2013 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
 # Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -105,8 +106,8 @@ class Config:
 					raise Exception("incorrect port")
 			except socket.gaierror:
 				Logger.error("Invalid conf for Web Client: incorrect IP")
-			except Exception, e:
-				Logger.error("Invalid conf for Web Client: " + str(e))
+			except Exception:
+				Logger.exception("Invalid conf for Web Client")
 			else:
 				protocol = getattr(Protocol, url.scheme.upper())
 				if url.port:

@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -48,8 +49,8 @@ class HttpServer(AbstractCommunication):
 	def initialize(self):
 		try:
 			self.webserver = ThreadPoolingHttpServer( ("", self.tcp_port), HttpRequestHandler, 5)
-		except socket.error, e:
-			Logger.error("Unable to initialize Communication: %s"%(str(e)))
+		except socket.error:
+			Logger.exception("Unable to initialize Communication")
 			return False
 		
 		self.webserver.comm_instance = self
@@ -101,10 +102,8 @@ class ThreadPoolingHttpServer(HTTPServer):
 		except socket.error, (code, msg):
 			(addr, port) = client_address
 			Logger.debug("HTTPServer: %s (%s, %s)" % (msg, addr, port))
-		except Exception, e:
-			Logger.debug("HTTPServer: unknown exception %s: %s" % (type(e), e))
-			import traceback
-			traceback.print_exc()
+		except Exception:
+			Logger.exception("HTTPServer")
 		finally:
 			self.close_request(request)
 	

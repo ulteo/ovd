@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -47,8 +48,8 @@ class FSBackend:
 					return False
 				
 				self.pid = int(pidStr)
-			except Exception, e:
-				Logger.error("Failed to get FSBackend pid: %s"%(str(e)))
+			except Exception:
+				Logger.exception("Failed to get FSBackend pid")
 				return False
 		
 		try:
@@ -94,8 +95,8 @@ class FSBackend:
 			return True
 			
 			
-		except Exception, e:
-			Logger.error("Failed to add entry for the share '%s': %s"%(share, str(e)))
+		except Exception:
+			Logger.exception("Failed to add entry for the share '%s'"%share)
 			return False
 		
 	
@@ -113,14 +114,13 @@ class FSBackend:
 				os.makedirs(path)
 			except OSError, err:
 				if err[0] is not errno.EEXIST:
-					Logger.error("Failed to create spool directory: %s %s"%(path, str(err)))
+					Logger.exception("Failed to create spool directory: %s"%path)
 					return False
 			
 			try:
 				os.lchown(path, Config.uid, Config.gid)
-			except OSError, err:
-				Logger.warn("Unable to change file owner for '%s'"%(path))
-                                Logger.debug("lchown returned %s"%(err))
+			except OSError:
+				Logger.exception("Unable to change file owner for '%s'"%path)
 				return False
 
 			if not os.path.exists(path):
@@ -190,7 +190,7 @@ class FSBackend:
 				os.kill(pid, signal.SIGKILL)
 			except Exception, e:
 				if e.errno != errno.ESRCH:
-					Logger.error("Failed to kill processus %s: %s"%( pid, str(e)))
+					Logger.exception("Failed to kill processus %s"%pid)
 		
 		if not os.path.ismount(self.path["spool"]):
 			return True

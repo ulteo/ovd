@@ -78,8 +78,8 @@ class System(AbstractSystem):
 			buf = buf.replace("\n", "")
 			buf = buf.encode('utf-8')
 		
-		except Exception, err:
-			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
+		except Exception:
+			Logger.exception("System::getVersion")
 			buf = platform.version()
 		
 		return buf
@@ -91,8 +91,8 @@ class System(AbstractSystem):
 			fd = file("/proc/stat", "r")
 			line = fd.readline()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::getCPULoad %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::getCPULoad")
 			return (0.0, 0.0)
 		
 		
@@ -122,8 +122,8 @@ class System(AbstractSystem):
 			fd = file(filename_, "r")
 			lines = fd.readlines()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::_getMeminfo %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::_getMeminfo")
 			return {}
 		
 		infos = {}
@@ -146,8 +146,8 @@ class System(AbstractSystem):
 			name = infos["model name"]
 			nb = int(infos["processor"]) + 1
 			
-		except Exception, e:
-			Logger.error("getCPUInfos %s"%(str(e)))
+		except Exception:
+			Logger.exception("getCPUInfos")
 			return (1, "Unknown")
 		
 		return (nb, name)
@@ -159,8 +159,8 @@ class System(AbstractSystem):
 			fd = file("/proc/meminfo", "r")
 			lines = fd.readlines()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::_getMeminfo %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::_getMeminfo")
 			return {}
 		
 		infos = {}
@@ -189,8 +189,8 @@ class System(AbstractSystem):
 			free = int(infos["MemFree"])
 			cached = int(infos["Cached"])
 			buffers = int(infos["Buffers"])
-		except Exception, e:
-			Logger.warn("getRAMUsed: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMUsed")
 			return 0.0
 		
 		return total - (free + cached + buffers)
@@ -203,8 +203,8 @@ class System(AbstractSystem):
 		try:
 			total = int(infos["MemTotal"])
 		
-		except Exception, e:
-			Logger.warn("getRAMTotal: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMTotal")
 			return 0.0
 		
 		return total
@@ -251,8 +251,8 @@ class System(AbstractSystem):
 	def groupMember(name_):
 		try:
 			group = grp.getgrnam(name_)
-		except KeyError, err:
-			Logger.error("groupMember: '%s'"%(str(err)))
+		except KeyError:
+			Logger.exception("groupMember")
 			return None
 		
 		return group[3]

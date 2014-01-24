@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -133,10 +134,9 @@ class Share:
 		else:
 			try:
 				os.remove(path)
-			except Exception, err:
+			except Exception:
 				ret = False
-				Logger.error("FS: unable to remove .htaccess")
-				Logger.debug("FS: unable to remove .htaccess '%s' return: %s"%(path, str(err)))
+				Logger.exception("FS: unable to remove .htaccess '%s'"%path)
 		
 		
 		cmd = "net usershare delete %s"%(self.name)

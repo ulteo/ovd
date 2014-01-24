@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -92,8 +93,8 @@ class Config:
 			f = file(cls.dav_passwd_file, "w")
 			f.close()
 			os.chown(cls.dav_passwd_file, cls.dav_uid, -1)
-		except Exception, err:
-			Logger.info("FileServer unable to write in '%s': %s"%(cls.dav_passwd_file, str(err)))
+		except Exception:
+			Logger.exception("FileServer unable to write in '%s'"%cls.dav_passwd_file)
 			return False
 		
 		return True

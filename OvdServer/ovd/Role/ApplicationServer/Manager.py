@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2011-2012 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -49,8 +50,8 @@ class Manager:
 				rootNode.setAttribute("reason", session.end_status)
 			
 			doc.appendChild(rootNode)
-		except Exception, e:
-			print str(e)
+		except Exception:
+			Logger.exception("ApplicationServer: send_session_status")
 		
 		response = self.smManager.send_packet("/session/status", doc)
 		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
@@ -97,8 +98,8 @@ class Manager:
 				rootNode.appendChild(node)
 			
 			doc.appendChild(rootNode)
-		except Exception, e:
-			print str(e)
+		except Exception:
+			Logger.exception("ApplicationServer: send_session_dump")
 		
 		response = self.smManager.send_packet("/session/dump", doc)
 		Logger.debug2("ApplicationServer: send_session_dump: %s"%(response))

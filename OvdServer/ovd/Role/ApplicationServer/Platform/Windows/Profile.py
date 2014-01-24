@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012, 2013
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -105,9 +105,8 @@ class Profile(AbstractProfile):
 			if login is not None:
 				cmd+= " /user:"+login
 			
-			Logger.error("Unable to mount drive")
-			Logger.debug("WNetAddConnection2 return %s"%(err))
-			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), cmd))
+			Logger.exception("Unable to mount drive")
+			Logger.debug("Unable to mount drive, try the net use command equivalent: '%s'"%cmd)
 			
 			self.mountPoint = None
 			return False
@@ -141,9 +140,8 @@ class Profile(AbstractProfile):
 		try:
 			win32wnet.WNetCancelConnection2(self.mountPoint, 0, True)
 		
-		except Exception, err:
-			Logger.error("Unable to umount drive")
-			Logger.debug("WNetCancelConnection2 return %s"%(err))
+		except Exception:
+			Logger.exception("Unable to umount drive")
 			Logger.debug("Unable to umount drive, net use command equivalent: '%s'"%("net use %s: /delete"%(self.mountPoint)))
 			return False
 		return True
@@ -173,14 +171,14 @@ class Profile(AbstractProfile):
 			while not os.path.exists(d):
 				try:
 					os.makedirs(d)
-				except OSError, err:
+				except OSError:
 					trial -= 1
 					if trial == 0:
-						Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+						Logger.exception("Failed to create directory %s"%d)
 						return False
 					
 					time.sleep(random.randint(1,10)/100.0)
-					Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+					Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS)")
 					continue
 		
 		
@@ -191,8 +189,8 @@ class Profile(AbstractProfile):
 			dirs = None
 			try:
 				dirs = os.listdir(d)
-			except Exception, err:
-				Logger.warn("Unable to list content of the directory %s (%s)"%(d, str(err)))
+			except Exception:
+				Logger.exception("Unable to list content of the directory %s"%d)
 				return
 			
 			for content in dirs:
@@ -200,8 +198,8 @@ class Profile(AbstractProfile):
 					try :
 						path = os.path.join(d, content)
 						os.remove(path)
-					except Exception, err:
-						Logger.warn("Unable to delete %s (%s)"%(path, str(err)))
+					except Exception:
+						Logger.exception("Unable to delete %s"%path)
 			
 			# Copy user registry
 			
@@ -238,14 +236,14 @@ class Profile(AbstractProfile):
 		while not os.path.exists(d):
 			try:
 				os.makedirs(d)
-			except OSError, err:
+			except OSError:
 				trial -= 1
 				if trial == 0:
-					Logger.error("Failed to create directory %s: %s"%(d, str(err)))
+					Logger.exception("Failed to create directory %s"%d)
 					return False
 				
 				time.sleep(random.randint(1,10)/100.0)	
-				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+				Logger.debug2("conf.Windows mkdir failed (concurrent access because of more than one ApS)")
 				continue
 		
 		# Copy user registry

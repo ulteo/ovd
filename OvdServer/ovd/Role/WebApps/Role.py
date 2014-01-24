@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -82,8 +83,8 @@ class Role(AbstractRole):
 			
 			self.server.server_bind()
 			self.server.server_activate()
-		except socket.error, e:
-			Logger.error("[WebApps] socket init: %s" % e)
+		except socket.error:
+			Logger.exception("[WebApps] socket init")
 			return False
 		
 		Logger.info('[WebApps] running on (%s, %d)' % addr)

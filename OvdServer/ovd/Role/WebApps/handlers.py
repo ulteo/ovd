@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Ania WSZEBOROWSKA <anna.wszeborowska@stxnext.pl> 2013
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -123,13 +123,13 @@ class ClientHandler(Handler):
         except (timeout, ssl.SSLError), exc:
             if isinstance(exc, ssl.SSLError) and not (exc.args and 'timed out' in exc.args[0]):
                 #TODO: handling other exceptions; same as below
-                Logger.error("Error getting requested site: %s" % exc)
+                Logger.exception("Error getting requested site")
                 return
             self.display_err_page(Config.timeout_page, communicator)
             self.close_connection(conn, communicator)
             return
-        except Exception, exc:
-            Logger.error("Error getting requested site: %s" % exc)
+        except Exception:
+            Logger.exception("Error getting requested site")
             return
 
         resp_headers = response.getheaders()

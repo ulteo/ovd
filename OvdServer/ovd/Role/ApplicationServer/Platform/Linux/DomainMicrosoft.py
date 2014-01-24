@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -47,8 +48,8 @@ class DomainMicrosoft(AbstractDomainMicrosoft):
 			gid = pwd.getpwnam(username).pw_gid
 			gids.append(grp.getgrgid(gid).gr_gid)
 			return ["'%s'"%(grp.getgrgid(gid).gr_name) for gid in gids]
-		except Exception, e:
-			Logger.error("Failed to get groups of the user %s: %s"%(username, str(e)))
+		except Exception:
+			Logger.exception("Failed to get groups of the user %s"%username)
 			return None
 	
 	

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -79,9 +80,8 @@ class Role(AbstractRole):
 		
 		try:
 			TS.getList()
-		except Exception, err:
-			Logger.error("RDP server dialog failed ... exiting")
-			Logger.debug("RDP server dialog: "+str(err))
+		except Exception:
+			Logger.exception("RDP server dialog failed ... exiting")
 			return
 		
 		if not System.groupExist(self.manager.ts_group_name):
@@ -226,9 +226,8 @@ class Role(AbstractRole):
 			for session in self.sessions.values():
 				try:
 					ts_id = TS.getSessionID(session.user.name)
-				except Exception, err:
-					Logger.error("RDP server dialog failed ... exiting")
-					Logger.debug("RDP server dialog: "+str(err))
+				except Exception:
+					Logger.exception("RDP server dialog failed ... exiting")
 					self.status = Role.STATUS_ERROR
 					break
 				
@@ -247,9 +246,8 @@ class Role(AbstractRole):
 				
 				try:
 					ts_status = TS.getState(ts_id)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... exiting")
-					Logger.debug("RDP server dialog: "+str(err))
+				except Exception:
+					Logger.exception("RDP server dialog failed ... exiting")
 					self.status = Role.STATUS_ERROR
 					break
 				

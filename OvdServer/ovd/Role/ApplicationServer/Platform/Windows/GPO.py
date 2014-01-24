@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -151,8 +152,8 @@ class GPO:
 			f.write("%s=%s\r\n"%(GPO.GPT_KEY, GPO.GUID))
 			f.write("version=65537\r\n")
 			f.close()
-		except Exception, e:
-			Logger.error("Failed to create new gpt file: %s", str(e))
+		except Exception:
+			Logger.exception("Failed to create new gpt file")
 			return False
 		return True
 	
@@ -217,8 +218,8 @@ class GPO:
 			
 			f.write(buffer)
 			f.close()
-		except Exception, e:
-			Logger.error("Failed to add a GPO: %s"%(str(e)))
+		except Exception:
+			Logger.exception("Failed to add a GPO")
 		
 		self.disableSysWow64(False)
 

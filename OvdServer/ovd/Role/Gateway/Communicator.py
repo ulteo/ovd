@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 # Author Julien LANGLOIS <julien@ulteo.com> 2012
 # Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
 #
@@ -156,8 +156,8 @@ class ServerCommunicator(Communicator):
 		if remote is not None:
 			try:
 				self.connect(remote)
-			except socket.error, e:
-				Logger.error("%s:: socket connection failed: %s" % (self.__class__.__name__, e))
+			except socket.error:
+				Logger.exception("%s:: socket connection failed"%self.__class__.__name__)
 	
 	
 	def make_socket(self):
@@ -402,8 +402,8 @@ class HttpServerCommunicator(ServerCommunicator):
 			session = parser.XML(body)
 			if session.tag.lower() != 'session':
 				raise Exception("not a 'session' XML response")
-		except Exception, e:
-			Logger.error("Gateway:: parsing XML session failed: %s" % e)
+		except Exception:
+			Logger.exception("Gateway:: parsing XML session failed")
 			return None
 		
 		session.set('mode_gateway', 'on')
@@ -502,8 +502,8 @@ class HttpsServerCommunicator(SecureServerCommunicator):
 			session = parser.XML(body)
 			if session.tag.lower() != 'session':
 				raise Exception("not a 'session' XML response")
-		except Exception, e:
-			Logger.error("Gateway:: parsing XML session failed: %s" % e)
+		except Exception:
+			Logger.exception("Gateway:: parsing XML session failed")
 			return None
 
 		session.set('mode_gateway', 'on')

@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -141,8 +142,8 @@ class SessionManagement(Process):
 			
 			try:
 				rr = session.install_client()
-			except Exception,err:
-				Logger.debug("Unable to initialize session %s: %s"%(session.id, str(err)))
+			except Exception:
+				Logger.exception("Unable to initialize session %s"%session.id)
 				rr = False
 			
 			if rr is False:
@@ -171,9 +172,8 @@ class SessionManagement(Process):
 			
 			try:
 				sessid = TS.getSessionID(session.user.name)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return
 			
 			if sessid is not None:
@@ -198,16 +198,14 @@ class SessionManagement(Process):
 			
 			try:
 				sessid = TS.getSessionID(session.user.name)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return False
 			
 			try:
 				status = TS.getState(sessid)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return
 			
 			if status in [TS.STATUS_LOGGED]:
@@ -215,9 +213,8 @@ class SessionManagement(Process):
 				
 				try:
 					TS.disconnect(sessid)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... ")
-					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+				except Exception:
+					Logger.exception("RDP server dialog failed ... ")
 					return
 		
 		session.switch_status(Session.SESSION_STATUS_INACTIVE)
@@ -231,9 +228,8 @@ class SessionManagement(Process):
 			
 			try:
 				status = TS.getState(sessid)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return
 			
 			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
@@ -241,9 +237,8 @@ class SessionManagement(Process):
 				
 				try:
 					TS.logoff(sessid)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... ")
-					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+				except Exception:
+					Logger.exception("RDP server dialog failed ... ")
 					return
 				
 				del(user.infos["tsid"])
