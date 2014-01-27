@@ -222,7 +222,7 @@ class Profile(AbstractProfile):
 		if self.profile is not None and self.profileMounted:
 			self.copySessionStop()
 		
-		for sharedFolder in self.sharedFolders:
+		for sharedFolder in self.sharedFolders and sharedFolder.hasattr("local_path"):
 			self.delGTKBookmark(sharedFolder["local_path"])
 		
 		while len(self.folderRedirection)>0:
