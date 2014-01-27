@@ -126,6 +126,7 @@ uovd.Session.prototype.started = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_STARTED ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYING ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYED ) { return ; }
+	this.starting();
 	this.phase = uovd.SESSION_PHASE_STARTED;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
@@ -133,12 +134,14 @@ uovd.Session.prototype.started = function(from) {
 uovd.Session.prototype.destroying = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_DESTROYING ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYED ) { return ; }
+	this.started();
 	this.phase = uovd.SESSION_PHASE_DESTROYING;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
 
 uovd.Session.prototype.destroyed = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_DESTROYED) { return ; }
+	this.destroying();
 	this.phase = uovd.SESSION_PHASE_DESTROYED;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
