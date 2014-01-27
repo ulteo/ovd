@@ -365,6 +365,7 @@ class Profile(AbstractProfile):
 	def ismount(path):
 		# The content returned by /proc/mounts escape space using \040
 		escaped_path = path.replace(" ", "\\040")
+		escaped_path = Profile.transformToLocaleEncoding(escaped_path)
 		
 		for line in file('/proc/mounts'):
 			components = line.split()
