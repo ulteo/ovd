@@ -88,7 +88,7 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 		"ovd.session.started" : new Array(function(type, source, params) {
 			/* Lower the polling interval to 30 sec */
 			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 30000);
+			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 10*60*1000);
 		}),
 		"ovd.session.destroying" : new Array(function(type, source, params) {
 			/* Set the polling interval to 3 sec */
