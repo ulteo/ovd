@@ -333,7 +333,7 @@ class Preferences_admin {
 			'general_slave_server_settings_remove_orphan' => _('Remove orphan applications when the application server is deleted'),
 			'general_slave_server_settings_auto_register_new_servers' => _('Auto register new servers'),
 			'general_slave_server_settings_auto_switch_new_servers_to_production' => _('Auto switch new servers to production mode'),
-			'general_slave_server_settings_use_max_sessions_limit' => _('When an Application Server have reached its "max sessions" limit, disable session launch on it ?'),
+			'general_slave_server_settings_use_max_sessions_limit' => _('When an Application Server has reached its "max sessions" limit, disable session launch on it ?'),
 			'general_slave_server_settings_load_balancing_aps' => _('Load Balancing policy for Application Servers'),
 			'general_slave_server_settings_load_balancing_fs' => _('Load Balancing policy for File Servers'),
 			

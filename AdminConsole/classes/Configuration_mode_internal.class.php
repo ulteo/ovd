@@ -79,7 +79,7 @@ class Configuration_mode_internal extends Configuration_mode {
     $str= '<h1>'._('Internal Database Profiles').'</h1>';
 
     $str.= '<div class="section">';
-    $str.= _('This is the default profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration.');
+    $str.= _('This is the default profile manager. It saves all data into the SQL database, defined in the system configuration settings.');
     $str.= '</div>';
 
     return $str;
