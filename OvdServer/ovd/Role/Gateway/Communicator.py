@@ -265,7 +265,7 @@ class HttpClientCommunicator(SSLCommunicator):
 
 				host, port = address
 				path = self.http.path[0:match.start("separator")]
-				path+= match.group("separator")+"server="+host
+				path+= match.group("separator")+"server="+host+"&port="+str(port)
 				path+= self.http.path[match.end("token"):]
 
 				match = HttpMessage.http_req_ptn.search(self.http.headers)

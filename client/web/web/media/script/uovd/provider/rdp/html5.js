@@ -56,6 +56,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 		url+="token="+server.token+"&";
 	} else {
 		url+="server="+server.fqdn+"&";
+		url+="port="+server.port+"&";
 	}
 	url+="username="+server.login+"&";
 	url+="password="+server.password+"&";
@@ -140,6 +141,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 		url+="token="+server.token+"&";
 	} else {
 		url+="server="+server.fqdn+"&";
+		url+="port="+server.port+"&";
 	}
 	url+="username="+server.login+"&";
 	url+="password="+server.password+"&";
@@ -258,6 +260,7 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			url+="token="+server.token+"&";
 		} else {
 			url+="server="+server.fqdn+"&";
+			url+="port="+server.port+"&";
 		}
 		url+="username="+server.login+"&";
 		url+="password="+server.password+"&";
