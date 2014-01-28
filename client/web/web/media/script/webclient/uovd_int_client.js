@@ -157,11 +157,8 @@ function validate_settings() {
 	}
 
 	/* Initialize the SM Host field */
-	if(settings.sessionmanager == 'localhost' || settings.sessionmanager == '127.0.0.1') {
+	if(["localhost", "127.0.0.1", ""].indexOf(settings.sessionmanager.trim()) != -1) {
 		settings.sessionmanager = location.host;
-	}
-	window.updateSMHostField = function() {
-		if (jQuery('#sessionmanager_host').css('color') == 'grey') { jQuery('#sessionmanager_host').prop('value', i18n['sessionmanager_host_example']) };
 	}
 
 	/* CheckLogin */
@@ -195,7 +192,6 @@ function validate_settings() {
 	/* Enable or disable "connect" button */
 	if(/* Session manager OK ? */
 	   settings.sessionmanager != '' &&
-	   settings.sessionmanager != i18n['sessionmanager_host_example'] &&
 		 /* RDP provider available ? */
 		 nb_rdp_providers > 0 &&
 	   /* User login or local_credentials valid ? */
@@ -319,12 +315,6 @@ function initialize_ui() {
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_input_method').on('change keyup', function() { settings.rdp_input_method = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('keyup change', function() { settings.sessionmanager = jQuery(this).val(); validate_settings(); });
-	jQuery('#sessionmanager_host').on('focus blur', function(e) {
-		var example = i18n['sessionmanager_host_example'];
-		if(e.type == "focus") { if (jQuery(this).val() == example) jQuery('#sessionmanager_host').css('color', 'black').val('');
-		} else {                if (jQuery(this).val() == '') jQuery('#sessionmanager_host').css('color', 'grey').val(example); }
-		settings.sessionmanager = jQuery(this).val();
-	});
 	
 	jQuery('#session_language').on('change keyup', function() {
 		settings.language = jQuery(this).val();
@@ -351,14 +341,6 @@ function initialize_ui() {
 	
 	/* Init flag flag */
 	jQuery('#session_language').css({"background-image": url});
-
-	/* Initialize the SM Host field */
-	if (jQuery('#sessionmanager_host').val() == '') { jQuery('#sessionmanager_host').css('color', 'grey').val(i18n['sessionmanager_host_example']); }
-	window.updateSMHostField = function() {
-		if (jQuery('#sessionmanager_host').css('color') != 'grey')
-			return;
-		jQuery('#sessionmanager_host').prop('value', i18n['sessionmanager_host_example']);
-	}
 
 	/* Login/Password */
 	if(defaults.force_use_local_credentials) {

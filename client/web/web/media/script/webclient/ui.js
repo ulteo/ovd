@@ -332,11 +332,11 @@ function translateInterface(lang_) {
 					items[translations[i].getAttribute('id')] = translations[i].getAttribute('string');
 				}
 
-				applyTranslations(items);
-				
 				var js_translations = xml.getElementsByTagName('js_translation');
 				for (var i = 0; i < js_translations.length; i++)
 					i18n[js_translations[i].getAttribute('id')] = js_translations[i].getAttribute('string');
+
+				applyTranslations(items);
 			}
 		}
 	);
@@ -355,9 +355,8 @@ function applyTranslations(translations) {
 		else
 			obj.innerHTML = value;
 	}
-		
-	if (typeof window.updateSMHostField == 'function')
-		updateSMHostField();
+
+	jQuery('#sessionmanager_host').attr('placeholder', i18n['sessionmanager_host_example']);
 }
 
 /* ------- Other ------ */
