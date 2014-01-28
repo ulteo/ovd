@@ -239,6 +239,10 @@ class Profile(AbstractProfile):
 		# etre sur que le type est logoff !
 		
 		
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		profile_tmp_dir = os.path.join(d, "ulteo", "profile", self.session.user.name)
+		System.DeleteDirectory(profile_tmp_dir)
+
 		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
 		trial = 5
 		while not os.path.exists(d):
@@ -337,13 +341,15 @@ class Profile(AbstractProfile):
 		
 		if self.profile is not None:
 			# Redirect the Shell Folders to the remote profile
+			d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+			base = os.path.join(d, r"ulteo\profile", self.session.user.name)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, r"U:\Data\%s"%(self.DesktopDir))
 			win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, r"U:\Data\%s"%(self.DocumentsDir))
-			win32api.RegSetValueEx(key, "AppData", 0, win32con.REG_SZ, r"%ProgramData%\ulteo\profile\%USERNAME%\CSIDL_APPDATA")
-			win32api.RegSetValueEx(key, "Local AppData", 0, win32con.REG_SZ, r"%ProgramData%\ulteo\profile\%USERNAME%\CSIDL_APPDATA")
+			win32api.RegSetValueEx(key, "AppData", 0, win32con.REG_SZ, os.path.join(base, "CSIDL_APPDATA"))
+			win32api.RegSetValueEx(key, "Local AppData", 0, win32con.REG_SZ, os.path.join(base, "CSIDL_LOCAL_APPDATA"))
 			win32api.RegCloseKey(key)
 			
 	
