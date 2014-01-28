@@ -5,7 +5,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -333,3 +333,44 @@ class System(AbstractSystem):
 		
 		v = platform.version()[:3]
 		return names.get(v, v)
+	
+	
+	@staticmethod
+	def setdacl(path, sid, dacl):
+		dsi = win32security.GetFileSecurity(path, win32security.DACL_SECURITY_INFORMATION)
+		dsi.SetSecurityDescriptorDacl(1, dacl, 0)
+		win32security.SetFileSecurity(path, win32security.DACL_SECURITY_INFORMATION, dsi)
+	
+	
+	@staticmethod
+	def _rchown(path, sid, dacl):
+		System.setdacl(path, sid, dacl)
+		
+		for item in os.listdir(path):
+			itempath = os.path.join(path, item)
+			System.setdacl(itempath, sid, dacl)
+			
+			if os.path.isdir(itempath):
+				System._rchown(itempath, sid, dacl)
+	
+	
+	@staticmethod
+	def rchown(path, user):
+		sid = None
+		admins = None
+		try:
+			sid, d, type = win32security.LookupAccountName ("", user)
+			admins = win32security.ConvertStringSidToSid("S-1-5-32-544")
+		except:
+			return False
+		
+		dacl = win32security.ACL()
+		dacl.AddAccessAllowedAce(win32security.ACL_REVISION, ntsecuritycon.FILE_ALL_ACCESS, sid)
+		dacl.AddAccessAllowedAce(win32security.ACL_REVISION, ntsecuritycon.FILE_ALL_ACCESS, admins)
+		
+		try:
+			System._rchown(path, sid, dacl)
+		except Exception, e:
+			return False
+		
+		return True

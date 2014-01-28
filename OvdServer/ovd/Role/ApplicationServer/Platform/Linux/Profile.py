@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@ from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 from ovd.Platform.System import System
 
 class Profile(AbstractProfile):
+	TEMPORARY_PROFILE_PATH = "/var/spool/ulteo/ovd/profiles/"
 	MOUNT_POINT = "/mnt/ulteo/ovd"
 	DEFAULT_PERMISSION = "file_mode=0700,dir_mode=0600"
 	
@@ -303,6 +304,10 @@ class Profile(AbstractProfile):
 	
 	
 	def copySessionStart(self):
+		profile_tmp_dir = os.path.join(Profile.TEMPORARY_PROFILE_PATH, self.session.user.name)
+		if os.path.exists(profile_tmp_dir):
+			System.rchown(profile_tmp_dir, self.session.user.name)
+		
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		

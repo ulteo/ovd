@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -169,4 +169,9 @@ class System:
 				Logger.exception("Unable to check mount point %s"%path)
 			return False
 		return True
+	
+	
+	@staticmethod
+	def rchown(path, user):
+		raise NotImplementedError()
 

@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -319,3 +319,30 @@ class System(AbstractSystem):
 	@staticmethod
 	def prepareForSessionActions():
 		pass
+	
+	
+	@staticmethod
+	def _rchown(path, uid, gid):
+		os.chown(path, uid, gid)
+		for item in os.listdir(path):
+			itempath = os.path.join(path, item)
+			os.chown(itempath, uid, gid)
+			
+			if os.path.isdir(itempath):
+				System._rchown(itempath, uid, gid)
+	
+	
+	@staticmethod
+	def rchown(path, user):
+		p = None
+		try:
+			p = pwd.getpwnam(System.local_encode(user))
+		except:
+			return False
+		
+		try:
+			System._rchown(path, p.pw_uid, p.pw_gid)
+		except:
+			return False
+		
+		return True

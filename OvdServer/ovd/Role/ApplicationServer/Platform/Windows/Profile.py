@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2010, 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@ import win32file
 import win32netcon
 import win32security
 import win32wnet
+from win32com.shell import shell, shellcon
 
 from ovd.Logger import Logger
 from ovd.Platform.System import System
@@ -164,6 +165,13 @@ class Profile(AbstractProfile):
 	
 	
 	def copySessionStart(self):
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		profile_tmp_dir = os.path.join(d, "ulteo", "profile", self.session.user.name)
+		
+		if os.path.exists(profile_tmp_dir):
+			System.rchown(profile_tmp_dir, self.session.user.name)
+		
+		
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, "Data", f)
 			
