@@ -71,12 +71,10 @@ function validate_settings() {
 
 	/* Update session mode */
 	if(settings.mode == uovd.SESSION_MODE_DESKTOP) {
-			jQuery('#advanced_settings_applications').hide();
-			jQuery('#advanced_settings_desktop').show();
+			jQuery('label[for="desktop_fullscreen"]').parent().show();
 	}
 	if(settings.mode == uovd.SESSION_MODE_APPLICATIONS) {
-			jQuery('#advanced_settings_applications').show();
-			jQuery('#advanced_settings_desktop').hide();
+			jQuery('label[for="desktop_fullscreen"]').parent().hide();
 	}
 
 	/* Update InputMethod */

@@ -494,7 +494,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									</div>
 								</div>
 								
-								<div class="loginElement" id="advanced_settings_desktop">
+								<div class="loginElement">
 									<label class="loginLabel" for="desktop_fullscreen">
 										<div class="image_settings_desktop_fullscreen_png"></div>
 										<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
