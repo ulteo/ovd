@@ -200,6 +200,7 @@ function get_available_translations($lang) {
 
 		'session_manager'				=>	_('Session Manager'),
 		'login'							=>	_('Login'),
+		'login_detected'		=>	_('Login (detected)'),
 		'password'						=>	_('Password'),
 		'use_local_credentials'			=>	_('Use local credentials'),
 		'use_local_credentials_yes'		=>	_('Yes'),

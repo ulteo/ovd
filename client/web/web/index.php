@@ -57,9 +57,10 @@ if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
 	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
 
 $force_sso = false;
+$wi_remote_user_login = '';
 if (defined('OPTION_FORCE_SSO') && OPTION_FORCE_SSO === true) {
 	if (array_key_exists('REMOTE_USER', $_SERVER)) {
-		$wi_user_login = $_SERVER['REMOTE_USER'];
+		$wi_remote_user_login = $_SERVER['REMOTE_USER'];
 		$force_sso = true;
 		$wi_use_local_credentials = 0;
 	}
@@ -433,11 +434,10 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									<?php
 										}
 									?>
-									<span id="user_login_local" style="display: none"></span>
 								</div>
 							</div>
 								
-							<div class="loginElement" id="password_row">
+							<div class="loginElement">
 								<label class="loginLabel" for="user_password">
 									<div class="image_user_password_png"></div>
 									<strong><span id="password_gettext">&nbsp;</span></strong>
@@ -446,10 +446,20 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									<input type="password" id="user_password" value=""/>
 								</div>
 							</div>
+
+							<div class="loginElement">
+								<label class="loginLabel" for="user_login_detected">
+									<div class="image_user_login_png"></div>
+									<strong><span id="login_detected_gettext">&nbsp;</span></strong>
+								</label>
+								<div class="loginField">
+									<input type="text" id="user_login_detected" disabled="disabled" value="<?php echo $wi_remote_user_login; ?>"/>
+								</div>
+							</div>
 							
 							<div id="advanced_settings" style="display: none;">
 								
-								<div class="loginElement" id="use_local_credentials"<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
+								<div class="loginElement" <?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
 									<label class="loginLabel" for="use_local_credentials_true">
 										<div class="image_use_local_credentials_png"></div>
 										<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>

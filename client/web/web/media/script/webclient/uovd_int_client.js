@@ -168,14 +168,15 @@ function validate_settings() {
 
 	/* CheckLogin */
 	if(settings.use_local_credentials) {
-		jQuery('#user_login').hide();
-		jQuery('#user_login_local').show();
-		jQuery('#password_row').hide();
+		jQuery('label[for="user_login"]').parent().hide();
+		jQuery('label[for="user_password"]').parent().hide();
+		jQuery('label[for="user_login_detected"]').parent().show();
 
-		if(jQuery('#user_login_local').html() == "") {
+		if(jQuery('#user_login_detected').val() == "") {
 			var detection = function(detected) {
 				if(detected) {
-					jQuery('#user_login_local').html(detected);
+					jQuery('#user_login_detected').val(detected);
+					settings.login = detected;
 				} else {
 					/* !!! erreur */
 				}
@@ -186,12 +187,15 @@ function validate_settings() {
 			else { detection(); }
 		}
 	} else if(settings.force_sso) {
-		jQuery('#user_login').prop('disabled', true);
-		jQuery('#password_row').hide();
+		jQuery('label[for="user_login"]').parent().hide();
+		jQuery('label[for="user_password"]').parent().hide();
+		jQuery('label[for="user_login_detected"]').parent().show();
+		settings.login = jQuery('#user_login_detected').val();
 	} else {
-		jQuery('#user_login').show();
-		jQuery('#user_login_local').hide();
-		jQuery('#password_row').show();
+		jQuery('label[for="user_login"]').parent().show();
+		jQuery('label[for="user_password"]').parent().show();
+		jQuery('label[for="user_login_detected"]').parent().hide();
+		settings.login = jQuery('#user_login').val();
 	}
 
 	/* Enable or disable "connect" button */
