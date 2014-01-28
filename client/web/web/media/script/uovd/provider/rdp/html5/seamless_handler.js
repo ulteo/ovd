@@ -3,7 +3,7 @@ uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 	this.rdp_provider = rdp_provider;
 	this.connections = this.rdp_provider.connections;
 	this.handler = jQuery.proxy(this.handleEvents, this);
-	this.message_id = 0;
+	this.message_id = {};
 	this.confirmation_popup = {};
 
 	/* Install instruction hook */
@@ -95,9 +95,13 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 		if(seamless[0] == "HELLO") {
 			/* seamless[2] = flags (0x0001 = reconnect)
 			*/
+
+			/* Initialize message ID */
+			this.message_id[server_id] = 0;
+
 			if(seamless[2] == 1) {
 				/* Begin session recovery */
-				var seamless_message = "SYNC,"+(this.message_id++)+",\n";
+				var seamless_message = "SYNC,"+(this.message_id[server_id]++)+",\n";
 				guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 			}
 		} else if(seamless[0] == "CREATE") {
@@ -223,7 +227,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 		var server_id = params["server_id"];
 		var connection = this.connections[server_id];
 		var guac_tunnel = connection.guac_tunnel
-		var seamless_message = "DESTROY,"+(this.message_id++)+","+id+"\n";
+		var seamless_message = "DESTROY,"+(this.message_id[server_id]++)+","+id+"\n";
 		guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 	} else if(type == "ovd.rdpProvider.seamless.out.windowPropertyChanged") {
 		var id = "0x"+parseInt(params["id"]).toString(16);
@@ -239,7 +243,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				var y = value[1];
 				var w = value[2];
 				var h = value[3];
-				var seamless_message = "POSITION,"+(this.message_id++)+","+id+","+x+","+y+","+w+","+h+",0x0\n";
+				var seamless_message = "POSITION,"+(this.message_id[server_id]++)+","+id+","+x+","+y+","+w+","+h+",0x0\n";
 				guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 				break
 
@@ -250,13 +254,13 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 				if(value == "Iconify")    state = "0x1";
 				if(value == "Maximized")  state = "0x2";
 				if(value == "Fullscreen") state = "0x3";
-				var seamless_message = "STATE,"+(this.message_id++)+","+id+","+state+",0x0\n";
+				var seamless_message = "STATE,"+(this.message_id[server_id]++)+","+id+","+state+",0x0\n";
 				guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 				break
 
 			case "focus" :
 				value = value ? "0x0" : "0x1";
-				var seamless_message = "FOCUS,"+(this.message_id++)+","+id+","+value+"\n";
+				var seamless_message = "FOCUS,"+(this.message_id[server_id]++)+","+id+","+value+"\n";
 				guac_tunnel.sendMessage("seamrdp", base64_encode(seamless_message));
 				break
 		}
