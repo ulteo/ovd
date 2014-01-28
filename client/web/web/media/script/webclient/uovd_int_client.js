@@ -136,6 +136,13 @@ function validate_settings() {
 		showSystemTestError("No RDP provider");
 	}
 
+	/* Hide Keymap selection in case of HTML5 */
+	if(settings.rdp_provider == 'html5') {
+		jQuery('label[for="session_keymap"]').parent().hide();
+	} else {
+		jQuery('label[for="session_keymap"]').parent().show();
+	}
+
 	/* Update HTTP providers */
 	if(defaults.gateway) {
 		if(defaults.use_proxy) { settings.http_provider = "proxy"; }
