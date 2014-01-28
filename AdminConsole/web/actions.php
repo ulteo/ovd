@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
  * Author David LECHEVALIER <david@ulteo.com> 2012
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
@@ -913,17 +913,17 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 }
 
 
-if ($_REQUEST['name'] == 'License') {
+if ($_REQUEST['name'] == 'Certificate') {
 	if (! checkAuthorization('manageConfiguration'))
 		redirect();
 	
 	if ($_REQUEST['action'] == 'add') {
-		if (! array_key_exists('license', $_FILES)) {
-			popup_info(_("No license uploaded"));
+		if (! array_key_exists('certificate', $_FILES)) {
+			popup_info(_("No certificate uploaded"));
 			redirect();
 		}
 		
-		$upload = $_FILES['license'];
+		$upload = $_FILES['certificate'];
 		if ($upload['error']) {
 			switch ($upload['error']) {
 				case 1: // UPLOAD_ERR_INI_SIZE
@@ -952,9 +952,9 @@ if ($_REQUEST['name'] == 'License') {
 			redirect();
 		}
 		
-		$res = $_SESSION['service']->license_add(base64_encode($content));
+		$res = $_SESSION['service']->certificate_add(base64_encode($content));
 		if (! $res) {
-			popup_error(_('Uploaded file is not a valid license'));
+			popup_error(_('Uploaded file is not a valid certificate'));
 			redirect();
 		}
 	}
@@ -964,12 +964,12 @@ if ($_REQUEST['name'] == 'License') {
 			redirect();
 		}
 		
-		$_SESSION['service']->license_del($_REQUEST['id']);
+		$_SESSION['service']->certificate_del($_REQUEST['id']);
 		redirect();
 	}
 
 	if ($_REQUEST['action'] == 'reset_named_users') {
-		$_SESSION['service']->license_reset_named_users();
+		$_SESSION['service']->certificate_reset_named_users();
 		redirect();
 	}
 }

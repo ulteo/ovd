@@ -227,10 +227,10 @@ if (isAuthorized('viewConfiguration')) {
 			  'parent' => array('configuration'));
 
 	if (is_premium()) {
-		$menu['configuration_licensing'] = 
-			array('id' => 'configuration_licensing',
-				  'name' => _('Licensing'),
-				  'page' => 'licensing.php',
+		$menu['configuration_certificate'] = 
+			array('id' => 'configuration_certificate',
+				  'name' => _('Certificate'),
+				  'page' => 'certificate.php',
 				  'parent' => array('configuration'));
 	}
 }
@@ -355,17 +355,17 @@ function page_header($params_=array()) {
     $infos = array();
   
   if (is_premium()) {
-    $link = array("<a href='/ovd/admin/licensing.php'>", "</a>");
-    $expirity = $_SESSION['service']->has_valid_license();
+    $link = array("<a href='/ovd/admin/certificate.php'>", "</a>");
+    $expirity = $_SESSION['service']->has_valid_certificate();
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-	$errors[] = sprintf(_("Your %sPremium license%s will expire in %d days"), $link[0], $link[1], $expirity);
+	$errors[] = sprintf(_("Your %sPremium certificate%s will expire in %d days"), $link[0], $link[1], $expirity);
       } elseif ($expirity <= 0) {
-	$errors[] = sprintf(_("Your %sPremium license%s has expired."), $link[0], $link[1]);
+	$errors[] = sprintf(_("Your %sPremium certificate%s has expired."), $link[0], $link[1]);
       }
     } else {
-      $errors[] = sprintf(_("You don't have any valid %sPremium license%s."), $link[0], $link[1]);
+      $errors[] = sprintf(_("You don't have any valid %sPremium certificate%s."), $link[0], $link[1]);
     }
   }
   

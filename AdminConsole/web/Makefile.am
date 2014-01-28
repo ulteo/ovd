@@ -1,10 +1,11 @@
-# Copyright (C) 2008-2013 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@linutop.com> 2008-2009
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -35,7 +36,7 @@ scripts_DATA = actions.php \
                configuration-sumup.php \
                error.php \
                index.php \
-               licensing.php \
+               certificate.php \
                login.php \
                logout.php \
                logs.php \

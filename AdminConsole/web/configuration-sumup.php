@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET  <laurent@ulteo.com> 2009-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -143,20 +143,20 @@ echo $buf;
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="licensing.php"><?php echo _("License"); ?></a></h2>
+  <h2><a href="certificate.php"><?php echo _("Certificate"); ?></a></h2>
 <?php
-    $expirity = $_SESSION['service']->has_valid_license();
+    $expirity = $_SESSION['service']->has_valid_certificate();
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-        echo sprintf(_("Your Premium license will expire in %d days"), $expirity);
+        echo sprintf(_("Your Premium certificate will expire in %d days"), $expirity);
       } elseif ($expirity <= 0) {
-        echo _("Your Premium license has expired.");
+        echo _("Your Premium certificate has expired.");
       } else {
-        echo sprintf(_("Your Premium license is valid for %d days."), $expirity);
+        echo sprintf(_("Your Premium certificate is valid for %d days."), $expirity);
       }
     } else {
-      echo _("You don't have any valid Premium license.");
+      echo _("You don't have any valid Premium certificate.");
     }
 ?>
   </div>

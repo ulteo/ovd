@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2012-2013 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -4698,41 +4698,41 @@ class OvdAdminSoap {
 		return $ret;
 	}
 	
-	public function has_valid_license() {
+	public function has_valid_certificate() {
 		if (class_exists("PremiumManager")) {
-			return PremiumManager::has_valid_license();
+			return PremiumManager::has_valid_certificate();
 		}
 		
 		return false;
 	}
 	
-	public function licenses_list() {
+	public function certificates_list() {
 		$this->check_authorized('manageConfiguration');
 
 		if (class_exists("PremiumManager")) {
-			return PremiumManager::licenses_list();
+			return PremiumManager::certificates_list();
 		}
 		
 		return array();
 	}
 
-	public function licenses_limits() {
+	public function certificates_limits() {
 		$this->check_authorized('manageConfiguration');
 
 		if (class_exists("PremiumManager")) {
-			return PremiumManager::licenses_limits();
+			return PremiumManager::certificates_limits();
 		}
 		
 		return array();
 	}
 	
-	public function license_add($content_) {
+	public function certificate_add($content_) {
 		$this->check_authorized('manageConfiguration');
 		
 		if (class_exists("PremiumManager")) {
-			$result = PremiumManager::license_add($content_);
+			$result = PremiumManager::certificate_add($content_);
 			if ($result !== false) {
-				$this->log_action('license_add', array('id' => $result));
+				$this->log_action('certificate_add', array('id' => $result));
 				return true;
 			}
 		}
@@ -4740,13 +4740,13 @@ class OvdAdminSoap {
 		return false;
 	}
 	
-	public function license_del($id_) {
+	public function certificate_del($id_) {
 		$this->check_authorized('manageConfiguration');
 		
 		if (class_exists("PremiumManager")) {
-			$result = PremiumManager::license_del($id_);
+			$result = PremiumManager::certificate_del($id_);
 			if ($result !== false) {
-				$this->log_action('license_del', array('id' => $result));
+				$this->log_action('certificate_del', array('id' => $result));
 				return true;
 			}
 		}
@@ -4754,12 +4754,12 @@ class OvdAdminSoap {
 		return false;
 	}
 
-	public function license_reset_named_users() {
+	public function certificate_reset_named_users() {
 		$this->check_authorized('manageConfiguration');
 		
 		if (class_exists("PremiumManager")) {
-			PremiumManager::license_reset_named_users();
-			$this->log_action('license_reset_named_users');
+			PremiumManager::certificate_reset_named_users();
+			$this->log_action('certificate_reset_named_users');
 			return true;
 		}
 		
