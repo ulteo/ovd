@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import glob
+import grp
 import os
 import statvfs
 import time
@@ -156,6 +157,14 @@ class Role(AbstractRole):
 		
 		htgroup = HTGroup(Config.dav_group_file)
 		htgroup.purge()
+		
+		try:
+			groups = [g.gr_name for g in grp.getgrall() if g.gr_name.startswith("ovd_share_")]
+			for g in groups:
+				System.groupDelete(g)
+                except Exception:
+                        Logger.exception("Failed to purge groups")
+           		ret = False
 		
 		return ret
 	

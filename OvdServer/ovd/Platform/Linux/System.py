@@ -238,6 +238,17 @@ class System(AbstractSystem):
 	
 	
 	@staticmethod
+	def groupDelete(name_):
+		cmd = "groupdel  %s"%(name_)
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("groupDelete return '%d' (%s)"%(p.returncode, p.stdout.read().decode("UTF-8")))
+			return False
+		
+		return True
+	
+	
+	@staticmethod
 	def groupExist(name_):
 		try:
 			grp.getgrnam(name_)

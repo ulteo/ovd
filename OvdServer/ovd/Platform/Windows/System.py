@@ -219,6 +219,17 @@ class System(AbstractSystem):
 	
 	
 	@staticmethod
+	def groupDelete(name_):
+		try:
+			win32net.NetLocalGroupDel(None, name_)
+		except win32net.error:
+			Logger.exception("SessionManagement createDeleteOVD")
+			return False
+		
+		return True
+	
+	
+	@staticmethod
 	def groupExist(name_):
 		try:
 			win32net.NetLocalGroupGetInfo(None, name_, 0)

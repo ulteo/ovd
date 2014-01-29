@@ -82,6 +82,10 @@ class System:
 		raise NotImplementedError()
 	
 	@staticmethod
+	def groupDelete(name_):
+		raise NotImplementedError()
+	
+	@staticmethod
 	def groupExist(name_):
 		raise NotImplementedError()
 	
