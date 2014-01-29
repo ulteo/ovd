@@ -241,7 +241,8 @@ class Profile(AbstractProfile):
 		
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		profile_tmp_dir = os.path.join(d, "ulteo", "profile", self.session.user.name)
-		System.DeleteDirectory(profile_tmp_dir)
+		if os.path.exists(profile_tmp_dir):
+			System.DeleteDirectory(profile_tmp_dir)
 
 		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
 		trial = 5
