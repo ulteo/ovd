@@ -48,7 +48,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			applications_sorted.sort(function(a, b) { var n1=a.name.toLowerCase(); var n2=b.name.toLowerCase(); return (n1>n2 ? 1 : (n1<n2 ? -1 : 0)); })
 
 			/* URL basename for icons */
-			var icon_basename = (session.mode_gateway == true) ? "client/" : "";
+			var icon_webservice = (session.mode_gateway == true) ? "client/icon" : "icon.php";
 
 			/* Create launchers */
 			var ul = jQuery(document.createElement("ul"));
@@ -62,7 +62,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 				var img = jQuery(document.createElement("img"));
 				img.addClass("application_icon");
-				img.prop("src", icon_basename+"icon.php?id="+id);
+				img.prop("src", icon_webservice+"?id="+id);
 
 				var p_name = jQuery(document.createElement("p"));
 				p_name.addClass("application_name");

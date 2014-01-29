@@ -50,7 +50,6 @@ if (is_array($headers) && array_key_exists($SERVICE_HEADER, $headers)) {
 		echo 'Bad service requested';
 		die();
 	}
-	$service = $service.'.php';
 } else {
 	echo 'No service requested';
 	die();
