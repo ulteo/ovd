@@ -1,4 +1,4 @@
-/* DirectAjaxProvider */
+/* DirectHttpProvider */
 
 /* Contact directly the session manager.
    Works only with the ssl gateway because of the 

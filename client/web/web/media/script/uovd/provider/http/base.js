@@ -11,9 +11,9 @@ uovd.provider.http.Base.prototype.sessionStart = function() {
 	this.sessionStart_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
 		if(error) {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionStart", self, {"state":uovd.ERROR, "code":error});
+			self.session_management.fireEvent("ovd.httpProvider.sessionStart", self, {"state":uovd.ERROR, "code":error});
 		} else {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionStart", self, {"state":uovd.SUCCESS});
+			self.session_management.fireEvent("ovd.httpProvider.sessionStart", self, {"state":uovd.SUCCESS});
 		}
 	});
 }
@@ -23,9 +23,9 @@ uovd.provider.http.Base.prototype.sessionStatus = function() {
 	this.sessionStatus_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
 		if(error) {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionStatus", self, {"state":uovd.ERROR, "code":error});
+			self.session_management.fireEvent("ovd.httpProvider.sessionStatus", self, {"state":uovd.ERROR, "code":error});
 		} else {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionStatus", self, {"state":uovd.SUCCESS});
+			self.session_management.fireEvent("ovd.httpProvider.sessionStatus", self, {"state":uovd.SUCCESS});
 		}
 	});
 }
@@ -35,9 +35,9 @@ uovd.provider.http.Base.prototype.sessionEnd = function() {
 	this.sessionEnd_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
 		if(error) {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionEnd", self, {"state":uovd.ERROR, "code":error});
+			self.session_management.fireEvent("ovd.httpProvider.sessionEnd", self, {"state":uovd.ERROR, "code":error});
 		} else {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionEnd", self, {"state":uovd.SUCCESS});
+			self.session_management.fireEvent("ovd.httpProvider.sessionEnd", self, {"state":uovd.SUCCESS});
 		}
 	});
 }
@@ -47,9 +47,9 @@ uovd.provider.http.Base.prototype.sessionSuspend = function() {
 	this.sessionSuspend_implementation( function(xml) {
 		var error = self.session_management.session.update(xml);
 		if(error) {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionSuspend", self, {"state":uovd.ERROR, "code":error});
+			self.session_management.fireEvent("ovd.httpProvider.sessionSuspend", self, {"state":uovd.ERROR, "code":error});
 		} else {
-			self.session_management.fireEvent("ovd.ajaxProvider.sessionSuspend", self, {"state":uovd.SUCCESS});
+			self.session_management.fireEvent("ovd.httpProvider.sessionSuspend", self, {"state":uovd.SUCCESS});
 		}
 	});
 }

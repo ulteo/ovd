@@ -5,7 +5,7 @@ uovd.provider.Java = function(node) {
 	uovd.provider.http.Base.prototype.initialize.apply(this);
 	uovd.provider.rdp.Base.prototype.initialize.apply(this);
 
-	/* Ajax provider initializer */
+	/* Http provider initializer */
 	this.request_cache = {};
 	this.request_cache_index = 0;
 
@@ -117,7 +117,7 @@ uovd.provider.Java.prototype.set_applet_codebase = function(applet_codebase_) {
 	return this;
 }
 
-/* --------------- Ajax provider part --------------- */
+/* --------------- Http provider part --------------- */
 
 uovd.provider.Java.prototype.applet_ajaxResponse = function(req_id, http_code, contentType, data) {
 	if(! this.request_cache[req_id]) { return; }

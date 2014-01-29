@@ -44,7 +44,7 @@ function startSession() {
 	var defaults = window.ovd.defaults;
 
 	framework.session_management.setParameters(settings);
-	framework.session_management.setAjaxProvider(framework.http_providers[settings.http_provider]);
+	framework.session_management.setHttpProvider(framework.http_providers[settings.http_provider]);
 	framework.session_management.setRdpProvider(framework.rdp_providers[settings.rdp_provider]);
 	framework.session_management.setWebAppsProvider(framework.webapps_providers[settings.webapps_provider]);
 	framework.session_management.start();

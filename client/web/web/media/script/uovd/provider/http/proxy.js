@@ -1,4 +1,4 @@
-/* ProxyAjaxProvider */
+/* ProxyHttpProvider */
 
 /* Provides all OVD services through an unique webService
    specified in the constructor (sample webservice is proxy.php)
