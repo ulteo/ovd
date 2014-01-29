@@ -13,13 +13,3 @@ uovd.server.WebApps = function(session, xml) {
 };
 
 uovd.server.WebApps.prototype = new uovd.server.Base();
-
-uovd.server.WebApps.prototype.setStatus = function(status) {
-	/* Server status message */
-	var old_status = this.status;
-	this.status = status
-
-	if(old_status != this.status) {
-		this.session.session_management.fireEvent("ovd.session.server.statusChanged", this, {"from":old_status,"to":this.status});
-	}
-};
