@@ -204,7 +204,12 @@ class Role(AbstractRole):
 		p = System.execute("net usershare list")
 		if p.returncode is not 0:
 			Logger.error("FS: unable to 'net usershare list': %d => %s"%(p.returncode, p.stdout.read()))
-			return []
+			res = []
+			try:
+				res = os.listdir("/var/lib/samba/usershares/")
+			except Exception, e:
+				Logger.exception("FS: unable to list content of /var/lib/samba/usershares")
+			return res
 		
 		names = [s.strip() for s in p.stdout.read().splitlines()]
 		
