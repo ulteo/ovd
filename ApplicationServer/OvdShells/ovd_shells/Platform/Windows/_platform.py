@@ -132,7 +132,6 @@ def getUserSessionDir():
 	d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 	d = d.encode(encoding)
 	user = os.environ["USERNAME"]
-	user = user.encode(encoding)
 	
 	return os.path.join(d, "ulteo", "ovd", user)
 

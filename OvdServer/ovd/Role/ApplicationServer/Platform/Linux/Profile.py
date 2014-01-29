@@ -152,9 +152,7 @@ class Profile(AbstractProfile):
 				
 			if not System.mount_point_exist(self.homeDir):
 				os.makedirs(self.homeDir)
-			
-			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.profile_mount_point, self.homeDir, self.session.user.name)
-			cmd = self.transformToLocaleEncoding(cmd)
+			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.transformToLocaleEncoding(self.profile_mount_point), self.homeDir, self.transformToLocaleEncoding(self.session.user.name))
 			Logger.debug("Profile bind dir command '%s'"%(cmd))
 			p = System.execute(cmd)
 			if p.returncode != 0:
@@ -169,6 +167,7 @@ class Profile(AbstractProfile):
 		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
+			dest = self.transformToLocaleEncoding(dest)
 			i = 0
 			while System.mount_point_exist(dest):
 				dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest()  + str(random.random()))
@@ -194,7 +193,7 @@ class Profile(AbstractProfile):
 				sharedFolder["mountdest"] = dest
 				home = self.homeDir
 				
-				dst = os.path.join(home, sharedFolder["name"])
+				dst = os.path.join(home, self.transformToLocaleEncoding(sharedFolder["name"]))
 				i = 0
 				while System.mount_point_exist(dst) and self.ismount(dst):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
@@ -204,7 +203,6 @@ class Profile(AbstractProfile):
 					os.makedirs(dst)
 				
 				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
-				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile bind dir command '%s'"%(cmd))
 				p = System.execute(cmd)
 				if p.returncode != 0:
@@ -237,7 +235,6 @@ class Profile(AbstractProfile):
 				Logger.exception("Unable to check mount point %s"%d)
 			
 			cmd = "umount \"%s\""%(d)
-			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile bind dir command: '%s'"%(cmd))
 			p = System.execute(cmd)
 			if p.returncode != 0:
@@ -247,7 +244,6 @@ class Profile(AbstractProfile):
 		for sharedFolder in self.sharedFolders:
 			if sharedFolder.has_key("mountdest"):
 				cmd = """umount "%s" """%(sharedFolder["mountdest"])
-				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile sharedFolder umount dir command: '%s'"%(cmd))
 				p = System.execute(cmd)
 				if p.returncode != 0:
@@ -371,7 +367,6 @@ class Profile(AbstractProfile):
 	def ismount(path):
 		# The content returned by /proc/mounts escape space using \040
 		escaped_path = path.replace(" ", "\\040")
-		escaped_path = Profile.transformToLocaleEncoding(escaped_path)
 		
 		for line in file('/proc/mounts'):
 			components = line.split()
@@ -398,7 +393,6 @@ class Profile(AbstractProfile):
 		return err in networkError
 	
 	def delGTKBookmark(self, url):
-		url = self.transformToLocaleEncoding(url)
 		url = urllib.pathname2url(url)
 		buffer = ''
 		
@@ -418,7 +412,6 @@ class Profile(AbstractProfile):
 	
 	
 	def addGTKBookmark(self, url):
-		url = self.transformToLocaleEncoding(url)
 		url = urllib.pathname2url(url)
 		
 		path = os.path.join(self.homeDir, ".gtk-bookmarks")
@@ -440,5 +433,5 @@ class Profile(AbstractProfile):
 			
 			path = os.path.join(dest_dir, sharedFolder["rid"])
 			f = file(path, "w")
-			f.write(self.transformToLocaleEncoding(sharedFolder["local_path"]))
+			f.write(sharedFolder["local_path"])
 			f.close()

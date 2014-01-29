@@ -273,7 +273,7 @@ class User(AbstractUser):
 	
 	def check_remaining_mount_points(self):
 		try:
-			user = pwd.getpwnam(self.name)
+			user = pwd.getpwnam(System.local_encode(self.name))
 		except KeyError:
 			return False
 		
