@@ -70,7 +70,7 @@ class Folders(AbstractFolders):
 				
 				try:
 					win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", mount_uri, None, login, password)
-					profile["local_path"] = "U:\\"
+					profile["local_path"] = "U:\\Data\\"
 					if login is not None:
 						alreadyAuthenticatedCIFSShares[server] = (login, password)
 				  
