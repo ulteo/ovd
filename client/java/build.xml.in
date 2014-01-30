@@ -229,11 +229,11 @@
 
   <!-- OVD native client part -->
 
-  <target name="ovdNativeClient_licensing">
+  <target name="ovdNativeClient_certificate">
     <antcall target="precompile_client" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
-           includes="org/ulteo/ovd/premium/Licensing.java"
+           includes="org/ulteo/ovd/premium/Certificate.java"
            debug="${javac.debug}" debuglevel="lines,vars,source">
       <classpath>
         <fileset dir="required_libraries" includes="*.jar" />
@@ -242,7 +242,7 @@
   </target>
 
   <target name="ovdNativeClient">
-    <antcall target="ovdNativeClient_licensing" />
+    <antcall target="ovdNativeClient_certificate" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/NativeClient.java"

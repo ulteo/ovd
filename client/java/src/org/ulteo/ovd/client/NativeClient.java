@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
@@ -7,7 +7,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * 
  * This program is free software; you can redistribute it and/or 
@@ -776,20 +776,20 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.loadingFrame.updateProgression(LoadingStatus.SM_CONNECTION, 0);
 		
 		try {
-			Class<?> licensing_class = Class.forName("org.ulteo.ovd.premium.Licensing");
-			Constructor<?> licensing_constructor = licensing_class.getConstructor(SessionManagerCommunication.class);
-			Object l = licensing_constructor.newInstance(dialog);
-			Logger.debug("Licensing system successfully loaded");
-			java.lang.reflect.Method licensing_check = licensing_class.getMethod("check");
-			licensing_check.invoke(l);
+			Class<?> certificate_class = Class.forName("org.ulteo.ovd.premium.Certificate");
+			Constructor<?> certificate_constructor = certificate_class.getConstructor(SessionManagerCommunication.class);
+			Object l = certificate_constructor.newInstance(dialog);
+			Logger.debug("Certificate system successfully loaded");
+			java.lang.reflect.Method certificate_check = certificate_class.getMethod("check");
+			certificate_check.invoke(l);
 		} catch (ClassNotFoundException e) {
-			Logger.debug("No licensing system found");
+			Logger.debug("No Certificate system found");
 		} catch (InvocationTargetException e) {
-			Logger.debug("Licensing error: " + e.getCause().getMessage());
-			throw new UnsupportedOperationException(I18n._("Unable to find a valid licence"));
+			Logger.debug("Certificate error: " + e.getCause().getMessage());
+			throw new UnsupportedOperationException(I18n._("Unable to find a valid certificate"));
 		} catch (Exception e) {
-			Logger.debug("Licensing system error: " + e.getClass().getName() + " " + e.getMessage());
-			throw new UnsupportedOperationException(I18n._("Unable to find a valid licence"));
+			Logger.debug("Certificate system error: " + e.getClass().getName() + " " + e.getMessage());
+			throw new UnsupportedOperationException(I18n._("Unable to find a valid certificate"));
 		}
 		
 		Properties request = new Properties(this.opts.sessionMode);
