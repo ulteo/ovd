@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2014
 # Author David LECHEVALIER <david@ulteo.com> 2011-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
@@ -50,6 +50,25 @@ class SessionManagement(Process):
 	
 	
 	def run(self):
+		try:
+			self.main()
+		except Exception, err:
+			from ovd.Config import Config
+			import os
+			import time
+			import traceback
+			try:
+				f = open("%s-crash-%d.txt"%(Config.log_file, os.getpid()), "a")
+				f.write("%s - Unhandled exception: \n"%(time.asctime()))
+				f.write(traceback.format_exc())
+				f.close()
+			except IOError, err:
+				pass
+			
+			raise err # Should we raise or continue at this point ??
+	
+	
+	def main(self):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
 		
