@@ -60,7 +60,7 @@ uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 					params["value"] = true;
 					session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", self, params);
 				}
-			}, 3 * 1000);
+			}, 5 * 1000);
 		})(i);
 	}
 
