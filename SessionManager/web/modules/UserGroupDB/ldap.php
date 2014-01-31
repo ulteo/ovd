@@ -261,7 +261,39 @@ class UserGroupDB_ldap {
 	
 	public function get_groups_including_user_from_list($groups_dn, $user_) {
 		$groups_result = array();
-		if (in_array('user_field', $this->preferences['group_match_user'])) {
+		# Be sure to use the simpliest method
+		# AD recursive group search can cause some problems with the other method
+		if (in_array('group_field', $this->preferences['group_match_user'])) {
+			$filters = array();
+			$filter_rdn_rules = array();
+			foreach($groups_dn as $group_dn) {
+				$expl = explode_with_escape(',', $group_dn, 2);
+				$rdn = $expl[0];
+				array_push($filter_rdn_rules, $rdn);
+			}
+			
+			array_push($filters, LDAP::join_filters($filter_rdn_rules, '|'));
+			
+			if ($this->preferences['group_field_type'] == 'user_dn') {
+				$item = $user_->getAttribute('dn');
+			}
+			else {
+				$item = $user_->getAttribute('login');
+			}
+			
+			array_push($filters, $this->preferences['group_field'].'='.$item);
+			
+			$filter = LDAP::join_filters($filters, '&');
+			$groups2 = $this->import_from_filter($filter);
+			foreach($groups2 as $group_id => $group) {
+				if (! in_array($group_id, $groups_dn)) {
+					continue;
+				}
+				
+				$groups_result[$group->id] = $group;
+			}
+		}
+		else { // user_field
 			$groups = $this->imports($groups_dn);
 			
 			$field = $this->preferences['user_field'];
@@ -306,36 +338,6 @@ class UserGroupDB_ldap {
 				}
 				
 				if (! in_array($item, $memberof)) {
-					continue;
-				}
-				
-				$groups_result[$group->id] = $group;
-			}
-		}
-		else { // group_field
-			$filters = array();
-			$filter_rdn_rules = array();
-			foreach($groups_dn as $group_dn) {
-				$expl = explode_with_escape(',', $group_dn, 2);
-				$rdn = $expl[0];
-				array_push($filter_rdn_rules, $rdn);
-			}
-			
-			array_push($filters, LDAP::join_filters($filter_rdn_rules, '|'));
-			
-			if ($this->preferences['group_field_type'] == 'user_dn') {
-				$item = $user_->getAttribute('dn');
-			}
-			else {
-				$item = $user_->getAttribute('login');
-			}
-			
-			array_push($filters, $this->preferences['group_field'].'='.$item);
-			
-			$filter = LDAP::join_filters($filters, '&');
-			$groups2 = $this->import_from_filter($filter);
-			foreach($groups2 as $group_id => $group) {
-				if (! in_array($group_id, $groups_dn)) {
 					continue;
 				}
 				
