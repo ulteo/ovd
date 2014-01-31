@@ -92,6 +92,10 @@ function initialize_framework() {
 			configureUI(mode);
 			pullMainContainer();
 		}
+
+		if(to == uovd.SESSION_STATUS_LOGGED) {
+			hideSplash();
+		}
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
