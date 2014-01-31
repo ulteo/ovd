@@ -238,7 +238,6 @@ function initialize_settings() {
 	settings.width                 = jQuery(window).innerWidth();
 	settings.height                = jQuery(window).innerHeight();
 	settings.fullscreen            = false;
-	settings.debug                 = true;
 	settings.use_local_credentials = defaults.force_use_local_credentials;
 	settings.rdp_provider          = defaults.rdp_provider;
 	settings.http_provider         = "proxy";
