@@ -85,11 +85,6 @@
       <itemizedlist>
         <listitem id="repository_step1">
           <xi:include href="&base;" xpointer="repository_online_step1_para" />
-          <important>
-            <para>
-              You have to replace LOGIN and PASSWORD by your own.
-            </para>
-          </important>
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main
 deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
