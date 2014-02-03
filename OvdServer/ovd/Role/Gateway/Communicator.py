@@ -280,7 +280,7 @@ class HttpClientCommunicator(SSLCommunicator):
 
 		# Check last service. If different, a new serverCommunicator must be created
 		reconnect = False
-		if self.last_service is not None and self.last_service != self.http.service :
+		if self.last_service is not None and self.http.service is not None and self.last_service != self.http.service :
 			names = ['SESSION_MANAGER', 'ADMINISTRATION', 'WEB_CLIENT', 'ROOT']
 			Logger.debug("Gateway:: Client service type switched from "+names[self.last_service]+" to "+names[self.http.service])
 			reconnect = True
