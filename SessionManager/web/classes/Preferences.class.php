@@ -478,6 +478,10 @@ class Preferences {
 		$c_user_profile->addReference('1', $c);
 		$this->add($c,'general','session_settings_defaults');
 		
+		$c = new ConfigElement_select('profile_mode', 'advanced');
+		$c->setContentAvailable(array('standard', 'advanced'));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_select('auto_create_profile', 1);
 		$c->setContentAvailable(array(0, 1));
 		$c_user_profile->addReference('1', $c);

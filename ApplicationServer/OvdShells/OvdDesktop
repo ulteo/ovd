@@ -48,17 +48,17 @@ def main():
 		
 		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
+	Util.loadUserEnv(user_sdir)
+	config = Config()
+	config.load(user_sdir)
+	
 	# Load profile share
-	folders = Folders()
+	folders = Folders(config.profile_mode)
 	folders.registerShares()
 	
 	# Synchronize Shortcuts
 	shortcuts = Shortcuts()
 	shortcuts.synchronize(os.path.join(user_sdir, "Shortcuts"))
-	
-	Util.loadUserEnv(user_sdir)
-	config = Config()
-	config.load(user_sdir)
 	
 	
 	# launch the integrated client

@@ -51,7 +51,7 @@ def main():
 	config.load(user_sdir)
 	
 	# Load profile share
-	folders = Folders()
+	folders = Folders(config.profile_mode)
 	folders.registerShares()
 	
 	drives = Drives()

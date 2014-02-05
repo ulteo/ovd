@@ -31,8 +31,9 @@ from ovd_shells.Folders import Folders as AbstractFolders
 import _platform as Platform
 
 class Folders(AbstractFolders):
-	def __init__(self):
+	def __init__(self, mode):
 		self.shares = {}
+		self.mode = mode
 	
 	
 	def registerShares(self):
@@ -85,10 +86,11 @@ class Folders(AbstractFolders):
 					print "Unable to mount share with default URI: ",err
 					print "Try with this command: ",cmd
 				
-				try:
-					Platform.launch("VFS.exe -p U:\\", False)
-				except:
-					print "Failed to start VFS program"
+				if self.mode == 'advanced':
+					try:
+						Platform.launch("VFS.exe -p U:\\", False)
+					except:
+						print "Failed to start VFS program"
 		
 		
 		for name in self.shares.keys():

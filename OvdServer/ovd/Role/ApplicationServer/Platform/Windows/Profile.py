@@ -164,13 +164,30 @@ class Profile(AbstractProfile):
 		return None
 	
 	
+	@staticmethod
+	def toCygPath(path):
+		res = path.replace(":", ":\\")
+		
+		if os.path.isabs(res):
+                	letter = path[0].lower()
+			res = path[2:]
+			res = "/cygdrive/"+letter+"/"+path[2:];
+
+		res = res.replace("\\", "/")
+		res = res.replace("//", "/")
+		return res
+	
+	
+	@staticmethod
+        def rsyncBlacklist():
+		return []
+	
+	
 	def copySessionStart(self):
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		profile_tmp_dir = os.path.join(d, "ulteo", "profile", self.session.user.name)
-		
-		if os.path.exists(profile_tmp_dir):
-			System.rchown(profile_tmp_dir, self.session.user.name)
-		
+		profile_tmp_dir = System.local_encode(profile_tmp_dir)
+		profile_filter = System.local_encode(Config.profile_filters_filename)
 		
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, "Data", f)
@@ -233,6 +250,19 @@ class Profile(AbstractProfile):
 				
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_src)
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_dst)
+			
+			# Copy configuration File
+			cmd = self.getRsyncMethod(Profile.toCygPath(d), Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(profile_filter))
+                	Logger.debug("rsync cmd '%s'"%(cmd))
+
+	                p = System.execute(cmd)
+        	        if p.returncode is not 0:
+                	        Logger.error("Unable to copy conf from profile")
+                        	Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+			
+		if os.path.exists(profile_tmp_dir):
+			System.rchown(profile_tmp_dir, self.session.user.name)
+
 	
 	
 	def copySessionStop(self):
@@ -241,8 +271,8 @@ class Profile(AbstractProfile):
 		
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		profile_tmp_dir = os.path.join(d, "ulteo", "profile", self.session.user.name)
-		if os.path.exists(profile_tmp_dir):
-			System.DeleteDirectory(profile_tmp_dir)
+		profile_tmp_dir = System.local_encode(profile_tmp_dir)
+		profile_filter = System.local_encode(Config.profile_filters_filename)
 
 		d = os.path.join(self.mountPoint, "conf.Windows.%s"%System.getWindowsVersionName())
 		trial = 5
@@ -270,6 +300,19 @@ class Profile(AbstractProfile):
 				Logger.error("Unable to copy registry to profile")
 		else:
 			Logger.warn("Weird: no NTUSER.DAT in user home dir ...")
+		
+		
+		# Copy configuration File
+		cmd = self.getRsyncMethod(Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(d), Profile.toCygPath(profile_filter))
+		Logger.debug("rsync cmd '%s'"%(cmd))
+		
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("Unable to copy conf to profile")
+			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+		
+		if os.path.exists(profile_tmp_dir):
+			System.DeleteDirectory(profile_tmp_dir)
 	
 	
 	def overrideRegistry(self, hiveName, username):

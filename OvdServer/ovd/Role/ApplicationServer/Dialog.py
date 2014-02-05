@@ -313,7 +313,7 @@ class Dialog(AbstractDialog):
 			nodes = sessionNode.getElementsByTagName("profile")
 			if len(nodes)>0:
 				profileNode = nodes[0]
-				for attribute in ("rid", "uri"):
+				for attribute in ("rid", "uri", "profile_mode"):
 					if len(profileNode.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 			else:

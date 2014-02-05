@@ -366,6 +366,8 @@ class Preferences_admin {
 			'general_session_settings_defaults_persistent' => _('Sessions are persistent'),
 			'general_session_settings_defaults_enable_profiles' => _('Enable user profiles'),
 			'general_session_settings_defaults_auto_create_profile' => _('Auto-create user profiles when non-existant'),
+			'general_session_settings_defaults_quota' => _('Quota assigned to the profile'),
+			'general_session_settings_defaults_profile_mode' => _('Profile integration used in the session'),
 			'general_session_settings_defaults_start_without_profile' => _('Launch a session without a valid profile'),
 			'general_session_settings_defaults_enable_sharedfolders' => _('Enable shared folders'),
 			'general_session_settings_defaults_start_without_all_sharedfolders' => _('Launch a session even when a shared folder\'s fileserver is missing'),

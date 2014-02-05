@@ -114,6 +114,7 @@ $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
 $need_valid_profile = ($default_settings['start_without_profile'] == 0);
 $default_quota = $default_settings['quota'];
+$profile_mode = $default_settings['profile_mode'];
 $need_all_sharedFolders = ($default_settings['start_without_all_sharedfolders'] == 0);
 
 if ($default_settings['use_known_drives'] == 1)
@@ -549,7 +550,7 @@ if (! isset($old_session_id)) {
 			$shell_node->appendChild($setting_node);
 		}
 		
-		foreach (array('no_desktop_process', 'use_known_drives') as $parameter) {
+		foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode') as $parameter) {
 			if (! isset($$parameter))
 				continue;
 
@@ -583,6 +584,10 @@ if (! isset($old_session_id)) {
 					$netfolder_node = $dom->createElement($netfolder['type']);
 					$netfolder_node->setAttribute('rid', $netfolder['rid']);
 					$netfolder_node->setAttribute('uri', $uri);
+					
+					if ($netfolder['type'] == 'profile') {
+						$netfolder_node->setAttribute('profile_mode', $profile_mode);
+					}
 					if ($netfolder['type'] == 'sharedfolder') {
 						$netfolder_node->setAttribute('name', $netfolder['name']);
 						$netfolder_node->setAttribute('mode', $netfolder['mode']);

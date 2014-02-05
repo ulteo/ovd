@@ -21,6 +21,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
+import os
 
 class Config:
 	general = None
@@ -30,7 +32,7 @@ class Config:
 	linux_icon_theme = "CrystalGnome"
 	linux_skel_directory = "/dev/null"
 	linux_fuse_group = "fuse"
-	linux_profile_filters_filename = "/etc/ulteo/ovd/profiles_filter.conf"
+	profile_filters_filename = os.path.join(System.get_default_config_dir(), "profiles_filter.conf")
 	
 	OVERRIDE_PASSWORD_METHOD_UNIX = 0x01
 	OVERRIDE_PASSWORD_METHOD_CUSTOM = 0x02

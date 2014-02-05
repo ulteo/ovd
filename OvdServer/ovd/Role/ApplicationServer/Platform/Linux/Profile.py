@@ -138,7 +138,10 @@ class Profile(AbstractProfile):
 		if self.profile is not None and self.profileMounted:
 			for d in [self.DesktopDir, self.DocumentsDir]:
 				src = os.path.join(self.profile_mount_point, "Data", d)
+				src = self.transformToLocaleEncoding(src)
+				dst = os.path.join(self.homeDir, d)
 				
+				trial = 5
 				while not System.mount_point_exist(src):
 					try:
 						os.makedirs(src)
@@ -147,20 +150,39 @@ class Profile(AbstractProfile):
 							Logger.exception("Unable to access profile")
 							return False
 						
-						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS)")
+						trial -= 1
+						if trial == 0:
+							Logger.exception("Failed to create directory %s"%(src))
+							return False
+						
+						time.sleep(random.randint(1,10)/100.0)
+						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
 				
-			if not System.mount_point_exist(self.homeDir):
-				os.makedirs(self.homeDir)
-			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.transformToLocaleEncoding(self.profile_mount_point), self.homeDir, self.transformToLocaleEncoding(self.session.user.name))
-			Logger.debug("Profile bind dir command '%s'"%(cmd))
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.error("Profile bind dir failed")
-				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-				return False
-			else:
-				self.folderRedirection.append(self.homeDir)
+				if self.profile['profile_mode'] == 'standard':
+					if not System.mount_point_exist(dst):
+						os.makedirs(dst)
+					
+					cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
+					Logger.debug("Profile bind dir command '%s'"%(cmd))
+					p = System.execute(cmd)
+					if p.returncode != 0:
+						Logger.error("Profile bind dir failed")
+						Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+						return False
+					else:
+						self.folderRedirection.append(dst)
+				
+			if self.profile['profile_mode'] == 'advanced':
+				cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.transformToLocaleEncoding(self.profile_mount_point), self.homeDir, self.transformToLocaleEncoding(self.session.user.name))
+				Logger.debug("Profile bind dir command '%s'"%(cmd))
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					Logger.error("Profile bind dir failed")
+					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+					return False
+				else:
+					self.folderRedirection.append(self.homeDir)
 			
 			
 			self.copySessionStart()
@@ -311,12 +333,26 @@ class Profile(AbstractProfile):
 		if not System.mount_point_exist(d):
 			return
 		
+		if self.profile['profile_mode'] == 'advanced':
+			return
+
+		# Copy conf files
+		d = self.transformToLocaleEncoding(d)
+		cmd = self.getRsyncMethod(d, self.homeDir, Config.profile_filters_filename, True)
+		Logger.debug("rsync cmd '%s'"%(cmd))
+		
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("Unable to copy conf from profile")
+			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+		
 	
 	def copySessionStop(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		
 		d = os.path.join(self.profile_mount_point, "conf.Linux")
+		trial = 5
 		while not System.mount_point_exist(d):
 			try:
 				os.makedirs(d)
@@ -325,27 +361,27 @@ class Profile(AbstractProfile):
 					Logger.exception("Unable to access profile")
 					return
 				
+				trial -= 1
+				if trial == 0:
+					Logger.exception("Failed to create directory %s: %s"%(src))
+					return
+
+				time.sleep(random.randint(1,10)/100.0)
 				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS)")
 				continue
 		
-	
-	@staticmethod
-	def getRsyncMethod(src, dst, owner=False):
-		args = ["-rltD", "--safe-links"]
-		if owner:
-			args.append("-o")
+		if self.profile['profile_mode'] == 'advanced':
+			return
 		
-		if os.path.exists(Config.linux_profile_filters_filename):
-			args.append("--include-from=%s"%Config.linux_profile_filters_filename)
-		else:
-			Logger.warn("Rsync filters file '%s' is missing, Using hardcoded rules"%Config.linux_profile_filters_filename)
-			for p in Profile.rsyncBlacklist():
-				args.append('--exclude="%s"'%p)
-			
-			args.append('--include="/.**"')
-			args.append('--exclude="/**"')
+		# Copy conf files
+		d = self.transformToLocaleEncoding(d)
+		cmd = self.getRsyncMethod(self.homeDir, d, Config.profile_filters_filename)
+		Logger.debug("rsync cmd '%s'"%(cmd))
 		
-		return 'rsync %s "%s/" "%s/"'%(" ".join(args), src, dst)
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("Unable to copy conf to profile")
+			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
 	@staticmethod

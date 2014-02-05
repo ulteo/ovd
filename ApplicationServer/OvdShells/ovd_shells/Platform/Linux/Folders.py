@@ -24,8 +24,9 @@ import os
 from ovd_shells.Folders import Folders as AbstractFolders
 
 class Folders(AbstractFolders):
-	def __init__(self):
+	def __init__(self, mode):
 		self.shares = {}
+		self.mode = mode
 	
 	
 	def registerShares(self):

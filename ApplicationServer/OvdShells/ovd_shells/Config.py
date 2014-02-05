@@ -29,6 +29,7 @@ class Config:
 	external_apps_token = None
 	no_desktop_process = False
 	use_known_drives = False
+	profile_mode = None
 	
 	application_to_start = []
 	
@@ -69,6 +70,9 @@ class Config:
 			
 			elif key == "use_known_drives" and node.getAttribute("value").lower() == "true":
 				self.use_known_drives = True
+			
+			elif key == "profile_mode":
+				self.profile_mode = node.getAttribute("value").lower()
 		
 		
 		nodes = shellNode.getElementsByTagName("start")
