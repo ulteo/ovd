@@ -116,9 +116,7 @@ class Session:
 			f.close()
 	
 	def post_install(self):
-		if self.user_session_dir is not None:
-			f = file(os.path.join(self.user_session_dir, "nolock"), "w")
-			f.close()
+		pass
 	
 	
 	def install_desktop_shortcuts(self):
