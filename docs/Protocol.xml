@@ -39,7 +39,7 @@
 
       <para>
 	Several product of Ulteo OVD like the Administration Console
-	and Web Client are pure web-based and use HTTP because the
+	and Web Portal are pure web-based and use HTTP because the
 	client is supposed to be a web browser.
       </para>
 
@@ -622,10 +622,10 @@ and view documents">
   </section>
   
   <section id="web_client">
-    <title>Web Client external API</title>
+    <title>Web Portal external API</title>
 
     <para>
-      The Ulteo OVD Web Client has an Javascript API to easily start
+      The Ulteo OVD Web Portal has an Javascript API to easily start
       an application or a desktop from another service.
     </para>
 

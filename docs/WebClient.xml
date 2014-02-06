@@ -4,7 +4,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Web Client</subtitle>
+    <subtitle>Web Portal</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -17,7 +17,7 @@
     <title id="intro_title">Introduction</title>
 
     <para>
-	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Web Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Web Portal" in its capabilities and how to launch Ulteo OVD sessions with it.
     </para>
   </section>
 
@@ -25,7 +25,7 @@
     <title id="prerequisites_title">Prerequisites</title>
 
     <para>
-      This is not a Web Client installation documentation. You need to have already installed a Web Client to be able to launch Ulteo OVD sessions with it.
+      This is not a Web Portal installation documentation. You need to have already installed a Web Portal to be able to launch Ulteo OVD sessions with it.
     </para>
 
     <xi:include href="common.xml" xpointer="system_requirements_client" />
@@ -35,11 +35,11 @@
     <title>User interface</title>
 
     <para>
-      When you start using a Web Client, some tests are done to see if your browser can launch OVD sessions successfully, you will see this window.
+      When you start using a Web Portal, some tests are done to see if your browser can launch OVD sessions successfully, you will see this window.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Test window</screeninfo>
+	  <screeninfo>Web Portal - Test window</screeninfo>
 	  <graphic fileref="img/wc_test_window.png"></graphic>
     </screenshot>
 
@@ -48,7 +48,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Test failed</screeninfo>
+	  <screeninfo>Web Portal - Test failed</screeninfo>
 	  <graphic fileref="img/wc_test_failed.png"></graphic>
     </screenshot>
 
@@ -57,7 +57,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Login window</screeninfo>
+	  <screeninfo>Web Portal - Login window</screeninfo>
 	  <graphic fileref="img/wc_login_window.png"></graphic>
     </screenshot>
 
@@ -66,7 +66,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Desktop session</screeninfo>
+	  <screeninfo>Web Portal - Desktop session</screeninfo>
 	  <graphic fileref="img/wc_desktop_session.png"></graphic>
     </screenshot>
   </section>
@@ -79,7 +79,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Advanced login window</screeninfo>
+	  <screeninfo>Web Portal - Advanced login window</screeninfo>
 	  <graphic fileref="img/wc_advanced_login_window.png"></graphic>
     </screenshot>
 
@@ -93,7 +93,7 @@
       <itemizedlist>
         <listitem>
           <para>
-            <emphasis>Use local credentials:</emphasis> When enabled, the Web Client will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Client will request the Session Manager with the login and password entered in the login window.
+            <emphasis>Use local credentials:</emphasis> When enabled, the Web Portal will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Portal will request the Session Manager with the login and password entered in the login window.
           </para>
         </listitem>
         <listitem>
@@ -107,7 +107,7 @@
               </listitem>
               <listitem>
                 <para>
-                  <emphasis>Portal:</emphasis> Launch a web portal with applications listed in it. Applications are launched seamlessly.
+                  <emphasis>Portal:</emphasis> Launch a Web Portal with applications listed in it. Applications are launched seamlessly.
                 </para>
               </listitem>
             </itemizedlist>
@@ -140,7 +140,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Session loading</screeninfo>
+	  <screeninfo>Web Portal - Session loading</screeninfo>
 	  <graphic fileref="img/wc_session_loading.png"></graphic>
     </screenshot>
 
@@ -156,7 +156,7 @@
       </para>
 
       <screenshot>
-	    <screeninfo>Web Client - Desktop session</screeninfo>
+	    <screeninfo>Web Portal - Desktop session</screeninfo>
 	    <graphic fileref="img/wc_desktop_session.png"></graphic>
       </screenshot>
     </simplesect>
@@ -169,7 +169,7 @@
       </para>
 
       <screenshot>
-	    <screeninfo>Web Client - Portal session</screeninfo>
+	    <screeninfo>Web Portal - Portal session</screeninfo>
 	    <graphic fileref="img/wc_portal_session.png"></graphic>
       </screenshot>
     </simplesect>
@@ -183,7 +183,7 @@
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Session end</screeninfo>
+	  <screeninfo>Web Portal - Session end</screeninfo>
 	  <graphic fileref="img/wc_session_end.png"></graphic>
     </screenshot>
 

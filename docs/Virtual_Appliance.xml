@@ -15,7 +15,7 @@
    <title>Introduction</title>
    <para>
     The purpose of this documentation is to describe how to use the virtual appliance which embeds
-    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, WebClient Java/HTML5, FileServer and Linux Application Server
+    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, Web Portal Java/HTML5, FileServer and Linux Application Server
   </para>
   </section>
   <section id="installation">
@@ -123,7 +123,7 @@
 		Check you shell console to get the IP	
 	</para>
 	<para>
-		Web client settings and how to use it is available <ulink url="WebClient.html">here</ulink>	
+		Web Portal settings and how to use it is available <ulink url="WebClient.html">here</ulink>	
 	</para>
 	<screenshot>
         <screeninfo>Virtual appliance shell</screeninfo>

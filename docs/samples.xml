@@ -25,7 +25,7 @@
 	This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
       </para>
     <screenshot>
-	  <screeninfo>Web Client - Advanced login window</screeninfo>
+	  <screeninfo>Web Portal - Advanced login window</screeninfo>
 	  <graphic fileref="img/wc_advanced_login_window.png"></graphic>
     </screenshot>
       <para>      

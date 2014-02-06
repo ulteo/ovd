@@ -161,12 +161,12 @@
   </section>
 
   <section>
-    <title>Start a session using the Web Client</title>
+    <title>Start a session using the Web Portal</title>
 
     <para>
       If you don't want to install anything on the client and just
       want to use your web browser, you need to install
-      the <emphasis>Web Client</emphasis> as explained on the
+      the <emphasis>Web Portal</emphasis> as explained on the
       installation documentations.
     </para>
 
@@ -204,7 +204,7 @@
 	      <imagedata fileref="img/wc_login.png"/>
             </imageobject>
             <textobject>
-	      <phrase>Web Client login</phrase>
+	      <phrase>Web Portal login</phrase>
             </textobject>
 	  </inlinemediaobject>
 	</para>

@@ -182,8 +182,8 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main
   </para>
   </section>
   <section id="webclient_gw">
-	<title>WebClient configuration</title>
-	<para>Due to security reasons, the Gateway doesn't deliver communications with the web client by default. If you want access to the web client through the Gateway, you have to change the default configuration.</para>	 
+	<title>Web Portal configuration</title>
+	<para>Due to security reasons, the Gateway doesn't deliver communications with the Web Portal by default. If you want access to the Web Portal through the Gateway, you have to change the default configuration.</para>	 
         <para>
           Edit the slaveserver.conf file in <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
         </para>
@@ -191,10 +191,10 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main
 		<![CDATA[# web_client = http[s]://ip[:port]/]]>
         </screen>
         <para>
-          You have to set it with the Url of your Web Client. 
+          You have to set it with the Url of your Web Portal. 
           For instance:
           <screen>
-			<![CDATA[web_client = http://webclient.test.demo/]]>
+			<![CDATA[web_client = http://webportal.test.demo/]]>
 		  </screen>
         </para> 
         <para>

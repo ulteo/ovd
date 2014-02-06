@@ -322,7 +322,7 @@ Chroot destination [/opt/ulteo]:]]>
         <para>Launch the configuration tool</para>
         <screen>
 <![CDATA[# ovd-webclient-config
-Do you want to link the web client to a specific Session Manager ? ([yes]/no): 
+Do you want to link the Web Portal to a specific Session Manager ? ([yes]/no): 
 Session Manager address [127.0.0.1]: sm.test.demo]]>
         </screen>
        </listitem>

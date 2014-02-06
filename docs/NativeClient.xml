@@ -149,7 +149,7 @@
       <itemizedlist>
         <listitem>
           <para>
-            <emphasis>Use local credentials:</emphasis> When enabled, the Web Client will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Client will request the Session Manager with the login and password entered in the login window.
+            <emphasis>Use local credentials:</emphasis> When enabled, the Web Portal will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Portal will request the Session Manager with the login and password entered in the login window.
           </para>
         </listitem>
         <listitem>

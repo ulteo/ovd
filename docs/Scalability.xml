@@ -131,7 +131,7 @@
 
 			<listitem>
 				<para>
-					We are now done configuring the Session Manager for scalability tests, you can try to launch a single session using the Web Client or Native Client to be sure that the system works.
+					We are now done configuring the Session Manager for scalability tests, you can try to launch a single session using the Web Portal or Native Client to be sure that the system works.
 				</para>
 			</listitem>
 		</itemizedlist>

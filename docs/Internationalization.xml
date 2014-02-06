@@ -99,10 +99,10 @@
     </section>
 
     <section id="translations_web_client">
-      <title>Ulteo Web Client</title>
+      <title>Ulteo Web Portal</title>
 
       <para>
-        At the first connexion, the Web Client detects the client
+        At the first connexion, the Web Portal detects the client
         language from the browser settings. But you can modify it by
         clicking on <emphasis>Advanced Settings</emphasis> and modify
         the <emphasis>Language</emphasis> option. When the option is
@@ -111,7 +111,7 @@
       </para>
       
       <para>
-        The Web Client uses the same translation system than the Session
+        The Web Portal uses the same translation system than the Session
         Manager Administration Console. So please <ulink
         url="#admin_console_important">the Administration Console
         note</ulink> part if you encounter any problem.
@@ -306,7 +306,7 @@
       <title>Choosing the method and/or the keyboard layout</title>
 
       <para>
-        By default, on both Native Client and Web Client, the scancode
+        By default, on both Native Client and Web Portal, the scancode
         method is set and the keyboard layout is auto detected on the
         system. But, it's also possible to select it manually by
         clicking on <emphasis>Advanced Settings</emphasis> and change
@@ -316,7 +316,7 @@
       <para>
         The choosen keyboard layout is stored into the default
         configuration file for the Native Client (default.conf) and
-        into a Cookie for the WebClient.
+        into a Cookie for the Web Portal.
       </para>
 
       <para>
@@ -327,7 +327,7 @@
         Native Client configuration. Or uncomment the
         <emphasis>define('RDP_INPUT_METHOD', 'unicode');</emphasis>
         line into the <emphasis>config.inc.php</emphasis> file for the
-        WebClient.
+        Web Portal.
       </para>
 
       <para>
