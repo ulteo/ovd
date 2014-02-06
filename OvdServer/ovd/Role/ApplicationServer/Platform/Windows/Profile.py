@@ -252,13 +252,14 @@ class Profile(AbstractProfile):
 				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_dst)
 			
 			# Copy configuration File
-			cmd = self.getRsyncMethod(Profile.toCygPath(d), Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(profile_filter))
-                	Logger.debug("rsync cmd '%s'"%(cmd))
-
-	                p = System.execute(cmd)
-        	        if p.returncode is not 0:
-                	        Logger.error("Unable to copy conf from profile")
-                        	Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+			if self.profile['profile_mode'] == 'standard':
+				cmd = self.getRsyncMethod(Profile.toCygPath(d), Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(profile_filter))
+        	        	Logger.debug("rsync cmd '%s'"%(cmd))
+				
+		                p = System.execute(cmd)
+        		        if p.returncode is not 0:
+                		        Logger.error("Unable to copy conf from profile")
+                        		Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 			
 		if os.path.exists(profile_tmp_dir):
 			System.rchown(profile_tmp_dir, self.session.user.name)
@@ -303,13 +304,14 @@ class Profile(AbstractProfile):
 		
 		
 		# Copy configuration File
-		cmd = self.getRsyncMethod(Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(d), Profile.toCygPath(profile_filter))
-		Logger.debug("rsync cmd '%s'"%(cmd))
+		if self.profile['profile_mode'] == 'standard':
+			cmd = self.getRsyncMethod(Profile.toCygPath(profile_tmp_dir), Profile.toCygPath(d), Profile.toCygPath(profile_filter))
+			Logger.debug("rsync cmd '%s'"%(cmd))
 		
-		p = System.execute(cmd)
-		if p.returncode is not 0:
-			Logger.error("Unable to copy conf to profile")
-			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+			p = System.execute(cmd)
+			if p.returncode is not 0:
+				Logger.error("Unable to copy conf to profile")
+				Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 		
 		if os.path.exists(profile_tmp_dir):
 			System.DeleteDirectory(profile_tmp_dir)
