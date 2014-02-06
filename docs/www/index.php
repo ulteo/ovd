@@ -24,12 +24,44 @@ $blacklist = array('AccountsIntegration', 'AD_Primary_Authentication', 'Installa
 
 $files = glob("*.html");
 
-echo '<img src="http://doc.ulteo.com/resources/logo.png" width="120" height="67" alt="" title="" /><br />';
-echo '<br />';
+?>
 
-echo '<table border="0" cellspacing="1" cellpadding="3">';
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+	<title> Ulteo OVD Documentation - Ulteo Open Virtual Desktop - Enterprise Open Source Virtual Desktop VDI and Application Delivery solutions (SBC)</title>
+	
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
 
-echo '<tr><td style="text-align: center;" colspan="4"><h2 style="color: #333; margin: 0; padding: 0;">Documentations</h2></td></tr>';
+<!-- add code here that should appear in the document head -->
+		<link rel="StyleSheet" href="//www.ulteo.com/home/default-static/global/global/styles.css" type="text/css"/>
+		<link rel="StyleSheet" href="//www.ulteo.com/home/_override-static/global/global/styles.css" type="text/css"/>
+		<style>
+			body{
+				text-align:justify;
+				overflow:auto;
+			}
+			#content {
+				width:900px;
+				margin:0px auto;
+				text-align:justify;
+				padding:15px;
+			}
+
+		</style>
+		<script type="text/javascript" src="jquery-1.11.0.min.js" ></script>
+		<script type="text/javascript" src="//www.ulteo.com/main/DOMparse/menu_js.js" ></script>
+		<body>
+		<header class="header" style="height: 94px;">
+			<div id="uHeader"></div>
+	</header>
+	<div class="uMenu"></div>
+	<div id="content">
+<?php
+
+echo '<table width="100%" border="0" cellspacing="1" cellpadding="3">';
+
+echo '<tr><td style="text-align: center;" colspan="4"><h1 style="color: #333; margin: 0; padding: 0;">Documentation</h1><br/></td></tr>';
 
 
 foreach ($files as $file) {
@@ -61,4 +93,15 @@ foreach ($files as $file) {
 	 echo "</tr>";
 	
 }
+?>
+</table>
+</div>
+</br>
+
+    <footer class="footer">
+
+</footer>
+  
+</body>
+</html>
 
