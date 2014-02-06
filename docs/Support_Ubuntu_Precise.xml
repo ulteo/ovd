@@ -16,10 +16,7 @@
 
     <important>
       <para>
-        The new LTS version is Ubuntu 12.04 (Precise Pangolin). If you don't
-        really need to use Ubuntu 12.04 version, it's highly
-        recommanded to use the LTS version: Ubuntu 10.04 (Lucid Lynx
-        ) and read the Ubuntu 10.04 (Lucid Lynx) documentation.
+        The new LTS version is @distrib_pretty_name@.
     </para>
     </important>
 

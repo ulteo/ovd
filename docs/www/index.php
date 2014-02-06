@@ -83,7 +83,7 @@ foreach ($files as $file) {
 	   echo '<td style="width: 15px;"></td>';
 	   
 	   echo '<td style="text-align: center; vertical-align: middle;">';
-		 echo '<a style="text-decoration: none;" href="'.$infos['filename'].'.html"><img style="border: none;" src="http://doc.ulteo.com/resources/html.png" width="22" height="22" alt="HTML" title="HTML" align="middle" />&nbsp;<span style="font-size: 0.75em; font-weight: bold;">HTML</span></a>';
+		 echo '<a target="_blank" style="text-decoration: none;" href="'.$infos['filename'].'.html"><img style="border: none;" src="http://doc.ulteo.com/resources/html.png" width="22" height="22" alt="HTML" title="HTML" align="middle" />&nbsp;<span style="font-size: 0.75em; font-weight: bold;">HTML</span></a>';
 	   echo "</td>";
 	   
 	   echo '<td style="text-align: center; vertical-align: middle;">';
