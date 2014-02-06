@@ -236,7 +236,7 @@ long long shares_getQuota(const char* name) {
 	long long quota;
 
 	if (shareList == NULL)
-		return true;
+		return -1;
 
 	pthread_mutex_lock(&shareMutex);
 

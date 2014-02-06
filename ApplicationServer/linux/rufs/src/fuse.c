@@ -842,7 +842,7 @@ static int rufs_statfs(const char *path, struct statvfs *stbuf)
 
 	res = statvfs(trpath, stbuf);
 
-	if (quota != -1) {
+	if (quota > 0) {
 		long block = quota/stbuf->f_frsize;
 		long blockUsed = spaceUsed/stbuf->f_frsize;
 		long blockAvailable = block - blockUsed;
