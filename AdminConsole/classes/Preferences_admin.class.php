@@ -509,6 +509,7 @@ class Preferences_admin {
 			'AuthMethod_Token_url' => _('If a token argument is sent to startsession, the system tries to get an user login by requesting the token validation url.<br /><br />Put here the url to request if a token argument is sent to <i>startsession</i> instead of login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set because it\'s replaced by the token argument when the URL is requested.'),
 			'AuthMethod_Token_user_node_name' => _('The id of the XML node that contains the user login'),
 			'AuthMethod_Token_login_attribute_name' => _('The name of the XML attribute which contains the user login (in the previously defined XML node)'),
+			'AuthMethod_Token2_tokens' => _('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
 		);
 		
 		$this->values = array(

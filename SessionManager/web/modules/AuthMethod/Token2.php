@@ -53,9 +53,6 @@ class AuthMethod_Token2 extends AuthMethod {
 	public static function configuration() {
 		return array(
 			new ConfigElement_dictionary('tokens',
-				_('Token list'),
-				_('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
-				_('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
 				array()),
 		);
 	}
