@@ -5,6 +5,7 @@
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
+# Author David LECHEVALIER <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,7 +31,7 @@ import threading
 from Config import Config, setup_apps
 from ControlProcess import ControlChildProcess
 from ConnectionPoolProcess import ConnectionPoolProcess
-from TCPHandler import WebAppsTCPHandler
+from TCPHandler import WebAppsTCPHandler, WebAppsTCPServer
 from ovd.Logger import Logger
 from ovd.Role.Role import Role as AbstractRole
 from SessionsRepository import SessionsRepository
@@ -78,7 +79,7 @@ class Role(AbstractRole):
 		addr = (Config.address, Config.port)
 		try:
 			WebAppsTCPHandler.role = self
-			self.server = TCPServer(addr, WebAppsTCPHandler, bind_and_activate=False)
+			self.server = WebAppsTCPServer(addr, WebAppsTCPHandler, bind_and_activate=False)
 			self.server.allow_reuse_address = Config.general.server_allow_reuse_address
 			
 			self.server.server_bind()
