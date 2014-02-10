@@ -330,8 +330,9 @@ public class Cache {
 				return glyph;
 			}
 		}
-		throw new RdesktopException("Could not get Font:" + font + ", "
-				+ character);
+
+		System.out.println("Could not get Font:" + font + ", " + character);
+		return null;
 	}
 
     /**
@@ -351,7 +352,8 @@ public class Cache {
 			}
 		}
 
-		throw new RdesktopException("Could not get Text:" + cache_id);
+		System.out.println("Could not get Text:" + cache_id);
+		return null;
 	}
 
     /**

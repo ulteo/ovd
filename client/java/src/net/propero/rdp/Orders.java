@@ -1523,7 +1523,8 @@ private void drawText(Text2Order text2, int clipcx, int clipcy, int boxcx, int b
 			length -= i;
 			ptext = i;
 			i = 0;
-            // break;
+			if (entry == null)
+				break;
             
 			byte[] data = entry.getData();
 			for(int j = 0; j < entry.getSize(); j++) {
