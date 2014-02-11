@@ -1272,27 +1272,7 @@ public class Orders {
             text2.setBoxBottom(data.getLittleEndian16());   // OpBottom (optional)
         }
 
-        /*
-         * Unknown members, seen when connecting to a session that was
-         * disconnected with mstsc and with wintach's spreadsheet test.
-         */
-        if ((present & 0x004000) != 0)
-            data.incrementPosition(1);                      // BrushOrgX (optional)
-
-        if ((present & 0x008000) != 0)
-            data.incrementPosition(1);                      // BrushOrgY (optional)
-
-        if ((present & 0x010000) != 0) {
-            data.incrementPosition(1);                      // BrushStyle (optional)
-            logger
-                    .warn("Unknown order state member (0x010000) in text2 order.\n");
-        }
-
-        if ((present & 0x020000) != 0)
-            data.incrementPosition(1);                      // BrushHatch (optional)
-
-        if ((present & 0x040000) != 0)
-            data.incrementPosition(7);                      // BrushExtra (optional)
+        this.parseBrush(data, text2.getBrush(), present>>14);
 
         if ((present & 0x080000) != 0) {
             text2.setX(data.getLittleEndian16());           // X (optional)
