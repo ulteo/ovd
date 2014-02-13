@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2011-2012 Ulteo SAS
+ * Copyright (C) 2011-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ package net.propero.rdp;
 
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
+import net.propero.rdp.keymapping.KeyMapException;
 
 import org.apache.log4j.Logger;
 
@@ -29,8 +30,14 @@ import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.utils.LayoutDetector;
 
 public class UnicodeInput extends Input {
 
@@ -223,6 +230,65 @@ public class UnicodeInput extends Input {
 							c = e.getKeyChar();
 						
 						scan = newKeyMapper.getFromMap(KeyCode_FileBased.NOSHIFT_SECTION, Integer.toString(c));
+						
+						if (scan == -1) {
+							String str = e.toString();
+							
+							// Only works with Sun jvm
+							if (OSTools.isWindows()) {
+								Pattern p = Pattern.compile(".*scancode=([0-9]*).*");
+								Matcher m = p.matcher(str);
+								
+								if (m.matches()) {
+									try {
+										scan = Integer.parseInt(m.group(1));
+									}
+									catch (NumberFormatException e2) {
+										logger.warn("Failed to convert scancode "+m.group(1)+" "+e2.getMessage());
+									}
+								}
+							}
+							else {
+								Pattern p = Pattern.compile(".*rawCode=([0-9]*).*");
+								Matcher m = p.matcher(str);
+								
+								if (m.matches()) {
+									try {
+										int rawCode = Integer.parseInt(m.group(1));
+										// https://mail.gnome.org/archives/gtk-vnc-list/2009-November/msg00017.html
+										if (rawCode < 80)
+											scan = rawCode - 8;
+									}
+									catch (NumberFormatException e2) {
+										logger.warn("Failed to convert rawcode "+m.group(1)+" "+e2.getMessage());
+									}
+								}
+							}
+							 
+							// Brutal way
+							if (scan == -1) {
+								String layout = LayoutDetector.get();
+								InputStream istr = UnicodeInput.class.getResourceAsStream(RdpConnection.KEYMAP_PATH + layout);
+								
+								if (istr != null) {
+									try {
+										KeyCode_FileBased keyMap;
+										
+										keyMap = new KeyCode_FileBased_Localised(istr, opt);
+										scan = keyMap.getFromMap(KeyCode_FileBased.NOSHIFT_SECTION, Integer.toString(e.getKeyChar()));
+										
+										istr.close();
+									}
+									catch (IOException ex) {
+										logger.warn("Unable to close keymap " + layout +" : "+ ex);
+									}
+									catch (KeyMapException e1) {
+										logger.warn("Unable to load keymap file: "+e1.getMessage());
+									}
+								}
+							}
+						}
+						
 						sendScancode(time, RDP_KEYPRESS, scan);
 						proceedOnKeyPressed = true;
 					}	

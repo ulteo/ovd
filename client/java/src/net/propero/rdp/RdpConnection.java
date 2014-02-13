@@ -61,7 +61,7 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	public static enum State {DISCONNECTED, CONNECTING, CONNECTED, FAILED};
 
-	private final static String KEYMAP_PATH = "/resources/keymaps/";
+	public final static String KEYMAP_PATH = "/resources/keymaps/";
 
 	private VChannels channels = null;
 	protected RdpdrChannel rdpdrChannel = null;
