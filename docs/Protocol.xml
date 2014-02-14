@@ -19,28 +19,27 @@
   </para>
 
   <section id="used_proto_list">
-    <title>List of Protocols used</title>
+    <title>List of Protocols</title>
     
     <section id="proto_http">
-      <title>Hyper Text Transfert Protocol (HTTP)</title>
+      <title>Hyper Text Transfer Protocol (HTTP)</title>
 
       <para>
-	The base communication protocol used in Ulteo OVD to negociate
-	session is HTTP over SSL. This protocol runs over TCP on the
-	port 443.
+	The base communication protocol used in Ulteo OVD for session establishment and 
+	management is HTTP over SSL. This protocol runs over TCP port 443.
       </para>
 
       <para>
-	Ulteo OVD use also HTTP for the communication between servers:
+	Ulteo OVD use also HTTP for communication between servers:
 	Session Manager to Application Server and vice versa. For this
 	usage, the TCP ports 1111 and 1112 (non standart service
 	ports) are used.
       </para>
 
       <para>
-	Several product of Ulteo OVD like the Administration Console
-	and Web Portal are pure web-based and use HTTP because the
-	client is supposed to be a web browser.
+	Several products of Ulteo OVD such as the Administration Console
+	and Web Portal are purely web-based and use HTTP because the
+	client in this case would normally be a web-browser.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP on Wikipedia</ulink></para>
@@ -57,11 +56,11 @@
 
       <para>
 	RDP is used by Ulteo Open Virtual Desktop to display desktop
-	and applications. 
+	and applications on the client machine. 
       </para>
 
       <para>
-	RDP use the TCP port 3389.
+	RDP uses TCP port 3389.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Remote_Desktop_Protocol">RDP on Wikipedia</ulink></para>
@@ -71,12 +70,12 @@
       <title>Secure Socket Layer (SSL)</title>
 
       <para>
-	SSL is an cryptographic layer protocol that provide encription
+	SSL is an cryptographic layer protocol that provide encryption
 	between server and client.
       </para>
 
       <para>
-	SSL is used by Ulteo OVD to tunnelize HTTP and/or RDP.
+	SSL is used by Ulteo OVD to tunnel RDP.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Secure_Sockets_Layer">SSL on Wikipedia</ulink></para>
@@ -88,8 +87,8 @@
     <title>Server Communication</title>
     <para>
       Servers communicate by using HTTP webservices (hosted by
-      Apache). The Session Manager listen on the TCP port 1111 and
-      Application Servers are using port 1112.
+      Apache). The Session Manager listens on TCP port 1111 and
+      Application Servers use port 1112.
     </para>
 
     <para>
@@ -98,14 +97,14 @@
     </para>
 
     <para>
-      Applications Servers only answer to the Session Manager for
-      which the address is stored in a configuration file.
+      Applications Servers only answer to the Session Manager whose
+      address is stored in their configuration file.
     </para>
 
     <section id="security">
       <title>Security</title>
       <para>
-	At the moment, the server are authenticated using the DNS resolution system.
+	At the moment, a server is authenticated using the DNS resolution system.
       </para>
 
       <para>
@@ -118,27 +117,27 @@
 	  resolution:</emphasis> resolves the FQDN to get an IP address
 	  and tests if it matches the remote server IP
 	  ($SERVER['REMOTE_ADDR'] in PHP). Authentication directly
-	  depends on that match</para></listitem>
+	  depends on that result being correct</para></listitem>
 
 	  <listitem><para><emphasis role="strong">reverse
 	  resolution:</emphasis> resolves the server IP address and tests
 	  if it matches the FQDN argument. Authentication directly
-	  depends on that match. This test can be disabled in the
-	  administration console using <emphasis>Disable FQDN
-	  check</emphasis></para></listitem>
+	  depends on that result being correct. This test can be disabled in the
+	  administration console using the <emphasis>Disable FQDN
+	  check</emphasis>parameter</para></listitem>
 
 	  <listitem><para><emphasis
 	  role="strong">authorization:</emphasis> tests the match of the FQDN
-	  with one of the <emphasis>Authorized FQDN</emphasis> defined
+	  with one of the <emphasis>Authorized FQDN</emphasis> parameters defined
 	  in the administration console.</para></listitem>
 	</itemizedlist>
       </para>
     </section>
 
     <section id="http_code">
-      <title>HTTP return codes</title>
+      <title>HTTP Return Codes</title>
       <para>
-	Webservices are using the standard HTTP return codes to know if the
+	Webservices use the standard HTTP return codes to know if the
 	request succeeded.
       </para>
 
@@ -150,20 +149,19 @@
 
 	<listitem>
 	  <para><emphasis role="strong">400 Bad Request :</emphasis>
-	  request argument no valid</para>
+	  request argument not valid</para>
 	</listitem>
 
 	<listitem>
 	  <para><emphasis role="strong">401 Unauthorized :</emphasis>
-	  From SM to ApS: ApS detects that the remote address is not its
-	  SM. From ApS to SM: ApS is not registered yet or has invalid
+	  From SM to ApS: ApS detects that the remote address does not match its
+	  configured SM. From ApS to SM: ApS is not registered yet or failed
 	  authentication.</para>
 	</listitem>
 
 	<listitem>
 	  <para><emphasis role="strong">500 Internal Server Error :</emphasis>
-	  Either a bug was detected on the system or the system is
-	  broken.</para>
+	  The request failed because of an error in the system or the system is broken.</para>
 	</listitem>
       </itemizedlist>
     </section>
@@ -171,20 +169,20 @@
 
 
   <section id="desktop_session">
-    <title>OVD Client session</title>
+    <title>OVD Client Session</title>
 
     <section>
-      <title>A simple session establishement process</title>
+      <title>Establing a Simple Session</title>
       
       <para>
 	The following schema describe the steps of the establishement
-	of a Ulteo OVD session.
+	of an Ulteo OVD session.
       </para>
 
       <para>
 	In this example, only one Application Server is used, the
-	session do not use File Servers (internal or external) and the
-	client connect directly without an OVD Gateway.
+	session does not use File Servers (internal or external) and the
+	client connects directly to the SM without using an OVD Gateway.
       </para>
      
       <inlinemediaobject>
@@ -195,15 +193,15 @@
     </section>
 
     <section id="sm_cleint_webservices">
-      <title>Session Manager client webservices</title>
+      <title>Session Manager Client Web Services</title>
 
       <para>
 	Session Manager client webservices are used by client
-	softwares to negotiate and manage their session.
+	software to negotiate and manage their session.
       </para>
 
       <para>
-	The base URL to access to these services is
+	The base URL to access these services is
 	<ulink url="https://sm.test.demo/ovd" />.
       </para>
 
@@ -228,16 +226,16 @@
 	  <listitem>
 	    <para>
               <emphasis role="strong">returns:</emphasis> an
-              applications list and details as XML content.
+              application list and application details as XML content.
             </para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  This webservice provide the available applications list and
-	  details for the current authenticated user. The
+	  This webservice provides the available application list and
+	  application details for the current authenticated user. The
 	  authentication can be done either by the dedicated service
-	  (auth.php) or directly into this one.
+	  (auth.php) or directly using this one.
 	</para>
 
         <para>
@@ -327,8 +325,8 @@ and view documents">
 	</itemizedlist>
 
 	<para>
-	  This is the dedicated authentication service. Authentication
-	  method depends of the enabled authentication module from the
+	  This is the dedicated authentication service. The authentication
+	  method used depends on the enabled authentication module as defined in the 
 	  Administration console.
 	</para>
 
@@ -339,8 +337,8 @@ and view documents">
 
         <para>
           XML format: the root node and the XML tree doesn't matter
-          for this webservice. The system only check if
-          a <emphasis>user</emphasis> node exist and test it.
+          for this webservice. The system only checks if
+          a <emphasis>user</emphasis> node exists and then attempts to authenticate it.
 
           <itemizedlist>
             <listitem>
@@ -400,10 +398,10 @@ and view documents">
 
 	<para>
 	  The authentication can be done either by the dedicated
-	  service (auth.php) or directly into this one. It also
-	  possible to access to any icon without anonymoulsy by enable
-	  the <emphasis>Public Webservices access</emphasis> access
-	  from the Administration Console.
+	  service (auth.php) or directly using this one. It is also
+	  possible to access any icon anonymously by enabling
+	  the <emphasis>Public Webservices access</emphasis> option
+	  in the Administration Console.
 	</para>
       </simplesect>
 
@@ -423,7 +421,7 @@ and view documents">
 	</itemizedlist>
 
 	<para>
-	  This webservice can be called to turn into de-authenticaded state.
+	  This webservice can be called to turn logout the user and terminate the session.
 	</para>
       </simplesect>
 
@@ -513,14 +511,14 @@ and view documents">
 	  <listitem>
 	    <para>
               <emphasis role="strong">returns:</emphasis> a
-              users list as XML content.
+              user list as XML content.
             </para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  This webservice provide the available users list from the
-	  users base used by the Session Manager.
+	  This webservice provides the available user list from the
+	  user base used by the Session Manager.
 	</para>
 
         <para>
@@ -553,12 +551,12 @@ and view documents">
 
 	<para>
 	  The service only respond if the <emphasis>Display users
-	  list</emphasis> setting is enable from the Administration
+	  list</emphasis> setting is enable in the Administration
 	  Console.
 	</para>
 	<para>
-	  The service limits to 100 items in the list (can be changed
-	  from the Administration Console).
+	  The service sets a limit of 100 items in the list by default (can be changed
+	  in the Administration Console).
 	</para>
       </simplesect>
 
@@ -584,8 +582,8 @@ and view documents">
 	<para>
 	  This service is the one used by a client to negotiate a
 	  session. In the input XML, the client describes the parameter
-	  wanted for the session. According with the Administration
-	  Console policy, the Session Manager returns either a session
+	  wanted for the session. According to the Administration
+	  Console defined policy, the Session Manager returns either a session
 	  (with parameter and access) or an error message explaining
 	  why the session cannot be created.
 	</para>
@@ -622,11 +620,11 @@ and view documents">
   </section>
   
   <section id="web_client">
-    <title>Web Portal external API</title>
+    <title>API for Web Clients</title>
 
     <para>
-      The Ulteo OVD Web Portal has an Javascript API to easily start
-      an application or a desktop from another service.
+      Ulteo OVD provides a Javascript API to easily start
+      an application or a desktop from another web based service.
     </para>
 
     <para>

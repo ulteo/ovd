@@ -4,17 +4,13 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <important id="gold">
     <para>	  
-      The Ulteo OVD @gold_product_name@ is a <emphasis
-      role="strong">@GOLD_NAME@ module</emphasis>. @GOLD_NAME@ modules are
-      commercial Open-Source modules that are not available in the
-      OVD Community Edition. To access executable @GOLD_NAME@ modules, you
-      need an Ulteo OVD Premium Subscription Key and a dedicated login and password.
-      To upgrade to OVD Premium Edition, refer <ulink url="Premium_Edition.html">here</ulink>       
+      The Ulteo OVD @gold_product_name@ is part of the <emphasis
+      role="strong">@GOLD_NAME@ Edition </emphasis>. The @GOLD_NAME@ Edition contains 
+      functionality on a commercial Open-Source basis. 
+      To activate the @GOLD_NAME@ Edition, you
+      need an Ulteo OVD Premium Edition Subscription Key and a dedicated login and password.
+      To upgrade to OVD Premium Edition, refer to the information <ulink url="Premium_Edition.html">here</ulink>       
     </para>
-    <!--<para>
-      In order to migrate to OVD Premium Edition and get access to @GOLD_NAME@ modules, contact us at <ulink
-      url="http://www.ulteo.com/home/contact-us" />
-    </para>-->
   </important>
 
     <simplesect id="system_requirements_client">
@@ -36,7 +32,7 @@
           Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
         </para></listitem>
         <listitem><para>
-            Production environments: Ulteo does not recommends to use
+            Production environments: Please note, Ulteo does not recommend using
             this installation method for production environments
           </para></listitem>
       </itemizedlist>

@@ -4,7 +4,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Start a Session</subtitle>
+    <subtitle>Quick Start</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -17,8 +17,8 @@
     <title id="pre_title">Prerequisites</title>
 
     <para>
-      This documentation aims to provide explanations about the session
-      management.
+      This documentation provides a description of session
+      management within Ulteo OVD.
     </para>
 
     <para>
@@ -33,33 +33,33 @@
   </section>
 
   <section>
-    <title>Select users</title>
+    <title>Selecting Users</title>
     
     <para>
-      The first step before trying to start a sesssion is to go on
-      the <emphasis>users</emphasis> page from the Administration
+      The first step before trying to start a sesssion is to go to
+      the <emphasis>users</emphasis> page on the Administration
       Console and see which users are available. If you don't have any
-      users, you need to create them or setup a directory access, like
+      users, you need to create them or setup directory access, such as 
       LDAP, for example.
     </para>
 
     <simplesect>
-      <title>The "populate" feature</title>
+      <title>The "populate" Feature</title>
       
       <para>
-        In the <emphasis>users</emphasis> page, you can see a part
+        In the <emphasis>users</emphasis> page, you can see a section
         called <emphasis>Populate</emphasis> at the bottom.
         This feature is useful to quickly create default accounts.
-
+	 </para>
         <screenshot>
-	  <screeninfo>Session Manager - populate users</screeninfo>
-	  <graphic fileref="img/sm_admin_populate.png"></graphic>
+		<screeninfo>Session Manager - populate users</screeninfo>
+		<graphic fileref="img/sm_admin_populate.png"></graphic>
         </screenshot>
-      </para>
+     
     </simplesect>
 
     <simplesect>
-      <title>Setup the LDAP access</title>
+      <title>Configuring LDAP Access</title>
       
       <para>
         Instead of using default accounts or creating your own ones,
@@ -70,7 +70,7 @@
       <para>
         In order to do that, you have to go to
         the <emphasis>Settings</emphasis> page then <emphasis>Profile
-        settings</emphasis> and setup the access. When done, the users
+        settings</emphasis> and setup the access. When complete, the users
         will appear in the <emphasis>users</emphasis> page.
       </para>
     </simplesect>
@@ -78,19 +78,19 @@
 
 
   <section id="publication">
-    <title>Manage "publications"</title>
+    <title>Publishing Applications</title>
     
     <para>
-      A publication is an association between an usergroup and an
-      applications group. It's an authorization for usergroups' members to
+      A publication is an association between a user group and an
+      applications group. It's an authorization for user groups' members to
       launch the applications included in the applications group.
     </para>
 
     <para>
-      By default, there is no usergroup or applications group installed
-      (or if you choose to read the usergroups from your
+      By default, there is no user group or applications group installed
+      (or if you choose to read the user groups from your
       directory) so you have to create these. It is the same process for
-      both usergroups and applications groups: first, you have to create a group
+      both user groups and applications groups: first, you have to create a group
       by giving a name in the <emphasis>group</emphasis> page, then, you
       have to add users/applications in it.
     </para>
@@ -99,16 +99,16 @@
       Finally, you can switch on the <emphasis>Publication</emphasis>
       page (from <emphasis>users</emphasis>
       or <emphasis>applications</emphasis> main page) and associate
-      usergroups with applications groups.
+      user groups with applications groups.
     </para>
   </section>
 
 
   <section id="servers">
-    <title>Server checks</title>
+    <title>Server Checks</title>
 
     <para>
-      On the previous step, we saw how to associate usergroups with
+      On the previous step, we saw how to associate user groups with
       applications groups. The applications are installed on Application
       Server so you need to check on the <emphasis>Servers</emphasis>
       page if the servers you need are registered and in production
@@ -127,8 +127,8 @@
       <important>
         <para>
           If you installed your Application Server on the same machine
-          than your Session Manager and you followed our advices, you
-          gave <emphasis role="strong">127.0.0.1</emphasis> as Session
+          as your Session Manager and you followed our directions, you
+          defined <emphasis role="strong">127.0.0.1</emphasis> as the Session
           Manager host so you <emphasis role="strong">must</emphasis>
           define a redirection name.
         </para>
@@ -139,35 +139,37 @@
         to launch sessions. When you launch a session, you are
         redirected to an Application Server using the redirection name.
         In some cases the default redirection name (the
-        FQDN you gave at the Application Server installation) is not valid.
+        FQDN you gave it during the Application Server installation) is not valid.
         For instance, if you setup a private IP address and you want to
-        connect from Internet.
+        connect from the Internet.
       </para>
-
+	  <para>
       <screenshot>
-	<screeninfo>Session Manager - server redirection name</screeninfo>
-	<graphic fileref="img/sm_admin_external_name.png"></graphic>
-      </screenshot>
+		<screeninfo>Session Manager - server redirection name</screeninfo>
+		<graphic fileref="img/sm_admin_external_name.png"></graphic>
+		</screenshot>
+      </para>
     </simplesect>
 
     <para>
-      To have a global overview on the publications and server status,
+      To have a global overview off the publication and server status,
       it is a good idea to see the <emphasis>Summary</emphasis> page
-      (from <emphasis>Status</emphasis> main section). This page shows,
-      for each user, in which usergroups he belongs to, then, which
-      applications and applications groups he can access and finally
-      if online servers can match the publications to start a session.
+      (from <emphasis>Status</emphasis> main section). This page shows
+      for each user, which user group he belongs to, which
+      applications and application groups he can access and finally
+      there are online servers that match the published applications in order to 
+      be able to start a session.
     </para>
   </section>
 
   <section>
-    <title>Start a session using the Web Portal</title>
+    <title>Starting a Session Using a Web Browser</title>
 
     <para>
       If you don't want to install anything on the client and just
       want to use your web browser, you need to install
-      the <emphasis>Web Portal</emphasis> as explained on the
-      installation documentations.
+      the <emphasis>Web Portal</emphasis> as explained in the
+      installation documentation.
     </para>
 
     <important>
@@ -187,7 +189,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  Back to <ulink url="http://localhost/ovd/" /> with
+	  Go to <ulink url="http://localhost/ovd/" /> with
 	  your web browser.
 	</para>
         <note>
@@ -212,7 +214,7 @@
 
       <listitem>
 	<para>
-	  Once logged in, the session is starting:
+	  Once logged in, the session will start:
 	</para>
 	<para>
 	  <inlinemediaobject>
@@ -248,11 +250,11 @@
 
 
   <section>
-    <title>Start a session using the Native Client</title>
+    <title>Starting a Session Using the Native Client</title>
 
     <para>
       The Native Client can be installed on your
-      operating system and then be started by the system menu.
+      operating system and then started in the normal manner.
     </para>
 
     <important>
@@ -272,7 +274,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-          Start the application, give the Session Manager adress and
+          Start the application, by entering the Session Manager address and
           your credentials.
 	</para>
 	<para>
@@ -289,7 +291,7 @@
 
       <listitem>
 	<para>
-	  Once logged in, the session is starting:
+	  Once logged in, the session will start:
 	</para>
 	<para>
 	  <inlinemediaobject>

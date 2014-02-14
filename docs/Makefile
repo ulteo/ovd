@@ -18,7 +18,7 @@ SRC=\
 	Internationalization.xml \
 	NativeClient.xml \
 	Protocol.xml \
-	StartASession.xml \
+	QuickStart.xml \
 	Virtual_Appliance.xml \
 	Support_Debian_Squeeze.xml \
 	Support_Debian_Wheezy.xml \

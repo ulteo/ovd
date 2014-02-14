@@ -23,7 +23,7 @@
     <title id="intro_title">Introduction</title>
 
     <para>
-      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      This documentation describes the capabilities and use of the Ulteo OVD Native Clients.
     </para>
   </section>
 
@@ -36,7 +36,10 @@
     <para>
       It can also be installed on @distrib_pretty_name@
     </para>
-
+    <!--
+      TBD What are the valid distributions for OVD 4?
+    -->
+            
     <xi:include href="common.xml" xpointer="system_requirements_client" />
   </section>
   
@@ -44,7 +47,7 @@
     <title id="installation_windows_title">Installation on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark></title>
     
     <para>
-      Download and execute the Ulteo OVD Native Client installer, <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-nc.php?suite=@VERSION@">from this place</ulink>
+      Download and execute the Ulteo OVD Native Client installer, <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-nc.php?suite=@VERSION@">from here</ulink>
     </para>
 
     <para>
@@ -84,7 +87,7 @@
     <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_common" />
 
     <section id="package_install">
-      <title>Package installation</title>
+      <title>Package Installation</title>
       <itemizedlist>
 	<listitem>
           <para>
@@ -100,7 +103,7 @@
   </section>
   
   <section id="userinterface">
-    <title id="userinterface_title">User interface</title>
+    <title id="userinterface_title">User Interface</title>
 
     <para>
       When you start the Native Client, you have access to the login window that you will use to launch your session.
@@ -126,10 +129,11 @@
   </section>
 
   <section>
-    <title>Advanced settings</title>
+    <title>Advanced Settings</title>
 
     <para>
-      At the login window, you can set advanced parameters by clicking the "More options ..." button.
+      In the login window, you can also set advanced parameters by clicking the 
+      "More options ..." button.
     </para>
 
     <para>
@@ -140,16 +144,16 @@
     </para>
 
     <para>
-      As you can see, you now have more available options, each one is described below.
+      The available options will be displayed, each one is described below.
     </para>
 
     <simplesect id="advanced_settings">
-      <title>Advanced settings description</title>
+      <title>Advanced Settings Description</title>
 
       <itemizedlist>
         <listitem>
           <para>
-            <emphasis>Use local credentials:</emphasis> When enabled, the Web Portal will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Portal will request the Session Manager with the login and password entered in the login window.
+            <emphasis>Use local credentials:</emphasis> When enabled, the Native Client will send a request to the Session Manager containing your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Native Client will send a request to the Session Manager containing the login and password entered in the login window.
           </para>
         </listitem>
         <listitem>
@@ -158,7 +162,7 @@
             <itemizedlist>
               <listitem>
                 <para>
-                  <emphasis>Auto:</emphasis> It is the Session Manager who will choose between a desktop session or an Application session.
+                  <emphasis>Auto:</emphasis> The Session Manager will choose between a desktop session or an Application session based on the configuration .
                 </para>
               </listitem>
               <listitem>
@@ -181,7 +185,7 @@
         </listitem>
         <listitem>
           <para>
-            <emphasis>Auto-publish shorcuts:</emphasis> Choose if you want to have shorcuts on your actual desktop at the session start, it applies only on application sessions.
+            <emphasis>Auto-publish shorcuts:</emphasis> Choose if you want to have shorcuts on your actual desktop at the session start. This option applies only when using the session mode set to "application".
           </para>
         </listitem>
         <listitem>
@@ -199,10 +203,10 @@
   </section>
 
   <section>
-    <title>Start a session</title>
+    <title>Starting a Session</title>
 
     <para>
-      When you start a session, a loading splash appears.
+      When you start a session, a splash screen appears indicating that the session is loading.
     </para>
 
     <para>
@@ -217,7 +221,7 @@
     </para>
 
     <simplesect>
-      <title>Desktop session</title>
+      <title>Desktop Session</title>
 
       <para>
         When the session is ready, your Desktop is available and you can launch applications, explore your files...
@@ -232,7 +236,7 @@
     </simplesect>
 
     <simplesect>
-      <title>Application session</title>
+      <title>Application Session</title>
 
       <para>
         When the session is ready, your Application session is available and you can launch applications seamlessly.
@@ -252,13 +256,13 @@
   </section>
 
   <section id="advanced_options">
-    <title id="advanced_options_title">Advanced features</title>
+    <title id="advanced_options_title">Advanced Features</title>
 
     <section id="config-file">
-      <title>Default configuration</title>
+      <title>Default Configuration</title>
 
       <para>
-        When enable the <emphasis>Remember me</emphasis> checkbox, the
+        When the <emphasis>Remember me</emphasis> checkbox is enabled, the
         current configuration is saved in a configuration file. This
         file is named <emphasis>default.conf</emphasis> and uses the INI
         syntax.
@@ -270,13 +274,13 @@
             <para>On <trademark class="registered">Microsoft Windows</trademark> systems, it's <emphasis>Application Data\ulteo\ovd\client</emphasis></para>
           </listitem>
           <listitem>
-            <para>On Linux systems, it's <emphasis>~/.ulteo/ovd/client</emphasis></para>
+            <para>On a Linux systems, it's <emphasis>~/.ulteo/ovd/client</emphasis></para>
           </listitem>
         </itemizedlist>
       </para>
 
       <para>
-        Here is the recognized INI tree:
+        Here is the INI tree that is used:
         <itemizedlist>
           <listitem>
             <para>Section <emphasis role="strong">server</emphasis></para>
@@ -386,7 +390,7 @@
       </para>
 
       <simplesect>
-        <title><trademark class="registered">Microsoft Windows</trademark> registry</title>
+        <title><trademark class="registered">Microsoft Windows</trademark> Registry</title>
         
         <para>
           On <trademark class="registered">Microsoft Windows</trademark>
@@ -395,8 +399,8 @@
         </para>
 
         <para>
-          The Native Client read the HKEY_LOCAL_MACHINE first and then,
-          the HKEY_CURRENT_USER tree. The readed path is
+          The Native Client reads the HKEY_LOCAL_MACHINE first and then,
+          the HKEY_CURRENT_USER tree. The path to the registry data is
           <emphasis>Software\Ulteo\OVD\NativeClient</emphasis>.
         </para>
 
@@ -427,11 +431,11 @@
 
       <important>
         <para>
-          That feature requires a server side configuration.
+          This feature requires server side configuration.
         </para>
         <para>
-          You have to use a Apache authentication module (Kerberos or
-          NTLM) and enable the "Apache auth module" into the
+          You have to use an Apache authentication module (Kerberos or
+          NTLM) and enable the "Apache auth module" in the
           Administration Console.
         </para>
       </important>

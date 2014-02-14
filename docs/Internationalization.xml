@@ -17,27 +17,25 @@
     <title>Introduction</title>
 
     <para>
-      There is more than one language in the world and
-      many people do not speak English. This documentation explains
-      how Ulteo take care about internationalization and
-      localization into the Open Virtual Desktop solution.
-    </para>
-
-    <para>
-      Firstly, Ulteo is translated in many languages and is
-      opened to support any new one.
+      This documentation explains
+      how Ulteo handles internationalization and
+      localization in the Open Virtual Desktop solution.
     </para>
     <para>
-      Secondly, as Ulteo software is a solution to access to desktops
-      and applications, the client can specify the requested language
-      for the session. But different operating systems and
-      applications have to support these different languages.
+      Ulteo is translated into many languages and is
+      open to support translations for other languages.
     </para>
     <para>
-      Finally, the user needs to use the local keyboard and, there is
-      more than one keyboard layout in the world. Ulteo solutions
-      support different behavior for keyboard mapping between clients
-      and servers.
+      Ulteo OVD is a solution to access desktops
+      and applications, the client can specify the required language
+      for the session. The various operating systems and
+      applications contained within the OVD infrastructure also have to
+      support the required language.
+    </para>
+    <para>
+      Ulteo OVD supports keyboard mapping between clients and servers.
+      Ulteo OVD allows the user to specify the keyboard mapping to be used for a given session. 
+      Ulteo OVD also supports Unicode IME input.
     </para>
   </section>
 
@@ -181,7 +179,7 @@
       
       </important>
       <para>
-        To install a language support, you have to install some
+        To install language support, you have to install some
         packages.
       </para>
       <screen>

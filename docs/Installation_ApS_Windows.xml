@@ -16,14 +16,13 @@
 
   <para>
     This documentation describes how to install an <emphasis>Ulteo
-    Open Virtual
-    Desktop</emphasis> <emphasis role="strong">Application
+    OVD </emphasis> <emphasis role="strong">Application
     Server</emphasis> (ApS) on a <trademark class="registered">Microsoft
     Windows</trademark> server system.
   </para>
   <para>
     This documention <emphasis role="strong">does not
-    describe</emphasis> the Open Virtual Desktop installation or
+    describe</emphasis> the OVD installation or
     configuration. For that, please read the <emphasis
     role="strong">Installation documentation</emphasis>.
   </para>
@@ -33,7 +32,7 @@
     <title>Prerequisites</title>
 
     <simplesect id="system_requirements">
-      <title>System requirements</title>
+      <title>System Requirements</title>
       <itemizedlist>
         <listitem><para>
           Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
@@ -88,7 +87,7 @@
   </section>
 
   <section>
-    <title>Installation of the Application Server</title>
+    <title>Installing the Application Server</title>
 
     <para>
       Copy the setup setup on the <trademark>Windows</trademark> machine.
@@ -126,7 +125,7 @@
     </para>
 
     <simplesect>
-      <title>Session Manager side</title>
+      <title>Session Manager Integration</title>
       <para>
 	Your <trademark>Windows</trademark> server should appear among the
 	<emphasis>Unregistered servers</emphasis>.
@@ -146,7 +145,7 @@
   </section>
 
   <section>
-    <title>Register the server and publish some applications</title>
+    <title>Registering the Server and Publishing Applications</title>
     <para>
       First, register your <trademark>Windows</trademark> server and switch it from
       "maintenance" to "production" mode.
@@ -177,7 +176,7 @@
 
 
   <section>
-    <title>Launch a session</title>
+    <title>Launching a Session</title>
     <para>
       If you launch a session, you should be able to access to your
       <trademark>Windows</trademark> applications from the application
@@ -198,7 +197,7 @@
     <title>Internal System</title>
 
     <simplesect>
-      <title>Have a look at the <trademark>Windows</trademark> agent log</title>
+      <title>Examining the <trademark>Windows</trademark> Agent Log</title>
 
       <para>
 	In a default <trademark>Windows</trademark> installation, the log file can be found at

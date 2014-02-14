@@ -51,6 +51,8 @@ DATA=\
 	wc_session_end.png \
 	wc_session_loading.png \
 	wc_test_failed.png \
+	ports_protocols.png \
+	web_apps_overview.png \
 	wc_test_window.png
 
 all:

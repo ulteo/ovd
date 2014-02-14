@@ -3,6 +3,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Mathieu SCHIRES <laurent@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,14 +71,74 @@ foreach ($files as $file) {
    continue;
  	
  $infos = pathinfo($file);
- 
+	
+	$name = null;
+	
+	switch ($infos['filename']){
+		
+		case "FAQ":
+			$name="Frequently Asked Questions";
+		break;
+		case "Installation_ApS_Windows":
+			$name="Installing a Windows Application Server";
+		break;
+		case "Installation_Gateway_Lucid":
+			$name="Installing OVD Gateway on Lucid";
+		break;
+		case "Installation_Gateway_Precise":
+			$name="Installing OVD Gateway on Precise";
+		break;
+		case "NativeClient":
+			$name="Native Client";
+		break;
+		case "Protocol":
+			$name="Protocol Overview";
+		break;
+		case "QuickStart":
+			$name="Quick Start";
+		break;
+		case "Support_Debian_Squeeze":
+			$name="Installing OVD 4 on Debian Squeeze";
+		break;
+		case "Support_Debian_Wheezy":
+			$name="Installing OVD 4 on Debian Wheezy";
+		break;
+		case "Support_RHEL_6.0":
+			$name="Installing OVD 4 on RHEL 6.0";
+		break;
+		case "Support_SLES_11.SP1":
+			$name="Installing OVD 4 on SLES 11.SP1";
+		break;
+		case "Support_Ubuntu_Lucid":
+			$name="Installing OVD 4 on Ubuntu Lucid";
+		break;
+		case "Support_Ubuntu_Precise":
+			$name="Installing OVD 4 on Ubuntu Precise";
+		break;
+		case "Support_openSUSE_11.3":
+			$name="Installing OVD 4 on openSUSE 11.3";
+		break;
+		case "WebClient":
+			$name="Web Client";
+		break;
+		case "Web_Applications_Gateway":
+			$name="Web Applications Integration";
+		break;
+		case "WsdlApi":
+			$name="Session Manager Admin API";
+		break;
+	
+		
+	}
+
+	if (is_null($name)) $name=$infos['filename'];
  
 /* if ((strpos($infos['filename'], 'Installation_Gateway')!== FALSE) || (strpos($infos['filename'], 'NativeClient')!== FALSE) || (strpos($infos['filename'], 'Premium')!== FALSE) )
 	 continue;*/
 	 
 	 echo "<tr>";
 	   echo "<td>";
-		 echo '<span style="font-size: 0.9em; color: #666; font-weight: bold;">'.str_replace('_', ' ', $infos['filename']).'</span>';
+		 echo '<span style="font-size: 0.9em; color: #666; font-weight: bold;">'.str_replace('_', ' ', $name).'</span>';
 	   echo "</td>";
 
 	   echo '<td style="width: 15px;"></td>';

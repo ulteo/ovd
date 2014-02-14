@@ -9,7 +9,7 @@
   <transform_var name="distrib_version" value="precise"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Gateway on @distrib_pretty_name@ installation</subtitle>
+    <subtitle>Gateway on @distrib_pretty_name@ Installation</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -19,7 +19,7 @@
   </articleinfo>
 
   <para>
-    The purpose of this document is to install a Ulteo OVD Gateway
+    The purpose of this document is to describe how to install an Ulteo OVD Gateway
     on a @distrib_pretty_name@.
   </para>
   <xi:include href="common.xml" xpointer="gold" />

@@ -20,22 +20,22 @@
 
   <para id="first_para">
     The purpose of this document is to describe how the different
-    pieces of Ulteo OVD are supported on @distrib_pretty_name@ system.
+    server roles of Ulteo OVD can be installed on @distrib_pretty_name@ system.
   </para>
 
   <section id="prerequisites">
     <title id="prerequisites_title">Prerequisites: @distrib_pretty_name@</title>
 
     <para>
-      @distrib_pretty_name@ is a LTS version of
+      @distrib_pretty_name@ is an LTS version of
       Ubuntu. There are several editions: desktop/server, 32/64
-      bits. This documentation has been done for the server edition
+      bits. This documentation has been created for the server edition
       (32/64 bits) but it should also work with the desktop edition. The Ubuntu
       operating system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
     </para>
 
     <simplesect id="system_requirements">
-      <title>System requirements</title>
+      <title>System Requirements</title>
 
       <itemizedlist>
         <listitem>
@@ -66,7 +66,7 @@
         </listitem>
         <listitem>
           <para>
-            For an Web Portal:
+            For a Web Portal:
           </para>
           <itemizedlist>
             <listitem><para>
@@ -79,7 +79,7 @@
         </listitem>
         <listitem>
           <para>
-            For using the same machine to host the Session Manager,
+            For using the same physical machine to host the Session Manager,
             the Web Portal and the Linux Application Server:
           </para>
           <xi:include href="common.xml" xpointer="system_requirements_server_linux_all_content" />
@@ -116,7 +116,7 @@
       </para>
       
       <para>
-        You need to set those names according to your own domain name.
+        You need to use the names that are configured for your own environment.
       </para>
     </important>
   </section>
@@ -132,12 +132,12 @@
     </para>
       
     <section id="repository_online">
-      <title id="repository_online_title">Online method</title>
+      <title id="repository_online_title">Online Method</title>
       
       <para id="repository_online_para">
-        The following method describe the repository process when your
-        servers can access to Internet. If not, please read the
-        offline method.
+        The following method describes the repository process when your
+        servers have access to the Internet. If no access is available, please read the
+        information presented in the section "Offline Method".
       </para>
       
       <itemizedlist>
@@ -207,7 +207,7 @@
     </section>
 
     <simplesect id="repository_common">
-      <title id="repository_common_title">Finish with any method</title>
+      <title id="repository_common_title">Completing the Installation Process </title>
       <itemizedlist>
         <listitem>
           <para id="repository_common_step1_para">
@@ -220,7 +220,7 @@
             <para>
               GPG errors given by the previous command will be fixed
               in the next installation steps. They won't prevent the
-              installation to succeed.
+              installation from succeeding.
             </para>
           </note>
         </listitem>
@@ -240,7 +240,7 @@
   </section>
 
   <section id="sm">
-    <title id="sm_title">Session Manager installation and configuration</title>
+    <title id="sm_title">Session Manager Installation and Configuration</title>
 
     <para id="sm_first_para">
       The Session Manager is a LAMP (Linux Apache MySQL PHP) system
@@ -248,7 +248,7 @@
     </para>
 
     <section id="sql">
-      <title id="sql_title">Installation of MySQL</title>
+      <title id="sql_title">Installing MySQL</title>
 
       <para id="sql_para">
         The Session Manager needs access to a MySQL database. We
@@ -264,7 +264,7 @@
         </listitem>
         <listitem id="mysql_createdb">
 	  <para>
-	    Now log in mysql and create a database:
+	    Now login to mysql and create a database:
 	    <screen>
 <![CDATA[# mysql -u root -p -e 'create database ovd']]>
 	    </screen>
@@ -281,7 +281,7 @@
     </section>
 
     <section id="sm_install">
-      <title id="sm_install_title">Package installation</title>
+      <title id="sm_install_title">Package Installation</title>
       
       <itemizedlist>
         <listitem>
@@ -293,7 +293,7 @@
         
         <listitem>
 	  <para>
-	    The installer asks for an Session Manager location
+	    The installer requires the location of the Session Manager
 	  </para>
     	  <para>
 	    <inlinemediaobject>
@@ -308,7 +308,7 @@
         </listitem>
         <listitem>
 	  <para>
-	    The installer asks for an admin login
+	    The installer requires an admin login
 	  </para>
     	  <para>
 	    <inlinemediaobject>
@@ -356,11 +356,11 @@
         
         <listitem>
 	  <para>
-            According to the <emphasis>Archictecture</emphasis>
+            As described in the <emphasis>Archictecture</emphasis>
             documentation,
             a <emphasis role="strong">Susbsystem</emphasis> archive
-            can be installed on the SM to simplify the Application Servers'
-	    deployements.
+            can be installed on the SM to simplify Application Server
+	    deployments.
 	  </para>
     	  <para>
 	    <inlinemediaobject>
@@ -374,7 +374,7 @@
 	  </para>
 	  <note>
 	    <para>
-	      If you don't have access to Internet, please read <link
+	      If you don't have access to the Internet, please read <link
 	      linkend="sm_chroot">this</link> to manually get the
 	      subsystem archive.
 	    </para>
@@ -383,8 +383,8 @@
       </itemizedlist>
 
       <para id="sm_install_browse">
-        The server is now installed but not configured yet. You have
-        to open <ulink url="http://sm.test.demo/ovd/admin" /> with a
+        The server is now installed but not configured yet. To configure the SM, 
+        open <ulink url="http://sm.test.demo/ovd/admin" /> in a
         web browser. It should display this page:
       </para>
 
@@ -422,14 +422,14 @@
       </para>
 
       <para>
-        For the first time you log in, the system detects that it is not
-        well configured so you are redirected to a basic setup page
+        The first time you log in, the system detects that it is not
+        configured so you are redirected to a basic setup page
         which will save a default configuration.
       </para>
       <para>
-        You have to set the MySQL configuration. For instance, if you
-        install MySQL on the same host as described previously, here
-        is the configuration:
+        You have to set the MySQL configuration. For example, if you
+        install MySQL on the same host as described previously, you would 
+        use the follwing configuration:
       </para>
     
       <para>
@@ -459,24 +459,24 @@
     </section>
 
     <para>
-      The Session Manager is now installed. Please read other
-      documentations to join servers or start sessions.
+      The Session Manager is now installed. Please read the appropriate
+      documentations to install other servers or start sessions.
     </para>
     
     <simplesect id="sm_chroot">
-      <title>Setup the subsystem archive</title>
+      <title>Setting Up the Subsystem Archive</title>
 
       <para>
-	If you didn't specify an URL at the last question, you have to
-	copy a subsystem archive into <emphasis
+	If you didn't specify a URL when initailly prompted, you have to
+	manually copy a subsystem archive into <emphasis
 	role="strong">/var/cache/ulteo/sessionmanager/base.tar.gz</emphasis>.
       </para>
 
       <para>
-	Get this <emphasis>base.tar.gz</emphasis> archive from <ulink
+	Retrieve the <emphasis>base.tar.gz</emphasis> archive from <ulink
 	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@">the
-	Ulteo website</ulink> or from the Ulteo OVD DVD and copy it in
-	the <emphasis>/var/cache/ulteo/sessionmanager/</emphasis> of
+	Ulteo website</ulink> or from the Ulteo OVD DVD and copy it into
+	the <emphasis>/var/cache/ulteo/sessionmanager/</emphasis> folder of
 	your machine.
       </para>
     </simplesect>
@@ -484,7 +484,7 @@
 
 
   <section id="subsystem">
-    <title id="subsystem_title">Application Server and File Server installation (using Subsystem)</title>
+    <title id="subsystem_title">Installing the Application Server and File Server (using Subsystem)</title>
     
     <itemizedlist>
       <listitem>
@@ -498,7 +498,7 @@
 
       <listitem>
         <para>
-	  The only question is about the host/IP address where the
+	  The only information required is the host/IP address where the
 	  session manager can be accessed (we use
 	  <ulink url="sm.test.demo" /> here for the example, but of
 	  course, you have to set your own domain name).
@@ -509,8 +509,7 @@
 	    If you are going to install an Application Server on the
 	    same machine as your Session Manager, it is recommended to use
 	    <emphasis role="strong"><ulink
-	    url="127.0.0.1" /></emphasis> as
-	    host.
+	    url="127.0.0.1" /></emphasis> as the host.
 	  </para>
 	</important>
 
@@ -528,9 +527,9 @@
     </itemizedlist>
 
     <para>
-      The configuration is now done. The system is going to donwload
+      The configuration is now done. The system is going to download
       and uncompress the application system archive from the Session
-      Manager your registered.
+      Manager you registered.
     </para>
     <para>
       Once done, you just have to restart the service:
@@ -550,7 +549,7 @@
     </screenshot>
     
     <simplesect id="aps_redirection_name">
-      <title>Set a redirection name</title>
+      <title>Setting a Redirection Name</title>
 
       <para>
         The server <emphasis role="strong">redirection name</emphasis> is
@@ -561,8 +560,8 @@
       <important>
         <para>
           If you have installed your Application Server on the same machine
-          as your Session Manager and you have followed our advices, you
-          have set <emphasis role="strong">127.0.0.1</emphasis> as server
+          as your Session Manager and you have followed our advice, you
+          have set <emphasis role="strong">127.0.0.1</emphasis> as the server
           name so you <emphasis role="strong">must</emphasis> define
           a redirection name.
         </para>
@@ -570,7 +569,7 @@
 
       <para id="redirectionname_explain">
         The <emphasis role="strong">redirection name</emphasis> is used
-        to launch sessions. When you launch a session, you are
+        when launching sessions. When you launch a session, you are
         redirected to an Application Server using the redirection name as
         target host. In some cases the default redirection name is not 
         valid. For instance, if you set up a private IP address and you 
@@ -586,18 +585,18 @@
   </section>
 
   <section id="wc">
-    <title id="wc_title">
-      Web Portal installation (web.test.demo)
+    <title id="wc_title">Installing a Web Portal (eg web.test.demo)
     </title>
       
     <para id="wc_para_1">
       The Ulteo OVD Web Portal is no longer installed with the Session
       Manager as it was on previous versions (version number &lt; 3.0). So you have
-      to install it manually on any server you want. Of course, it's
+      to install it manually on any server you want. It is, of course, 
       possible to install it on the same machine as the Session Manager.
     </para>
     <para id="wc_para_2">
-      In this example, we are using <emphasis>web.test.demo</emphasis>
+      In this example, we are using <emphasis>web.test.demo</emphasis> 
+      as the Web Portal address
     </para>
 
     <itemizedlist>
@@ -612,8 +611,8 @@
 
       <listitem id="wc_debconf_1">
 	<para>
-	  The installer asks if you want to plug the Web Portal with
-	  an existing Session Manager. It depends if you want to use
+	  The installer asks if you want to connect the Web Portal with
+	  an existing Session Manager. The answer depends on whether you want to use
 	  this Web Portal in a specific Ulteo OVD farm or if you
 	  want a generic Web Portal.
 	</para>
@@ -631,8 +630,8 @@
       
       <listitem id="wc_debconf_2">
 	<para>
-	  If you answered yes at the previous question, you now have
-	  to provide the Session Manager an host/IP address. In our
+	  If you answered yes for the previous question, you now have
+	  to provide the host/IP address of the Session Manager. In our
 	  example: <ulink url="sm.test.demo" />.
 	</para>
     	<para>
