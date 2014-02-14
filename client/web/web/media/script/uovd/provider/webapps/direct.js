@@ -23,7 +23,6 @@ uovd.provider.webapps.Direct.prototype.connectApplications = function() {
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) { continue; }
 		
 		var url = '/webapps/connect';
-		console.log(url);
 		
 		jQuery.ajax({
 			url : url,
@@ -49,7 +48,6 @@ uovd.provider.webapps.Direct.prototype.disconnect_implementation = function() {
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) { continue; }
 
 		var url = '/webapps/disconnect';
-		console.log(url);
 
 		jQuery.ajax({
 			url : url,
@@ -65,7 +63,6 @@ uovd.provider.webapps.Direct.prototype.disconnect_implementation = function() {
 }
 
 uovd.provider.webapps.Direct.prototype.webappServerStatus = function(xml) {
-	console.log(xml);
 	var xml_root = jQuery(xml).find(":root");
 
 	if(xml_root.prop("nodeName") != "webapp_server_status") {
