@@ -60,7 +60,8 @@ function initialize_framework() {
 	};
 
 	framework.webapps_providers = {
-		jsonp: new uovd.provider.webapps.Jsonp()
+		jsonp: new uovd.provider.webapps.Jsonp(),
+		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php")
 	};
 
 	/* Setup Handlers */
@@ -241,7 +242,7 @@ function initialize_settings() {
 	settings.use_local_credentials = defaults.force_use_local_credentials;
 	settings.rdp_provider          = defaults.rdp_provider;
 	settings.http_provider         = "proxy";
-	settings.webapps_provider      = "jsonp";
+	settings.webapps_provider      = "proxy";
 	settings.wc_url                = getWebClientBaseURL();
 
 	/* Settings needed by the framework */

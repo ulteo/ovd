@@ -89,42 +89,71 @@ foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
 	if (! $server)
 		continue;
 
-	if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
-		continue;
-
-	if ($server->id == $session->server)
-		continue;
-
-	$server_applications = $server->getApplications();
-	if (! is_array($server_applications))
-		$server_applications = array();
-
-	$available_applications = array();
-	foreach ($server_applications as $server_application)
-		$available_applications[] = $server_application->getAttribute('id');
-
-	$server_node = $dom->createElement('server');
-	$server_node->setAttribute('fqdn', $server->getExternalName());
-	$server_node->setAttribute('login', $session->settings['aps_access_login']);
-	$server_node->setAttribute('password', $session->settings['aps_access_password']);
-	foreach ($session->getPublishedApplications() as $application) {
-		if ($application->getAttribute('type') != $server->getAttribute('type'))
+	if (array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles())) {
+		if ($server->id == $session->server)
 			continue;
 
-		if (! in_array($application->getAttribute('id'), $available_applications))
-			continue;
+		$server_applications = $server->getApplications();
+		if (! is_array($server_applications))
+			$server_applications = array();
 
-		$application_node = $dom->createElement('application');
-		$application_node->setAttribute('id', $application->getAttribute('id'));
-		$application_node->setAttribute('name', $application->getAttribute('name'));
-		foreach ($application->getMimeTypes() as $mimetype) {
-			$mimetype_node = $dom->createElement('mime');
-			$mimetype_node->setAttribute('type', $mimetype);
-			$application_node->appendChild($mimetype_node);
+		$available_applications = array();
+		foreach ($server_applications as $server_application)
+			$available_applications[] = $server_application->getAttribute('id');
+
+		$server_node = $dom->createElement('server');
+		$server_node->setAttribute('fqdn', $server->getExternalName());
+		$server_node->setAttribute('login', $session->settings['aps_access_login']);
+		$server_node->setAttribute('password', $session->settings['aps_access_password']);
+		foreach ($session->getPublishedApplications() as $application) {
+			if ($application->getAttribute('type') != $server->getAttribute('type'))
+				continue;
+
+			if (! in_array($application->getAttribute('id'), $available_applications))
+				continue;
+
+			$application_node = $dom->createElement('application');
+			$application_node->setAttribute('id', $application->getAttribute('id'));
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			foreach ($application->getMimeTypes() as $mimetype) {
+				$mimetype_node = $dom->createElement('mime');
+				$mimetype_node->setAttribute('type', $mimetype);
+				$application_node->appendChild($mimetype_node);
+			}
+			$server_node->appendChild($application_node);
 		}
-		$server_node->appendChild($application_node);
+		$session_node->appendChild($server_node);
 	}
-	$session_node->appendChild($server_node);
+}
+		
+if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session->servers)) {
+	foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+		$server = Abstract_Server::load($server_id);
+		if (! $server)
+			throw_response(INTERNAL_ERROR);
+	
+		if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $server->getRoles()))
+			throw_response(INTERNAL_ERROR);
+	
+		$server_node = $dom->createElement('webapp-server');
+		$server_node->setAttribute('type', 'webapps');
+		$server_node->setAttribute('base-url', $server->getBaseURL());
+		
+		$server_node->setAttribute('webapps-url', $session->settings['webapps-url']);
+		$server_node->setAttribute('login', $session->settings['webapps_access_login']);
+		$server_node->setAttribute('password', $session->settings['webapps_access_password']);
+	
+		foreach ($session->getPublishedApplications() as $application) {
+			if ($application->getAttribute('type') != 'webapp')
+				continue;
+			$application_node = $dom->createElement('application');
+			$application_node->setAttribute('id', $application->getAttribute('id'));
+			$application_node->setAttribute('type', 'webapp');
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			$server_node->appendChild($application_node);
+		}
+		$session_node->appendChild($server_node);
+	}
 }
 $dom->appendChild($session_node);
 

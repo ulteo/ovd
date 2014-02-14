@@ -42,6 +42,7 @@ import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -195,6 +196,9 @@ public abstract class OvdClient implements RdpListener {
 	protected abstract void runSessionTerminated();
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
+	
+	protected abstract void customizeConnection(WebAppsServerAccess wasa);
+	
 
 	protected abstract void hide(RdpConnectionOvd co);
 	

@@ -22,6 +22,7 @@
 
 import httplib
 import re
+import urlparse
 
 from Config import Config, Protocol
 from ovd.Logger import Logger
@@ -52,7 +53,7 @@ def page_error(code, addr=None):
 
 class Service(object):
 
-	(SESSION_MANAGER, ADMINISTRATION, WEB_CLIENT, ROOT) = range(0, 4)
+	(SESSION_MANAGER, ADMINISTRATION, WEB_CLIENT, ROOT, WEBAPPS) = range(0, 5)
 
 	@staticmethod
 	def get(path):
@@ -62,6 +63,8 @@ class Service(object):
 			return Service.ADMINISTRATION
 		elif path == '/ovd' or path.startswith("/ovd/"):
 			return Service.WEB_CLIENT
+		elif path.startswith("/webapps/") or path.startswith("/webapps-"):
+			return Service.WEBAPPS
 		elif path == '/':
 			return Service.ROOT
 
@@ -271,6 +274,12 @@ class HttpMessage():
 			else:
 				return httplib.FORBIDDEN
 
+		elif self.service is Service.WEBAPPS:
+			if Config.webapps_redirection is True:
+				return httplib.OK
+			else:
+				return httplib.FORBIDDEN
+		
 		elif self.service is Service.ROOT:
 			if Config.root_redirection is not None:
 				return httplib.FOUND
@@ -297,6 +306,25 @@ class HttpMessage():
 		elif self.service is Service.WEB_CLIENT:
 			if Config.web_client[1] != addr:
 				return Config.web_client[0], Config.web_client[1:3]
+		
+		elif self.service is Service.WEBAPPS:
+			header = self.get_header("x-ovd-webappsserver")
+			if header is not None:
+				url = urlparse.urlparse(header)
+				token = url.path[len("/webapps-"):]
+			
+			else:
+				components = self.path.split("/")
+				token = components[1][len("webapps-"):]
+			
+			# get the token
+                        address = self.communicator.f_ctrl.send(("get_token", token))
+			url = urlparse.urlparse(address)
+
+			proto = Protocol.HTTPS
+			if url.scheme == "http":
+				proto = Protocol.HTTP
+			return proto, (url.hostname, url.port)
 
 		else:
 			return Protocol.HTTPS, (Config.general.session_manager, Protocol.HTTPS)

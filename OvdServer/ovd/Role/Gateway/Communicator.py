@@ -29,10 +29,11 @@ import httplib
 import socket
 import re
 import xml.etree.ElementTree as parser
+import urlparse
 
 from ProtocolDetectDispatcher import ProtocolException
 from premium.Licensing import Licensing
-from HttpMessage import HttpMessage, Protocol, page_error
+from HttpMessage import HttpMessage, Protocol, page_error, Service
 from Config import Config
 from ovd.Logger import Logger
 from OpenSSL import SSL
@@ -278,10 +279,46 @@ class HttpClientCommunicator(SSLCommunicator):
 					self.http.path = path
 					self.http.headers = headers
 
+		## manage webapps
+		referer= self.http.get_header("Referer")
+		if self.http.path.startswith("/webapps/"):
+			command = self.http.path[len("/webapps/"):]
+			command_header = self.http.get_header("x-ovd-service")
+			params_header = self.http.get_header("x-ovd-param")
+			server_header = self.http.get_header("x-ovd-webappsserver")
+			url = urlparse.urlparse(server_header)
+			token = url.path[len("/webapps-"):]
+			if not command == command_header:
+				Logger.error("%s:: invalid webapps command"% (self.__class__.__name__))
+				return ''
+			
+			new_path = self.http.path+"?"+params_header
+			self.http.headers = self.http.headers.replace(self.http.path, new_path)
+			self.http.path = new_path
+		
+		
+		elif self.http.path.startswith("/webapps-"):
+			components = self.http.path.split("/")
+			new_path = "/" + "/".join(components[2:])
+			if not new_path.startswith("/webapps/"):
+				new_path = "/webapps" + new_path
+			
+			self.http.headers = self.http.headers.replace(self.http.path, new_path)
+		
+		elif referer is not None:
+			url = urlparse.urlparse(referer)
+			if url.path.startswith("/webapps-"):
+				webapps_prefix = url.path.split("/")[1]
+				self.http.service = Service.WEBAPPS
+				new_path = "/" + webapps_prefix + self.http.path
+				self.http.headers = self.http.headers.replace(webapps_prefix, "webapps")
+				self.http.path = new_path
+		
+		
 		# Check last service. If different, a new serverCommunicator must be created
 		reconnect = False
 		if self.last_service is not None and self.http.service is not None and self.last_service != self.http.service :
-			names = ['SESSION_MANAGER', 'ADMINISTRATION', 'WEB_CLIENT', 'ROOT']
+			names = ['SESSION_MANAGER', 'ADMINISTRATION', 'WEB_CLIENT', 'ROOT', 'WEBAPPS']
 			Logger.debug("Gateway:: Client service type switched from "+names[self.last_service]+" to "+names[self.http.service])
 			reconnect = True
 
@@ -384,6 +421,27 @@ class HttpServerCommunicator(ServerCommunicator):
 		# in any case of redirection with HTTP protocol use
 		if self.http.have_redirection():
 			location = self.http.get_header("Location")
+			if location is not None and "/webapps/" in location:
+				address = None
+				if location.startswith("/"):
+					address = "http://%s:%i"%self.addr
+				
+				else:
+					address = "http://"
+					if location.startswith("https://"):
+						address = "https://"
+					
+					address += "%s:%i"%self.addr
+				
+				token = self.f_ctrl.send(('assign_token', address))
+				
+				new_base_location = "/webapps-"+token+"/"
+				location = location.replace("/webapps/", new_base_location, 1)
+				self.http.set_header("Location", location)
+				self.http.headers = self.http.headers.replace("Path=/webapps/", "Path="+new_base_location, 1)
+				self.http.headers = self.http.headers.replace("HttpOnly", "HttpsOnly", 1)
+
+			location = self.http.get_header("Location")
 			if location is not None and location.startswith("http://"):
 				location = location.replace("http", "https", 1)
 				self.http.set_header("Location", location)
@@ -421,6 +479,15 @@ class HttpServerCommunicator(ServerCommunicator):
 			del server.attrib['fqdn']
 			if server.attrib.has_key("port"):
 				del server.attrib["port"]
+		
+		for server in session.findall('webapp-server'):
+			if server.attrib.has_key("webapps-url"):
+				url = server.attrib["webapps-url"]
+			
+			if url is not None:
+				token = self.f_ctrl.send(('assign_token', url))
+				host = self.parent_http.get_header("Host")
+				server.attrib["webapps-url"] = "http://"+host+"/webapps-"+token
 		
 		return parser.tostring(session)
 
@@ -521,5 +588,14 @@ class HttpsServerCommunicator(SecureServerCommunicator):
 			del server.attrib['fqdn']
 			if server.attrib.has_key("port"):
 				del server.attrib["port"]
+		
+		for server in session.findall('webapp-server'):
+			if server.attrib.has_key("webapps-url"):
+				url = server.attrib["webapps-url"]
+			
+			if url is not None:
+				token = self.f_ctrl.send(('assign_token', url))
+				host = self.parent_http.get_header("Host")
+				server.attrib["webapps-url"] = "https://"+host+"/webapps-"+token
 
 		return parser.tostring(session)

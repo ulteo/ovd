@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2013 Ulteo SAS
+ * Copyright (C) 2013-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -450,10 +450,7 @@ function display_webapp_configuration($application_id) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			$value = '';
 			
-			if (! is_array($config['values']))
-				continue;
-			
-			if (array_key_exists($name, $config['values'])) {
+			if (is_array($config['values']) && array_key_exists($name, $config['values'])) {
 				$value = $config['values'][$name];
 			} elseif (array_key_exists('value', $params)) {
 				$value = $params['value'];

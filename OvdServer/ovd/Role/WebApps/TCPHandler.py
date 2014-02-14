@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David LECHEVALIER <david@ulteo.com> 2014
+# Author David PHAM-VAN <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,10 +22,21 @@
 
 from multiprocessing.reduction import reduce_socket
 import pickle
-from SocketServer import BaseRequestHandler
+from SocketServer import BaseRequestHandler, TCPServer
 
 from Config import Config
 from ovd.Logger import Logger
+
+
+class WebAppsTCPServer(TCPServer):
+	def shutdown_request(self, request):
+		# Since python 2.7, python shutdown socket with this function
+		# Because of multiprocessing, we do not want this behaviour
+		try:
+			self.close_request(request)
+		except:
+			pass
+
 
 
 class WebAppsTCPHandler(BaseRequestHandler):

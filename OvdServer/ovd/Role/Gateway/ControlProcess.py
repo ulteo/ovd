@@ -24,7 +24,7 @@ from multiprocessing.reduction import rebuild_socket
 import pickle
 from threading import Thread
 
-from TokenDatabase import digestToken, insertToken
+from TokenDatabase import digestToken, insertToken, getToken, assignToken
 
 
 class ControlClassProcess(Thread):
@@ -81,9 +81,14 @@ class ControlFatherProcess(ControlClassProcess):
 
 
 class ControlChildProcess(ControlClassProcess):
+	def _assign_token(self, address):
+		return assignToken(address)
 	
 	def _digest_token(self, token):
 		return digestToken(token)
+	
+	def _get_token(self, token):
+		return getToken(token)
 	
 	def _insert_token(self, address):
 		return insertToken(address)

@@ -216,6 +216,8 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/nkeyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/proxy.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/direct.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js") && $debug_mode != true) { ?>

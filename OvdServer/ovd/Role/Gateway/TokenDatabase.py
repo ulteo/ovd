@@ -32,6 +32,30 @@ def insertToken(address):
 	lock.release()
 	return token
 
+def assignToken(address):
+	token = str(uuid.uuid4())
+	lock.acquire()
+	for key, value in database.iteritems():
+		if value == address:
+			lock.release()
+			return key
+
+	database[token] = address
+	lock.release()
+	
+	return token
+
+
+def getToken(token):
+	try:
+		lock.acquire()
+		return database[token]
+	except KeyError:
+		return None
+	finally:
+		lock.release()
+
+
 def digestToken(token):
 	try:
 		lock.acquire()

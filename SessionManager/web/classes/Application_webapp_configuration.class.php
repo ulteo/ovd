@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2013 Ulteo SAS
+ * Copyright (C) 2013-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,7 +51,16 @@ class Application_webapp_configuration extends Application_webapp {
 	public function getUpdatedConfguration() {
 		$raw_configuration = $this->getAttribute('raw_configuration');
 		$url_prefix = $this->getAttribute('url_prefix');
+		$values = $this->getAttribute('values');
 		$parsed_config = json_decode($raw_configuration, True);
+		
+		if (is_array($values)) {
+			foreach ($values as $key => $value) {
+				if (array_key_exists($key, $parsed_config['Configuration'])) {
+					$parsed_config['Configuration'][$key]['value'] = $value;
+				}
+			}
+		}
 		$parsed_config = array($url_prefix => $parsed_config);
 		return json_encode($parsed_config);
 	}

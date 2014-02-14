@@ -23,17 +23,23 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.Application;
+import org.ulteo.ovd.WebApplication;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.client.OvdClientPerformer;
 import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.sm.News;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.ovd.client.desktop.SessionStatus;
+import org.ulteo.ovd.client.portal.WebApplicationListener;
 
 
 public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClientPerformer {
@@ -55,13 +61,41 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 
 	@Override
 	public void createRDPConnections() {
+		List<ServerAccess> servers = this.smComm.getServers();
+		List<ServerAccess> rdp_servers = new ArrayList<ServerAccess>();
+
+		for (ServerAccess server : servers) {
+			if(server.isRDP()) {
+				rdp_servers.add(server);
+			}
+		}
+
 		this.configureRDP(this.smComm.getResponseProperties());
-		_createRDPConnections(this.smComm.getServers());
+		_createRDPConnections(rdp_servers);
 	}
 	
 	@Override
 	public boolean checkRDPConnections() {
 		return _checkRDPConnections();
+	}
+
+	@Override
+	public void createWebAppsConnections() {
+		List<ServerAccess> servers = this.smComm.getServers();
+		List<ServerAccess> webapps_servers = new ArrayList<ServerAccess>();
+
+		for (ServerAccess server : servers) {
+			if(! server.isRDP()) {
+				webapps_servers.add(server);
+			}
+		}
+
+		_createWebAppsConnections(webapps_servers);
+	}
+	
+	@Override
+	public boolean checkWebAppsConnections() {
+		return _checkWebAppsConnections();
 	}
 	
 	@Override
@@ -77,6 +111,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 		
 		this.createRDPConnections();
+		this.createWebAppsConnections();
 		
 		this.sessionStatusMonitoringThread = new Thread(this);
 		this.continueSessionStatusMonitoringThread = true;
@@ -86,6 +121,12 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 			this.customizeConnection(rc);
 			rc.addRdpListener(this);
 		}
+		
+		for (WebAppsServerAccess wasa : this.webAppsServers) {
+			this.customizeConnection(wasa);
+		}
+		
+		this.desktopIntegrator.start();
 		
 		do
 		{
@@ -106,7 +147,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 				} catch (InterruptedException ex) {}
 			}
 
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+			if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 				this.disconnection();
 				break;
 			}
@@ -116,7 +157,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {}
 
-				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+				if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 					this.disconnection();
 					break;
 				}
@@ -163,6 +204,11 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 					this.connect();
 					Logger.info("Session is ready");
 					((OvdClientPerformer)this).runSessionReady();
+					for (WebAppsServerAccess wasa: this.webAppsServers) {
+						wasa.activate();
+					}
+
+					this.togglePublications();
 					continue;
 				
 				} else if (oldSessionStatus.equalsIgnoreCase(SessionStatus.SESSION_STATUS_ACTIVE ) &&

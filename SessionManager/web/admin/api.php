@@ -4653,9 +4653,8 @@ class OvdAdminSoap {
 					'name' => $server->getDisplayName(),
 					'type' => $server->getAttribute('type'),
 				);
+				$info['servers'][$s['id']] = $s;
 			}
-			
-			$info['servers'][$s['id']] = $s;
 		}
 		
 		if (! $info['can_start_session_desktop'] || ! $info['can_start_session_applications']) {

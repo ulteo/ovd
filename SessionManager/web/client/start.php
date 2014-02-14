@@ -340,8 +340,16 @@ if (isset($old_session_id)) {
 		
 		$random_server = $sessionManagement->desktop_server->id;
 	}
-	else
+	else if (! empty($servers[Server::SERVER_ROLE_APS])) {
 		$random_server = array_rand($servers[Server::SERVER_ROLE_APS]);
+	}
+	else if (! empty($servers[Server::SERVER_ROLE_WEBAPPS])) {
+		$random_server = array_rand($servers[Server::SERVER_ROLE_WEBAPPS]);
+	}
+	else {
+		Logger::error('main', '(client/start) No server for this session');
+		$random_server = '';
+	}
 
 	$random_session_id = gen_unique_string();
 
@@ -493,8 +501,11 @@ if (! isset($old_session_id)) {
 	}
 
 	$prepare_servers = array();
+	$allow_external_applications = isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1;
+	
 	if ($session->mode == Session::MODE_DESKTOP) {
-		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && count($session->servers[Server::SERVER_ROLE_APS]) > 1) {
+		$have_external_apps = count($session->servers[Server::SERVER_ROLE_APS]) > 1 || count($session->servers[Server::SERVER_ROLE_WEBAPPS]) > 0;
+		if ($session->mode == Session::MODE_DESKTOP && $allow_external_applications && $have_external_apps) {
 			$external_apps_token = new Token(gen_unique_string());
 			$external_apps_token->type = 'external_apps';
 			$external_apps_token->link_to = $session->id;
@@ -505,9 +516,9 @@ if (! isset($old_session_id)) {
 		$prepare_servers[] = $session->server;
 	}
 
-	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
+	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && $allow_external_applications)) {
 		foreach ($session->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
-			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server_id == $session->server)
+			if ($session->mode == Session::MODE_DESKTOP && $allow_external_applications && $server_id == $session->server)
 				continue;
 
 			$prepare_servers[] = $server_id;
@@ -699,10 +710,8 @@ if (! isset($old_session_id)) {
 		}
 	}
 	$prepare_servers = array();
-	if ($session->mode == Session::MODE_APPLICATIONS) {
-		foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
-			$prepare_servers[] = $server_id;
-		}
+	foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+		$prepare_servers[] = $server_id;
 	}
 
 	$count_prepare_servers = 0;
@@ -754,6 +763,8 @@ if (! isset($old_session_id)) {
 			$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 
 			throw_response(INTERNAL_ERROR);
+		} else {
+			$session->setServerStatus($server->id, Session::SESSION_STATUS_READY, NULL, Server::SERVER_ROLE_WEBAPPS);
 		}
 
 		$ret_dom = new DomDocument('1.0', 'utf-8');
@@ -762,6 +773,7 @@ if (! isset($old_session_id)) {
 		$webapps_url = $node->getAttribute('webapps-scheme').'://'.$server->getExternalName().':'.$node->getAttribute('webapps-port');
 		$session->settings['webapps-url'] = $webapps_url;
 	}
+	$save_session = Abstract_Session::save($session);
 }
 
 $_SESSION['session_id'] = $session->id;
@@ -863,9 +875,6 @@ if (array_key_exists(Server::SERVER_ROLE_APS, $session->servers)) {
 
 if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session->servers)) {
 	foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
-		if ($session->mode == Session::MODE_DESKTOP && $server_id != $session->server)
-			continue;
-
 		$server = Abstract_Server::load($server_id);
 		if (! $server)
 			throw_response(INTERNAL_ERROR);

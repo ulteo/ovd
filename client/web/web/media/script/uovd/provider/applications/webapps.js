@@ -15,7 +15,7 @@ uovd.provider.applications.Web.prototype.applicationStart_implementation = funct
 
 		if(server.type == uovd.SERVER_TYPE_WEBAPPS) {
 			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
-			var url = server.webapps_url + '/open?id=' + application_id + '&user=' + server.login + '&pass=' + server.password;
+			var url = server.webapps_url + '/webapps/open?id=' + application_id + '&user=' + server.login + '&pass=' + server.password;
 			this.session_management.fireEvent("ovd.applicationsProvider.web.start", this, this.build_startWebAppInstance(this.session_management, url, token));
 		}
 	} else {
@@ -35,7 +35,7 @@ uovd.provider.applications.Web.prototype.applicationStartWithArgs_implementation
 
 		if(server.type == uovd.SERVER_TYPE_WEBAPPS) {
 			this.session_management.fireEvent("ovd.applicationsProvider.statusChanged", this, {"application":this.applications[token], "from":"", "to":"unknown"});
-			var url = server.webapps_url + '/open?id=' + application_id + '&user=' + server.login + '&pass=' + server.password;
+			var url = server.webapps_url + '/webapps/open?id=' + application_id + '&user=' + server.login + '&pass=' + server.password;
 			this.session_management.fireEvent("ovd.applicationsProvider.web.start", this, this.build_startWebAppInstance(this.session_management, url, token));
 		}
 	} else {

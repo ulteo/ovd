@@ -77,7 +77,7 @@ public class WebAppsServerAccess extends ServerAccess implements Runnable {
 	private URL getConnectURL() {
 		final String uri;
 		try {
-			uri = url + "/connect?id=0&user=" + URLEncoder.encode(getLogin(), "UTF-8") + "&pass=" + URLEncoder.encode(getPassword(), "UTF-8");
+			uri = url + "/webapps/connect?id=0&user=" + URLEncoder.encode(getLogin(), "UTF-8") + "&pass=" + URLEncoder.encode(getPassword(), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
@@ -96,7 +96,7 @@ public class WebAppsServerAccess extends ServerAccess implements Runnable {
 		}
 	}
 	
-	private boolean activate() {
+	public boolean activate() {
 		final URL url = getConnectURL();
 		Logger.info("Connect URL " + url.toString());
 		

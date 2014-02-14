@@ -91,6 +91,8 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			return;
 		}
 		
+		this.desktopIntegrator = new DesktopIntegrator(this.system, this.smComm);
+		this.desktopIntegrator.addDesktopIntegrationListener(this);
 		this.spool = new Spool(this);
 		this.system.setShortcutArgumentInstance(this.spool.getID());
 		this.spool.start();
@@ -113,16 +115,20 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		}
 		
 		if (this.performDesktopIntegration && this.system != null) {
-			this.desktopIntegrator = new DesktopIntegrator(this.system, new ArrayList<RdpConnectionOvd>(this.connections), this.smComm);
-			this.desktopIntegrator.setWebAppServers(webAppsServers);
-			this.desktopIntegrator.addDesktopIntegrationListener(this);
-			this.desktopIntegrator.start();
+			this.desktopIntegrator.addRDPServer(co);
 		}
 		
 		this.recovery_display = new RecoverySeamlessDisplay(co);
 		co.setShell("OvdRemoteApps");
 	}
 
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) {
+		if (this.performDesktopIntegration && this.system != null) {
+			this.desktopIntegrator.addWebAppServer(wasa);
+		}
+	}
+	
 	@Override
 	public void disconnected(RdpConnection co) {
 		try {
@@ -276,10 +282,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	public RdpConnectionOvd createRDPConnection(ServerAccess server) {
 		if (server == null)
 			return null;
-		if (!server.isRDP()) {
-			// Non-RDP servers don't need this connection.
-			return null;
-		}
 
 		if (this.screensize == null) {
 			Logger.error("Failed to initialize RDP connection: RDP configuration is not set");
@@ -326,8 +328,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	protected void _createRDPConnections(List<ServerAccess> serversList) {
-		this.ApplicationIndex = 0;
-
 		for (ServerAccess server : serversList) {
 			if (this.isCancelled)
 				return;
@@ -336,10 +336,6 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				RdpConnectionOvd rc = this.createRDPConnection(server);
 				if (rc != null)
 					this.processIconCache(rc);
-			} else {
-				final WebAppsServerAccess webAppServer = (WebAppsServerAccess) server;
-				createWepAppConnection(webAppServer);
-				this.processWebAppIconCache(webAppServer);
 			}
 		}
 	}
@@ -378,6 +374,23 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		
 		return (nSeveralConnectionsFailed == nConnections) ? false : true;
 	}
+
+	protected void _createWebAppsConnections(List<ServerAccess> serversList) {
+		for (ServerAccess server : serversList) {
+			if (this.isCancelled)
+				return;
+
+			if (! server.isRDP()) {
+				final WebAppsServerAccess webAppServer = (WebAppsServerAccess) server; /* Local Cast */
+				createWepAppConnection(webAppServer);
+				this.processWebAppIconCache(webAppServer);
+			}
+		}
+	}
+
+	protected boolean _checkWebAppsConnections() {
+		return true;
+	}
 	
 	public void setPerformDesktopIntegration(boolean value) {
 		this.performDesktopIntegration = value;
@@ -399,9 +412,19 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			for (RdpConnectionOvd rc : this.getAvailableConnections())
 				this.unpublish(rc);
 			this.publicated = false;
+			
+			for (WebAppsServerAccess wasa:this.webAppsServers) {
+				this.unpublish(wasa);
+			}
+			
 		} else {
 			for (RdpConnectionOvd rc : this.getAvailableConnections())
 				this.publish(rc);
+			
+			for (WebAppsServerAccess wasa:this.webAppsServers) {
+				this.publish(wasa);
+			}
+
 			this.publicated = true;
 		}
 		return this.publicated;
@@ -432,6 +455,27 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 	
 	/**
+	 * publish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void publish(WebAppsServerAccess wasa) {
+		if (wasa == null)
+			throw new NullPointerException("WebAppsServerAccess parameter cannot be null");
+		
+		if (this.system == null)
+			return;
+
+		if (this.system instanceof SystemLinux)
+			((SystemLinux) this.system).installSystemMenu();
+		
+		for (Application app : wasa.getWebApplications()) {
+			this.system.install(app, this.showDesktopIcons, false);
+		}
+
+		this.system.refresh();
+	}
+	
+	/**
 	 * unpublish all application from a specified {@link RdpConnectionOvd}
 	 * @param {@link RdpConnectionOvd}
 	 */
@@ -448,7 +492,26 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 
 		this.system.refresh();
 	}
-    
+
+	/**
+	 * unpublish all application from a specified {@link RdpConnectionOvd}
+	 * @param {@link RdpConnectionOvd}
+	 */
+	protected void unpublish(WebAppsServerAccess wasa) {
+		if (wasa == null)
+			throw new NullPointerException("WebAppsServerAccess parameter cannot be null");
+		
+		if (this.system == null)
+			return;
+
+		for (Application app : wasa.getWebApplications()) {
+			this.system.uninstall(app);
+		}
+
+		this.system.refresh();
+	}
+
+	
 	/**
 	 * find the {@link RdpConnectionOvd} corresponding to a given {@link OvdAppChannel}
 	 * @param specific {@link OvdAppChannel}
@@ -475,6 +538,15 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				}
 			}
 		}
+		
+		for (WebAppsServerAccess wasa : this.webAppsServers) {
+			for (Application app : wasa.getWebApplications()) {
+				if (app.getId() == id) {
+					return app;
+				}
+			}
+		}
+		
 		return null;
 	}
 }

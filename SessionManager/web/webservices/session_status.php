@@ -49,11 +49,15 @@ function parse_session_status_XML($xml_) {
 		'id'		=>	$node->getAttribute('id'),
 		'server'	=>	$_SERVER['REMOTE_ADDR'],
 		'status'	=>	$node->getAttribute('status'),
-		'reason'	=>	NULL
+		'reason'	=>	NULL,
+		'role'	=> NULL
 	);
 
 	if ($node->hasAttribute('reason'))
 		$ret['reason'] = $node->getAttribute('reason');
+
+	if ($node->hasAttribute('role'))
+		$ret['role'] = $node->getAttribute('role');
 
 	return $ret;
 }
@@ -76,7 +80,7 @@ if (! $session) {
 	webservices_return_error(2, 'Session does not exist');
 }
 
-$session->setServerStatus($server->id, $ret['status'], $ret['reason']);
+$session->setServerStatus($server->id, $ret['status'], $ret['reason'], $ret['role']);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');

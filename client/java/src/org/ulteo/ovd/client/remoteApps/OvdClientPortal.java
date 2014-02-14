@@ -49,6 +49,7 @@ import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.integrated.DesktopIntegrator;
 import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -140,14 +141,22 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		for (Application app : co.getOvdAppChannel().getApplicationsList()) {
 			this.appsList.add(app);
 		}
+	}
+
+	
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) {
 		// Add shortcuts for web apps.
 		for (WebAppsServerAccess server : this.webAppsServers) {
 			for (Application app : server.getWebApplications()) {
 				this.appsList.add(app);
 			}
 		}
+		
+		super.customizeConnection(wasa);
 	}
 
+	
 	@Override
 	public void disconnected(RdpConnection co) {
 		super.disconnected(co);
@@ -255,19 +264,46 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void createRDPConnections() {
 		List<ServerAccess> servers = this.smComm.getServers();
-		
+		List<ServerAccess> rdp_servers = new ArrayList<ServerAccess>();
 		int nbApplications = 0;
-		for (ServerAccess server : servers)
-			nbApplications += server.applications.size();
-		this.ApplicationIncrement = (float) (100.0 / nbApplications);
 
+		for (ServerAccess server : servers) {
+			if(server.isRDP()) {
+				rdp_servers.add(server);
+				nbApplications += server.applications.size();
+			}
+		}
+
+		this.ApplicationIncrement += (float) (100.0 / nbApplications);
 		this.configureRDP(this.smComm.getResponseProperties());
-		_createRDPConnections(servers);
+		_createRDPConnections(rdp_servers);
 	}
 	
 	@Override
 	public boolean checkRDPConnections() {
 		return _checkRDPConnections();
+	}
+
+	@Override
+	public void createWebAppsConnections() {
+		List<ServerAccess> servers = this.smComm.getServers();
+		List<ServerAccess> webapps_servers = new ArrayList<ServerAccess>();
+		int nbApplications = 0;
+
+		for (ServerAccess server : servers) {
+			if(! server.isRDP()) {
+				webapps_servers.add(server);
+				nbApplications += server.applications.size();
+			}
+		}
+
+		this.ApplicationIncrement += (float) (100.0 / nbApplications);
+		_createWebAppsConnections(webapps_servers);
+	}
+
+	@Override
+	public boolean checkWebAppsConnections() {
+		return _checkWebAppsConnections();
 	}
 
 	@Override
@@ -330,6 +366,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 		
 		this.createRDPConnections();
+		this.createWebAppsConnections();
 		
 		this.sessionStatusMonitoringThread = new Thread(this);
 		this.continueSessionStatusMonitoringThread = true;
@@ -339,6 +376,12 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.customizeConnection(rc);
 			rc.addRdpListener(this);
 		}
+		
+		for (WebAppsServerAccess wasa : this.webAppsServers) {
+			this.customizeConnection(wasa);
+		}
+		
+		this.desktopIntegrator.start();
 		
 		do
 		{
@@ -359,7 +402,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 				} catch (InterruptedException ex) {}
 			}
 
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+			if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 				this.disconnection();
 				break;
 			}
@@ -369,7 +412,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {}
 
-				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+				if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 					this.disconnection();
 					break;
 				}
@@ -380,6 +423,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			} catch (InterruptedException ex) {}
 			
 		} while (this.connectionIsActive);
+		
+		this.runSessionTerminated();
 	}
 
 	@Override
@@ -423,6 +468,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 						this.connect();
 						Logger.info("Session is ready");
 						((OvdClientPerformer)this).runSessionReady();
+						
+						if (this.connections.isEmpty()) {
+							this.portal.initLocalDesktopIntegrationButton(true);
+						}
 					}
 				}
 				else {

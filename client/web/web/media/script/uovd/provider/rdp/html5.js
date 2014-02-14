@@ -219,6 +219,11 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 		if(!servers[index]) {
 			/* Stop recursion : Success ! */
 
+			if(self.connections.length == 0) {
+				/* Stop recursion : No rdp servers */
+				return;
+			}
+
 			/* set handler for seamrdp channel */
 			var seamless_instructionHandler = new uovd.provider.rdp.html5.SeamlessHandler(self);
 

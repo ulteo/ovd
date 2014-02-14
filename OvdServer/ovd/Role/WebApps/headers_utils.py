@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2012-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,6 +26,14 @@ def parse_request_headers(communicator):
 		if len(header_item) == 2:
 			header_name, header_value = header_item
 			headers[header_name] = header_value.strip()
+	return headers
+
+def parse_request_headers_list(communicator):
+	headers = []
+	for header in communicator.http.headers.split("\n"):
+		header_item = header.split(":", 1)
+		if len(header_item) == 2:
+			headers.append(header_item)
 	return headers
 
 def response_headers_get_cookies(headers):

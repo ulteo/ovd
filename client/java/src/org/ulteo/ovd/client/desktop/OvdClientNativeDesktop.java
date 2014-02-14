@@ -40,6 +40,7 @@ import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.ovd.client.Newser;
 import org.ulteo.ovd.sm.News;
@@ -73,6 +74,9 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 		co.setShell("OvdDesktop");
 	}
 
+	@Override
+	protected void customizeConnection(WebAppsServerAccess wasa) { }
+	
 	@Override
 	public void display(RdesktopCanvas canvas) {
 		this.desktop.setCanvas(canvas);
@@ -135,6 +139,15 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 	}
 
 	@Override
+	public void createWebAppsConnections() {
+	}
+
+	@Override
+	public boolean checkWebAppsConnections() {
+		return true;
+	}
+
+	@Override
 	public void runSessionReady() {
 		this.desktop.setVisible(true);
 	}
@@ -188,6 +201,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
 		
 		this.createRDPConnections();
+		this.createWebAppsConnections();
 		
 		for (RdpConnectionOvd rc : this.connections) {
 			this.customizeConnection(rc);
@@ -217,7 +231,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 				} catch (InterruptedException ex) {}
 			}
 
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+			if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 				this.disconnection();
 				break;
 			}
@@ -227,7 +241,7 @@ public class OvdClientNativeDesktop extends OvdClientDesktop implements NativeCl
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {}
 
-				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
+				if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 					this.disconnection();
 					break;
 				}
