@@ -3,7 +3,7 @@
 # Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
-# Author David LECHEVALIER <david@ulteo.com> 2010, 2012
+# Author David LECHEVALIER <david@ulteo.com> 2010, 2012, 2014
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import ntsecuritycon
+import socket
 import sys
 import win32api
 import win32con
@@ -39,6 +40,11 @@ import Langs
 import Reg
 
 class User(AbstractUser):
+	def __init__(self, name_, infos_ = {}):
+		AbstractUser.__init__(self, name_, infos_)
+		self.host = socket.gethostname()
+	
+	
 	def create(self):
 		userData = {}
 		userData['name'] = self.name
@@ -72,7 +78,8 @@ class User(AbstractUser):
 	
 	
 	def post_create(self):
-		data = [ {'domainandname' : self.name} ]
+		# We use hostname in order to be sure to add local user to the group, not the domain one
+		data = [ {'domainandname' : self.host+"\\"+self.name} ]
 		
 		if self.infos.has_key("groups"):
 			for group in  self.infos["groups"]:
@@ -116,7 +123,8 @@ class User(AbstractUser):
 	def getSid(self):
 		#get the sid
 		try:
-			sid, _, _ = win32security.LookupAccountName(None, self.name)
+			# We use hostname in order to be sure to add local user to the group, not the domain one
+			sid, _, _ = win32security.LookupAccountName(None, self.host+"\\"+self.name)
 			sid = win32security.ConvertSidToStringSid(sid)
 		except Exception:
 			Logger.exception("Unable to get SID")
