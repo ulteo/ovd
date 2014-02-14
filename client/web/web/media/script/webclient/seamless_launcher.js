@@ -161,6 +161,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			if(next == 0) {
 				node.html("");
 				node.parent().removeClass("launched");
+				node.parent().removeClass("launching");
 			} else {
 				node.html(next);
 			}
