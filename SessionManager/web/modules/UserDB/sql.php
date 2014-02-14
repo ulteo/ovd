@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -222,15 +223,15 @@ class UserDB_sql extends UserDB  {
 		if (!($user_->hasAttribute('login')))
 			return false;
 
-		$login = $user_->getAttribute('login');
-		$hash = crypt($password_, md5($login));
-		// TODO very very ugly
-		if ($user_->hasAttribute('password'))
-			return ($user_->getAttribute('password') == $hash);
-		else {
+		if (! ($user_->hasAttribute('password'))) {
 			Logger::error('main', 'USERDB::MYSQL::authenticate failed for \''.$user_->getAttribute('login').'\'');
 			return false;
 		}
+		
+		$login = $user_->getAttribute('login');
+		$hash = $user_->getAttribute('password');
+		
+		return (crypt($password_, $hash) == $hash);
 	}
 	
 	private function generateUserFromRow($row){
@@ -306,7 +307,7 @@ class UserDB_sql extends UserDB  {
 			$attributes = $user_->getAttributesList();
 			foreach ($attributes as $key){
 				if ($key == 'password')
-					$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+					$value = crypt($user_->getAttribute($key), '$1$'.md5($user_->getAttribute('login')));
 				else
 					$value = $user_->getAttribute($key);
 
@@ -363,7 +364,7 @@ class UserDB_sql extends UserDB  {
 						return false;
 					}
 					if ($user_ori->hasAttribute($key) and ($user_ori->getAttribute($key) != $user_->getAttribute($key))) {
-						$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+						$value = crypt($user_->getAttribute($key), '$1$'.md5($user_->getAttribute('login')));
 					}
 					else {
 						$value = $user_->getAttribute($key);
