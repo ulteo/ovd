@@ -1,7 +1,7 @@
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -233,6 +233,7 @@ int str_toOct(const char* str) {
 long long str_toSize(const char* str) {
 	char* temp = str_dup(str);
 	int coef = 0;
+	long long res = 0;
 
 	str_trim(temp);
 
@@ -266,6 +267,7 @@ long long str_toSize(const char* str) {
 	default:
 		if (!isdigit(lastChar)) {
 			logWarn("Invalid value '%s'", temp);
+			memory_free(temp);
 			return -1;
 		}
 		break;
@@ -275,7 +277,10 @@ long long str_toSize(const char* str) {
 		temp[strlen(temp) - 1] = '\0';
 	}
 
-	return (long long)(atol(temp) * exp10(coef));
+	res = (long long)(atol(temp) * exp10(coef));
+	memory_free(temp);
+
+	return res;
 }
 
 
