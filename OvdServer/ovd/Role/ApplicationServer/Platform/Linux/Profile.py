@@ -221,20 +221,14 @@ class Profile(AbstractProfile):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
-				if not System.mount_point_exist(dst):
-					os.makedirs(dst)
+				try:
+					os.symlink(dest, dst)
+				except:
+					Logger.exception("Failed to map shared folder into the home directory ")
+					continue
 				
-				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
-				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				p = System.execute(cmd)
-				if p.returncode != 0:
-					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-					return False
-				else:
-					sharedFolder["local_path"] = dst
-					self.folderRedirection.append(dst)
-					self.addGTKBookmark(dst)
+				sharedFolder["local_path"] = dst
+				self.addGTKBookmark(dst)
 		
 		return True
 	
