@@ -1,10 +1,11 @@
 <?php
 /**
-* Copyright (C) 2009-2012 Ulteo SAS
+* Copyright (C) 2009-2014 Ulteo SAS
 * http://www.ulteo.com
 * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
 * Author Julien LANGLOIS <julien@ulteo.com> 2009-2012
+* Author David LECHEVALIER <david@ulteo.com> 2014
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -282,6 +283,11 @@ function show_page($mode_) {
 	if ($t1 > time()) {
 		popup_error(_('Error: "to" field is in the future, switching to current time'));
 		$t1 = $mode_->transform_date(time());
+	}
+	
+	if ($t0 > time()) {
+		popup_error(_('Error: "from" field is in the future, switching to current time'));
+		$t0 = $mode_->transform_date(time());
 	}
 	
 	$t2 = strtotime($mode_->get_next(), $t1);
