@@ -145,10 +145,15 @@
 }
 
 #appsContainer li .application_instance_counter {
-	width: 15px;
-	text-align: right;
 	font-size: 0.9em;
 	font-style: italic;
+	display: block;
+	height: 0.9em;
+}
+
+#appsContainer li .application_name {
+    margin: 5px 0 0;
+    padding: 0;
 }
 
 #appsContainer li.applicationTaskbar {

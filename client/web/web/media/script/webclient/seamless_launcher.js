@@ -71,7 +71,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				var count = jQuery(document.createElement("span"));
 				count.addClass("application_instance_counter");
 
-				li.append(img, p_name, count);
+				li.append(img, count, p_name);
 
 				this.content[id] = {"node":li, "event":null};
 				ul.append(li);
