@@ -10,7 +10,7 @@ Architecture: all
 Depends: mysql-server, wwwconfig-common,
  ulteo-ovd-session-manager, ulteo-ovd-slaveserver-role-aps,
  ulteo-ovd-web-client, ulteo-ovd-web-client-ajaxplorer,
- ulteo-ovd-slaveserver-role-fs
+ ulteo-ovd-slaveserver-role-fs, ulteo-ovd-slaveserver-role-web
 Recommends: firefox, gimp, leafpad, libreoffice,
  ulteo-ovd-desktop | ulteo-ovd-desktop-legacy,
  language-pack-en, language-pack-fr, language-pack-es, language-pack-de,
