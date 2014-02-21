@@ -4,7 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
@@ -374,6 +374,19 @@ class Session(AbstractSession):
 			if ret is False:
 				Logger.warn("Unable to set TimeZone (%s, %s)"%(self.parameters["timezone"], tz_name))
 		
+		
+		# Hack for Windows 2012R2 relative to StartScreen integration.
+		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage"%(hiveName)
+		try:
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			win32api.RegSetValueEx(key, "MakeAllAppsDefault", 0, win32con.REG_DWORD, 1)
+			win32api.RegCloseKey(key)
 		
 		# Unload the hive
 		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2013, 2014
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@ import time
 
 import platform
 import pythoncom
+import win32com
 import pywintypes
 import win32api
 import win32com.client
@@ -247,10 +248,25 @@ def toUnicode(str):
 	return unicode(str, encoding)
 	
 
+def getLongVersion():
+	pythoncom.CoInitialize()
+	wmi = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+	wmi_serv = wmi.ConnectServer(".")
+	windows_server = wmi_serv.ExecQuery("Select Caption from Win32_OperatingSystem")
+
+	return windows_server[0].Caption
+
+
 def getVersion():
 	varray = platform.version().split(".")
 	
 	if len(varray) == 1:
 		return int(varray(0))
        
-	return float(varray[0]+"."+varray[1])
+	res = float(varray[0]+"."+varray[1])
+	
+	# We can not make difference between Windows 2012
+	# GetVersion is deprecated in Windows Server 2012R2
+	# http://msdn.microsoft.com/en-us/library/windows/desktop/ms724439(v=vs.85).aspx
+	if res == 6.2 and "R2" in getLongVersion():
+		return 6.3

@@ -1,6 +1,6 @@
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David LECHEVALIER <david@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -33,13 +33,17 @@ import _platform as Platform
 
 class Shortcuts(AbstractShortcuts):
 	def __init__(self):
+		self.version = Platform.getVersion()
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, 0, 0)
-		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, 0, 0)
+		if self.version > 6.1:
+			self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_STARTMENU, 0, 0)
+		else:
+			self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, 0, 0)
 		self.installedShortcut = []
 	
 	
 	def synchronize(self, path):
-		if Platform.getVersion() > 6.1:
+		if self.version > 6.1:
 			self.defaultProgram = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_PROGRAMS, 0, 0)
 			desktopLNKFile = os.path.join(self.windowsProgramsDir, "desktop.lnk")
 			
@@ -49,6 +53,7 @@ class Shortcuts(AbstractShortcuts):
 			except Exception, e:
 				print "Failed to copy file: ", str(e)
 			
+		if self.version == 6.2:
 			threading.Thread(target=self.server2012Integration, args=(path,)).start()
 			for p in glob.glob(os.path.join(path, "*")):
 				self.installedShortcut.append(p)
@@ -61,10 +66,10 @@ class Shortcuts(AbstractShortcuts):
 
 		for p in glob.glob(os.path.join(path, "*")):
 			self.installToDesktop(os.path.join(path, p))
-			self.installToStartMenu(os.path.join(path, p))
+			self.installToStartMenu(os.path.join(path, p), False)
 	
 	
-	def installToStartMenu(self, shortcut):
+	def installToStartMenu(self, shortcut, deleteOnClose = True):
 		shortcut = Platform.toUnicode(shortcut)
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
@@ -72,7 +77,8 @@ class Shortcuts(AbstractShortcuts):
 		
 		try:
 			win32file.CopyFile(shortcut, dstFile, True)
-			Platform.deleteOnclose(dstFile)
+			if deleteOnClose:
+				Platform.deleteOnclose(dstFile)
 		except pywintypes.error, err:
 			if err[0] == 5: # Access is denied
 				print "Session::Windows::install_shortcut Access is denied on copy of '%s' to '%s'"%(shortcut, dstFile)
