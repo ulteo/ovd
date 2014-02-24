@@ -39,7 +39,7 @@ public class Rdp5 extends Rdp {
 	/* Enable Desktop Composition */
 	public static final int PERF_ENABLE_DESKTOP_COMPOSITION =	0x00000100;
 	/* Enable all server desktop shell features */
-	public static final int PERF_ENABLE_ALL = PERF_ENABLE_FONT_SMOOTHING | PERF_ENABLE_DESKTOP_COMPOSITION | Rdp5.PERF_DISABLE_FULLWINDOWDRAG;
+	public static final int PERF_ENABLE_ALL = PERF_ENABLE_FONT_SMOOTHING | PERF_ENABLE_DESKTOP_COMPOSITION | PERF_DISABLE_FULLWINDOWDRAG | PERF_DISABLE_CURSOR_SHADOW;
 	/* Disable all server desktop shell features */
 	public static final int PERF_DISABLE_ALL = PERF_DISABLE_WALLPAPER
 						| PERF_DISABLE_FULLWINDOWDRAG

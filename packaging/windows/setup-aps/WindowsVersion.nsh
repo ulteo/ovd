@@ -29,6 +29,7 @@
 !define WINDOWSVERSION_FUNCTION
 
 !include String.nsh
+!include x64.nsh
 !include VersionCompare.nsh
 
 !macro setRegViewFromArch
@@ -55,7 +56,13 @@ Function .WindowsInstall
    IntCmp $1 2 done remoteapps done
 
    remoteapps:
+      ${If} ${RunningX64}
+        ${DisableX64FSRedirection}
+      ${EndIf}
       CopyFiles "$INSTDIR\wrapper\*.exe" "$SYSDIR"
+      ${If} ${RunningX64}
+        ${EnableX64FSRedirection}
+      ${EndIf}
 
       ; If you apply local modification on the user environment variable "path", 
       ; this modification can't be applied in seamless mode.

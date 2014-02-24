@@ -318,6 +318,7 @@ class Profile(AbstractProfile):
 	
 	
 	def overrideRegistry(self, hiveName, username):
+		fileservers = []
 		username_motif = r"u([a-zA-Z0-9\x00]{31}_\x00A\x00P\x00S\x00)"
 		subpath = "Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook"
 		
@@ -348,6 +349,7 @@ class Profile(AbstractProfile):
 			u = urlparse.urlparse(self.profile["uri"])
 			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(u.netloc, u.path[1:].replace("/", "#"))
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			fileservers.append(u.netloc)
 			
 			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 			win32api.RegSetValueEx(key, "_LabelFromReg", 0, win32con.REG_SZ, "Personal User Profile")
@@ -376,6 +378,10 @@ class Profile(AbstractProfile):
 			
 			# Set the name
 			u = urlparse.urlparse(share["uri"])
+			# No need to authorize shortcut in sharedFolder ??
+			#if u.netloc not in fileservers:
+			#	fileservers.append(u.netloc)
+			#
 			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\##%s#%s"%(u.netloc, u.path[1:].replace("/", "#"))
 			Reg.CreateKeyR(win32con.HKEY_USERS, path)
 			
@@ -398,6 +404,17 @@ class Profile(AbstractProfile):
 			win32api.RegSetValueEx(key, "Local AppData", 0, win32con.REG_SZ, os.path.join(base, "CSIDL_LOCAL_APPDATA"))
 			win32api.RegCloseKey(key)
 			
+		
+		# Register file server
+		rangeNumber = 1
+		for address in fileservers:
+			path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Ranges\Range%i"%(rangeNumber)
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "file",  0, win32con.REG_DWORD, 1)
+			win32api.RegSetValueEx(key, ":Range",  0, win32con.REG_SZ, address)
+			rangeNumber += 1
+	
 	
 	def getFreeLetter(self):
 		# ToDo: manage a global LOCK system to avoid two threads get the same result

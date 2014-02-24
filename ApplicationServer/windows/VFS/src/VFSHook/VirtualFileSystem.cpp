@@ -274,6 +274,9 @@ bool VirtualFileSystem::substitutePath(	const std::wstring& szPathRef,
 				log_debug(L"   => replace by is %s %s", pszSubstitutedPath.c_str(), pszSubstitutedPath.c_str());
 				bSubstituted = true;
 
+				if ((*it)->isLoopBack())
+					bSubstituted = false;
+
 				break;
 			}
 		}

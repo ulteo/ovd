@@ -242,7 +242,7 @@ Section "un.pre" UnPostCmd
   UserMgr::DeleteAccount "OVDAdmin"
   
   DetailPrint "Remove PDF printer driver"
-  nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
+  nsExec::execToStack 'start /w rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
   DeleteRegKey HKLM "SOFTWARE\GPL Ghostscript\8.71"
 
   DetailPrint "Remove PATH Environment variable"

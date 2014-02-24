@@ -31,6 +31,7 @@ private:
 	std::wstring destination;
 	std::wregex* reg;
 	bool translate;
+	bool loopback;
 
 public:
 	VFSRule(const std::wstring& rule, const std::wstring& unionName, bool translate);
@@ -42,6 +43,7 @@ public:
 	const std::wstring& getRule();
 	const std::wstring& getDestination();
 	bool needTranslate();
+	bool isLoopBack();
 };
 
 #endif /* VFSRULE_H_ */
