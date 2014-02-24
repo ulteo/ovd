@@ -115,6 +115,9 @@ def setup_apps(reset=False):
 	sm_request_manager = SMRequestManager()
 	webapps_dom = sm_request_manager.get_webapps()
 	
+	if webapps_dom == None:
+		return True
+	
 	for webapp_dom in webapps_dom.childNodes:
 		config_nodes = webapp_dom.getElementsByTagName('configuration')
 		if len(config_nodes) < 1:
