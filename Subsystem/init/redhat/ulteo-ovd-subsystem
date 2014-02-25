@@ -71,6 +71,9 @@ do_start() {
     mount -t devpts none $CHROOTDIR/dev/pts 2>/dev/null
     mount -t tmpfs none $CHROOTDIR/dev/shm 2>/dev/null
 
+    # Apply chroot fstab
+    uchroot mount -a
+    
     uchroot service cups start && \
     uchroot service uxda-server start && \
     uchroot service smbd start && \
