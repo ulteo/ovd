@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -304,6 +305,9 @@ class UserDB_ldap  extends UserDB {
 		$c = new ConfigElement_list('hosts', array('servldap.example.com'));
 		$ret []= $c;
 		$c = new ConfigElement_input('port', '389');
+		$ret []= $c;
+		$c = new ConfigElement_select('use_ssl', 0);
+		$c->setContentAvailable(array(0,1));
 		$ret []= $c;
 		$c = new ConfigElement_input('login', '');
 		$ret []= $c;

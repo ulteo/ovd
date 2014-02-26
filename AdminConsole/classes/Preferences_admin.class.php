@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -425,6 +426,7 @@ class Preferences_admin {
 			
 			'UserDB_ldap_hosts' => _('Server host address'),
 			'UserDB_ldap_port' => _('Server port'),
+			'UserDB_ldap_use_ssl' => _('Use SSL'),
 			'UserDB_ldap_login' => _('User login'),
 			'UserDB_ldap_password' => _('User password'),
 			'UserDB_ldap_options' => _('Options given to ldap object'),
@@ -436,6 +438,8 @@ class Preferences_admin {
 			'UserDB_activedirectory_domain' => _('Domain name'),
 			'UserDB_activedirectory_login' => _('Administrator DN'),
 			'UserDB_activedirectory_password' => _('Administrator password'),
+			'UserDB_activedirectory_port' => _('Server port'),
+			'UserDB_activedirectory_use_ssl' => _('Use SSL'),
 			'UserDB_activedirectory_match' => _('match'),
 			'UserDB_activedirectory_accept_expired_password' => _('Accept expired password'),
 			
@@ -497,6 +501,7 @@ class Preferences_admin {
 			
 			'UserDB_ldap_hosts' => _('The address of your LDAP server.'),
 			'UserDB_ldap_port' => _('The port number used by your LDAP server.'),
+			'UserDB_ldap_use_ssl' => _('Use SSL (ldaps://)'),
 			'UserDB_ldap_login' => _('The user login that must be used to access the database (to list users accounts).'),
 			'UserDB_ldap_password' => _('The user password that must be used to access the database (to list users accounts).'),
 			'UserDB_ldap_filter' => _('Filter, example (&(distinguishedname=mike*)(uid=42*))'),
@@ -505,6 +510,8 @@ class Preferences_admin {
 			'UserDB_activedirectory_domain' => _('Domain name used by Active Directory'),
 			'UserDB_activedirectory_login' => _('The user login that must be used to access the database (to list users accounts).'),
 			'UserDB_activedirectory_password' => _('The user password that must be used to access the database (to list users accounts).'),
+			'UserDB_activedirectory_port' => _('The port number used by your LDAP server.'),
+			'UserDB_activedirectory_use_ssl' => _('Use SSL (ldaps://)'),
 			'UserDB_activedirectory_accept_expired_password' => _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'),
 			
 			'AuthMethod_Token_url' => _('If a token argument is sent to startsession, the system tries to get an user login by requesting the token validation url.<br /><br />Put here the url to request if a token argument is sent to <i>startsession</i> instead of login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set because it\'s replaced by the token argument when the URL is requested.'),

@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -130,7 +131,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'login' => $config['login'].'@'.$config['domain'],
 			'password' => $config['password'],
 
-			'port'	=> '389',
+			'port'  => $config['port'],
+			'use_ssl' =>  $config['use_ssl'],
 			'options' => array(
 				'LDAP_OPT_PROTOCOL_VERSION' => '3',
 				'LDAP_OPT_REFERRALS' => 0,
@@ -150,6 +152,11 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$c = new ConfigElement_input('login', NULL);
 		$ret []= $c;
 		$c = new ConfigElement_password('password', NULL);
+		$ret []= $c;
+		$c = new ConfigElement_input('port', '389');
+		$ret []= $c;
+		$c = new ConfigElement_select('use_ssl', 0);
+		$c->setContentAvailable(array(0,1));
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match', array());
 		$ret []= $c;

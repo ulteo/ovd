@@ -76,6 +76,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['hosts'] = array($form['host'], $form['host2']);
     $config['suffix'] = $form['suffix'];
     $config['port'] = $form['port'];
+    $config['use_ssl'] = ((array_key_exists('use_ssl', $form))?1:0);
     $config['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
 
 
@@ -156,6 +157,8 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['host2'] = $config['hosts'][1];
     $form['suffix'] = $config['suffix'];
     $form['port'] = ($config['port']=='')?'389':$config['port'];
+    if ($config['use_ssl'] == 1)
+      $form['use_ssl'] = true;
 
     if ($config['login'] == '')
       $form['bind_anonymous'] = 1;
@@ -228,6 +231,10 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('optional').')</span></td>';
     $str.= '</tr>';
     $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
+    $str.= '<tr><td><input class="input_checkbox" type="checkbox" name="use_ssl"';
+    if (array_key_exists('use_ssl', $form))
+      $str.= ' checked="checked"';
+    $str.= '/></td><td>'._('Use SSL').'</td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
@@ -322,11 +329,14 @@ class Configuration_mode_ldap extends Configuration_mode {
   public function display_sumup($prefs) {
     $form = $this->config2form($prefs);
     $str = '';
+    $scheme = 'ldap';
+    if ($form['use_ssl'] == 1)
+       $scheme = 'ldaps';
 
     if (in_array(strtolower(parse_url($form['host'], PHP_URL_SCHEME)), array('ldap', 'ldaps')))
       $ldap_url = $form['host'];
     else
-      $ldap_url = 'ldap://'.$form['host'];
+      $ldap_url = $scheme.'://'.$form['host'];
     
     if ($form['port'] != 389)
       $ldap_url.= ':'.$form['port'];

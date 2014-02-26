@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Antoine WALTER <anw@ulteo.com> 2008
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,6 +35,7 @@ class LDAP {
 
 	private $hosts = array();
 	private $port;
+	private $use_ssl = false;
 	private $login;
 	private $password;
 	private $suffix;
@@ -46,6 +48,8 @@ class LDAP {
 			$this->hosts = $config_['hosts'];
 		if (isset($config_['port']))
 			$this->port = $config_['port'];
+		if (isset($config_['use_ssl']))
+			$this->use_ssl = ($config_['use_ssl'] === 1);
 		if (isset($config_['login']))
 			$this->login = $config_['login'];
 		if (isset($config_['password']))
@@ -73,7 +77,7 @@ class LDAP {
 	private function connect_on_one_host($host, &$log=array()) {
 		Logger::debug('main', 'LDAP - connect_on_one_host(\''.$host.'\', \''.$this->port.'\')');
 		$buf = false;
-		$buf = @ldap_connect($host, $this->port);
+		$buf = @ldap_connect($this->get_ldap_uri($host));
 		if (!$buf) {
 			Logger::error('main', 'Link to LDAP server failed. Please try again later.');
 			$log['LDAP connect'] = false;
@@ -141,7 +145,7 @@ class LDAP {
 			$protocol_version = '';
 			if (array_key_exists('LDAP_OPT_PROTOCOL_VERSION', $this->options))
 				$protocol_version = '-P '.$this->options['LDAP_OPT_PROTOCOL_VERSION'];
-			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.' '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$this->suffix.'"';
+			$ldapsearch = 'ldapsearch -x -H "'.$this->get_ldap_uri($this->hosts[0]).'" '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$this->suffix.'"';
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
@@ -311,5 +315,20 @@ class LDAP {
 		}
 		
 		return $attribs_;
+	}
+	
+	private function get_ldap_uri($host_) {
+		$ldap_uri = '';
+		if ($this->use_ssl)
+			$ldap_uri.= 'ldaps://';
+		else
+			$ldap_uri.= 'ldap://';
+		
+		$ldap_uri.= $host_;
+		
+		if (($this->use_ssl === false && $this->port != 389 ) || ($this->use_ssl === true && $this->port != 636 ))
+			$ldap_uri.= ":".$this->port;
+		
+		return $ldap_uri;
 	}
 }

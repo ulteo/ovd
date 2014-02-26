@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2011-2013 Ulteo SAS
+ * Copyright (C) 2011-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2013
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +82,9 @@ class Configuration_mode_ad extends Configuration_mode {
     $ad_ar['login'] = $form['admin_login'];
     $ad_ar['password'] = $form['admin_password'];
 
+    $ad_ar['port'] = $form['port'];
+    $ad_ar['use_ssl'] = ((array_key_exists('use_ssl', $form))?1:0);
+
     // Enable modules
     $module_to_enable = array('SessionManagement', 'UserDB', 'UserGroupDB');
     if ($form['sessionmanagement'] == 'internal') {
@@ -134,6 +138,10 @@ class Configuration_mode_ad extends Configuration_mode {
     if (isset($config['hosts'][1]))
       $form['host2'] = $config['hosts'][1];
     
+    $form['port'] = $config['port'];
+    if ($config['use_ssl'] == 1)
+      $form['use_ssl'] = true;
+    
     $form['domain'] = $config['domain'];
 
     $form['admin_login'] = $config['login'];
@@ -160,6 +168,21 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<tr><td>'._('Secondary Host:').'</td><td><input type="text" name="host2" value="'.$form['host2'].'" /></td>';
     $str.= '<td><span style="font-size: 0.9em; font-style: italic;">('._('Optional').')</span></td>';
     $str.= '</tr>';
+    
+    $str.= '<tr><td style="padding-left: 20px;" colspan="2">';
+    $str.= '<a id="show_a_b" href="" title="'._('Show advanced options').'" onclick="$(\'show_a_b\').hide(); $(\'hide_a_b\').show(); $$(\'tr.advanced\').each(function(e) { e.show();}); return false;">';
+    $str.= '<img src="media/image/more.png"/> '._('Show advanced options').'</a>';
+    $str.= '<a id="hide_a_b" href="" title="'._('Hide advanced options').'" onclick="$(\'show_a_b\').show(); $(\'hide_a_b\').hide(); $$(\'tr.advanced\').each(function(e) { e.hide();}); return false;" style="display: none;">';
+    $str.= '<img src="media/image/less.png"/> '._('Hide advanced options').'</a>';
+    $str.= '</td></tr>';
+    
+    $str.= '<tr class="advanced" style="display: none;"><td>'._('LDAP port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
+    $str.= '<tr class="advanced" style="display: none;"><td>';
+    $str.= '<input class="input_checkbox" type="checkbox" name="use_ssl"';
+    if (array_key_exists('use_ssl', $form))
+      $str.= ' checked="checked"';
+    $str.= '/></td><td>'._('Use LDAP encryption (SSL)').'</td></tr>';
+    
     $str.= '</table>';
     $str.= '</div>';
 
