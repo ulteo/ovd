@@ -79,7 +79,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['options'] = array('LDAP_OPT_PROTOCOL_VERSION' => '3');
 
 
-    if (isset($form['bind_anonymous'])) {
+    if (isset($form['bind_anonymous']) || empty($form['bind_dn'])) {
       $config['login'] = '';
       $config['password'] = '';
     } else {
