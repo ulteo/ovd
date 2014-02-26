@@ -357,7 +357,7 @@ class Profile(AbstractProfile):
 				
 				trial -= 1
 				if trial == 0:
-					Logger.exception("Failed to create directory %s: %s"%(src))
+					Logger.exception("Failed to create directory %s"%d)
 					return
 
 				time.sleep(random.randint(1,10)/100.0)
