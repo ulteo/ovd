@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
@@ -8,6 +8,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -200,7 +201,7 @@ class Session {
 
 		Logger::debug('main', 'Starting Session::setServerStatus for \''.$this->id.'\'');
 
-		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for server \''.$server_.'\' on session \''.$this->id.'\'');
+		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for server \''.$server_.'\' on session \''.$this->id.'\' for role ' . $server_role_);
 		$this->servers[$server_role_][$server_]['status'] = $status_;
 		Abstract_Session::save($this);
 
@@ -213,13 +214,15 @@ class Session {
 				$all_ready = true;
 				$all_servers = array();
 				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
-					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+					foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data)
+						$all_servers[$server_id.Server::SERVER_ROLE_APS] = $data['status'];
 				
 				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
-					 $all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+					foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data)
+						$all_servers[$server_id.Server::SERVER_ROLE_WEBAPPS] = $data['status'];
 				
-				foreach ($all_servers as $server_id => $data) {
-					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_READY) {
+				foreach ($all_servers as $server_id => $server_status) {
+					if ($server_id != $server_.$server_role_ && $server_status != Session::SESSION_STATUS_READY) {
 						$all_ready = false;
 						break;
 					}
@@ -254,13 +257,15 @@ class Session {
 				$all_destroyed = true;
 				$all_servers = array();
 				if (array_key_exists(Server::SERVER_ROLE_APS, $this->servers))
-					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_APS]);
+					foreach ($this->servers[Server::SERVER_ROLE_APS] as $server_id => $data)
+						$all_servers[$server_id.Server::SERVER_ROLE_APS] = $data['status'];
 				
 				if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $this->servers))
-					$all_servers = array_merge($all_servers, $this->servers[Server::SERVER_ROLE_WEBAPPS]);
+					foreach ($this->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data)
+						$all_servers[$server_id.Server::SERVER_ROLE_WEBAPPS] = $data['status'];
 				
-				foreach ($all_servers as $server_id => $data) {
-					if ($server_id != $server_ && $data['status'] != Session::SESSION_STATUS_DESTROYED) {
+				foreach ($all_servers as $server_id => $server_status) {
+					if ($server_id != $server_.$server_role_ && $server_status != Session::SESSION_STATUS_DESTROYED) {
 						$all_destroyed = false;
 						break;
 					}
