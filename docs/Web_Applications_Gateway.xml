@@ -21,7 +21,7 @@
   <transform_var name="product_name" value="OVD Web Application Gateway"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Web Application Gateway</subtitle>
+    <subtitle>@product_name@</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
     <copyright>
       <year>@YEAR@</year>
@@ -32,7 +32,7 @@
   <section id="introduction">
    <title>Introduction</title>
    <para>
-	<emphasis>Ulteo Open Virtual Desktop 4.0</emphasis> supports the delivery of native web applications alongside Windows and Linux. The Web Application Gateway is intended to provide a single sign on (SSO) capability for web applications as well as the ability to integrate web applications into the OVD infrastructure.   	   
+	<emphasis>Ulteo Open Virtual Desktop 4.0</emphasis> supports the delivery of native web applications alongside Windows and Linux. The @product_name@ is intended to provide a single sign on (SSO) capability for web applications as well as the ability to integrate web applications into the OVD infrastructure.   	   
     This documentation describes how to configure OVD to integrate Web Applications into an OVD user session. 
        
   </para>
@@ -53,7 +53,8 @@
 	   The <emphasis>@product_name@</emphasis> can be used in two modes:
 	    <itemizedlist>
 		<listitem>
-			path: The path mode defines the full path for a web application such as <emphasis>http://ulteo.demo/webapps/webappname</emphasis>			
+			path: The path mode defines the full path for a web application 
+			such as <emphasis>http://ulteo.demo/webapps/webappname</emphasis>			
 		</listitem>
 		<listitem>
 			domain: The domain mode will use the dns configuration for a domain in order to access the web application such as <emphasis>http://webappname.ulteo.demo/</emphasis>			
@@ -262,7 +263,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
           <listitem>
            <para>			  
 			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
-			that provides the Web Application Gateway execute the following command:
+			that provides the @product_name@ execute the following command:
         </para>
         <screen>
 <![CDATA[
@@ -278,7 +279,6 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 		<title>Configuration</title>
   <section id="format">
 	  <title>Configuration file</title>
-<<<<<<< HEAD
 			In order to integrate a web application, a JSON configuration file is required. More details on the JSON format can be found in Wikipedia: <ulink url="http://en.wikipedia.org/wiki/JSON"></ulink>.
 			One JSON file is required for each Web Application. Once created, the JSON config file can be uploaded using the OVD Admin Console. The configuration of the JSON file is described below.
 		 	Configuration parameters described in this section can be assigned the value of a setting that is defined in the Admin Console. This is done by using variables to contain those values. They can be used in handlers and filters on any nesting level. 
@@ -610,7 +610,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
   </section>
   </section>
   <section>
-	  <title>Example</title>
+	  <title>Configuration Example</title>
 	  <para> The example below illustrates how to configure and use Zarafa (a Webmail application) in <emphasis>Ulteo Open Virtual Desktop</emphasis></para>
 	  <screen>
 <![CDATA[
