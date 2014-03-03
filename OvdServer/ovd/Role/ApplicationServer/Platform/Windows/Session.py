@@ -230,7 +230,7 @@ class Session(AbstractSession):
 			
 			# Transform the drive letter into a bit value according to
 			# http://technet.microsoft.com/en-us/library/cc959437.aspx
-			value += 2 << (ord(drive.lower()[0]) - 98)
+			value += 1 << (ord(drive.lower()[0]) - 97)
 		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)
 		try:
