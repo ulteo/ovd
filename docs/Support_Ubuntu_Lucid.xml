@@ -485,8 +485,8 @@
 
   <section id="subsystem">
     <title id="subsystem_title">Installing the Application Server and File Server (using Subsystem)</title>
-    
-    <itemizedlist>
+        
+    <itemizedlist id="listinstall">
       <listitem>
         <para id="subsystem_package">
 	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
@@ -526,15 +526,15 @@
       </listitem> 
     </itemizedlist>
 
-    <para>
+    <para id="donwloadaps">
       The configuration is now done. The system is going to download
       and uncompress the application system archive from the Session
       Manager you registered.
     </para>
-    <para>
+    <para id="restartservice">
       Once done, you just have to restart the service:
     </para>
-    <screen>
+    <screen id="screenrestart"> 
 <![CDATA[# /etc/init.d/ulteo-ovd-subsystem restart]]>
     </screen>
 
@@ -581,7 +581,7 @@
           <graphic fileref="img/sm_admin_external_name.png"></graphic>
       </screenshot>
     </simplesect>
-    
+   
   </section>
 
   <section id="wc">

@@ -82,10 +82,7 @@
         An OVD server may be configured to support Web Application Integration.
         This could be installed as a standalone server or could be configured on an existing server with different roles.
         The Web Application Integration provides seamless integration of Web Applications into the OVD environment and a Single Sign On capability
-      </para>
-      <para>
-        ...
-      </para>
+      </para>    
     </section>
 
     <section>

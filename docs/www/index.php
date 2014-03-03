@@ -122,7 +122,7 @@ foreach ($files as $file) {
 			$name="Web Client";
 		break;
 		case "Web_Applications_Gateway":
-			$name="Web Applications Integration";
+			$name="Web Application Gateway";
 		break;
 		case "WsdlApi":
 			$name="Session Manager Admin API";

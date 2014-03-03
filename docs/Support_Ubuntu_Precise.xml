@@ -28,7 +28,49 @@
   <xi:include href="&parent;" xpointer="repository" />
 
   <xi:include href="&parent;" xpointer="sm" />
-  <xi:include href="&parent;" xpointer="subsystem" />
+  <!--<xi:include href="&parent;" xpointer="subsystem" />-->
+  <section id="subsystem">
+	    <title id="subsystem_title">Installing the Application Server and File Server (using Subsystem)</title>
+	    <section id="important_note">
+	    <title id="title_important note">Important note</title>
+	    <important id="downgradekernel">
+        <para>
+          Due to issues with the latest kernel, it's necessary to downgrade it. You have to use a Linux kernel version 3.2.0 in your host server
+        </para>   
+        </important>
+        <itemizedlist> 
+		<listitem>
+        <para>
+			Install the previous kernel
+		<screen>
+<![CDATA[# sudo apt-get install linux-image-3.2.0-59-virtual]]>
+          </screen>          
+        </para>  
+        </listitem>
+        <listitem>  
+        <para>
+		Remove the latest
+		  <screen>
+<![CDATA[# sudo apt-get remove linux-image-3.8.0]]>
+          </screen>
+        </para> 
+        </listitem>
+        <listitem>  
+        <para>You must reboot the server now</para>
+        </listitem>
+        </itemizedlist>      
+      </section>
+      <section id="install">
+	    <title id="title_install">Installation</title>
+		<xi:include href="&parent;" xpointer="listinstall" />
+		<xi:include href="&parent;" xpointer="donwloadaps" />
+		<xi:include href="&parent;" xpointer="restartservice" />
+		<xi:include href="&parent;" xpointer="screenrestart" />
+		<xi:include href="&parent;" xpointer="subsystem_last_para" />
+		<xi:include href="&parent;" xpointer="subsystem_last_screenshot" />
+		<xi:include href="&parent;" xpointer="aps_redirection_name" />
+	  </section>
+  </section>
   <xi:include href="&parent;" xpointer="wc" />  
   <xi:include href="colophon.xml" />
 </article>
