@@ -366,6 +366,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_enhance_user_experience' => _('Enhance user experience'),
 			
 			'general_session_settings_defaults_persistent' => _('Sessions are persistent'),
+			'general_session_settings_defaults_followme' => _('Follow me'),
 			'general_session_settings_defaults_enable_profiles' => _('Enable user profiles'),
 			'general_session_settings_defaults_auto_create_profile' => _('Auto-create user profiles when non-existant'),
 			'general_session_settings_defaults_quota' => _('Quota assigned to the profile'),

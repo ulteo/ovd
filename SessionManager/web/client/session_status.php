@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,6 +73,10 @@ if (! $session) {
 $session_status = $session->getStatus();
 if ($session_status == Session::SESSION_STATUS_CREATED)
 	$session_status = Session::SESSION_STATUS_INIT;
+
+if (array_key_exists('client_id', $_SESSION) && $session->client_id != $_SESSION['client_id']) {
+	$session_status = Session::SESSION_STATUS_INACTIVE;
+}
 
 header('Content-Type: text/xml; charset=utf-8');
 

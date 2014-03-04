@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
@@ -238,6 +238,11 @@ class Session {
 				break;
 			case Session::SESSION_STATUS_INACTIVE:
 				Logger::debug('main', 'Session::setServerStatus('.$server_.', '.$status_.') - Server "'.$server_.'" is now "'.$status_.'", switching Session status to "'.$status_.'"');
+				if (($this->mode == self::MODE_DESKTOP) && ($this->server != $server_)) {
+					// External apps session status is not the global session status.
+					break;
+				}
+				
 				$this->setStatus(Session::SESSION_STATUS_INACTIVE);
 				break;
 			case Session::SESSION_STATUS_WAIT_DESTROY:
@@ -338,6 +343,12 @@ class Session {
 		} elseif ($status_ == Session::SESSION_STATUS_INACTIVE) {
 			if (! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
 				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);
+			
+			// We prevent switch from READY to INACTIVE
+			if ($this->getAttribute('status') == Session::SESSION_STATUS_READY) {
+				return true;
+			}
+			
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\' (reason: \''.$reason_.'\')');
 			
@@ -408,7 +419,7 @@ class Session {
 	private function canSwitchToPreviousStatus($status_) {
 		return (array_key_exists('persistent', $this->settings) && 
 			$this->settings['persistent'] == 1 && 
-			$this->getAttribute('status') == Session::SESSION_STATUS_INACTIVE &&
+			in_array($this->getAttribute('status'), array(Session::SESSION_STATUS_INACTIVE, Session::SESSION_STATUS_ACTIVE)) &&
 			$status_ == Session::SESSION_STATUS_READY);
 	}
 

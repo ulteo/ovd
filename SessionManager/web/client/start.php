@@ -192,8 +192,26 @@ $ev = new SessionStart(array('user' => $user));
 $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
-		if ($session->isSuspended()) {
+		if ($session->isSuspended() || $session->isAlive()) {
 			$old_session_id = $session->id;
+			
+			if ($session->isAlive()) {
+				$same_mode = ($session->mode == $session_mode);
+				if (! $same_mode) {
+					Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' do not specify the right session mode');
+					throw_response(USER_WITH_ACTIVE_SESSION);
+				}
+				
+				if (! $persistent) {
+					Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' is not authorized to retrieve a session');
+					throw_response(USER_WITH_ACTIVE_SESSION);
+				}
+				
+				$client_id = gen_unique_string();
+				$session->client_id = $client_id;
+				$session->orderDisonnect();
+				$session->setStatus(Session::SESSION_STATUS_INACTIVE);
+			}
 
 			$user_login_aps = $session->settings['aps_access_login'];
 			$user_password_aps = $session->settings['aps_access_password'];
@@ -208,9 +226,6 @@ if ($sessions > 0) {
 			if (array_key_exists('webapps-url', $session->settings)) {
 				$webapps_url = $session->settings['webapps-url'];
 			}
-		} elseif ($session->isAlive()) {
-			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' already have an active session');
-			throw_response(USER_WITH_ACTIVE_SESSION);
 		} elseif ($session->status == Session::SESSION_STATUS_DESTROYED) {
 			$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 			Abstract_Session::delete($session);
@@ -352,10 +367,12 @@ if (isset($old_session_id)) {
 	}
 
 	$random_session_id = gen_unique_string();
+	$client_id = gen_unique_string();
 
 	$session_type = 'start';
 
 	$session = new Session($random_session_id);
+	$session->client_id = $client_id;
 	$session->server = $random_server;
 	$session->mode = $session_mode;
 	$session->type = $session_type;
@@ -455,6 +472,7 @@ if (isset($user_login_webapps) && isset($user_password_webapps)) {
 	$session->settings['webapps_access_password'] = $user_password_webapps;
 }
 
+$session->client_id = $client_id;
 $save_session = Abstract_Session::save($session);
 if (! $save_session) {
 	Logger::error('main', '(client/start) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
@@ -789,6 +807,7 @@ if (! isset($old_session_id)) {
 }
 
 $_SESSION['session_id'] = $session->id;
+$_SESSION['client_id'] = $client_id;
 
 $sessionManagement->end();
 
