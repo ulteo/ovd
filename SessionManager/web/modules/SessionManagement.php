@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
- * Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2012-2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
@@ -107,16 +107,16 @@ abstract class SessionManagement extends Module {
 		}
 
 		if ($session_node->hasAttribute('mode'))
-			$_SESSION['mode'] = $session_node->getAttribute('mode');
+			$this->mode = $session_node->getAttribute('mode');
 
 		if ($session_node->hasAttribute('language'))
-			$_REQUEST['language'] = $session_node->getAttribute('language');
+			$this->language = $session_node->getAttribute('language');
 
 		if ($session_node->hasAttribute('timezone'))
-			$_REQUEST['timezone'] = $session_node->getAttribute('timezone');
+			$this->timezone = $session_node->getAttribute('timezone');
 
 		if ($session_node->hasAttribute('no_desktop'))
-			$_SESSION['no_desktop'] = true;
+			$this->no_desktop = true;
 		
 		$user_node = $dom->getElementsByTagname('user')->item(0);
 		if (! is_null($user_node)) {
@@ -125,19 +125,17 @@ abstract class SessionManagement extends Module {
 			if ($user_node->hasAttribute('password'))
 				$_POST['password'] = $user_node->getAttribute('password');
 			if ($user_node->hasAttribute('token'))
-				$_REQUEST['token'] = $user_node->getAttribute('token');
+				$this->token = $user_node->getAttribute('token');
 		}
 
 		$start_node = $dom->getElementsByTagname('start')->item(0);
+		$this->start_apps = array();
 		if (! is_null($start_node)) {
 			$application_nodes = $start_node->getElementsByTagname('application');
 			foreach ($application_nodes as $application_node) {
 				if (! $application_node->hasAttribute('id'))
 					continue;
 				
-				if (! isset($_REQUEST['start_apps']) || ! is_array($_REQUEST['start_apps']))
-					$_REQUEST['start_apps'] = array();
-
 				$r = array('id' => $application_node->getAttribute('id'));
 				
 				if ($application_node->hasAttribute('file_type') && 
@@ -151,7 +149,7 @@ abstract class SessionManagement extends Module {
 				else if ($application_node->hasAttribute('arg'))
 					$r['arg'] = $application_node->getAttribute('arg');
 				
-				$_REQUEST['start_apps'][] = $r;
+				$this->start_apps[] = $r;
 			}
 		}
 
@@ -810,5 +808,419 @@ abstract class SessionManagement extends Module {
 		
 		$this->sharedfolders_known_rid[]= $item;
 		return $item;
+	}
+	
+	public function prepareFSAccess($session_) {
+		if (! array_key_exists(Server::SERVER_ROLE_FS, $session_->servers)) {
+			return true;
+		}
+		
+		$default_settings = $this->user->getSessionSettings('session_settings_defaults');
+		$need_valid_profile = ($default_settings['start_without_profile'] == 1);
+		$need_all_sharedFolders = ($default_settings['start_without_all_sharedfolders'] == 1);
+		$user_login_fs = $session_->settings['fs_access_login'];
+		$user_password_fs = $session_->settings['fs_access_password'];
+		
+		$mounts = array();
+		
+		foreach ($session_->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
+			$server = Abstract_Server::load($server_id);
+			if (! $server)
+				continue;
+			
+			foreach ($netfolders as $netfolder) {
+				$quota = 0;
+				$mode = 'rw';
+				if ($netfolder['type'] == 'profile')
+					$quota = $default_settings['quota'];
+				
+				if ($netfolder['type'] == 'sharedfolder')
+					$mode = $netfolder['mode'];
+				
+				$mounts[$netfolder['dir']] = array('quota' => $quota, 'mode' => $mode);
+			}
+			
+			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $mounts)) {
+				if (($need_valid_profile && $netfolder['type'] == 'profile') || ($need_all_sharedFolders && $netfolder['type'] == 'sharedfolder')) {
+					Logger::error('main', 'SessionManagement::prepareFSAccess - Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
+					$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public function prepareWebappsAccess($session_) {
+		$prepare_servers = array();
+		foreach ($session_->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+			$prepare_servers[] = $server_id;
+		}
+		
+		$user_login_webapps = $session_->settings['webapps_access_login'];
+		$user_password_webapps = $session_->settings['webapps_access_password'];
+
+		$count_prepare_servers = 0;
+		foreach ($prepare_servers as $prepare_server) {
+			$count_prepare_servers++;
+			
+			$server = Abstract_Server::load($prepare_server);
+			if (! $server)
+				continue;
+			
+			if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $server->getRoles()))
+				continue;
+			
+			$dom = new DomDocument('1.0', 'utf-8');
+			$session_node = $dom->createElement('session');
+			$session_node->setAttribute('id', $session_->id);
+			$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+			$user_node = $dom->createElement('user');
+			$user_node->setAttribute('login', $user_login_webapps);
+			$user_node->setAttribute('password', $user_password_webapps);
+			$user_node->setAttribute('USER_LOGIN', $_POST['login']);
+			$user_node->setAttribute('USER_PASSWD', $_POST['password']);
+			$user_node->setAttribute('displayName', $this->user->getAttribute('displayname'));
+			$session_node->appendChild($user_node);
+			
+			$applications_node = $dom->createElement('applications');
+			foreach ($session_->getPublishedApplications() as $application) {
+				if ($application->getAttribute('type') != 'webapp')
+					continue;
+				
+				$application_node = $dom->createElement('application');
+				$application_node->setAttribute('id', $application->getAttribute('id'));
+				$application_node->setAttribute('type', 'webapp');
+				$application_node->setAttribute('name', $application->getAttribute('name'));
+				$applications_node->appendChild($application_node);
+			}
+			$session_node->appendChild($applications_node);
+				
+			$dom->appendChild($session_node);
+			
+			$this->appendToSessionCreateXML($dom);
+			
+			$xml = $dom->saveXML();
+			
+			$ret_xml = query_url_post_xml($server->getBaseURL().'/webapps/session/create', $xml);
+			$ret = $this->parseSessionCreate($ret_xml);
+			if (! $ret) {
+				Logger::critical('main', 'SessionManagement::prepareWebappsAccess - Unable to create Session \''.$session_->id.'\' for User \''.$session_->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+				$session_->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+				
+				return false;
+			} else {
+				$session_->setServerStatus($server->id, Session::SESSION_STATUS_READY, NULL, Server::SERVER_ROLE_WEBAPPS);
+			}
+			
+			$ret_dom = new DomDocument('1.0', 'utf-8');
+			$ret_buf = @$ret_dom->loadXML($ret_xml);
+			$node = $ret_dom->getElementsByTagname('session')->item(0);
+			$webapps_url = $node->getAttribute('webapps-scheme').'://'.$server->getExternalName().':'.$node->getAttribute('webapps-port');
+			$session_->settings['webapps-url'] = $webapps_url;
+		}
+		
+		return true;
+	}
+
+
+	public function prepareAPSAccess($session_) {
+		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
+		$default_settings = $this->user->getSessionSettings('session_settings_defaults');
+		$prepare_servers = array();
+		
+		# No_desktop option management
+		if (isset($this->no_desktop) && $this->no_desktop === true) {
+			if ($authorize_no_desktop  === true)
+				$no_desktop_process = 1;
+			else
+				Logger::warning('main', 'SessionManagement::prepareAPSAccess - Cannot apply no_desktop parameter because policy forbid it');
+		}
+		
+		if ($default_settings['use_known_drives'] == 1)
+			$use_known_drives = 'true';
+		
+		$profile_mode = $default_settings['profile_mode'];
+		$desktop_icons = $remote_desktop_settings['desktop_icons'];
+		$need_valid_profile = ($default_settings['start_without_profile'] == 0);
+		$user_login_aps = $session_->settings['aps_access_login'];
+		$user_password_aps = $session_->settings['aps_access_password'];
+		$user_login_fs = $session_->settings['fs_access_login'];
+		$user_password_fs = $session_->settings['fs_access_password'];
+		
+		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
+		$allow_external_applications = array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1;
+		$locale = $this->user->getLocale();
+		if (isset($this->timezone) && $this->timezone != '')
+			$timezone = $this->timezone;
+	
+		if ($session_->mode == Session::MODE_DESKTOP) {
+			$have_external_apps = count($session_->servers[Server::SERVER_ROLE_APS]) > 1 || count($session_->servers[Server::SERVER_ROLE_WEBAPPS]) > 0;
+			if ($session_->mode == Session::MODE_DESKTOP && $allow_external_applications && $have_external_apps) {
+				$external_apps_token = new Token(gen_unique_string());
+				$external_apps_token->type = 'external_apps';
+				$external_apps_token->link_to = $session_->id;
+				$external_apps_token->valid_until = 0;
+				Abstract_Token::save($external_apps_token);
+			}
+			
+			$prepare_servers[] = $session_->server;
+		}
+		
+		if ($session_->mode == Session::MODE_APPLICATIONS || ($session_->mode == Session::MODE_DESKTOP && $allow_external_applications)) {
+			foreach ($session_->servers[Server::SERVER_ROLE_APS] as $server_id => $data) {
+				if ($session_->mode == Session::MODE_DESKTOP && $allow_external_applications && $server_id == $session_->server)
+					continue;
+
+				$prepare_servers[] = $server_id;
+			}
+		}
+
+		$count_prepare_servers = 0;
+		foreach ($prepare_servers as $prepare_server) {
+			$count_prepare_servers++;
+			
+			$server = Abstract_Server::load($prepare_server);
+			if (! $server)
+				continue;
+
+			if (! array_key_exists(Server::SERVER_ROLE_APS, $server->getRoles()))
+				continue;
+			
+			$server_applications = $server->getApplications();
+			if (! is_array($server_applications))
+				$server_applications = array();
+			
+			$available_applications = array();
+			foreach ($server_applications as $server_application)
+				$available_applications[] = $server_application->getAttribute('id');
+			
+			$dom = new DomDocument('1.0', 'utf-8');
+			
+			$session_node = $dom->createElement('session');
+			$session_node->setAttribute('id', $session_->id);
+			$session_node->setAttribute('mode', (($session_->mode == Session::MODE_DESKTOP && $count_prepare_servers == 1)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
+			
+			// OvdShell Configuration
+			$shell_node = $dom->createElement('shell');
+			$session_node->appendChild($shell_node);
+			
+			if (isset($external_apps_token)) {
+				$setting_node = $dom->createElement('setting');
+				$setting_node->setAttribute('name', 'external_apps_token');
+				$setting_node->setAttribute('value', $external_apps_token->id);
+				$shell_node->appendChild($setting_node);
+			}
+			
+			if (isset($this->start_apps) && is_array($this->start_apps)) {
+				$start_apps = $this->start_apps;
+				
+				$applicationDB = ApplicationDB::getInstance();
+				
+				foreach ($start_apps as $start_app) {
+					$app = $applicationDB->import($start_app['id']);
+					
+					if (! is_object($app)) {
+						Logger::error('main', 'SessionManagement::prepareAPSAccess - No such application for id \''.$start_app['id'].'\'');
+						throw_response(SERVICE_NOT_AVAILABLE);
+					}
+					
+					$apps = $session_->getPublishedApplications();
+					
+					$ok = false;
+					foreach ($apps as $user_app) {
+						if ($user_app->getAttribute('id') == $start_app['id']) {
+							$ok = true;
+							break;
+						}
+					}
+					
+					if ($ok === false) {
+						Logger::error('main', 'SessionManagement::prepareAPSAccess - Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app['id'].'\'');
+						return false;
+					}
+				}
+			}
+			
+			
+			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode') as $parameter) {
+				if (! isset($$parameter))
+					continue;
+				
+				$setting_node = $dom->createElement('setting');
+				$setting_node->setAttribute('name', $parameter);
+				$setting_node->setAttribute('value', $$parameter);
+				$shell_node->appendChild($setting_node);
+			}
+			
+			foreach (array('desktop_icons', 'locale', 'timezone', 'need_valid_profile') as $parameter) {
+				if (! isset($$parameter))
+					continue;
+				
+				$parameter_node = $dom->createElement('parameter');
+				$parameter_node->setAttribute('name', $parameter);
+				$parameter_node->setAttribute('value', $$parameter);
+				$session_node->appendChild($parameter_node);
+			}
+		
+			$scripts = $this->user->scripts();
+			if (is_array($scripts)) {
+				$scripts_node = $dom->createElement('scripts');
+				foreach ($scripts as $script) {
+					$script_node = $dom->createElement('script');
+					$script_node->setAttribute('id', $script->getAttribute('id'));
+					$script_node->setAttribute('type', $script->getAttribute('type'));
+					$script_node->setAttribute('name', $script->getAttribute('name'));
+					$scripts_node->appendChild($script_node);
+				}
+				$shell_node->appendChild($scripts_node);
+			}
+			
+			$user_node = $dom->createElement('user');
+			$user_node->setAttribute('login', $user_login_aps);
+			$user_node->setAttribute('password', $user_password_aps);
+			$user_node->setAttribute('displayName', $this->user->getAttribute('displayname'));
+			$session_node->appendChild($user_node);
+			
+			if (array_key_exists(Server::SERVER_ROLE_FS, $session_->servers)) {
+				foreach ($session_->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
+					$fs_server = Abstract_Server::load($server_id);
+					foreach ($netfolders as $netfolder) {
+						$uri = 'cifs://'.$fs_server->getExternalName().'/'.$netfolder['dir'];
+						
+						$netfolder_node = $dom->createElement($netfolder['type']);
+						$netfolder_node->setAttribute('rid', $netfolder['rid']);
+						$netfolder_node->setAttribute('uri', $uri);
+						
+						if ($netfolder['type'] == 'profile') {
+							$netfolder_node->setAttribute('profile_mode', $profile_mode);
+						}
+						if ($netfolder['type'] == 'sharedfolder') {
+							$netfolder_node->setAttribute('name', $netfolder['name']);
+							$netfolder_node->setAttribute('mode', $netfolder['mode']);
+						}
+						
+						$netfolder_node->setAttribute('login', $user_login_fs);
+						$netfolder_node->setAttribute('password', $user_password_fs);
+						$session_node->appendChild($netfolder_node);
+					}
+				}
+			}
+			
+			foreach ($this->forced_sharedfolders as $share) {
+				$sharedfolder_node = $dom->createElement('sharedfolder');
+				$sharedfolder_node->setAttribute('rid', $share['rid']);
+				$sharedfolder_node->setAttribute('uri', $share['uri']);
+				$sharedfolder_node->setAttribute('name', $share['name']);
+				if (array_key_exists('login', $share) && array_key_exists('password', $share)) {
+					$sharedfolder_node->setAttribute('login', $share['login']);
+					$sharedfolder_node->setAttribute('password', $share['password']);
+				}
+				
+				$session_node->appendChild($sharedfolder_node);
+			}
+			
+			// Pass custom shared folders to the server
+			foreach (Plugin::dispatch('getSharedFolders', $server) as $plugin=>$results) {
+				foreach ($results as $sharedfolder) {
+					$sharedfolder_ok = true;
+					$sharedfolder_node = $dom->createElement('sharedfolder');
+					foreach (array('uri', 'name', 'rid') as $key) {
+						if (array_key_exists($key, $sharedfolder)) {
+							$sharedfolder_node->setAttribute($key, $sharedfolder[$key]);
+						} else {
+							Logger::error('main', 'SharedFolder is missing '.$key.' parameter in '.$plugin);
+							$sharedfolder_ok = false;
+						}
+					}
+					foreach (array('login', 'password') as $key) {
+						if (array_key_exists($key, $sharedfolder)) {
+							$sharedfolder_node->setAttribute($key, $sharedfolder[$key]);
+						}
+					}
+					if (($have_login = array_key_exists('login', $sharedfolder)) != array_key_exists('password', $sharedfolder) && $have_login) {
+						Logger::error('main', 'SharedFolder login and password are both required if one is present in '.$plugin);
+						$sharedfolder_ok = false;
+					}
+					if ($sharedfolder_ok) {
+						$session_node->appendChild($sharedfolder_node);
+					}
+				}
+			}
+			
+			foreach ($session_->getPublishedApplications() as $application) {
+				if ($application->getAttribute('type') != $server->getAttribute('type'))
+					continue;
+				
+				if (! in_array($application->getAttribute('id'), $available_applications))
+					continue;
+				
+				$application_node = $dom->createElement('application');
+				$application_node->setAttribute('id', $application->getAttribute('id'));
+				$application_node->setAttribute('name', $application->getAttribute('name'));
+				if (! $application->getAttribute('static'))
+					$application_node->setAttribute('mode', 'local');
+				else
+					$application_node->setAttribute('mode', 'static');
+				
+				$session_node->appendChild($application_node);
+			}
+			
+			if (isset($start_apps) && is_array($start_apps)) {
+				$start_node = $dom->createElement('start');
+				foreach ($start_apps as $start_app) {
+					$application_node = $dom->createElement('application');
+					$application_node->setAttribute('app_id', $start_app['id']);
+					if (array_key_exists('arg', $start_app) && ! is_null($start_app['arg']))
+						$application_node->setAttribute('arg', $start_app['arg']);
+					
+					if (array_key_exists('file', $start_app)) {
+						$file_node = $dom->createElement('file');
+						$file_node->setAttribute('type', $start_app['file']['type']);
+						$file_node->setAttribute('location', $start_app['file']['location']);
+						$file_node->setAttribute('path', $start_app['file']['path']);
+						
+						$application_node->appendChild($file_node);
+					}
+					
+					$start_node->appendChild($application_node);
+				}
+				$session_node->appendChild($start_node);
+			}
+			
+			$dom->appendChild($session_node);
+			
+			$this->appendToSessionCreateXML($dom);
+			
+			$xml = $dom->saveXML();
+			
+			$session_create_xml = query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml);
+			$ret = $this->parseSessionCreate($session_create_xml);
+			if (! $ret) {
+				Logger::critical('main', 'SessionManagement::prepareAPSAccess - Unable to create Session \''.$session->id.'\' for User \''.$session->user_login.'\' on Server \''.$server->fqdn.'\', aborting');
+				$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
+				return false;
+			}
+		}
+		
+		return true;
+		
+	}
+	
+	public function prepareSession($session) {
+		if (! $this->prepareFSAccess($session)) {
+			return false;
+		}
+		
+		if (! $this->prepareAPSAccess($session)) {
+			return false;
+		}
+		
+		if (! $this->prepareWebappsAccess($session)) {
+			return false;
+		}
+		
+		return true;
 	}
 }
