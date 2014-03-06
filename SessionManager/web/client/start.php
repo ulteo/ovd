@@ -163,6 +163,7 @@ $ev = new SessionStart(array('user' => $user));
 $createNow = true;
 $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
+	$stop = false;
 	foreach ($sessions as $session) {
 		$same_mode = ($session->mode == $session_mode);
 		if (! $same_mode) {
@@ -188,10 +189,11 @@ if ($sessions > 0) {
 				
 			case Session::SESSION_STATUS_WAIT_DESTROY:
 			case Session::SESSION_STATUS_DESTROYING:
+				$stop = true;
 				if (array_key_exists('stop_time', $session->settings) && ($session->settings['stop_time'] + DESTROYING_DURATION) < time()) {
 					$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 					Abstract_Session::delete($session);
-					continue;
+					break;
 				}
 				
 				$createNow = false;
@@ -200,15 +202,19 @@ if ($sessions > 0) {
 			case Session::SESSION_STATUS_DESTROYED:
 				$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 				Abstract_Session::delete($session);
-				continue;
+				$stop = true;
+				break;
 			
 			case Session::SESSION_STATUS_ERROR:
 			default: # Unknown status
 				$session->orderDeletion(false, Session::SESSION_END_STATUS_ERROR);
 				Abstract_Session::delete($session);
-				continue;
+				$stop = true;
+				break;
 		}
-				
+		
+		if ($stop)
+			continue;
 		
 		$old_session_id = $session->id;
 		$client_id = gen_unique_string();

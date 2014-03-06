@@ -54,6 +54,7 @@ class Session {
 
 	public $id = NULL;
 
+	public $need_creation = false;
 	public $server = NULL;
 	public $mode = NULL;
 	public $type = NULL;

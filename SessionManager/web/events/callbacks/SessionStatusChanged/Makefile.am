@@ -1,4 +1,5 @@
-scripts_DATA = Report.class.php
+scripts_DATA = Report.class.php \
+               PendingSessionCreation.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/events/callbacks/SessionStatusChanged
 
