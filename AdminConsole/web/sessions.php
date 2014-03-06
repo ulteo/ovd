@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -213,6 +213,8 @@ else {
 		echo '	</tr>';
 		echo '</thead>';
 		echo '<tbody>';
+		
+		$server_cache = array();
 
 		$i = 0;
 		foreach ($sessions as $session) {
@@ -233,9 +235,14 @@ else {
 					foreach ($servers as $server_id => $data) {
 						$server_name = $server_id;
 						
-						$server =  $_SESSION['service']->server_info($server_id); // Avoid to load a whole server just to display the name ...
-						if (! is_null($server)) {
-							$server_name = $server->getDisplayName();
+						if (array_key_exists($server_id, $server_cache)) {
+							$server_name = $server_cache[$server_id];
+						} else {
+							$server =  $_SESSION['service']->server_info($server_id); // Avoid to load a whole server just to display the name ...
+							if (! is_null($server)) {
+								$server_name = $server->getDisplayName();
+							}
+							$server_cache[$server_id] = $server_name;
 						}
 						
 						echo '<li><a href="servers.php?action=manage&id='.$server_id.'">'.$server_name.'</a></li>';
