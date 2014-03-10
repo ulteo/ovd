@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
@@ -201,6 +201,7 @@ public abstract class OvdClient implements RdpListener {
 	
 
 	protected abstract void hide(RdpConnectionOvd co);
+	protected void show(RdpConnectionOvd co) {};
 	
 	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
 
@@ -210,6 +211,7 @@ public abstract class OvdClient implements RdpListener {
 	public void connected(RdpConnection co) {
 		Logger.info("Connected to "+co);
 
+		this.show((RdpConnectionOvd)co);
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.availableConnections.add((RdpConnectionOvd) co);
 	}

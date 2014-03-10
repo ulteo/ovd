@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,6 +62,11 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	}
 	
 	
+	@Override
+	protected void show(RdpConnectionOvd rc) {
+		this.publish(rc);
+	}
+		
 	// interface OvdClientPerformer's methods 
 
 	@Override
