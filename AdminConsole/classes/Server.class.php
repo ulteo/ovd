@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +21,7 @@
  **/
 
 class Server {
+	const SERVER_ROLE_WEBAPPS = "webapps";
 	const SERVER_ROLE_APS = "aps";
 	const SERVER_ROLE_FS = "fs";
 	const SERVER_TYPE_LINUX = "linux";
