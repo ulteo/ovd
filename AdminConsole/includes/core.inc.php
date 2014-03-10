@@ -90,4 +90,4 @@ if (array_key_exists('admin_language', $_SESSION['configuration'])) {
 }
 
 if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&  $_SESSION['configuration']['system_in_maintenance'] == '1')
-	popup_error(_('The system is on maintenance mode'));
+	popup_error(_('The system is in maintenance mode'));

@@ -226,11 +226,11 @@ function get_available_translations($lang) {
 		'connect'						=>	_('Connect'),
 
 		'system_compatibility_check_1'	=>	_('Checking for system compatibility'),
-		'system_compatibility_check_2'	=>	_('If this is your first time here, a Java security window will show up and you have to accept it to use the service.'),
+		'system_compatibility_check_2'	=>	_('If this is your first time here, a Java security window will show up and you will have to accept it to use the service.'),
 		'system_compatibility_check_3'	=>	_('You are advised to check the "<em>Always trust content from this publisher</em>" checkbox.'),
 
 		'system_compatibility_error_1'	=>	_('System compatibility error'),
-		'system_compatibility_error_2'	=>	_('Java is not available either on your system or in your web browser.'),
+		'system_compatibility_error_2'	=>	_('Java is either not available on your system or in your web browser.'),
 		'system_compatibility_error_3'	=>	_('Please install Java extension for your web browser or contact your administrator.'),
 		'system_compatibility_error_4'	=>	_('You have not accepted the Java security window.'),
 		'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
@@ -262,7 +262,7 @@ function get_available_translations($lang) {
 		'unable_to_reach_sm'			=>	_('Unable to reach the Session Manager'),
 
 		'auth_failed'					=>	_('Authentication failed: please double-check your password and try again'),
-		'in_maintenance'				=>	_('The system is on maintenance mode, please contact your administrator for more information'),
+		'in_maintenance'				=>	_('The system is in maintenance mode, please contact your administrator for more information'),
 		'internal_error'				=>	_('An internal error occurred, please contact your administrator'),
 		'invalid_user'					=>	_('You specified an invalid login, please double-check and try again'),
 		'service_not_available'			=>	_('The service is not available, please contact your administrator for more information'),

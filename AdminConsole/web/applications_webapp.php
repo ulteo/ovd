@@ -56,7 +56,7 @@ function show_default() {
 	page_header();
 
 	echo '<div>'; // general div
-	echo '<h1>'._('Web applications').'</h1>';
+	echo '<h1>'._('Web Applications').'</h1>';
 	echo '<div id="apps_list_div">'; // apps_list_div
 	$count = 0;
 	
@@ -121,7 +121,7 @@ function show_default() {
 			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
 			echo '</td>';
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these static applications?').'\');;">';
+			echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these Static Applications?').'\');;">';
 			echo '<input type="hidden" name="name" value="Application_webapp" />';
 			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="delete" value="'._('Delete').'"/>';
@@ -136,7 +136,7 @@ function show_default() {
 
 	if ($is_rw and $can_manage_applications) {
 		echo '<br />';
-		echo '<h2>'._('Add a web application').'</h2>';
+		echo '<h2>'._('Add a Web Application').'</h2>';
 		echo '<div id="application_add">';
 
 		echo '<form action="actions.php" method="post" enctype="multipart/form-data">';
@@ -274,7 +274,7 @@ function show_manage($id) {
 		$count = 1;
 		$app->setAttribute('application_name', $app->getAttribute('name')); // ugly hack
 		$app->setAttribute('url_prefix', $app_info['url_prefix']);
-		$attr_list = array('application_name'=>_('Name'), 'description'=>('Description'), 'url_prefix'=>_('Url prefix'));
+		$attr_list = array('application_name'=>_('Name'), 'description'=>('Description'), 'url_prefix'=>_('URL prefix'));
 		
 		foreach ($attr_list as $attr_name=>$display_name) {
 			$content = 'content'.(($count++%2==0)?1:2);
@@ -404,7 +404,7 @@ function show_manage($id) {
 }
 
 function display_web_form() {
-	$inputs = array('name'=>_('Name'), 'url_prefix'=>_('Url prefix'), 'description'=>_('Description'), 'app_conf_file'=>_('Configuration'));
+	$inputs = array('name'=>_('Name'), 'url_prefix'=>_('URL prefix'), 'description'=>_('Description'), 'app_conf_file'=>_('Configuration'));
 	$count = 0;
 
 	foreach ($inputs as $attr_name=>$display_name) {

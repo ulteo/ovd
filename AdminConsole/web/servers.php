@@ -212,7 +212,7 @@ function show_unregistered() {
   page_header();
 
   echo '<div id="servers_div">';
-  echo '<h1>'._('Unregistered servers').'</h1>';
+  echo '<h1>'._('Unregistered Servers').'</h1>';
 
   if (count($u_servs) > 0){
     echo '<div id="servers_list_div">';

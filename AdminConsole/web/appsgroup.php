@@ -194,7 +194,7 @@ function show_manage($id) {
 	$groups_users_all = $usersgroupsList->search();
 	if (! is_array($groups_users_all)) {
 		$groups_users_all = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Group list"));
 	}
 	uasort($groups_users_all, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
@@ -211,7 +211,7 @@ function show_manage($id) {
   page_header();
 
   echo '<div>';
-  echo '<h1><a href="?">'._('Application groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('Application Group management').'</a> - '.$group->name.'</h1>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
   echo '<th>'._('Description').'</th>';

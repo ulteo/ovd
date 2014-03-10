@@ -41,7 +41,7 @@ function show_all() {
 	$count = 0;
 	
 	page_header();
-	echo '<h1>'._('Administration actions log').'</h1>';
+	echo '<h1>'._('Administration Actions Log').'</h1>';
 	echo '<div>';
 	
 	echo '<div style="padding: 10px;">';

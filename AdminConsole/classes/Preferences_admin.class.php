@@ -294,7 +294,7 @@ class Preferences_admin {
 	public function initialize(){
 		$this->titles = array(
 			'general' => _('General configuration'),
-			'general_system_in_maintenance' => _('System on maintenance mode'),
+			'general_system_in_maintenance' => _('System in maintenance mode'),
 			'general_admin_language' => _('Administration console language'),
 			'general_log_flags' => _('Debug options list'),
 			'general_cache_update_interval' => _('Cache logs update interval'),
@@ -326,7 +326,7 @@ class Preferences_admin {
 			'general_mails_settings_send_username' => _('SMTP username'),
 			'general_mails_settings_send_password' => _('SMTP password'),
 			
-			'general_slave_server_settings' => _('Slave Server settings'),
+			'general_slave_server_settings' => _('Slave Server Settings'),
 			'general_slave_server_settings_authorized_fqdn' => _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'),
 			'general_slave_server_settings_disable_fqdn_check' => _('Disable reverse FQDN checking'),
 			'general_slave_server_settings_use_reverse_dns' => _('Use reverse DNS for server\'s FQDN'),
@@ -371,15 +371,15 @@ class Preferences_admin {
 			'general_session_settings_defaults_quota' => _('Quota assigned to the profile'),
 			'general_session_settings_defaults_profile_mode' => _('Profile integration used in the session'),
 			'general_session_settings_defaults_start_without_profile' => _('Launch a session without a valid profile'),
-			'general_session_settings_defaults_enable_sharedfolders' => _('Enable shared folders'),
+			'general_session_settings_defaults_enable_sharedfolders' => _('Enable shared Folders'),
 			'general_session_settings_defaults_start_without_all_sharedfolders' => _('Launch a session even when a shared folder\'s fileserver is missing'),
-			'general_session_settings_defaults_can_force_sharedfolders' => _('Allow user to force shared folders'),
+			'general_session_settings_defaults_can_force_sharedfolders' => _('Allow user to force shared Folders'),
 			'general_session_settings_defaults_advanced_settings_startsession' => _('Forceable paramaters by users'),
 			'general_session_settings_defaults_time_restriction' => _('Time restriction'),
 			
 			'general_web_interface_settings' => _('Web interface settings'),
-			'general_web_interface_settings_show_list_users' => _('Display users list'),
-			'general_web_interface_settings_public_webservices_access' => _('Public Webservices access'),
+			'general_web_interface_settings_show_list_users' => _('Display user list'),
+			'general_web_interface_settings_public_webservices_access' => _('Public Web Services access'),
 			
 			'activedirectory' => _('Active Directory'),
 			'ldap' => _('Lightweight Directory Access Protocol (LDAP)'),
@@ -409,7 +409,7 @@ class Preferences_admin {
 			'UserGroupDB_sql_external_user' => _('User login'),
 			'UserGroupDB_sql_external_password' => _('User password'),
 			'UserGroupDB_sql_external_database' => _('Database name'),
-			'UserGroupDB_sql_external_table' => _('Database users groups table name'),
+			'UserGroupDB_sql_external_table' => _('Database User Group table name'),
 			'UserGroupDB_sql_external_match' => _('Matching'),
 			
 			'UserDB_sql_external_host' => _('Server host address'),
@@ -476,9 +476,9 @@ class Preferences_admin {
 			'general_slave_server_settings_use_reverse_dns' => _('Try to identify the server using the reverse DNS record associated to the remote address.'),
 			'general_slave_server_settings_auto_recover' => _('When a server status is down or broken, and it is sending monitoring, try to switch it back to ready ?'),
 			'general_remote_desktop_settings_allowed_desktop_servers' => _('An empty list means all servers can host a desktop (no restriction on desktop server choice)'),
-			'general_remote_desktop_settings_authorize_no_desktop' => _('Usefull for web integration starting a maximised application as only windows into the remote screen'),
+			'general_remote_desktop_settings_authorize_no_desktop' => _('Useful for web integration starting a maximised application as only windows into the remote screen'),
 			
-			'general_session_settings_defaults_max_sessions_number' => _('The maximum number of session that can be started on the farm (0 is unlimited).'),
+			'general_session_settings_defaults_max_sessions_number' => _('The maximum number of sessions that can be started on the farm (0 is unlimited).'),
 			'general_session_settings_defaults_use_known_drives' => _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'),
 			'general_session_settings_defaults_redirect_client_drives' => _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"),
 			'general_session_settings_defaults_rdp_bpp' => _('RDP color depth'),
@@ -498,7 +498,7 @@ class Preferences_admin {
 			'UserGroupDB_sql_external_user' => _('The user login that must be used to access the database (to list users groups).'),
 			'UserGroupDB_sql_external_password' => _('The user password that must be used to access the database (to list users groups).'),
 			'UserGroupDB_sql_external_database' => _('The name of the database.'),
-			'UserGroupDB_sql_external_table' => _('The name of the database table which contains the users groups'),
+			'UserGroupDB_sql_external_table' => _('The name of the database table which contains the User Groups'),
 			
 			'UserDB_ldap_hosts' => _('The address of your LDAP server.'),
 			'UserDB_ldap_port' => _('The port number used by your LDAP server.'),
@@ -515,9 +515,9 @@ class Preferences_admin {
 			'UserDB_activedirectory_use_ssl' => _('Use SSL (ldaps://)'),
 			'UserDB_activedirectory_accept_expired_password' => _('Authorize a user connection even if the password has expired, to have the Windows server perform the password renew process'),
 			
-			'AuthMethod_Token_url' => _('If a token argument is sent to startsession, the system tries to get an user login by requesting the token validation url.<br /><br />Put here the url to request if a token argument is sent to <i>startsession</i> instead of login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set because it\'s replaced by the token argument when the URL is requested.'),
+			'AuthMethod_Token_url' => _('If a token argument is sent to <i>startsession</i>, the system performs a user login by requesting the token validation URL.<br /><br />Enter the URL to request if a token argument is sent to <i>startsession</i> instead of login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set because it will be replaced by the token argument when the URL is requested.'),
 			'AuthMethod_Token_user_node_name' => _('The id of the XML node that contains the user login'),
-			'AuthMethod_Token_login_attribute_name' => _('The name of the XML attribute which contains the user login (in the previously defined XML node)'),
+			'AuthMethod_Token_login_attribute_name' => _('The name of the XML attribute that contains the user login (in the previously defined XML node)'),
 			'AuthMethod_Token2_tokens' => _('Token list: the first column is supposed to be the token. the second is the user login associated with this token'),
 		);
 		
@@ -583,8 +583,8 @@ class Preferences_admin {
 			'canUseAdminPanel' => _('use Admin panel'),
 			'viewServers' => _('view Servers'),
 			'manageServers' => _('manage Servers'),
-			'viewSharedFolders' => _('view Shared folders'),
-			'manageSharedFolders' => _('manage Shared folders'),
+			'viewSharedFolders' => _('view Shared Folders'),
+			'manageSharedFolders' => _('manage Shared Folders'),
 			'viewUsers' => _('view Users'),
 			'manageUsers' => _('manage Users'),
 			'viewUsersGroups' => _('view Usergroups'),

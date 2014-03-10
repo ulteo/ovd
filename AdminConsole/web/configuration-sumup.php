@@ -47,7 +47,7 @@ if (! $prefs) {
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><?php echo _('Last save'); ?></h2>
+  <h2><?php echo _('Last saved'); ?></h2>
 <?php
   if (array_key_exists('settings_last_backup', $_SESSION['configuration']))
     echo date('m/d/Y H:i:s', $_SESSION['configuration']['settings_last_backup']);
@@ -149,14 +149,14 @@ echo $buf;
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-        echo sprintf(_("Your Premium certificate will expire in %d days"), $expirity);
+        echo sprintf(_("Your Premium Edition certificate will expire in %d days"), $expirity);
       } elseif ($expirity <= 0) {
-        echo _("Your Premium certificate has expired.");
+        echo _("Your Premium Edition certificate has expired.");
       } else {
-        echo sprintf(_("Your Premium certificate is valid for %d days."), $expirity);
+        echo sprintf(_("Your Premium Edition certificate is valid for %d days."), $expirity);
       }
     } else {
-      echo _("You don't have any valid Premium certificate.");
+      echo _("You don't have any valid Premium Edition certificate.");
     }
 ?>
   </div>

@@ -488,7 +488,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 
 			$ret = $_SESSION['service']->application_webapp_add($name, $description, $url_prefix, $configuration);
 			if (! $ret) {
-				popup_error(_('Unable to add web application'));
+				popup_error(_('Unable to add Web Application'));
 				redirect();
 			}
 
@@ -523,7 +523,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				popup_info(_('Unable to change icon'));
 			}
 			
-			popup_info(sprintf(_("Web application '%s' has been successfully uploaded"), $ret));
+			popup_info(sprintf(_("Web Application '%s' has been successfully uploaded"), $ret));
 			redirect('applications_webapp.php?action=manage&id='.$ret);
 
 		}
@@ -596,7 +596,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					//save
 					$ret = $_SESSION['service']->application_webapp_set_values($app_id, $dynamic_variables);
 					if (! $ret) {
-						popup_error(_('Unable to update web application configuration'));
+						popup_error(_('Unable to update Web Application configuration'));
 						redirect();
 					}
 				}
@@ -753,10 +753,10 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 
 		$ret = $_SESSION['service']->application_webapp_clone($_REQUEST['id']);
 		if (! $ret) {
-			popup_error(sprintf(_("Failed to clone web application '%s'"), $app->getAttribute('name')));
+			popup_error(sprintf(_("Failed to clone Web Application '%s'"), $app->getAttribute('name')));
 			redirect();
 		}
-		popup_info(sprintf(_("Web application '%s' successfully added"), $app->getAttribute('name')));
+		popup_info(sprintf(_("Web Application '%s' successfully added"), $app->getAttribute('name')));
 		redirect('applications_webapp.php');
 	}
 	
@@ -846,11 +846,11 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			
 			$res = $_SESSION['service']->applications_group_add($name, $description);
 			if (!$res) {
-				popup_error(sprintf(_("Unable to create applications group '%s'"), $name));
+				popup_error(sprintf(_("Unable to create Application Group '%s'"), $name));
 				redirect('appsgroup.php');
 			}
 			
-			popup_info(sprintf(_("Applications group '%s' successfully added"), $name));
+			popup_info(sprintf(_("Application Group '%s' successfully added"), $name));
 			redirect('appsgroup.php?action=manage&id='.$res);
 		}
 	}
@@ -861,16 +861,16 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			foreach ($ids as $id) {
 				$group = $_SESSION['service']->applications_group_info($id);
 				if (! is_object($group)) {
-					popup_error(sprintf(_("Importing applications group '%s' failed"), $id));
+					popup_error(sprintf(_("Importing Application Group '%s' failed"), $id));
 					continue;
 				}
 				
 				$res = $_SESSION['service']->applications_group_remove($id);
 				if (! $res) {
-					popup_error(sprintf(_("Unable to remove applications group '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to remove Application Group '%s'"), $group->name));
 					continue;
 				}
-				popup_info(sprintf(_("Applications group '%s' successfully deleted"), $group->name));
+				popup_info(sprintf(_("Application Group '%s' successfully deleted"), $group->name));
 			}
 			redirect('appsgroup.php');
 		}
@@ -881,7 +881,7 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			$id = $_REQUEST['id'];
 			$group = $_SESSION['service']->applications_group_info($id);
 			if (! is_object($group))
-				popup_error(sprintf(_("Import of applications group '%s' failed"), $id));
+				popup_error(sprintf(_("Import of Application Group '%s' failed"), $id));
 			
 			$has_change = false;
 			
@@ -903,9 +903,9 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			if ($has_change) {
 				$res = $_SESSION['service']->applications_group_modify($group->id, $group->name, $group->description, $group->published);
 				if (! $res)
-					popup_error(sprintf(_("Unable to modify applications group '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to modify Application Group '%s'"), $group->name));
 				else
-					popup_info(sprintf(_("Applications group '%s' successfully modified"), $group->name));
+					popup_info(sprintf(_("Application Group '%s' successfully modified"), $group->name));
 			}
 			redirect('appsgroup.php?action=manage&id='.$group->id);
 		}
@@ -995,12 +995,12 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'del') {
 		$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
 		if (! is_object($group)) {
-			popup_error(sprintf(_("Usergroup '%s' does not exist"), $_REQUEST['group']));
+			popup_error(sprintf(_("User Group '%s' does not exist"), $_REQUEST['group']));
 			redirect();
 		}
 
 		if ($group->isDefault()) {
-			popup_error(sprintf(_("Unable to remove a user from usergroup '%s' because it is the default usergroup"), $group->name));
+			popup_error(sprintf(_("Unable to remove a user from User Group '%s' because it is the default usergroup"), $group->name));
 			redirect();
 		}
 
@@ -1021,13 +1021,13 @@ if ($_REQUEST['name'] == 'Publication') {
 	if ($_REQUEST['action'] == 'add') {
 		$usergroup = $_SESSION['service']->users_group_info($_REQUEST['group_u']);
 		if (is_object($usergroup) == false) {
-			popup_error(sprintf(_("Importing usergroup '%s' failed"), $_REQUEST['group_u']));
+			popup_error(sprintf(_("Importing User Group '%s' failed"), $_REQUEST['group_u']));
 			redirect();
 		}
 		
 		$applicationsgroup = $_SESSION['service']->applications_group_info($_REQUEST['group_a']);
 		if (is_object($applicationsgroup) == false) {
-			popup_error(sprintf(_("Importing applications group '%s' failed"), $_REQUEST['group_a']));
+			popup_error(sprintf(_("Importing Application Group '%s' failed"), $_REQUEST['group_a']));
 			redirect();
 		}
 		
@@ -1058,7 +1058,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		if (isset($_REQUEST['type']) && isset($_REQUEST['name_group']) &&  isset($_REQUEST['description_group'])) {
 			if ($_REQUEST['name_group'] == '') {
-				popup_error(_('You must define a name for your usergroup'));
+				popup_error(_('You must define a name for your User Group'));
 				redirect('usersgroup.php');
 			}
 			
@@ -1074,22 +1074,22 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				}
 				
 				if (!$res) {
-					popup_error(sprintf(_("Unable to create usergroup '%s'"), $_REQUEST['name_group']));
+					popup_error(sprintf(_("Unable to create User Group '%s'"), $_REQUEST['name_group']));
 					redirect('usersgroup.php');
 				}
 				
 				$res = $_SESSION['service']->users_group_dynamic_modify($res, $_POST['rules'], $_REQUEST['validation_type']);
 			}
 			else {
-				die_error(_('Unknow usergroup type'));
+				die_error(_('Unknown User Group type'));
 			}
 			
 			if (!$res) {
-				popup_error(sprintf(_("Unable to create usergroup '%s'"), $_REQUEST['name_group']));
+				popup_error(sprintf(_("Unable to create User Group '%s'"), $_REQUEST['name_group']));
 				redirect('usersgroup.php');
 			}
 			
-			popup_info(_('UserGroup successfully added'));
+			popup_info(_('User Group successfully added'));
 			redirect('usersgroup.php?action=manage&id='.$res);
 		}
 	}
@@ -1099,16 +1099,16 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			foreach ($_REQUEST['checked_groups'] as $id) {
 				$group = $_SESSION['service']->users_group_info($id);
 				if (! is_object($group)) {
-					popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+					popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 					redirect();
 				}
 				
 				$res = $_SESSION['service']->users_group_remove($id);
 				if (! $res) {
-					popup_error(sprintf(_("Unable to remove usergroup '%s'"), $id));
+					popup_error(sprintf(_("Unable to remove User Group '%s'"), $id));
 				}
 				
-				popup_info(sprintf(_("UserGroup '%s' successfully deleted"), $group->name));
+				popup_info(sprintf(_("User Group '%s' successfully deleted"), $group->name));
 			}
 			redirect('usersgroup.php');
 		}
@@ -1120,7 +1120,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			
 			$group = $_SESSION['service']->users_group_info($id);
 			if (! is_object($group)) {
-				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+				popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 				redirect();
 			}
 			
@@ -1144,7 +1144,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			if ($has_change) {
 				$ret = $_SESSION['service']->users_group_modify($group->id, $group->name, $group->description, $group->published);
 				if (! $ret) {
-					popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 					redirect();
 				}
 			}
@@ -1152,12 +1152,12 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			if (isset($_REQUEST['schedule'])) {
 				$ret = $_SESSION['service']->users_group_dynamic_cached_set_schedule($group->id, $_REQUEST['schedule']);
 				if (! $ret) {
-					popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 					redirect();
 				}
 			}
 			
-			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			popup_info(sprintf(_("User Group '%s' successfully modified"), $group->name));
 			redirect('usersgroup.php?action=manage&id='.$group->id);
 		}
 	}
@@ -1182,7 +1182,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				$_SESSION['service']->system_unset_default_users_group();
 			}
 			
-			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			popup_info(sprintf(_("User Group '%s' successfully modified"), $group->name));
 			redirect('usersgroup.php?action=manage&id='.$group->id);
 			
 		}
@@ -1193,13 +1193,13 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			$id = $_REQUEST['id'];
 			$group = $_SESSION['service']->users_group_info($id);
 			if (! is_object($group)) {
-				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+				popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 				redirect();
 			}
 			
 			$res = $_SESSION['service']->users_group_dynamic_modify($id, $_POST['rules'], $_REQUEST['validation_type']);
 			if (! $res) 
-				popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+				popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 			else
 				popup_info(sprintf(_("Rules of '%s' successfully modified"), $group->name));
 			
@@ -1229,7 +1229,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 
 	$group = $_SESSION['service']->users_group_info($_REQUEST['id']);
 	if (! is_object($group)) {
-		popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+		popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 		redirect();
 	}
 
@@ -1276,10 +1276,10 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 		}
 		
 		if ($ret === true) {
-			popup_info(_('Usergroup successfully modified'));
+			popup_info(_('User Group successfully modified'));
 		}
 		else if ($ret === false) {
-			popup_error(_('Failed to modify usergroup'));
+			popup_error(_('Failed to modify User Group'));
 		}
 	}
 }

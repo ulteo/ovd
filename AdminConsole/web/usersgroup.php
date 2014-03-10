@@ -69,14 +69,14 @@ function show_default() {
   page_header();
 
   echo '<div id="usersgroup_div" >';
-  echo '<h1>'._('User groups').'</h1>';
+  echo '<h1>'._('User Groups').'</h1>';
 
   echo $searchDiv;
   
   echo '<div id="usersgroup_list">';
 
   if (! $has_group)
-    echo _('No available user group').'<br />';
+    echo _('No available User Group').'<br />';
   else {
      $all_static = true;
      foreach($groups as $group){
@@ -280,7 +280,7 @@ function show_manage($id) {
 	$group = $_SESSION['service']->users_group_info($id);
   
   if (! is_object($group)) {
-    die_error(_('Failed to load usergroup'));
+    die_error(_('Failed to load User Group'));
   }
   
   $usergroupdb_rw = usergroupdb_is_writable();
@@ -431,7 +431,7 @@ function show_manage($id) {
 
   page_header();
   echo '<div id="users_div">';
-  echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('User Group management').'</a> - '.$group->name.'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
@@ -615,7 +615,7 @@ echo '<br />';
 	echo '<br />';
   }
 
-  // Users list
+  // User list
 if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filter() || count($users) > 0)) {
     echo '<div>';
     echo '<h2>'._('List of users in this group').'</h2>';
@@ -824,7 +824,7 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 
 			echo '<br />';
 			echo '<div>';
-			echo '<h2>'._('Shared folders').'</h1>';
+			echo '<h2>'._('Shared Folders').'</h1>';
 
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			foreach ($used_sharedfolders as $sharedfolder_id => $sharedfolder_name) {
@@ -860,9 +860,9 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 		
 		echo '<br />';
 	}
-	echo '<div>'; // Session settings configuration
+	echo '<div>'; // Session Settings configuration
 	echo '<h2>';
-	echo _('Session settings configuration');
+	echo _('Session Settings configuration');
 	echo '</h2>';
 	
 	if ($prefs_of_a_group != array()) {
@@ -902,7 +902,7 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 					echo '</td>';
 					
 					echo '<td>';
-					echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="usergroup_settings_remove(\''.$group->id.'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
+					echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="usergroup_settings_remove(\''.$group->id.'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
 					echo '</td>';
 					
 					echo '</tr>';
@@ -945,7 +945,7 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 		}
 	}
 	
-	echo '</div>'; // Session settings configuration
+	echo '</div>'; // Session Settings configuration
 	echo "\n\n\n";
 
   echo '</div>';

@@ -424,7 +424,7 @@ function show_manage($id_) {
 	
 	page_header();
 
-	echo '<h1><a title="'._('Back to archived sessions list').'" href="?">'._('Archived session').'</a> - '.$session->getId();
+	echo '<h1><a title="'._('Back to archived session list').'" href="?">'._('Archived session').'</a> - '.$session->getId();
 	echo ' <a href="?action=pdf&amp;id='.$session->getId().'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Export as PDF file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 	echo '</h1>';
 

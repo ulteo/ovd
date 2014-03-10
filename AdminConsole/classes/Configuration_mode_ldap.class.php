@@ -257,7 +257,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<h3>'._('Users').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="field_filter" value="'.$form['field_filter'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Specific OU (optionnal):').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Specific OU (optional):').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
     $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
     $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
     $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
@@ -281,9 +281,9 @@ class Configuration_mode_ldap extends Configuration_mode {
 	$str.= '<br/>';
 	$str.= '<table style="padding-left: 3%;">';
 	$str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="group_filter" value="'.$form['group_filter'].'" /></td></tr>';
-	$str.= '<tr><td>'._('Specific OU (optionnal):').'</td><td><input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/></td></tr>';
+	$str.= '<tr><td>'._('Specific OU (optional):').'</td><td><input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/></td></tr>';
 	$str.= '<tr><td>'._('Name field:').'</td><td><input type="text" name="group_field_name" value="'.$form['group_field_name'].'" /></td></tr>';
-	$str.= '<tr><td>'._('Description field (Optionnal):').'</td><td><input type="text" name="group_field_desc" value="'.$form['group_field_desc'].'" /></td></tr>';
+	$str.= '<tr><td>'._('Description field (optional):').'</td><td><input type="text" name="group_field_desc" value="'.$form['group_field_desc'].'" /></td></tr>';
 	$str.= '<tr><td colspan="2"><input type="checkbox" name="group_match_using[]" value="user_field"';
 	if (in_array('user_field', $form['group_match_using'])) {
 	    $str.= ' checked="checked"';

@@ -80,7 +80,7 @@ function show_default() {
 	echo '</div>';
 
 	echo '<br />';
-	echo '<h2>'._('Add script').'</h2>';
+	echo '<h2>'._('Add Script').'</h2>';
 
 	echo '<div>';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -192,7 +192,7 @@ function show_manage($script_id_) {
 		$groups_available[]= $group;
 
 	echo '<div>';
-	echo '<h2>'._('User groups with this user').'</h2>';
+	echo '<h2>'._('User Groups with this user').'</h2>';
 	echo $searchDiv;
 	
 	echo '<table border="0" cellspacing="1" cellpadding="3">';

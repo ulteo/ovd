@@ -34,7 +34,7 @@ if (!isset($_REQUEST['action'])) {
 
 if ($_REQUEST['action'] == 'change') {
 	page_header();
-	echo '<h1>'._('Change Administrator password').'</h1>';
+	echo '<h1>'._('Change Administrator Password').'</h1>';
 	echo '<form action="actions.php" method="post">';
 	echo '<input type="hidden" name="name" value="password" />';
 	echo '<input type="hidden" name="action" value="change" />';

@@ -84,8 +84,8 @@ function show_default() {
 		echo '<tr class="title">';
 		echo '<th>'._('Login').'</th>';
 		echo '<th>'._('Name').'</th>';
-		echo '<th>'._('In these users groups').'</th>';
-		echo '<th>'._('Published applications groups').'</th>';
+		echo '<th>'._('In these User Groups').'</th>';
+		echo '<th>'._('Published Application Groups').'</th>';
 		echo '<th>'._('Access to these applications').'</th>';
 		echo '<th>'._('Access to these folders').'</th>';
 		echo '</tr>';
@@ -107,7 +107,7 @@ function show_default() {
 
 			echo '<td>';
 			if ( count($user_info['user_grps']) == 0)
-				echo '<em>'._('Not in any users group').'</em>';
+				echo '<em>'._('Not in any User Group').'</em>';
 			else {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($user_info['user_grps'] as $group_id => $group_name) {
@@ -142,7 +142,7 @@ function show_default() {
 
 				echo '<td>'; // in app
 				if (count($user_info['apps']) == 0)
-					echo '<em>'._('No applications in these groups').'</em>';
+					echo '<em>'._('No application in these groups').'</em>';
 				else {
 					echo '<table border="0" cellspacing="1" cellpadding="3">';
 					foreach ($user_info['apps'] as $application_id => $aaa) {

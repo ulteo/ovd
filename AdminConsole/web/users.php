@@ -363,7 +363,7 @@ function show_manage($login) {
   // User groups part
   if (count($groups_mine)>0 or !$usersgroupsList->is_empty_filter() or ($usergroupdb_rw and count($groups_all)>0)) {
     echo '<div>';
-    echo '<h2>'._('User groups with this user').'</h2>';
+    echo '<h2>'._('User Groups with this user').'</h2>';
 
     echo $searchDiv;
     echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -421,7 +421,7 @@ function show_manage($login) {
 
 
   echo '<h2>';
-  echo _('Session settings configuration');
+  echo _('Session Settings configuration');
   echo '</h2>';
   
   if ($prefs_of_a_user != array()) {
@@ -461,7 +461,7 @@ function show_manage($login) {
           echo '</td>';
           
           echo '<td>';
-          echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="user_settings_remove(\''.$u->getAttribute('login').'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
+          echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="user_settings_remove(\''.$u->getAttribute('login').'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
           echo '</td>';
           
           echo '</tr>';

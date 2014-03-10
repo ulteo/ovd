@@ -47,14 +47,14 @@ page_header();
 		<td style="width: 30%; text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2><?php echo _('Users and Users groups'); ?></h2>
+	<h2><?php echo _('Users and User Groups'); ?></h2>
 
 	<ul>
 		<?php
 			if ($show_users)
-				echo '<li><a href="users.php">'._('Users list').'</a></li>';
+				echo '<li><a href="users.php">'._('User list').'</a></li>';
 			if ($show_usersgroups)
-				echo '<li><a href="usersgroup.php">'._('Users groups list').'</a></li>';
+				echo '<li><a href="usersgroup.php">'._('User Group list').'</a></li>';
 		?>
 	</ul>
 </div>
@@ -70,8 +70,8 @@ page_header();
 if ($show_servers) {
 ?>
 	<ul>
-		<li><a href="servers.php"><?php echo _('Servers list'); ?></a></li>
-		<li><a href="servers.php?view=unregistered"><?php echo _('Unregistered servers list'); ?></a></li>
+		<li><a href="servers.php"><?php echo _('Server list'); ?></a></li>
+		<li><a href="servers.php?view=unregistered"><?php echo _('Unregistered Server list'); ?></a></li>
 	</ul>
 <?php
 }
@@ -106,18 +106,18 @@ if ($show_configuration) {
 		<td style="text-align: inherit; vertical-align: top;">
 <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2><?php echo _('Applications and applications groups'); ?></h2>
+	<h2><?php echo _('Applications and Application Groups'); ?></h2>
 
 	<ul>
 		<?php
 		if ($show_applications)
-			echo '<li><a href="applications.php">'._('Applications list').'</a></li>';
-		echo '<li><a href="applications_webapp.php">'._('Web applications list').'</a></li>';
+			echo '<li><a href="applications.php">'._('Application list').'</a></li>';
+		echo '<li><a href="applications_webapp.php">'._('Web Application list').'</a></li>';
 		if ($show_applicationsgroups)
-			echo '<li><a href="appsgroup.php">'._('Applications groups list').'</a><br /><br /></li>';
+			echo '<li><a href="appsgroup.php">'._('Application Groups list').'</a><br /><br /></li>';
 		if ($show_publications) {
-			echo '<li><a href="publications.php">'._('Publications list').'</a></li>';
-			echo '<li><a href="wizard.php">'._('Publication wizard').'</a></li>';
+			echo '<li><a href="publications.php">'._('Publication list').'</a></li>';
+			echo '<li><a href="wizard.php">'._('Publication Wizard').'</a></li>';
 		}
 		?>
 	</ul>
@@ -135,12 +135,12 @@ if ($show_configuration) {
 	<?php
 
 		if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&  $_SESSION['configuration']['system_in_maintenance'] == '1') {
-			echo '<span class="msg_error">'._('The system is on maintenance mode').'</span><br /><br />';
+			echo '<span class="msg_error">'._('The system is in maintenance mode').'</span><br /><br />';
 
 			if (isAuthorized('manageServers'))
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to production mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="production" /><input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Switch the system to production mode').'" /></form>';
 		} else {
-			echo '<span class="msg_ok">'._('The system is on production mode').'</span><br /><br />';
+			echo '<span class="msg_ok">'._('The system is in production mode').'</span><br /><br />';
 
 			if (isAuthorized('manageServers'))
 				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to switch the system to maintenance mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="maintenance" /><input type="submit" value="'._('Switch the system to maintenance mode').'" /></form>';

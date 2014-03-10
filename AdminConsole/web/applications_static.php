@@ -125,7 +125,7 @@ function show_default() {
 			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
 			echo '</td>';
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these static applications?').'\');;">';
+			echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these Static Applications?').'\');;">';
 			echo '<input type="hidden" name="name" value="Application_static" />';
 			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="delete" value="'._('Delete').'"/>';
@@ -139,7 +139,7 @@ function show_default() {
 	}
 	if ($is_rw and $can_manage_applications) {
 		echo '<br />';
-		echo '<h2>'._('Add a static application').'</h2>';
+		echo '<h2>'._('Add a Static Application').'</h2>';
 		echo '<div id="application_add">';
 		$first_type = array_keys($types);
 		$first_type = $first_type[0];

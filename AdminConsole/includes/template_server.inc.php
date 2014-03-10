@@ -614,7 +614,7 @@ function server_display_role_fs($server_, $var_) {
 		$show_action_column = (isAuthorized('manageServers') && $server_->isOnline() && count($var_['sharedfolders_currently_used']) < count($var_['sharedfolders']));
 		$show_mass_action = ($show_action_column && count($var_['sharedfolders_currently_used']) + 1 < count($var_['sharedfolders']));
 		
-		echo '<h3>'._('Shared folders on the server').'</h3>';
+		echo '<h3>'._('Shared Folders on the server').'</h3>';
 		$count = 0;
 		echo '<table id="available_networkfolder_table_sf" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 		echo '<thead>';

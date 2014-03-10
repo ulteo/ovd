@@ -93,7 +93,7 @@ class UsersGroupsList {
 			$str.= '<input type="hidden" name="'.$k.'" value="'.$v.'"/>';
 		}
 		$str.= '<table><tr>';
-		$str.= '<td>'._('Search for users groups pattern: ').'</td>';
+		$str.= '<td>'._('Search for User Group pattern: ').'</td>';
 		$str.= '<td><input type="text" name="search_item" value="'.$this->search_item.'" /> ';
 		$str.= '<input type="submit" value="'._('Search').'" /> ';
 		$str.= '<input type="button" value="'._('Reset filter').'" onclick="this.form.search_item.value=\'\'; this.form.submit();"'.($this->empty_filter?' disabled="disabled"':'').'/>';

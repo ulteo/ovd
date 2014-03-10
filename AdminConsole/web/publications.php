@@ -52,7 +52,7 @@ function show_default() {
 	$groups_users = $usersgroupsList->search();
 	if (! is_array($groups_users)) {
 		$groups_users = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Groups list"));
 	}
 	uasort($groups_users, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
@@ -106,8 +106,8 @@ function show_default() {
   echo '<table class="main_sub sortable" id="publications_list_table" border="0" cellspacing="1" cellpadding="5">';
   echo '<thead>';
   echo '<tr class="title">';
-  echo '<th>'._('Users group').'</th>';
-  echo '<th>'._('Applications group').'</th>';
+  echo '<th>'._('User Group').'</th>';
+  echo '<th>'._('Application Group').'</th>';
   echo '</tr>';
   echo '</thead>';
 
@@ -169,7 +169,7 @@ function show_default() {
     echo '<input type="hidden" name="name" value="Publication" />';
     echo '<input type="hidden" name="group_u" value="" id="input_group_u" />';
     echo '<input type="hidden" name="group_a" value="" id="input_group_a" />';
-    echo '<input type="button" value="'._('Add').'" onclick="if($(\'input_group_u\').value == \'\') {alert(\''.addslashes(_('Please select an users group')).'\'); return;} if($(\'input_group_a\').value == \'\') {alert(\''.addslashes(_('Please select an applications group')).'\'); return;} this.form.submit();" />';
+    echo '<input type="button" value="'._('Add').'" onclick="if($(\'input_group_u\').value == \'\') {alert(\''.addslashes(_('Please select a User Group')).'\'); return;} if($(\'input_group_a\').value == \'\') {alert(\''.addslashes(_('Please select an Application Group')).'\'); return;} this.form.submit();" />';
     echo '</div></form>';
     echo '</td>';
     echo '</tr>';

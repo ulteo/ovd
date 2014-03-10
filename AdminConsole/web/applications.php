@@ -279,7 +279,7 @@ function show_manage($id) {
   echo '<input type="hidden" name="name" value="Application" />';
   echo '<input type="hidden" name="action" value="clone" />';
   echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-  echo '<input type="submit" value="'._('Clone to static application').'"/>';
+  echo '<input type="submit" value="'._('Clone to Static Application').'"/>';
   echo '</form>';
   echo '</td></tr>';
   echo '</table>';

@@ -81,7 +81,7 @@ if (isAuthorized('viewServers')) {
 
 	$menu['servers_unregistered'] = 
 		array('id' => 'servers_unregistered',
-			  'name' => _('Unregistered servers'),
+			  'name' => _('Unregistered Servers'),
 			  'page' => 'servers.php?view=unregistered',
 			  'parent' => array('servers'));
 }
@@ -90,7 +90,7 @@ if (isAuthorized('viewSharedFolders')) {
 	if (is_module_enabled('SharedFolderDB')) {
 		$menu['sharedfolders'] = 
 			array('id' => 'sharedfolders',
-				'name' => _('Shared folders'),
+				'name' => _('Shared Folders'),
 				'page' => 'sharedfolders.php',
 				'parent' => array('servers'));
 	}
@@ -98,7 +98,7 @@ if (isAuthorized('viewSharedFolders')) {
 if (isAuthorized('viewScripts')) {
 	$menu['script'] = 
 		array('id' => 'script',
-			  'name' => _('Login scripts'),
+			  'name' => _('Login Scripts'),
 			  'page' => 'script.php',
 			  'parent' => array('servers'));
 }
@@ -123,7 +123,7 @@ if (isAuthorized('viewUsers'))
 if (isAuthorized('viewUsersGroups'))
 	$menu['users_groups'] = 
 		array('id' => 'users_groups',
-			  'name' => _('Users Groups'),
+			  'name' => _('User Groups'),
 			  'page' => 'usersgroup.php',
 			  'parent' => array('users'));
 
@@ -135,7 +135,7 @@ if (isAuthorized('viewApplications')) {
 			  'parent' => array('applications'));
 	$menu['applications_webapp'] = 
 		array('id' => 'applications_webapp',
-			  'name' => _('Web applications'),
+			  'name' => _('Web Applications'),
 			  'page' => 'applications_webapp.php',
 			  'parent' => array('applications'));
 }
@@ -143,7 +143,7 @@ if (isAuthorized('viewApplications')) {
 if (isAuthorized('viewApplicationsGroups'))
 	$menu['applications_groups'] = 
 		array('id' => 'applications_groups',
-			  'name' => _('Applications Groups'),
+			  'name' => _('Application Groups'),
 			  'page' => 'appsgroup.php',
 			  'parent' => array('applications'));
 
@@ -155,7 +155,7 @@ if (isAuthorized('viewApplications')) {
 			  'parent' => array('applications'));
 	$menu['applications_static'] = 
 		array('id' => 'applications_static',
-			  'name' => _('Static applications'),
+			  'name' => _('Static Applications'),
 			  'page' => 'applications_static.php',
 			  'parent' => array('applications'));
 }
@@ -170,56 +170,56 @@ if (isAuthorized('viewPublications'))
 if (isAuthorized('managePublications'))
 	$menu['publications_wizard'] = 
 		array('id' => 'publications_wizard',
-			  'name' => _('Publication wizard'),
+			  'name' => _('Publication Wizard'),
 			  'page' => 'wizard.php',
 			  'parent' => array('applications', 'users'));
 
 if (isAuthorized('viewConfiguration')) {
 	$menu['configuration_sumup'] = 
 		array('id' => 'configuration_sumup',
-			  'name' => _('Sum up'),
+			  'name' => _('Summary'),
 			  'page' => 'configuration-sumup.php',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_db'] = 
 		array('id' => 'configuration_db',
-			  'name' => _('Database settings'),
+			  'name' => _('Database Settings'),
 			  'page' => 'configuration-partial.php?mode=sql',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_general'] = 
 		array('id' => 'configuration_general',
-			  'name' => _('System settings'),
+			  'name' => _('System Settings'),
 			  'page' => 'configuration-partial.php?mode=general',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_server'] = 
 		array('id' => 'configuration_server',
-			  'name' => _('Server settings'),
+			  'name' => _('Server Settings'),
 			  'page' => 'configuration-partial.php?mode=slave_server_settings',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_profiles'] = 
 		array('id' => 'configuration_profiles',
-			  'name' => _('Domain integration settings'),
+			  'name' => _('Domain Integration Settings'),
 			  'page' => 'configuration-profile.php',
 			  'parent' => array('configuration'));
 	
 	$menu['configuration_auth'] = 
 		array('id' => 'configuration_auth',
-			  'name' => _('Authentication settings'),
+			  'name' => _('Authentication Settings'),
 			  'page' => 'configuration-partial.php?mode=auth',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_sessions'] = 
 		array('id' => 'configuration_sessions',
-			  'name' => _('Session settings'),
+			  'name' => _('Session Settings'),
 			  'page' => 'configuration-partial.php?mode=session_settings',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_events'] = 
 		array('id' => 'configuration_events',
-			  'name' => _('Events settings'),
+			  'name' => _('Event Settings'),
 			  'page' => 'configuration-partial.php?mode=events',
 			  'parent' => array('configuration'));
 
@@ -231,7 +231,7 @@ if (isAuthorized('viewConfiguration')) {
 	
 	$menu['configuration_changepassword'] = 
 		array('id' => 'configuration_changepassword',
-			  'name' => _('Change Administrator password'),
+			  'name' => _('Change Administrator Password'),
 			  'page' => 'password.php?action=change',
 			  'parent' => array('configuration'));
 
@@ -265,13 +265,13 @@ if (isAuthorized('viewStatus')) {
 	
 	$menu['session_reporting'] = 
 		array('id' => 'session_reporting',
-			  'name' => _('Session reporting'),
+			  'name' => _('Session Reporting'),
 			  'page' => 'session-reporting.php',
 			  'parent' => array('status'));
 
 	$menu['action_reporting'] = 
 		array('id' => 'action-reporting',
-			  'name' => _('Administration actions log'),
+			  'name' => _('Administration Actions Log'),
 			  'page' => 'action-reporting.php',
 			  'parent' => array('status'));
 }
@@ -369,12 +369,12 @@ function page_header($params_=array()) {
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-	$errors[] = sprintf(_("Your %sPremium certificate%s will expire in %d days"), $link[0], $link[1], $expirity);
+	$errors[] = sprintf(_("Your %sPremium Edition certificate%s will expire in %d days"), $link[0], $link[1], $expirity);
       } elseif ($expirity <= 0) {
-	$errors[] = sprintf(_("Your %sPremium certificate%s has expired."), $link[0], $link[1]);
+	$errors[] = sprintf(_("Your %sPremium Edition certificate%s has expired."), $link[0], $link[1]);
       }
     } else {
-      $errors[] = sprintf(_("You don't have any valid %sPremium certificate%s."), $link[0], $link[1]);
+      $errors[] = sprintf(_("You don't have any valid %sPremium Edition certificate%s."), $link[0], $link[1]);
     }
   }
   

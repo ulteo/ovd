@@ -50,22 +50,22 @@ function show_default() {
 
 	echo '<div>';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
-	echo '<tr><th>'._('Organization').'</th><th>'._('Certificate owner').'</th><th>'._('email').'</th><th>'._('Start date (UTC)').'</th><th>'._('End date  (UTC)').'</th><th>'._('Type').'</th><th>'._('Status').'</th></tr>';
+	echo '<tr><th>'._('Organization').'</th><th>'._('Certificate owner').'</th><th>'._('Email').'</th><th>'._('Start Date (UTC)').'</th><th>'._('End Date  (UTC)').'</th><th>'._('Type').'</th><th>'._('Status').'</th></tr>';
 
 	foreach ($certificates as $certificate) {
 		echo '<tr>';
 		echo '<td>'.$certificate['organization'].'</td>';
 		echo '<td>'.$certificate['owner'].'</td>';
-		echo '<td>'.$certificate['email'].'</td>';
+		echo '<td>'.$certificate['Email'].'</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $certificate['start']).'</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $certificate['expiry']).'</td>';
 
 		echo '<td>';
 		if($certificate['concurrent_users'] !== null) {
-			echo _('Connected users limit').' : '.$certificate['concurrent_users'].'<br/>';
+			echo _('Connected User Limit').' : '.$certificate['concurrent_users'].'<br/>';
 		}
 		if($certificate['named_users'] !== null) {
-			echo _('Assigned users').' : '.$certificate['named_users'].'<br/>';
+			echo _('Assigned Users').' : '.$certificate['named_users'].'<br/>';
 		}
 		echo '</td>';
 
@@ -119,7 +119,7 @@ function show_default() {
 
 	if ($can_manage_configuration && ! in_array($certificates_limits["named_users_max"], array(0, null))) {
 		echo '<div>';
-		echo '<h2>'._('Assigned users list').'</h2>';
+		echo '<h2>'._('Assigned Users list').'</h2>';
 		echo '<table border="0" cellspacing="1" cellpadding="5">';
 		echo '<tr>';
 		echo '<td>';
@@ -185,7 +185,7 @@ function print_summary() {
 	if($limits['concurrent_users_max']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Connected users limit').'</span>';
+		echo '<span>'._('Connected User Limit').'</span>';
 		echo '</td>';
 		if($limits['concurrent_users_current'] > $limits['concurrent_users_max']) {
 			echo '<td class="msg_error">';
@@ -201,7 +201,7 @@ function print_summary() {
 	if($limits['named_users_max']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Assigned users limit').'</span>';
+		echo '<span>'._('Assigned User Limit').'</span>';
 		echo '</td>';
 		if($limits['named_users_current'] > $limits['named_users_max']) {
 			echo '<td class="msg_error">';

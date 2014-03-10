@@ -494,7 +494,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (key.equals(ERROR_AUTHENTICATION_FAILED))
 				return I18n._("Authentication failed: please double-check your password and try again");
 			else if (key.equals(ERROR_IN_MAINTENANCE))
-				return I18n._("The system is on maintenance mode, please contact your administrator for more information");
+				return I18n._("The system is in maintenance mode, please contact your administrator for more information");
 			else if (key.equals(ERROR_INTERNAL))
 				return I18n._("An internal error occurred, please contact your administrator");
 			else if (key.equals(ERROR_INVALID_USER))

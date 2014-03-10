@@ -44,7 +44,7 @@ function show_default() {
 	page_header();
 
 	echo '<div id="sharedfolders_div">';
-	echo '<h1>'._('Shared folders').'</h1>';
+	echo '<h1>'._('Shared Folders').'</h1>';
 
 	echo '<div id="sharedfolders_list_div">';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -100,7 +100,7 @@ function show_manage($sharedfolder_id_) {
 	$all_groups = $usersgroupsList->search();
 	if (! is_array($all_groups)) {
 		$all_groups = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Group list"));
 	}
 	uasort($all_groups, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
