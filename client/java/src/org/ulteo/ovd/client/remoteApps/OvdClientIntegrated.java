@@ -23,6 +23,9 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,7 @@ import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.client.desktop.SessionStatus;
 import org.ulteo.ovd.client.portal.WebApplicationListener;
 
@@ -101,6 +105,31 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 	@Override
 	public void runSessionReady() {}
 
+	
+	public Rectangle getScreenSize() {
+		return WorkArea.getWorkAreaSize();
+	}
+	
+	public void adjustSessionSize() {
+		Rectangle rect = WorkArea.getWorkAreaSize();
+		this.suspendSession();
+		
+		for (RdpConnectionOvd each : this.connections) {
+			int bpp = this.smComm.getResponseProperties().getRDPBpp();
+			each.setGraphic((int) rect.width & ~3,(int) rect.height, bpp);
+			each.getCanvas().resize((int) rect.width & ~3,(int) rect.height);
+		}
+		
+		while (! this.availableConnections.isEmpty()) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ex) {}
+		}
+		
+		this.resumeSession();
+	}
+	
+	
 	@Override
 	public void perform() {
 		System.out.println("OvdClientIntegrated : perform");
@@ -127,6 +156,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 		}
 		
 		this.desktopIntegrator.start();
+		
+		Rectangle lastDim = this.getScreenSize();
 		
 		do
 		{
@@ -160,6 +191,14 @@ public class OvdClientIntegrated extends OvdClientRemoteApps implements OvdClien
 				if (! ((OvdClientPerformer)this).checkRDPConnections() && ! ((OvdClientPerformer)this).checkWebAppsConnections()) {
 					this.disconnection();
 					break;
+				}
+				
+				Rectangle current = this.getScreenSize(); 
+				if (! current.equals(lastDim)) {
+					Logger.info("Dimension change "+lastDim.toString()+" "+current.toString());
+					lastDim = current;
+					
+					this.adjustSessionSize();
 				}
 			}
 			
