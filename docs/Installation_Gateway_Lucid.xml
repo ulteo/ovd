@@ -9,7 +9,7 @@
   <transform_var name="distrib_version" value="lucid"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Gateway Installation on @distrib_pretty_name@ </subtitle>
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@ </subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -26,12 +26,12 @@
   <xi:include href="common.xml" xpointer="gold" />
   
   <section id="prerequisites_gw">
-    <title>Prerequisites</title>
+    <title id="prerequisites_gw_title">Prerequisites</title>
 
-    <itemizedlist>
+    <itemizedlist id="prerequisites_gw_list">
       <listitem>
         <para>
-          A installed <emphasis role="strong">@distrib_pretty_name@</emphasis> system (x86 or amd64).
+          An installed <emphasis role="strong">@distrib_pretty_name@</emphasis> system (x86 or amd64).
         </para>
       </listitem>
       
@@ -49,7 +49,7 @@
       </listitem>
     </itemizedlist>
 
-    <important>
+    <important id="prerequisites_gw_important">
       <para>
 	The Gateway Server has to be a dedicated system
 	for Ulteo OVD usage. It may also host another Ulteo OVD
@@ -76,7 +76,7 @@
 
 
   <section id="configuration_gw">
-    <title>Ubuntu Packages Configuration</title>
+    <title>Packages Configuration</title>
       
      <section id="repository_online">
        <xi:include href="&base;" xpointer="repository_online_title" />

@@ -83,10 +83,25 @@ foreach ($files as $file) {
 			$name="Installing a Windows Application Server";
 		break;
 		case "Installation_Gateway_Lucid":
-			$name="Installing OVD Gateway on Lucid";
+			$name="Installing OVD Gateway on Ubuntu Lucid";
 		break;
 		case "Installation_Gateway_Precise":
-			$name="Installing OVD Gateway on Precise";
+			$name="Installing OVD Gateway on Ubuntu Precise";
+		break;
+		case "Installation_Gateway_Wheezy":
+			$name="Installing OVD Gateway on Debian Wheezy";
+		break;
+		case "Installation_Gateway_Squeeze":
+			$name="Installing OVD Gateway on Debian Squeeze";
+		break;
+		case "Installation_Gateway_RHEL6.0":
+			$name="Installing OVD Gateway on RHEL 6.0";
+		break;
+		case "Installation_Gateway_SLES_11.SP1":
+			$name="Installing OVD Gateway on SLES 11.SP1";
+		break;
+		case "Installation_Gateway_openSUSE_11.3":
+			$name="Installing OVD Gateway on openSUSE 11.3";
 		break;
 		case "NativeClient":
 			$name="Native Client";

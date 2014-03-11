@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY base "Support_Ubuntu_Lucid.xml">
+<!ENTITY parent "Support_RHEL_5.5.xml">
+]>
+<article>
+  <transform_var name="gold_product_name" value="Gateway"/>
+
+  <transform_var name="distrib_pretty_name"
+                 value="SUSE Linux Enterprise Server (SLES) 11 SP1"/>
+
+  <transform_var name="distrib_name" value="sles"/>
+
+  <transform_var name="rpm_install_cmd" value="zypper"/>
+
+  <transform_var name="distrib_version" value="11_sp1"/>
+
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@</subtitle>
+
+    <graphic align="center" fileref="img/ovd.png"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com"/></holder>
+    </copyright>
+  </articleinfo>
+
+  <xi:include href="Installation_Gateway_RHEL6.0.xml" xpointer="purpose"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="common.xml" xpointer="gold"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Installation_Gateway_RHEL6.0.xml"
+              xpointer="prerequisites_gw"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <section id="configuration_gw">
+    <title>Packages Configuration</title>
+
+    <section id="repository_online">
+      <xi:include href="Support_RHEL_5.5.xml"
+                  xpointer="repository_online_title"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+      <xi:include href="Support_RHEL_5.5.xml"
+                  xpointer="repository_online_para"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+      <itemizedlist>
+        <listitem>
+          <para>Add the ovd repository:<screen># zypper ar @BASE_URI@/@distrib_name@/@distrib_version@/
+# zypper ar @BASE_URI_GOLD@/@distrib_name@/@distrib_version@/
+</screen></para>
+        </listitem>
+
+        <listitem>
+          <para>Install the keyring package to validate the repository using
+          gpg:<screen># rpm --import @BASE_URI@/@distrib_name@/@distrib_version@/keyring
+</screen></para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="repository_offline">
+      <xi:include href="Support_RHEL_5.5.xml"
+                  xpointer="repository_offline_title"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+      <itemizedlist>
+        <listitem id="repository_offline_step2">
+          <para id="repository_offline_step2_para">The OVD offline repository
+          is made up of two archives. The first one can be found <ulink
+          url="@BASE_URI@/offline/ovd-@VERSION@-@distrib_name@-@distrib_version@.tar.gz">here</ulink>
+          . The second one is only available <ulink
+          url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@-@distrib_version@.tar.gz">online</ulink>,
+          using your @GOLD_NAME@ account credentials.</para>
+
+          <para>You have to download or copy the two archives to the
+          <emphasis>/root/</emphasis> path of your workstation.</para>
+        </listitem>
+
+        <listitem id="repository_offline_step">
+          <para id="repository_offline_step_para">Uncompress the
+          archive:</para>
+
+          <screen># for f in ovd-@VERSION@-*-@distrib_version@.tar.gz; do tar xzf $f; done          </screen>
+        </listitem>
+
+        <xi:include href="Support_SLES_11.SP1.xml"
+                    xpointer="repository_offline_step3"
+                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+        <xi:include href="Support_SLES_11.SP1.xml"
+                    xpointer="repository_offline_step4"
+                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
+      </itemizedlist>
+    </section>
+
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_common"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
+  </section>
+
+  <section id="installation_gw">
+    <title>Packages Installation</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>Install the package
+        <emphasis>ulteo-ovd-slaveserver-role-gateway</emphasis>:</para>
+
+        <screen># @rpm_install_cmd@ install ulteo-ovd-slaveserver-role-gateway        </screen>
+      </listitem>
+
+      <listitem>
+        <para>The only installation data required is the host/IP address where
+        the session manager can be accessed. (we use <ulink
+        url="sm.test.demo"/> here for the example, but of course, you have to
+        set your own domain name).</para>
+
+        <para>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/subsystem_install_sm_host.png"/>
+            </imageobject>
+
+            <textobject>
+              <phrase>debconf Session Manager host/address</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The configuration is now done. The service should be started at the
+    end of the installation, you should see the server appear in the
+    <emphasis>unregistered server</emphasis> page of your Session
+    Manager.</para>
+  </section>
+
+  <section id="webclient_gw">
+    <title>Web Client Configuration</title>
+
+    <para>Due to security reasons, the Gateway doesn't deliver communications
+    to the Web Portal by default. If you want provide access to the Web Portal
+    via the Gateway, you have to change the default configuration.</para>
+
+    <para>Edit the slaveserver.conf file in
+    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this
+    line:</para>
+
+    <screen># web_client = http[s]://ip[:port]/</screen>
+
+    <para>You have to set it with the Url of your Web Portal. For instance:
+    <screen>web_client = http://webportal.test.demo/  </screen></para>
+
+    <para>Now, you have to restart the slaverserver service. <screen># /etc/init.d/ulteo-ovd-slaveserver restart  </screen></para>
+  </section>
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</article>

@@ -132,7 +132,7 @@ SELinux status:              disabled]]>
      </itemizedlist>
     </section>
 
-    <simplesect id="repository_common">
+    <section id="repository_common">
       <xi:include href="&parent;" xpointer="repository_common_title" />
 
       <itemizedlist>
@@ -143,7 +143,7 @@ SELinux status:              disabled]]>
           </screen>
         </listitem>
       </itemizedlist>
-    </simplesect>
+    </section>
   </section>
 
 
