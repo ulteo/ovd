@@ -6,7 +6,7 @@
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
- * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -4276,6 +4276,11 @@ class OvdAdminSoap {
 				$buf.= $str;
 			
 			fclose($fp);
+			
+			if (function_exists("iconv")) {
+				$buf = iconv("UTF-8", "UTF-8//IGNORE", $buf);
+			}
+			
 			return $buf;
 		}
 		
@@ -4290,6 +4295,10 @@ class OvdAdminSoap {
 		$buf = '';
 		while ($str = $l->getContent()) {
 			$buf.= $str;
+		}
+		
+		if (function_exists("iconv")) {
+			$buf = iconv("UTF-8", "UTF-8//IGNORE", $buf);
 		}
 		
 		return $buf;
