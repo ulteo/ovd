@@ -954,6 +954,11 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
+		<operation name="session_disconnect">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
 		<operation name="session_simulate">
 			<input message="urn:String"/>
 			<output message="urn:Any"/>
@@ -2271,6 +2276,16 @@
 		
 		<operation name="session_kill">
 			<soap:operation soapAction="urn:OvdAdmin#session_kill"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="session_disconnect">
+			<soap:operation soapAction="urn:OvdAdmin#session_disconnect"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

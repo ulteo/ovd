@@ -4233,6 +4233,26 @@ class OvdAdminSoap {
 		return true;
 	}
 	
+	public function session_disconnect($id_) {
+		$this->check_authorized('manageSession');
+		
+		$session = Abstract_Session::load($id_);
+		if (! $session) {
+			Logger::error('api', sprintf('Unknown session "%s"', $id_));
+			return false;
+		}
+		
+		$ret = $session->orderDisonnect();
+		if (! $ret) {
+			Logger::error('api', sprintf("Unable to disconnect session '%s'", $session->id));
+			return false;
+		}
+		
+		$session->setStatus(Session::SESSION_STATUS_INACTIVE);
+		$this->log_action('session_disconnect', array('id' => $id_, 'user' => $this->user_login));
+		return true;
+	}
+	
 	public function log_preview() {
 		$this->check_authorized('viewStatus');
 		

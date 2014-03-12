@@ -6,7 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
@@ -1689,6 +1689,25 @@ if ($_REQUEST['name'] == 'Session') {
 				}
 				else {
 					popup_info(sprintf(_("Session '%s' successfully deleted"), $session));
+				}
+			}
+			redirect('sessions.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'disc') {
+		if (! checkAuthorization('manageSession'))
+			redirect();
+		
+		if (isset($_REQUEST['selected_session']) && is_array($_REQUEST['selected_session'])) {
+			foreach ($_POST['selected_session'] as $session) {
+				$ret = $_SESSION['service']->session_disconnect($session);
+				if (! $ret) {
+					popup_error(sprintf(_("Unable to disconnect session '%s'"), $session));
+					continue;
+				}
+				else {
+					popup_info(sprintf(_("Session '%s' successfully disconnected"), $session));
 				}
 			}
 			redirect('sessions.php');

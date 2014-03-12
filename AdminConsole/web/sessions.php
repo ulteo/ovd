@@ -6,6 +6,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -159,6 +160,14 @@ if (isset($_GET['info'])) {
 		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
 		echo '	<input type="submit" value="'._('Kill this session').'" />';
 		echo '</form>';
+		
+		echo '<h2>'._('Disconnect this session').'</h2>';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+		echo '  <input type="hidden" name="name" value="Session" />';
+		echo '	<input type="hidden" name="action" value="disc" />';
+		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+		echo '	<input type="submit" value="'._('Disconnect this session').'" />';
+		echo '</form>';
 	}
 
 	echo '</div>';
@@ -262,6 +271,15 @@ else {
 				echo '<input type="submit" value="'._('Kill').'" />';
 				echo '</form>';
 				echo '</td>';
+				
+				echo '<td style="vertical-align: middle;">';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+				echo '<input type="hidden" name="name" value="Session" />';
+				echo '<input type="hidden" name="action" value="disc" />';
+				echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+				echo '<input type="submit" value="'._('Disconnect').'" />';
+				echo '</form>';
+				echo '</td>';
 			}
 			echo '	</tr>';
 		}
@@ -277,6 +295,14 @@ else {
 			echo '  <input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
 			echo '</td>';
+			
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '  <input type="hidden" name="name" value="Session" />';
+			echo '  <input type="hidden" name="action" value="disc" />';
+			echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
+			echo '</td>';
+
 			echo '	</tr>';
 			echo '</tfoot>';
 		}
