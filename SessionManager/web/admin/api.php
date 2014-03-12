@@ -2442,7 +2442,7 @@ class OvdAdminSoap {
 		$g = new AppsGroup(NULL, $name_, $description_, 1);
 		$res = $applicationsGroupDB->add($g);
 		if (! $res) {
-			Logger::error('api', sprintf("Unable to create applications group '%s'", $name));
+			Logger::error('api', sprintf("Unable to create applications group '%s'", $name_));
 			return null;
 		}
 		
