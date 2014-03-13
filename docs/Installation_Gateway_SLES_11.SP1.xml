@@ -54,8 +54,8 @@
 
       <itemizedlist>
         <listitem>
-          <para>Add the ovd repository:<screen># zypper ar @BASE_URI@/@distrib_name@/@distrib_version@/
-# zypper ar @BASE_URI_GOLD@/@distrib_name@/@distrib_version@/
+          <para>Add the ovd repository:<screen># zypper ar @BASE_URI@/@distrib_name@/@distrib_version@/ ovd
+# zypper ar @BASE_URI_GOLD@/@distrib_name@/@distrib_version@/ ovd-premium
 </screen></para>
         </listitem>
 

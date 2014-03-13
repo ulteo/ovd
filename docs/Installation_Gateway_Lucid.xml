@@ -12,7 +12,7 @@
     <subtitle>Installing OVD Gateway on @distrib_pretty_name@ </subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
-    <copyright>
+    <copyright>	  		 
       <year>@YEAR@</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
