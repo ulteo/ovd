@@ -19,7 +19,8 @@ uovd.provider.rdp.html5.ClipboardHandler = function(rdp_provider) {
 
 uovd.provider.rdp.html5.ClipboardHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
 	if(opcode == "clipboard") {
-		var value = base64_decode(parameters[0]);
+		var utf8 = base64_decode(parameters[0]);
+		var value = utf8_decode(utf8);
 		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.clipboard.in", this, {"value":value});
 	}
 }
@@ -30,7 +31,8 @@ uovd.provider.rdp.html5.ClipboardHandler.prototype.handleEvents = function(type,
 		/* Send clipboard value */
 		for(var i=0 ; i<this.connections.length ; ++i) {
 			var tunnel = this.connections[i].guac_tunnel
-			var message = base64_encode(params["value"]);
+			var utf8 = utf8_encode(params["value"]);
+			var message = base64_encode(utf8);
 			tunnel.sendMessage("clipboard", message);
 		}
 	} else if(type == "ovd.rdpProvider.clipboard.in") {
