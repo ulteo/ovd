@@ -360,7 +360,7 @@ Guacamole.Keyboard = function(element) {
         return keysyms[location] || keysyms[0];
     }
 
-    function keysym_from_key_identifier(shifted, keyIdentifier, location) {
+    function keysym_from_key_identifier(modifiers, keyIdentifier, location) {
 
         // If identifier is U+xxxx, decode Unicode codepoint
         var unicodePrefixLocation = keyIdentifier.indexOf("U+");
@@ -371,7 +371,7 @@ Guacamole.Keyboard = function(element) {
             var typedCharacter;
 
             // Convert case if shifted
-            if (shifted === 0)
+            if (modifiers.shift == 0 || modifiers.ctrl == 1)
                 typedCharacter = String.fromCharCode(codepoint).toLowerCase();
             else
                 typedCharacter = String.fromCharCode(codepoint).toUpperCase();
@@ -602,7 +602,7 @@ Guacamole.Keyboard = function(element) {
         if (identifier) {
 
             keysym = keysym ||
-            keysym_from_key_identifier(guac_keyboard.modifiers.shift,
+            keysym_from_key_identifier(guac_keyboard.modifiers,
                 identifier, location) /*||
             keysym_from_charcode(keynum)*/;
 
