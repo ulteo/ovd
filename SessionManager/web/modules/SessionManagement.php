@@ -841,7 +841,7 @@ abstract class SessionManagement extends Module {
 			
 			if (! $server->orderFSAccessEnable($user_login_fs, $user_password_fs, $mounts)) {
 				if (($need_valid_profile && $netfolder['type'] == 'profile') || ($need_all_sharedFolders && $netfolder['type'] == 'sharedfolder')) {
-					Logger::error('main', 'SessionManagement::prepareFSAccess - Cannot enable FS access for User \''.$user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
+					Logger::error('main', 'SessionManagement::prepareFSAccess - Cannot enable FS access for User \''.$this->user->getAttribute('login').'\' on Server \''.$server->fqdn.'\', aborting');
 					$session->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 					return false;
 				}
