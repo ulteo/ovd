@@ -821,9 +821,8 @@ abstract class SessionManagement extends Module {
 		$user_login_fs = $session_->settings['fs_access_login'];
 		$user_password_fs = $session_->settings['fs_access_password'];
 		
-		$mounts = array();
-		
 		foreach ($session_->servers[Server::SERVER_ROLE_FS] as $server_id => $netfolders) {
+			$mounts = array();
 			$server = Abstract_Server::load($server_id);
 			if (! $server)
 				continue;
