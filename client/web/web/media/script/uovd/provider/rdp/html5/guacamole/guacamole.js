@@ -192,6 +192,7 @@ Guacamole.Client = function(tunnel) {
     guac_client.onname = null;
     guac_client.onerror = null;
     guac_client.onclipboard = null;
+    guac_client.oncursor = null;
 
     // Layers
     function getBufferLayer(index) {
@@ -384,7 +385,7 @@ Guacamole.Client = function(tunnel) {
             // Update css cursor
             cursor.sync(function () {
                 var img = cursor.getCanvas().toDataURL("image/png");
-                default_layer_container_element.style.cursor = 'url("'+img+'") '+cursorHotspotX+' '+cursorHotspotY+', auto';
+                if (guac_client.oncursor) guac_client.oncursor({url:img, x:cursorHotspotX, y:cursorHotspotY});
             });
 
         },

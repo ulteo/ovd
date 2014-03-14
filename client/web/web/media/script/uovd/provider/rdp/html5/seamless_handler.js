@@ -10,6 +10,7 @@ uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 	for(var i=0 ; i<this.connections.length ; ++i) {
 		(function(server_id) {
 			self.connections[server_id].guac_tunnel.addInstructionHandler("seamrdp", jQuery.proxy(self.handleOrders, self, server_id));
+			self.connections[server_id].guac_client.oncursor = jQuery.proxy(self.handleOrders, self, server_id, "cursor");
 		})(i);
 	}
 
@@ -70,6 +71,15 @@ uovd.provider.rdp.html5.SeamlessHandler = function(rdp_provider) {
 }
 
 uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server_id, opcode, parameters) {
+	if(opcode == "cursor") {
+		var params = {};
+		params["server_id"] = server_id;
+		params["url"] = parameters["url"];
+		params["x"] = parameters["x"];
+		params["y"] = parameters["y"];
+		this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.cursor", this, params);
+	}
+
 	if(opcode == "seamrdp") {
 		/* Format :
 			 parameters[0] = string (CSV encoded)
@@ -295,6 +305,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleEvents = function(type, 
 		for(var i=0 ; i<this.connections.length ; ++i) {
 			(function(server_id) {
 				self.connections[server_id].guac_tunnel.removeInstructionHandler("seamrdp");
+				self.connections[server_id].guac_client.oncursor = null;
 			})(i);
 		}
 

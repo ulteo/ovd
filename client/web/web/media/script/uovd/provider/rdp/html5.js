@@ -88,6 +88,14 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			connection.keyboard = new uovd.provider.rdp.html5.Keyboard(self, connection);
 			connection.mouse = new uovd.provider.rdp.html5.Mouse(self, connection);
 
+			/* Cursor support */
+			connection.guac_client.oncursor = function(params) {
+				var url = params["url"];
+				var x = params["x"];
+				var y = params["y"];
+				jQuery(connection.guac_display).css("cursor", "url("+url+")"+x+" "+y+", auto");
+			};
+
 			/* Save server settings */
 			self.connections.push(connection);
 
@@ -173,6 +181,14 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			/* Initialize inputs */
 			connection.keyboard = new uovd.provider.rdp.html5.Keyboard(self, connection);
 			connection.mouse = new uovd.provider.rdp.html5.Mouse(self, connection);
+
+			/* Cursor support */
+			connection.guac_client.oncursor = function(params) {
+				var url = params["url"];
+				var x = params["x"];
+				var y = params["y"];
+				jQuery(connection.guac_display).css("cursor", "url("+url+")"+x+" "+y+", auto");
+			};
 
 			/* Save server settings */
 			self.connections.push(connection);

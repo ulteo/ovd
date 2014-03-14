@@ -3,6 +3,7 @@ uovd.provider.rdp.html5.SeamlessWindowManager = function(session_management, nod
 	this.session_management = session_management;
 	this.windowFactory = windowFactory;
 	this.windows = {};
+	this.cursors = {};
 	this.handler = jQuery.proxy(this.handleEvents, this);
 	this.refreshTimer = null;
 
@@ -31,8 +32,19 @@ uovd.provider.rdp.html5.SeamlessWindowManager.prototype.handleEvents = function(
 		}
 	} else if(type == "ovd.rdpProvider.seamless.in.windowCreate") {
 		var id = params["id"];
+		var server_id = params["server_id"];
 		this.windows[id] = this.windowFactory.create(params);
-		this.node.append(this.windows[id].getNode());
+
+		var node = jQuery(this.windows[id].getNode());
+
+		/* Set cursor */
+		if(this.cursors[server_id]) {
+			var cursor = this.cursors[server_id];
+			node.css("cursor", "url("+cursor["url"]+")"+cursor["x"]+" "+cursor["y"]+", auto");
+		}
+
+		/* Insert */
+		this.node.append(node);
 	} else if(type == "ovd.rdpProvider.seamless.in.windowDestroy") {
 		var id = params["id"];
 		if(this.windows[id]) {
@@ -130,6 +142,21 @@ uovd.provider.rdp.html5.SeamlessWindowManager.prototype.handleEvents = function(
 					this.windows[id].blur();
 				}
 				break;
+		}
+	} else if(type == "ovd.rdpProvider.seamless.in.cursor" ) { /* Clean context */
+		var server_id = params["server_id"];
+		var url = params["url"];
+		var x = params["x"];
+		var y = params["y"];
+
+		this.cursors[server_id] = params;
+
+		for(var id in this.windows) {
+			var win = this.windows[id];
+			if(win.getServerId() == server_id) {
+				var node = jQuery(win.getNode());
+				node.css("cursor", "url("+url+")"+x+" "+y+", auto");
+			}
 		}
 	} else if(type == "ovd.session.destroying" ) { /* Clean context */
 		this.end();
