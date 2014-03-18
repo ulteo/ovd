@@ -44,13 +44,13 @@ function show_default() {
 	
 	page_header();
 	echo '<div>';
-	echo '<h1>'._('Activation certificates').'</h1>';
+	echo '<h1>'._('Subscription Keys').'</h1>';
 
 	print_summary();
 
 	echo '<div>';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
-	echo '<tr><th>'._('Organization').'</th><th>'._('Certificate owner').'</th><th>'._('Email').'</th><th>'._('Start Date (UTC)').'</th><th>'._('End Date  (UTC)').'</th><th>'._('Type').'</th><th>'._('Status').'</th></tr>';
+	echo '<tr><th>'._('Organization').'</th><th>'._('Subscription Key Owner').'</th><th>'._('Email').'</th><th>'._('Start Date (UTC)').'</th><th>'._('End Date  (UTC)').'</th><th>'._('Type').'</th><th>'._('Status').'</th></tr>';
 
 	foreach ($certificates as $certificate) {
 		echo '<tr>';
@@ -70,10 +70,10 @@ function show_default() {
 		echo '</td>';
 
 		if (! $certificate['valid']) {
-			echo '<td class="msg_error">'._('Invalid Ulteo certificate').'</td>';
+			echo '<td class="msg_error">'._('Invalid Subscription Key').'</td>';
 		}
 		else if ($certificate['expired']) {
-			echo '<td class="msg_error">'._('Certificate expired').'</td>';
+			echo '<td class="msg_error">'._('Subscription Key has expired').'</td>';
 		}
 		else {
 			$delta = get_expiry_days($certificate['expiry']);
@@ -86,11 +86,11 @@ function show_default() {
 		}
 		
 		if ($can_manage_configuration) {
-			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this certificate?').'\');">';
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this Subscription Key?').'\');">';
 			echo '<input type="hidden" name="name" value="Certificate" />';
 			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="hidden" name="id" value="'.$certificate['id'].'" />';
-			echo '<input type="submit" value="'._('Delete this certificate').'" />';
+			echo '<input type="submit" value="'._('Delete this Subscription Key').'" />';
 			echo '</form></td>';
 		}
 		echo '</tr>';
@@ -101,7 +101,7 @@ function show_default() {
 	
 	if ($can_manage_configuration) {
 		echo '<div>';
-		echo '<h2>'._('Install a certificate').'</h2>';
+		echo '<h2>'._('Install a Subscription Key').'</h2>';
 		echo '<table border="0" cellspacing="1" cellpadding="5">';
 		echo '<tr>';
 		echo '<td>';
@@ -109,7 +109,7 @@ function show_default() {
 		echo '<input type="hidden" name="name" value="Certificate" />';
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<input type="file" name="certificate" /> ';
-		echo '<input type="submit" value="'._('Install this certificate').'" />';
+		echo '<input type="submit" value="'._('Install this Subscription Key').'" />';
 		echo '</form>';
 		echo '</td>';
 		echo '</tr>';
@@ -119,7 +119,7 @@ function show_default() {
 
 	if ($can_manage_configuration && ! in_array($certificates_limits["named_users_max"], array(0, null))) {
 		echo '<div>';
-		echo '<h2>'._('Assigned Users list').'</h2>';
+		echo '<h2>'._('Assigned Users').'</h2>';
 		echo '<table border="0" cellspacing="1" cellpadding="5">';
 		echo '<tr>';
 		echo '<td>';
@@ -145,14 +145,14 @@ function print_summary() {
 	$color = 0;
 
 	echo '<table class="main_sub2" border="0" cellspacing="1" cellpadding="3">';
-	echo '<tr class="title"><th colspan="2">'._('Activation certificates summary').'</th></tr>';
+	echo '<tr class="title"><th colspan="2">'._('Subscription Key Summary').'</th></tr>';
 
 	echo '<tr class="content'.($color++ % 2 +1).'">';
 	echo '<td style="width: 200px;">';
-	echo '<span>'._('State').'</span>';
+	echo '<span>'._('Status').'</span>';
 	echo '</td>';
 	if (! $limits['global_validity']) {
-		echo '<td class="msg_error">'._('No valid Ulteo certificate').'</td>';
+		echo '<td class="msg_error">'._('No valid Subscription Keys').'</td>';
 	} else {
 		if ($delta < 20) {
 			echo '<td class="msg_warn">'.sprintf(_('Only %d days remaining'), $delta).'</td>';
@@ -167,7 +167,7 @@ function print_summary() {
 	if($limits['global_from']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Certificate valid from').'</span>';
+		echo '<span>'._('Valid from').'</span>';
 		echo '</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $limits['global_from']).'</td>';
 		echo '</tr>';
@@ -176,7 +176,7 @@ function print_summary() {
 	if($limits['global_to']) {
 		echo '<tr class="content'.($color++ % 2 +1).'">';
 		echo '<td style="width: 200px;">';
-		echo '<span>'._('Certificate valid until').'</span>';
+		echo '<span>'._('Valid until').'</span>';
 		echo '</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $limits['global_to']).'</td>';
 		echo '</tr>';

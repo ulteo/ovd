@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: uovdsmadmin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-07 09:36+0100\n"
+"POT-Creation-Date: 2014-03-21 11:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgid "more"
 msgstr ""
 
 #: ../../AdminConsole/classes/ConfigElement_sliders_loadbalancing.class.php:126
-msgid "Back to default"
+msgid "Reset to default"
 msgstr ""
 
 #: ../../AdminConsole/classes/ConfigElement_sliders_loadbalancing.class.php:132
@@ -75,120 +75,138 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:29
-#: ../../AdminConsole/classes/Preferences_admin.class.php:568
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:30
+#: ../../AdminConsole/classes/Preferences_admin.class.php:582
 msgid "Microsoft"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:151
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:159
 msgid "Microsoft integration"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:154
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:223
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:162
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:227
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:261
 #: ../../AdminConsole/web/profiles.php:159
-#: ../../AdminConsole/web/reporting.php:598
+#: ../../AdminConsole/web/reporting.php:666
 #: ../../AdminConsole/web/sharedfolders.php:135
-#: ../../AdminConsole/web/tasks.php:160
+#: ../../AdminConsole/web/tasks.php:161
 msgid "Server"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:156
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:218
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:164
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:241
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:267
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:324
 msgid "Domain:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:157
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:225
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:165
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:229
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:263
 msgid "Primary Host:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:158
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:166
 msgid ""
 "Optional: If the domain name is not registered in your DNS, fill in the "
 "Active Directory IP."
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:160
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:226
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:168
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:230
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:264
 msgid "Secondary Host:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:161
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:169
 msgid "Optional"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:167
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:235
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:173
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:174
+msgid "Show advanced options"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:175
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:176
+msgid "Hide advanced options"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:179
+msgid "LDAP port:"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:184
+msgid "Use LDAP encryption (SSL)"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:190
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:243
 msgid "Authentication (require a user with read right on the tree)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:169
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:192
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:284
 msgid "Login:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:170
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:193
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:285
 msgid "Password:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:176
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:199
 msgid "Usergroups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:180
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:203
 msgid "Use <strong>Active Directory</strong> usergroups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:185
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:208
 msgid "Use <strong>Internal</strong> usergroups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:199
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:222
 msgid "Domain users"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:203
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:226
 msgid ""
 "Use <strong>Active Directory</strong> to handle users in OVD sessions <em>"
 "(not compatible with Linux applications)</em>"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:207
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:230
 msgid "Use <strong>Internal</strong> method to handle users in OVD sessions"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:220
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:243
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:326
 msgid "Administrator account:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:222
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:339
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:245
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:350
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:328
 msgid "User Groups:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:224
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:247
 msgid "Active Directory User Groups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:226
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:266
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:343
+#: ../../AdminConsole/classes/Configuration_mode_ad.class.php:249
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:274
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:354
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:313
 msgid "Use Internal User Groups"
 msgstr ""
 
 #. to change !
 #: ../../AdminConsole/classes/Configuration_mode_internal.class.php:27
-#: ../../AdminConsole/classes/Preferences_admin.class.php:567
+#: ../../AdminConsole/classes/Preferences_admin.class.php:581
 msgid "Internal"
 msgstr ""
 
@@ -198,140 +216,151 @@ msgstr ""
 
 #: ../../AdminConsole/classes/Configuration_mode_internal.class.php:82
 msgid ""
-"This is the default profile manager. This profile manager saves all the data "
-"into a the same SQL database as you defined it in the system configuration."
+"This is the default profile manager. It saves all data in the SQL database "
+"that was defined in the system configuration settings."
 msgstr ""
 
 #: ../../AdminConsole/classes/Configuration_mode_internal.class.php:93
 msgid "Use a dynamic internal User Group"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:27
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:220
-#: ../../AdminConsole/classes/Preferences_admin.class.php:381
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:28
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:224
+#: ../../AdminConsole/classes/Preferences_admin.class.php:387
 msgid "Lightweight Directory Access Protocol (LDAP)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:227
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:255
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:231
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:263
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:265
 msgid "optional"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:229
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:233
 msgid "Server Port:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:230
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:237
+#: ../../AdminConsole/classes/Preferences_admin.class.php:432
+#: ../../AdminConsole/classes/Preferences_admin.class.php:445
+msgid "Use SSL"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:238
 msgid "Base DN:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:241
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:249
 msgid "Anonymous bind"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:243
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:251
 msgid "Bind DN (without suffix):"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:244
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:252
 msgid "Bind password:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:249
-#: ../../AdminConsole/includes/page_template.php:51
-#: ../../AdminConsole/includes/page_template.php:116
-#: ../../AdminConsole/web/summary.php:79 ../../AdminConsole/web/users.php:58
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:257
+#: ../../AdminConsole/includes/page_template.php:53
+#: ../../AdminConsole/includes/page_template.php:119
+#: ../../AdminConsole/web/index.php:55 ../../AdminConsole/web/summary.php:69
+#: ../../AdminConsole/web/summary.php:79 ../../AdminConsole/web/sumup.php:40
+#: ../../AdminConsole/web/users.php:58
 msgid "Users"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:251
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:275
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:259
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:283
 msgid "Filter:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:252
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:276
-msgid "Specific OU (optionnal):"
-msgstr ""
-
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:253
-msgid "Distinguished name field:"
-msgstr ""
-
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:254
-msgid "Display name field:"
-msgstr ""
-
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:255
-msgid "Locale field"
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:260
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:284
+msgid "Specific OU (optional):"
 msgstr ""
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:261
+msgid "Distinguished name field:"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:262
+msgid "Display name field:"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:263
+msgid "Locale field"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:269
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:304
+#: ../../AdminConsole/includes/page_template.php:126
+#: ../../AdminConsole/web/index.php:57
+#: ../../AdminConsole/web/usersgroup.php:72
 msgid "User Groups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:272
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:341
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:280
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:352
 msgid "Use LDAP User Groups"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:277
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:285
 msgid "Name field:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:278
-msgid "Description field (Optionnal):"
-msgstr ""
-
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:283
-msgid "Use the following field from the user entry"
-msgstr ""
-
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:285
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:303
-msgid "which is"
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:286
+msgid "Description field (optional):"
 msgstr ""
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:291
+msgid "Use the following field from the user entry"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:293
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:311
+msgid "which is"
+msgstr ""
+
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:299
 msgid "Group DN"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:296
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:304
 msgid "Group name"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:301
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:309
 msgid "Use the following field from the group entry"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:309
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:317
 msgid "User DN"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:314
-#: ../../AdminConsole/classes/Preferences_admin.class.php:405
-#: ../../AdminConsole/classes/Preferences_admin.class.php:412
-#: ../../AdminConsole/classes/Preferences_admin.class.php:426
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:322
+#: ../../AdminConsole/classes/Preferences_admin.class.php:411
+#: ../../AdminConsole/classes/Preferences_admin.class.php:418
+#: ../../AdminConsole/classes/Preferences_admin.class.php:433
 msgid "User login"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:335
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:346
 msgid "Server:"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:336
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:347
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:282
 msgid "Administrator account"
 msgstr ""
 
-#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:337
+#: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:348
 msgid "User branch:"
 msgstr ""
 
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:27
-#: ../../AdminConsole/classes/Preferences_admin.class.php:569
+#: ../../AdminConsole/classes/Preferences_admin.class.php:583
 msgid "Novell"
 msgstr ""
 
@@ -373,561 +402,579 @@ msgstr ""
 
 #: ../../AdminConsole/classes/NetworkFolder.class.php:35
 #: ../../AdminConsole/classes/NetworkFolder.class.php:39
-#: ../../AdminConsole/classes/Server.class.php:99
-#: ../../AdminConsole/classes/Server.class.php:108
-#: ../../AdminConsole/classes/Server.class.php:115
+#: ../../AdminConsole/classes/Server.class.php:101
+#: ../../AdminConsole/classes/Server.class.php:110
+#: ../../AdminConsole/classes/Server.class.php:117
 #: ../../AdminConsole/classes/Session.class.php:68
 #: ../../AdminConsole/classes/Session.class.php:102
 #: ../../AdminConsole/web/configuration-sumup.php:55
-#: ../../AdminConsole/web/sessions.php:104
+#: ../../AdminConsole/web/sessions.php:105
 msgid "Unknown"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:294
-#: ../../AdminConsole/web/index.php:92
-msgid "General configuration"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:295
-msgid "System on maintenance mode"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:296
-msgid "Administration console language"
+#: ../../AdminConsole/web/index.php:92
+msgid "General Configuration"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:297
-msgid "Debug options list"
+msgid "System in maintenance mode"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:298
-msgid "Cache logs update interval"
+msgid "Administration Console language"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:299
-msgid "Cache logs expiry time"
+msgid "Debug options list"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:300
-msgid "Default user group"
+msgid "Cached logs update interval"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:301
-msgid "Domain integration"
+msgid "Cached logs expiry time"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:302
-msgid "Maximum items per page"
+msgid "Default user group"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:303
-msgid "Default browser"
+msgid "Domain integration"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:304
+msgid "Maximum items per page"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:305
+msgid "Default browser"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:306
 #: ../../AdminConsole/web/checkup.php:79
 msgid "Liaisons"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:306
-msgid "Policy for administration delegation"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:307
-msgid "Default policy"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:308
+msgid "Policy for Administration Delegation"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:309
-msgid "SQL configuration"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:310
-msgid "Database type"
+msgid "Default policy"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:311
-msgid "Database host address"
+msgid "SQL configuration"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:312
-msgid "Database username"
+msgid "Database type"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:313
-msgid "Database password"
+msgid "Database host address"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:314
-#: ../../AdminConsole/classes/Preferences_admin.class.php:407
-#: ../../AdminConsole/classes/Preferences_admin.class.php:414
-msgid "Database name"
+msgid "Database username"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:315
-msgid "Table prefix"
+msgid "Database password"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:316
+#: ../../AdminConsole/classes/Preferences_admin.class.php:413
+#: ../../AdminConsole/classes/Preferences_admin.class.php:420
+msgid "Database name"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:317
-msgid "Email settings"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:318
-msgid "Mail server type"
+msgid "Table prefix"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:319
-#: ../../AdminConsole/web/reporting.php:508
-#: ../../AdminConsole/web/session-reporting.php:128
-msgid "From"
+msgid "Email Settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:320
-msgid "Host"
+msgid "Mail Server Type"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:321
-msgid "Port"
+#: ../../AdminConsole/web/reporting.php:576
+#: ../../AdminConsole/web/session-reporting.php:132
+msgid "From"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:322
-msgid "Use SSL with SMTP"
+msgid "Host"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:323
-msgid "Authentication"
+msgid "Port"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:324
-msgid "SMTP username"
+msgid "Use SSL with SMTP"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:325
-msgid "SMTP password"
+msgid "Authentication"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:326
+msgid "SMTP username"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:327
-msgid "Slave Server settings"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:328
-msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgid "SMTP password"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:329
-msgid "Disable reverse FQDN checking"
+msgid "Slave Server Settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:330
-msgid "Use reverse DNS for server's FQDN"
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:331
-msgid "Action when a server status is not ready anymore"
+msgid "Disable reverse FQDN checking"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:332
-msgid "Auto-recover server"
+msgid "Use reverse DNS for server's FQDN"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:333
-msgid "Remove orphan applications when the application server is deleted"
+msgid "Action when a server status becomes not ready"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:334
-msgid "Auto register new servers"
+msgid "Auto-recover server"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:335
-msgid "Auto switch new servers to production mode"
+msgid "Remove orphan applications when an Application Server is deleted"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:336
-msgid ""
-"When an Application Server have reached its \"max sessions\" limit, disable "
-"session launch on it ?"
+msgid "Auto register new servers"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:337
-msgid "Load Balancing policy for Application Servers"
+msgid "Auto switch new servers to production mode"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:338
-msgid "Load Balancing policy for File Servers"
+msgid ""
+"When an Application Server has reached its \"max sessions\" limit, disable "
+"session launch on it ?"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:339
+msgid "Load Balancing policy for Application Servers"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:340
-msgid "Remote Desktop settings"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:341
-msgid "Enable Remote Desktop"
+msgid "Load Balancing policy for File Servers"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:342
-msgid "Show icons on user desktop"
+msgid "Remote Desktop Settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:343
-msgid "Allow external applications in Desktop"
+msgid "Enable Remote Desktop"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:344
-msgid "Desktop type"
+msgid "Show icons on user desktop"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:345
-msgid "Servers which are allowed to start desktop"
+msgid "Allow external applications in Desktop"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:346
-msgid "Authorize to launch a desktop session without desktop process"
+msgid "Desktop type"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:347
+msgid "Servers which are allowed to start desktop"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:348
-msgid "Remote Applications settings"
+msgid "Authorize to launch a desktop session without desktop process"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:349
-msgid "Enable Remote Applications"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:350
+msgid "Remote Application Settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:351
-msgid "Sessions settings"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:352
-msgid "Default mode for session"
+msgid "Enable Remote Applications"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:353
-msgid "Default language for session"
+msgid "Session settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:354
-msgid "Default timeout for session"
+msgid "Default mode for session"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:355
-msgid "Maximum number of running sessions"
+msgid "Default language for session"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:356
+msgid "Default timeout for session"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:357
+msgid "Maximum number of running sessions"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:358
 msgid ""
 "User can launch a session even if some of his published applications are not "
 "available"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:357
+#: ../../AdminConsole/classes/Preferences_admin.class.php:359
 msgid "User can use a console in the session"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:358
+#: ../../AdminConsole/classes/Preferences_admin.class.php:360
 msgid "Use known drives"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:359
+#: ../../AdminConsole/classes/Preferences_admin.class.php:361
 msgid "Multimedia"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:360
+#: ../../AdminConsole/classes/Preferences_admin.class.php:362
 msgid "Redirect client drives"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:361
+#: ../../AdminConsole/classes/Preferences_admin.class.php:363
 msgid "Redirect client printers"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:362
+#: ../../AdminConsole/classes/Preferences_admin.class.php:364
 msgid "Redirect Smart card readers"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:363
+#: ../../AdminConsole/classes/Preferences_admin.class.php:365
 msgid "RDP bpp"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:364
+#: ../../AdminConsole/classes/Preferences_admin.class.php:366
 msgid "Enhance user experience"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:366
+#: ../../AdminConsole/classes/Preferences_admin.class.php:368
 msgid "Sessions are persistent"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:367
-msgid "Enable user profiles"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:368
-msgid "Auto-create user profiles when non-existant"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:369
-msgid "Launch a session without a valid profile"
+msgid "Follow me"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:370
-msgid "Enable shared folders"
+msgid "Enable user profiles"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:371
-msgid "Launch a session even when a shared folder's fileserver is missing"
+msgid "Auto-create user profiles when non-existent"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:372
-msgid "Allow user to force shared folders"
+msgid "Quota assigned to the profile"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:373
-msgid "Forceable paramaters by users"
+msgid "Profile integration used in the session"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:374
-msgid "Time restriction"
+msgid "Launch a session without a valid profile"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:376
-#: ../../AdminConsole/includes/page_template.php:225
-msgid "Web interface settings"
+msgid "Enable shared folders"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:377
-msgid "Display users list"
+msgid "Launch a session even when a shared folder's fileserver is missing"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:378
-msgid "Public Webservices access"
+msgid "Allow user to force shared folders"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:379
+msgid "User selectable parameters"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:380
-msgid "Active Directory"
+msgid "Time restriction"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:382
-msgid "MySQL external"
+#: ../../AdminConsole/includes/page_template.php:228
+msgid "Web Interface Settings"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:383
+msgid "Display user list"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:384
+msgid "Public Web Services access"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:386
+msgid "Active Directory"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:388
+msgid "MySQL external"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:389
 msgid "Unix"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:385
-msgid "Modules activation"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:398
-#: ../../AdminConsole/classes/Preferences_admin.class.php:401
-#: ../../AdminConsole/classes/Preferences_admin.class.php:409
-#: ../../AdminConsole/classes/Preferences_admin.class.php:416
-#: ../../AdminConsole/classes/Preferences_admin.class.php:429
-msgid "Matching"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:399
-msgid "Use child groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:402
-msgid "Filter"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:391
+msgid "Module activation"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:404
-#: ../../AdminConsole/classes/Preferences_admin.class.php:411
-#: ../../AdminConsole/classes/Preferences_admin.class.php:424
-#: ../../AdminConsole/classes/Preferences_admin.class.php:433
-msgid "Server host address"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:407
+#: ../../AdminConsole/classes/Preferences_admin.class.php:415
+#: ../../AdminConsole/classes/Preferences_admin.class.php:422
+#: ../../AdminConsole/classes/Preferences_admin.class.php:436
+msgid "Matching"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:406
-#: ../../AdminConsole/classes/Preferences_admin.class.php:413
-#: ../../AdminConsole/classes/Preferences_admin.class.php:427
-msgid "User password"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:405
+msgid "Use child groups"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:408
-msgid "Database users groups table name"
+msgid "Filter"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:415
+#: ../../AdminConsole/classes/Preferences_admin.class.php:410
+#: ../../AdminConsole/classes/Preferences_admin.class.php:417
+#: ../../AdminConsole/classes/Preferences_admin.class.php:430
+#: ../../AdminConsole/classes/Preferences_admin.class.php:440
+msgid "Server host address"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:412
+#: ../../AdminConsole/classes/Preferences_admin.class.php:419
+#: ../../AdminConsole/classes/Preferences_admin.class.php:434
+msgid "User password"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:414
+msgid "Database User Group table name"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:421
 msgid "Table of users"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:417
+#: ../../AdminConsole/classes/Preferences_admin.class.php:423
 msgid "Hash method"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:419
-#: ../../AdminConsole/classes/Preferences_admin.class.php:489
+#: ../../AdminConsole/classes/Preferences_admin.class.php:425
+#: ../../AdminConsole/classes/Preferences_admin.class.php:499
 msgid "The address of your MySQL server."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:420
-#: ../../AdminConsole/classes/Preferences_admin.class.php:497
-#: ../../AdminConsole/classes/Preferences_admin.class.php:503
+#: ../../AdminConsole/classes/Preferences_admin.class.php:426
+#: ../../AdminConsole/classes/Preferences_admin.class.php:508
+#: ../../AdminConsole/classes/Preferences_admin.class.php:514
 msgid ""
 "The user login that must be used to access the database (to list users "
 "accounts)."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:421
-#: ../../AdminConsole/classes/Preferences_admin.class.php:498
-#: ../../AdminConsole/classes/Preferences_admin.class.php:504
+#: ../../AdminConsole/classes/Preferences_admin.class.php:427
+#: ../../AdminConsole/classes/Preferences_admin.class.php:509
+#: ../../AdminConsole/classes/Preferences_admin.class.php:515
 msgid ""
 "The user password that must be used to access the database (to list users "
 "accounts)."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:422
-#: ../../AdminConsole/classes/Preferences_admin.class.php:464
-#: ../../AdminConsole/classes/Preferences_admin.class.php:492
+#: ../../AdminConsole/classes/Preferences_admin.class.php:428
+#: ../../AdminConsole/classes/Preferences_admin.class.php:474
+#: ../../AdminConsole/classes/Preferences_admin.class.php:502
 msgid "The name of the database."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:425
+#: ../../AdminConsole/classes/Preferences_admin.class.php:431
+#: ../../AdminConsole/classes/Preferences_admin.class.php:444
 msgid "Server port"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:428
+#: ../../AdminConsole/classes/Preferences_admin.class.php:435
 msgid "Options given to ldap object"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:430
+#: ../../AdminConsole/classes/Preferences_admin.class.php:437
 msgid "Filter (optional)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:431
+#: ../../AdminConsole/classes/Preferences_admin.class.php:438
 msgid "extra"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:434
+#: ../../AdminConsole/classes/Preferences_admin.class.php:441
 msgid "Domain name"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:435
+#: ../../AdminConsole/classes/Preferences_admin.class.php:442
 msgid "Administrator DN"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:436
+#: ../../AdminConsole/classes/Preferences_admin.class.php:443
 msgid "Administrator password"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:437
+#: ../../AdminConsole/classes/Preferences_admin.class.php:446
 msgid "match"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:438
+#: ../../AdminConsole/classes/Preferences_admin.class.php:447
 msgid "Accept expired password"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:440
+#: ../../AdminConsole/classes/Preferences_admin.class.php:449
 msgid "CAS server URL"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:442
+#: ../../AdminConsole/classes/Preferences_admin.class.php:451
 msgid "SERVER variable for SSO"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:443
+#: ../../AdminConsole/classes/Preferences_admin.class.php:452
 msgid "Remove domain if exists"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:445
+#: ../../AdminConsole/classes/Preferences_admin.class.php:454
 msgid "Token validation URL"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:446
+#: ../../AdminConsole/classes/Preferences_admin.class.php:455
 msgid "Token XML user node name"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:447
+#: ../../AdminConsole/classes/Preferences_admin.class.php:456
 msgid "Token XML login attribute name"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:449
+#: ../../AdminConsole/classes/Preferences_admin.class.php:458
 msgid "Which login should be used for the ApplicationServer's generated user?"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:451
-msgid "Manage users by ZENworks DLU instead of native method"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:453
-msgid "Override password"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:457
-msgid "Select debug options you want to enable."
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:458
-msgid "The maximum number of items that can be displayed."
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:460
-msgid "The type of your database."
+#: ../../AdminConsole/classes/Preferences_admin.class.php:459
+msgid ""
+"Which password should be used for the ApplicationServer's generated user?"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:461
+msgid "Manage users by ZENworks DLU instead of native method"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:463
+msgid "Override password"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:467
+msgid "Select debug options you want to enable."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:468
+msgid "The maximum number of items that can be displayed."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:470
+msgid "The type of your database."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:471
 msgid ""
 "The address of your database host. This database contains adminstration "
 "console data. Example: localhost or db.mycorporate.com."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:462
+#: ../../AdminConsole/classes/Preferences_admin.class.php:472
 msgid "The username that must be used to access the database."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:463
+#: ../../AdminConsole/classes/Preferences_admin.class.php:473
 msgid "The user password that must be used to access the database."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:465
+#: ../../AdminConsole/classes/Preferences_admin.class.php:475
 msgid "The table prefix for the database."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:467
+#: ../../AdminConsole/classes/Preferences_admin.class.php:477
 msgid ""
 "Enable this option if you don't want to check that the result of the reverse "
 "FQDN address fits the one that was registered."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:468
+#: ../../AdminConsole/classes/Preferences_admin.class.php:478
 msgid ""
 "Try to identify the server using the reverse DNS record associated to the "
 "remote address."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:469
+#: ../../AdminConsole/classes/Preferences_admin.class.php:479
 msgid ""
 "When a server status is down or broken, and it is sending monitoring, try to "
 "switch it back to ready ?"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:470
+#: ../../AdminConsole/classes/Preferences_admin.class.php:480
 msgid ""
 "An empty list means all servers can host a desktop (no restriction on "
 "desktop server choice)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:471
+#: ../../AdminConsole/classes/Preferences_admin.class.php:481
 msgid ""
-"Usefull for web integration starting a maximised application as only windows "
+"Useful for web integration starting a maximised application as only windows "
 "into the remote screen"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:473
+#: ../../AdminConsole/classes/Preferences_admin.class.php:483
 msgid ""
-"The maximum number of session that can be started on the farm (0 is "
+"The maximum number of sessions that can be started on the farm (0 is "
 "unlimited)."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:474
+#: ../../AdminConsole/classes/Preferences_admin.class.php:484
 msgid ""
 "Provide file access optimization when using common network drives between "
 "client & Application Servers (open the file on server side instead of "
 "sending it from client using RDP disk redirection)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:475
+#: ../../AdminConsole/classes/Preferences_admin.class.php:485
 msgid ""
 "- None: none of the client drives will be used in the OVD session<br />- "
 "Partial: Desktop and My Documents user directories will be available in the "
@@ -935,432 +982,468 @@ msgid ""
 "Documents) will be available in the OVD session"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:476
+#: ../../AdminConsole/classes/Preferences_admin.class.php:486
 msgid "RDP color depth"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:477
+#: ../../AdminConsole/classes/Preferences_admin.class.php:487
 msgid ""
 "Enhance user experience: graphic effects and optimizations (It decreases "
 "performances if used in a Wide Area Network)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:478
+#: ../../AdminConsole/classes/Preferences_admin.class.php:488
 msgid ""
 "Choose Advanced Settings options you want to make available to users before "
 "they launch a session."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:480
+#: ../../AdminConsole/classes/Preferences_admin.class.php:490
 msgid ""
 "Display the list of users from the corporate directory in the login box. If "
 "the list is not displayed, the user must provide his login name."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:481
+#: ../../AdminConsole/classes/Preferences_admin.class.php:491
 msgid ""
 "Authorize non authenticated requests to get information about users "
 "authorized applications or get applications icons."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:483
+#: ../../AdminConsole/classes/Preferences_admin.class.php:493
 msgid "Choose the modules you want to enable."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:485
+#: ../../AdminConsole/classes/Preferences_admin.class.php:495
 msgid "Use child groups (works with AD up to 2008r2)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:487
+#: ../../AdminConsole/classes/Preferences_admin.class.php:497
 #, php-format
 msgid "Filter (example: %s)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:490
+#: ../../AdminConsole/classes/Preferences_admin.class.php:500
 msgid ""
 "The user login that must be used to access the database (to list users "
 "groups)."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:491
+#: ../../AdminConsole/classes/Preferences_admin.class.php:501
 msgid ""
 "The user password that must be used to access the database (to list users "
 "groups)."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:493
-msgid "The name of the database table which contains the users groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:495
-msgid "The address of your LDAP server."
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:496
-msgid "The port number used by your LDAP server."
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:499
-msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:501
-msgid "The address of your Active Directory server."
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:502
-msgid "Domain name used by Active Directory"
+#: ../../AdminConsole/classes/Preferences_admin.class.php:503
+msgid "The name of the database table which contains the User Groups"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:505
+msgid "The address of your LDAP server."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:506
+#: ../../AdminConsole/classes/Preferences_admin.class.php:516
+msgid "The port number used by your LDAP server."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:507
+#: ../../AdminConsole/classes/Preferences_admin.class.php:517
+msgid "Use SSL (ldaps://)"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:510
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:512
+msgid "The address of your Active Directory server."
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:513
+msgid "Domain name used by Active Directory"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:518
 msgid ""
 "Authorize a user connection even if the password has expired, to have the "
 "Windows server perform the password renew process"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:507
+#: ../../AdminConsole/classes/Preferences_admin.class.php:520
 msgid ""
-"If a token argument is sent to startsession, the system tries to get an user "
-"login by requesting the token validation url.<br /><br />Put here the url to "
-"request if a token argument is sent to <i>startsession</i> instead of login/"
-"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
-"because it's replaced by the token argument when the URL is requested."
+"If a token argument is sent to <i>startsession</i>, the system performs a "
+"user login by requesting the token validation URL.<br /><br />Enter the URL "
+"to request if a token argument is sent to <i>startsession</i> instead of "
+"login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it will be replaced by the token argument when the URL is requested."
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:508
+#: ../../AdminConsole/classes/Preferences_admin.class.php:521
 msgid "The id of the XML node that contains the user login"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:509
+#: ../../AdminConsole/classes/Preferences_admin.class.php:522
 msgid ""
-"The name of the XML attribute which contains the user login (in the "
+"The name of the XML attribute that contains the user login (in the "
 "previously defined XML node)"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:513
+#: ../../AdminConsole/classes/Preferences_admin.class.php:523
+msgid ""
+"Token list: the first column is supposed to be the token. the second is the "
+"user login associated with this token"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:527
 #: ../../AdminConsole/web/applications_static.php:243
 msgid "None"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:514
-#: ../../AdminConsole/classes/Preferences_admin.class.php:611
+#: ../../AdminConsole/classes/Preferences_admin.class.php:528
+#: ../../AdminConsole/classes/Preferences_admin.class.php:629
 msgid "no"
 msgstr ""
 
 #. todo change to false instead of 0
-#: ../../AdminConsole/classes/Preferences_admin.class.php:515
+#: ../../AdminConsole/classes/Preferences_admin.class.php:529
 msgid "yes"
 msgstr ""
 
 #. todo change to true instead of 1
-#: ../../AdminConsole/classes/Preferences_admin.class.php:517
+#: ../../AdminConsole/classes/Preferences_admin.class.php:531
 msgid "Autodetect"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:543
+#: ../../AdminConsole/classes/Preferences_admin.class.php:557
 msgid "debug"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:544
+#: ../../AdminConsole/classes/Preferences_admin.class.php:558
 msgid "info"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:545
+#: ../../AdminConsole/classes/Preferences_admin.class.php:559
 msgid "warning"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:546
+#: ../../AdminConsole/classes/Preferences_admin.class.php:560
 msgid "error"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:547
+#: ../../AdminConsole/classes/Preferences_admin.class.php:561
 msgid "critical"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:549
+#: ../../AdminConsole/classes/Preferences_admin.class.php:563
 msgid "30 seconds"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:550
+#: ../../AdminConsole/classes/Preferences_admin.class.php:564
 msgid "1 minute"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:551
+#: ../../AdminConsole/classes/Preferences_admin.class.php:565
 msgid "2 minutes"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:552
+#: ../../AdminConsole/classes/Preferences_admin.class.php:566
 msgid "5 minutes"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:553
+#: ../../AdminConsole/classes/Preferences_admin.class.php:567
 msgid "10 minutes"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:554
+#: ../../AdminConsole/classes/Preferences_admin.class.php:568
 msgid "15 minutes"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:555
+#: ../../AdminConsole/classes/Preferences_admin.class.php:569
 msgid "30 minutes"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:556
+#: ../../AdminConsole/classes/Preferences_admin.class.php:570
 #: ../../AdminConsole/web/usersgroup.php:32
 msgid "1 hour"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:557
+#: ../../AdminConsole/classes/Preferences_admin.class.php:571
 msgid "2 hours"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:558
+#: ../../AdminConsole/classes/Preferences_admin.class.php:572
 msgid "5 hours"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:559
+#: ../../AdminConsole/classes/Preferences_admin.class.php:573
 msgid "12 hours"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:560
-msgid "A day"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:561
-msgid "2 days"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:562
-msgid "A week"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:563
-msgid "A month"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:564
-#: ../../AdminConsole/classes/Preferences_admin.class.php:565
-msgid "A year"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:571
-msgid "use Admin panel"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:572
-msgid "view Servers"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:573
-msgid "manage Servers"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:574
-msgid "view Shared folders"
+#: ../../AdminConsole/web/usersgroup.php:33
+msgid "1 day"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:575
-msgid "manage Shared folders"
+msgid "2 days"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:576
-msgid "view Users"
+#: ../../AdminConsole/web/usersgroup.php:34
+msgid "1 week"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:577
-msgid "manage Users"
+msgid "1 month"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:578
-msgid "view Usergroups"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:579
-msgid "manage Usergroups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:580
-msgid "view Applications"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:581
-msgid "manage Applications"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:582
-msgid "view Application groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:583
-msgid "manage Application groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:584
-msgid "view Publications"
+msgid "1 year"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:585
-msgid "manage Publications"
+msgid "use Admin Console"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:586
-msgid "view Configuration"
+msgid "view Servers"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:587
-msgid "manage Configuration"
+msgid "manage Servers"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:588
-msgid "view Status"
+msgid "view Shared Folders"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:589
-msgid "manage session"
+msgid "manage Shared Folders"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:590
-msgid "manage Reporting"
+msgid "view Users"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:591
-msgid "view Summary"
+msgid "manage Users"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:592
-msgid "view News"
+msgid "view User Groups"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:593
-msgid "manage News"
+msgid "manage User Groups"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:594
+msgid "view Applications"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:595
+msgid "manage Applications"
+msgstr ""
+
 #: ../../AdminConsole/classes/Preferences_admin.class.php:596
-msgid "MySQL"
+msgid "view Application Groups"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:597
+msgid "manage Application Groups"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:598
-msgid "Local"
+msgid "view Publications"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:599
-msgid "SMTP server"
+msgid "manage Publications"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:600
+msgid "view Configuration"
 msgstr ""
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:601
-#: ../../AdminConsole/web/sessions.php:100
+msgid "manage Configuration"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:602
+msgid "view Status"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:603
+msgid "manage Sessions"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:604
+msgid "manage Reporting"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:605
+msgid "view Summary"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:606
+msgid "view News"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:607
+msgid "manage News"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:608
+msgid "manage Scripts"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:609
+msgid "view Scripts"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:610
+msgid "view Script Groups"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:611
+msgid "manage Script Groups"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:613
+#: ../../AdminConsole/classes/Preferences_admin.class.php:614
+msgid "MySQL"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:616
+msgid "Local"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:617
+msgid "SMTP server"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:619
+#: ../../AdminConsole/web/sessions.php:101
 #: ../../AdminConsole/web/summary.php:198
 msgid "Desktop"
 msgstr ""
 
 #. general div
-#: ../../AdminConsole/classes/Preferences_admin.class.php:602
-#: ../../AdminConsole/includes/page_template.php:57
-#: ../../AdminConsole/includes/page_template.php:130
+#: ../../AdminConsole/classes/Preferences_admin.class.php:620
+#: ../../AdminConsole/includes/page_template.php:59
+#: ../../AdminConsole/includes/page_template.php:133
 #: ../../AdminConsole/web/applications.php:59
-#: ../../AdminConsole/web/sessions.php:102
+#: ../../AdminConsole/web/index.php:114
+#: ../../AdminConsole/web/sessions.php:103
 #: ../../AdminConsole/web/summary.php:80
 #: ../../AdminConsole/web/summary.php:216 ../../AdminConsole/web/sumup.php:212
 msgid "Applications"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:604
+#: ../../AdminConsole/classes/Preferences_admin.class.php:622
 msgid "Do nothing"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:605
+#: ../../AdminConsole/classes/Preferences_admin.class.php:623
 #: ../../AdminConsole/web/servers.php:101
 #: ../../AdminConsole/web/servers.php:185
 #: ../../AdminConsole/web/servers.php:338
 msgid "Switch to maintenance"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:607
+#: ../../AdminConsole/classes/Preferences_admin.class.php:625
 msgid "Any"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:608
+#: ../../AdminConsole/classes/Preferences_admin.class.php:626
 msgid "Linux"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:609
+#: ../../AdminConsole/classes/Preferences_admin.class.php:627
 msgid "Windows"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:612
+#: ../../AdminConsole/classes/Preferences_admin.class.php:630
 msgid "partial"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:613
+#: ../../AdminConsole/classes/Preferences_admin.class.php:631
 msgid "full"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:615
+#: ../../AdminConsole/classes/Preferences_admin.class.php:633
 msgid "session mode"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:616
+#: ../../AdminConsole/classes/Preferences_admin.class.php:634
 msgid "language"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:617
+#: ../../AdminConsole/classes/Preferences_admin.class.php:635
 msgid "server"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:618
+#: ../../AdminConsole/classes/Preferences_admin.class.php:636
 msgid "timeout"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:619
+#: ../../AdminConsole/classes/Preferences_admin.class.php:637
 msgid "persistent"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:621
+#: ../../AdminConsole/classes/Preferences_admin.class.php:639
 msgid "Auto authentication"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:622
+#: ../../AdminConsole/classes/Preferences_admin.class.php:640
 msgid "CAS authentication"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:623
+#: ../../AdminConsole/classes/Preferences_admin.class.php:641
 msgid "RemoteUser authentication"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:624
+#: ../../AdminConsole/classes/Preferences_admin.class.php:642
 msgid "Token authentication"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:625
+#: ../../AdminConsole/classes/Preferences_admin.class.php:643
 msgid "Login/Password authentication"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:627
+#: ../../AdminConsole/classes/Preferences_admin.class.php:645
 msgid "Use given login"
 msgstr ""
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:628
+#: ../../AdminConsole/classes/Preferences_admin.class.php:646
+#: ../../AdminConsole/classes/Preferences_admin.class.php:649
 msgid "Auto-generate"
 msgstr ""
 
-#: ../../AdminConsole/classes/Server.class.php:87
+#: ../../AdminConsole/classes/Preferences_admin.class.php:648
+msgid "Use given password"
+msgstr ""
+
+#: ../../AdminConsole/classes/Server.class.php:89
 msgid "Under maintenance"
 msgstr ""
 
-#: ../../AdminConsole/classes/Server.class.php:91
+#: ../../AdminConsole/classes/Server.class.php:93
 msgid "Pending"
 msgstr ""
 
-#: ../../AdminConsole/classes/Server.class.php:93
+#: ../../AdminConsole/classes/Server.class.php:95
 msgid "Online"
 msgstr ""
 
-#: ../../AdminConsole/classes/Server.class.php:95
+#: ../../AdminConsole/classes/Server.class.php:97
 msgid "Offline"
 msgstr ""
 
-#: ../../AdminConsole/classes/Server.class.php:97
+#: ../../AdminConsole/classes/Server.class.php:99
 msgid "Broken"
 msgstr ""
 
@@ -1369,7 +1452,7 @@ msgstr ""
 #: ../../AdminConsole/web/applications.php:393
 #: ../../AdminConsole/web/configuration-profile.php:176
 #: ../../AdminConsole/web/error.php:35 ../../AdminConsole/web/error.php:37
-#: ../../AdminConsole/web/tasks.php:86 ../../AdminConsole/web/tasks.php:181
+#: ../../AdminConsole/web/tasks.php:87 ../../AdminConsole/web/tasks.php:182
 msgid "Error"
 msgstr ""
 
@@ -1409,26 +1492,26 @@ msgstr ""
 msgid "Destroyed"
 msgstr ""
 
-#: ../../AdminConsole/classes/SessionManager.class.php:70
+#: ../../AdminConsole/classes/SessionManager.class.php:71
 msgid "Communication error with Session Manager"
 msgstr ""
 
-#: ../../AdminConsole/classes/SessionManager.class.php:71
+#: ../../AdminConsole/classes/SessionManager.class.php:72
 msgid "Soap exception: "
 msgstr ""
 
-#: ../../AdminConsole/classes/SessionManager.class.php:80
+#: ../../AdminConsole/classes/SessionManager.class.php:81
 #: ../../AdminConsole/includes/functions.inc.php:329
 msgid "You are not allowed to perform this action"
 msgstr ""
 
 #: ../../AdminConsole/classes/UsersGroupsList.class.php:96
-msgid "Search for users groups pattern: "
+msgid "Search for User Group pattern: "
 msgstr ""
 
 #: ../../AdminConsole/classes/UsersGroupsList.class.php:98
 #: ../../AdminConsole/classes/UsersList.class.php:99
-#: ../../AdminConsole/web/session-reporting.php:149
+#: ../../AdminConsole/web/session-reporting.php:153
 msgid "Search"
 msgstr ""
 
@@ -1457,12 +1540,12 @@ msgstr ""
 #: ../../AdminConsole/web/appsgroup.php:120
 #: ../../AdminConsole/web/mimetypes.php:56
 #: ../../AdminConsole/web/mimetypes.php:102
-#: ../../AdminConsole/web/servers.php:81
+#: ../../AdminConsole/web/script.php:60 ../../AdminConsole/web/servers.php:81
 #: ../../AdminConsole/web/sharedfolders.php:146
 #: ../../AdminConsole/web/summary.php:86
 #: ../../AdminConsole/web/usersgroup.php:94
 #: ../../AdminConsole/web/usersgroup.php:204
-#: ../../AdminConsole/web/usersgroup.php:827
+#: ../../AdminConsole/web/usersgroup.php:881
 #: ../../AdminConsole/web/users.php:440 ../../AdminConsole/web/wizard.php:279
 #: ../../AdminConsole/web/wizard.php:428
 msgid "Name"
@@ -1484,14 +1567,14 @@ msgstr ""
 #: ../../AdminConsole/web/appsgroup.php:217
 #: ../../AdminConsole/web/usersgroup.php:95
 #: ../../AdminConsole/web/usersgroup.php:209
-#: ../../AdminConsole/web/usersgroup.php:426
+#: ../../AdminConsole/web/usersgroup.php:438
 #: ../../AdminConsole/web/wizard.php:284 ../../AdminConsole/web/wizard.php:433
 msgid "Description"
 msgstr ""
 
 #: ../../AdminConsole/classes/UsersGroupsList.class.php:117
 #: ../../AdminConsole/classes/UsersList.class.php:118
-#: ../../AdminConsole/web/session-reporting.php:160
+#: ../../AdminConsole/web/session-reporting.php:164
 #, php-format
 msgid ""
 "<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
@@ -1539,7 +1622,7 @@ msgstr ""
 
 #: ../../AdminConsole/includes/core.inc.php:93
 #: ../../AdminConsole/web/index.php:138
-msgid "The system is on maintenance mode"
+msgid "The system is in maintenance mode"
 msgstr ""
 
 #: ../../AdminConsole/includes/functions.inc.php:175
@@ -1549,23 +1632,24 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:38
+#: ../../AdminConsole/includes/page_template.php:40
 #: ../../AdminConsole/web/index.php:44
 msgid "Index"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:45
-#: ../../AdminConsole/includes/page_template.php:76
+#: ../../AdminConsole/includes/page_template.php:47
+#: ../../AdminConsole/includes/page_template.php:78
 #: ../../AdminConsole/web/applications_webapp.php:347
-#: ../../AdminConsole/web/index.php:68 ../../AdminConsole/web/servers.php:70
-#: ../../AdminConsole/web/session-reporting.php:455
-#: ../../AdminConsole/web/sessions.php:210 ../../AdminConsole/web/tasks.php:75
+#: ../../AdminConsole/web/index.php:68 ../../AdminConsole/web/index.php:73
+#: ../../AdminConsole/web/servers.php:70
+#: ../../AdminConsole/web/session-reporting.php:461
+#: ../../AdminConsole/web/sessions.php:219 ../../AdminConsole/web/tasks.php:76
 msgid "Servers"
 msgstr ""
 
 #. reset
-#: ../../AdminConsole/includes/page_template.php:63
-#: ../../AdminConsole/includes/page_template.php:321
+#: ../../AdminConsole/includes/page_template.php:65
+#: ../../AdminConsole/includes/page_template.php:324
 #: ../../AdminConsole/web/applications_webapp.php:307
 #: ../../AdminConsole/web/applications_webapp.php:407
 #: ../../AdminConsole/web/checkup.php:120
@@ -1576,196 +1660,202 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:69
+#: ../../AdminConsole/includes/page_template.php:71
 #: ../../AdminConsole/includes/template_server.inc.php:414
 #: ../../AdminConsole/includes/template_server.inc.php:544
 #: ../../AdminConsole/includes/template_server.inc.php:626
 #: ../../AdminConsole/web/applications.php:385
 #: ../../AdminConsole/web/appsgroup.php:60
 #: ../../AdminConsole/web/appsgroup.php:218
-#: ../../AdminConsole/web/index.php:159
-#: ../../AdminConsole/web/licensing.php:53
-#: ../../AdminConsole/web/servers.php:84
+#: ../../AdminConsole/web/certificate.php:53
+#: ../../AdminConsole/web/certificate.php:157
+#: ../../AdminConsole/web/index.php:159 ../../AdminConsole/web/servers.php:84
 #: ../../AdminConsole/web/servers.php:379
-#: ../../AdminConsole/web/sessions.php:212
-#: ../../AdminConsole/web/sessions.php:280
-#: ../../AdminConsole/web/sumup.php:213 ../../AdminConsole/web/tasks.php:76
-#: ../../AdminConsole/web/tasks.php:161
+#: ../../AdminConsole/web/sessions.php:221
+#: ../../AdminConsole/web/sessions.php:313
+#: ../../AdminConsole/web/sumup.php:213 ../../AdminConsole/web/tasks.php:77
+#: ../../AdminConsole/web/tasks.php:162
 #: ../../AdminConsole/web/usersgroup.php:96
-#: ../../AdminConsole/web/usersgroup.php:427
+#: ../../AdminConsole/web/usersgroup.php:439
 msgid "Status"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:82
-#: ../../AdminConsole/web/servers.php:215
-msgid "Unregistered servers"
+#: ../../AdminConsole/includes/page_template.php:84
+#: ../../AdminConsole/web/index.php:74 ../../AdminConsole/web/servers.php:215
+msgid "Unregistered Servers"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:88
-#: ../../AdminConsole/web/tasks.php:148
-msgid "Tasks"
-msgstr ""
-
-#: ../../AdminConsole/includes/page_template.php:97
+#: ../../AdminConsole/includes/page_template.php:93
 #: ../../AdminConsole/web/sharedfolders.php:47
-#: ../../AdminConsole/web/usersgroup.php:773
-msgid "Shared folders"
+#: ../../AdminConsole/web/usersgroup.php:827
+msgid "Shared Folders"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:107
+#: ../../AdminConsole/includes/page_template.php:101
+msgid "Login Scripts"
+msgstr ""
+
+#: ../../AdminConsole/includes/page_template.php:110
 #: ../../AdminConsole/web/profiles.php:51
 msgid "Profiles"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:123
-msgid "Users Groups"
-msgstr ""
-
 #. general div
-#: ../../AdminConsole/includes/page_template.php:135
+#: ../../AdminConsole/includes/page_template.php:138
 #: ../../AdminConsole/web/applications_webapp.php:59
-msgid "Web applications"
+#: ../../AdminConsole/web/index.php:115
+msgid "Web Applications"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:143
-msgid "Applications Groups"
+#: ../../AdminConsole/includes/page_template.php:146
+#: ../../AdminConsole/web/index.php:117
+msgid "Application Groups"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:150
+#: ../../AdminConsole/includes/page_template.php:153
 #: ../../AdminConsole/web/applications.php:451
 #: ../../AdminConsole/web/applications_static.php:533
 #: ../../AdminConsole/web/mimetypes.php:47
 msgid "Mime-Types"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:155
-msgid "Static applications"
+#. general div
+#: ../../AdminConsole/includes/page_template.php:158
+#: ../../AdminConsole/web/applications_static.php:63
+msgid "Static Applications"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:163
+#: ../../AdminConsole/includes/page_template.php:166
+#: ../../AdminConsole/web/index.php:119
 #: ../../AdminConsole/web/publications.php:104
 #: ../../AdminConsole/web/sharedfolders.php:167
 msgid "Publications"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:170
-#: ../../AdminConsole/web/index.php:120
-msgid "Publication wizard"
+#: ../../AdminConsole/includes/page_template.php:173
+#: ../../AdminConsole/web/index.php:120 ../../AdminConsole/web/wizard.php:184
+#: ../../AdminConsole/web/wizard.php:271 ../../AdminConsole/web/wizard.php:330
+#: ../../AdminConsole/web/wizard.php:420 ../../AdminConsole/web/wizard.php:463
+msgid "Publication Wizard"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:177
-msgid "Sum up"
+#: ../../AdminConsole/includes/page_template.php:180
+#: ../../AdminConsole/includes/page_template.php:289
+msgid "Summary"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:183
-msgid "Database settings"
+#: ../../AdminConsole/includes/page_template.php:186
+msgid "Database Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:189
-msgid "System settings"
+#: ../../AdminConsole/includes/page_template.php:192
+msgid "System Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:195
-msgid "Server settings"
+#: ../../AdminConsole/includes/page_template.php:198
+msgid "Server Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:201
-msgid "Domain integration settings"
+#: ../../AdminConsole/includes/page_template.php:204
+msgid "Domain Integration Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:207
-msgid "Authentication settings"
+#: ../../AdminConsole/includes/page_template.php:210
+msgid "Authentication Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:213
-msgid "Session settings"
+#: ../../AdminConsole/includes/page_template.php:216
+msgid "Session Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:219
-msgid "Events settings"
+#: ../../AdminConsole/includes/page_template.php:222
+msgid "Event Settings"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:231
+#: ../../AdminConsole/includes/page_template.php:234
 #: ../../AdminConsole/web/password.php:37
-msgid "Change Administrator password"
+msgid "Change Administrator Password"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:238
-#: ../../AdminConsole/web/licensing.php:47
-msgid "Licensing"
+#: ../../AdminConsole/includes/page_template.php:241
+#: ../../AdminConsole/web/certificate.php:47
+#: ../../AdminConsole/web/configuration-sumup.php:146
+msgid "Subscription Keys"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:247
+#: ../../AdminConsole/includes/page_template.php:250
 msgid "Sessions"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:253
+#: ../../AdminConsole/includes/page_template.php:256
 #: ../../AdminConsole/web/configuration-sumup.php:81
 #: ../../AdminConsole/web/logs.php:57 ../../AdminConsole/web/logs.php:132
 #: ../../AdminConsole/web/logs.php:136
 msgid "Logs"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:259
-#: ../../AdminConsole/web/reporting.php:293
-#: ../../AdminConsole/web/reporting.php:461
+#: ../../AdminConsole/includes/page_template.php:262
+#: ../../AdminConsole/web/reporting.php:357
+#: ../../AdminConsole/web/reporting.php:529
 msgid "Reporting"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:265
-msgid "Session reporting"
+#: ../../AdminConsole/includes/page_template.php:268
+#: ../../AdminConsole/web/session-reporting.php:114
+msgid "Session Reporting"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:271
+#: ../../AdminConsole/includes/page_template.php:274
 #: ../../AdminConsole/web/action-reporting.php:44
-msgid "Administration actions log"
+msgid "Administration Actions Log"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:279
+#: ../../AdminConsole/includes/page_template.php:282
 #: ../../AdminConsole/web/news.php:59
 msgid "News"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:286
-msgid "Summary"
-msgstr ""
-
-#: ../../AdminConsole/includes/page_template.php:315
+#: ../../AdminConsole/includes/page_template.php:318
 msgid "Debug Tools"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:327
+#: ../../AdminConsole/includes/page_template.php:330
 #: ../../AdminConsole/web/checkup.php:50
 msgid "Checkup"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:334
+#: ../../AdminConsole/includes/page_template.php:336
+#: ../../AdminConsole/web/tasks.php:149
+msgid "Tasks"
+msgstr ""
+
+#: ../../AdminConsole/includes/page_template.php:343
 msgid "Logout"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:341
+#: ../../AdminConsole/includes/page_template.php:350
 #: ../../AdminConsole/includes/page_template_static.php:35
 #: ../../AdminConsole/includes/page_template_static.php:74
 #: ../../AdminConsole/web/login.php:94
 msgid "Administration"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:363
+#: ../../AdminConsole/includes/page_template.php:372
 #, php-format
-msgid "Your %sPremium licence%s will expire in %d days"
+msgid "Your %sPremium Edition Subscription Key%s will expire in %d days"
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:365
+#: ../../AdminConsole/includes/page_template.php:374
 #, php-format
-msgid "Your %sPremium licence%s has expired."
+msgid "Your %sPremium Edition Subscription Key%s has expired."
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:368
+#: ../../AdminConsole/includes/page_template.php:377
 #, php-format
-msgid "You don't have any valid %sPremium licence%s."
+msgid "You don't have any valid %sPremium Edition Subscription Keys%s."
 msgstr ""
 
-#: ../../AdminConsole/includes/page_template.php:496
+#: ../../AdminConsole/includes/page_template.php:507
 #: ../../AdminConsole/includes/page_template_static.php:95
 msgid "powered by"
 msgstr ""
@@ -1813,17 +1903,17 @@ msgid "Application"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:276
-#: ../../AdminConsole/web/tasks.php:225
+#: ../../AdminConsole/web/tasks.php:228
 msgid "Install"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:285
-#: ../../AdminConsole/web/tasks.php:239
+#: ../../AdminConsole/web/tasks.php:242
 msgid "Upgrade"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:290
-#: ../../AdminConsole/web/tasks.php:228
+#: ../../AdminConsole/web/tasks.php:231
 msgid "Upgrade the internal system and applications"
 msgstr ""
 
@@ -1873,7 +1963,7 @@ msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:412
 #: ../../AdminConsole/web/applications.php:383
-#: ../../AdminConsole/web/tasks.php:157
+#: ../../AdminConsole/web/tasks.php:158
 msgid "ID"
 msgstr ""
 
@@ -1886,11 +1976,11 @@ msgstr ""
 #: ../../AdminConsole/web/applications_static.php:78
 #: ../../AdminConsole/web/applications_static.php:334
 #: ../../AdminConsole/web/applications_webapp.php:217
-#: ../../AdminConsole/web/licensing.php:53
-#: ../../AdminConsole/web/servers.php:81
+#: ../../AdminConsole/web/certificate.php:53
+#: ../../AdminConsole/web/script.php:60 ../../AdminConsole/web/servers.php:81
 #: ../../AdminConsole/web/servers.php:225
 #: ../../AdminConsole/web/servers.php:379 ../../AdminConsole/web/sumup.php:210
-#: ../../AdminConsole/web/tasks.php:74 ../../AdminConsole/web/tasks.php:159
+#: ../../AdminConsole/web/tasks.php:75 ../../AdminConsole/web/tasks.php:160
 #: ../../AdminConsole/web/usersgroup.php:97
 msgid "Type"
 msgstr ""
@@ -1898,8 +1988,8 @@ msgstr ""
 #: ../../AdminConsole/includes/template_server.inc.php:415
 #: ../../AdminConsole/web/applications.php:386
 #: ../../AdminConsole/web/servers.php:84
-#: ../../AdminConsole/web/servers.php:380 ../../AdminConsole/web/tasks.php:77
-#: ../../AdminConsole/web/tasks.php:162
+#: ../../AdminConsole/web/servers.php:380 ../../AdminConsole/web/tasks.php:78
+#: ../../AdminConsole/web/tasks.php:163
 msgid "Details"
 msgstr ""
 
@@ -1910,7 +2000,7 @@ msgid "Active sessions (total: %s)"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:450
-#: ../../AdminConsole/web/sessions.php:109
+#: ../../AdminConsole/web/sessions.php:110
 #: ../../AdminConsole/web/users.php:519
 msgid "Not started yet"
 msgstr ""
@@ -1950,10 +2040,10 @@ msgstr ""
 #: ../../AdminConsole/web/servers.php:269
 #: ../../AdminConsole/web/servers.php:298
 #: ../../AdminConsole/web/servers.php:583
-#: ../../AdminConsole/web/session-reporting.php:277
-#: ../../AdminConsole/web/session-reporting.php:298
-#: ../../AdminConsole/web/session-reporting.php:450
-#: ../../AdminConsole/web/tasks.php:103 ../../AdminConsole/web/tasks.php:201
+#: ../../AdminConsole/web/session-reporting.php:281
+#: ../../AdminConsole/web/session-reporting.php:302
+#: ../../AdminConsole/web/session-reporting.php:456
+#: ../../AdminConsole/web/tasks.php:104 ../../AdminConsole/web/tasks.php:202
 #: ../../AdminConsole/web/usersgroup.php:128
 #: ../../AdminConsole/web/usersgroup.php:148
 #: ../../AdminConsole/web/users.php:92 ../../AdminConsole/web/users.php:113
@@ -1969,8 +2059,8 @@ msgstr ""
 #: ../../AdminConsole/web/profiles.php:109
 #: ../../AdminConsole/web/servers.php:173
 #: ../../AdminConsole/web/servers.php:284
-#: ../../AdminConsole/web/session-reporting.php:291
-#: ../../AdminConsole/web/sessions.php:266
+#: ../../AdminConsole/web/session-reporting.php:295
+#: ../../AdminConsole/web/sessions.php:291
 #: ../../AdminConsole/web/usersgroup.php:143
 #: ../../AdminConsole/web/users.php:106 ../../AdminConsole/web/wizard.php:228
 #: ../../AdminConsole/web/wizard.php:247 ../../AdminConsole/web/wizard.php:373
@@ -1987,8 +2077,8 @@ msgstr ""
 #: ../../AdminConsole/web/profiles.php:110
 #: ../../AdminConsole/web/servers.php:174
 #: ../../AdminConsole/web/servers.php:285
-#: ../../AdminConsole/web/session-reporting.php:292
-#: ../../AdminConsole/web/sessions.php:266
+#: ../../AdminConsole/web/session-reporting.php:296
+#: ../../AdminConsole/web/sessions.php:291
 #: ../../AdminConsole/web/usersgroup.php:143
 #: ../../AdminConsole/web/users.php:107 ../../AdminConsole/web/wizard.php:228
 #: ../../AdminConsole/web/wizard.php:247 ../../AdminConsole/web/wizard.php:373
@@ -2001,7 +2091,7 @@ msgid "Are you sure you want to delete these user profiles?"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:617
-msgid "Shared folders on the server"
+msgid "Shared Folders on the server"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:625
@@ -2030,7 +2120,7 @@ msgid "Are you sure you want to delete these orphan folders?"
 msgstr ""
 
 #: ../../AdminConsole/includes/template_server.inc.php:770
-#: ../../AdminConsole/web/usersgroup.php:830
+#: ../../AdminConsole/web/usersgroup.php:884
 #: ../../AdminConsole/web/users.php:443
 msgid "Action"
 msgstr ""
@@ -2127,7 +2217,8 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:423
 #: ../../AdminConsole/web/actions.php:678
 #: ../../AdminConsole/web/actions.php:930
-msgid "Oversized file for server rules"
+#: ../../AdminConsole/web/actions.php:1584
+msgid "File too large to be used for server rules"
 msgstr ""
 
 #. UPLOAD_ERR_PARTIAL
@@ -2136,7 +2227,8 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:427
 #: ../../AdminConsole/web/actions.php:682
 #: ../../AdminConsole/web/actions.php:933
-msgid "The file was corrupted while upload"
+#: ../../AdminConsole/web/actions.php:1588
+msgid "The file was corrupted during the upload"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:223
@@ -2144,6 +2236,7 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:443
 #: ../../AdminConsole/web/actions.php:694
 #: ../../AdminConsole/web/actions.php:945
+#: ../../AdminConsole/web/actions.php:1600
 msgid "The file is not readable"
 msgstr ""
 
@@ -2161,15 +2254,15 @@ msgid "Icon for application '%s' has been successfully uploaded"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:242
-#: ../../AdminConsole/web/actions.php:1634
-#: ../../AdminConsole/web/actions.php:1651
-#: ../../AdminConsole/web/actions.php:1678
-#: ../../AdminConsole/web/actions.php:1692
-#: ../../AdminConsole/web/actions.php:1714
-#: ../../AdminConsole/web/actions.php:1748
-#: ../../AdminConsole/web/actions.php:1776
-#: ../../AdminConsole/web/actions.php:1829
-#: ../../AdminConsole/web/actions.php:1860
+#: ../../AdminConsole/web/actions.php:1727
+#: ../../AdminConsole/web/actions.php:1744
+#: ../../AdminConsole/web/actions.php:1771
+#: ../../AdminConsole/web/actions.php:1785
+#: ../../AdminConsole/web/actions.php:1807
+#: ../../AdminConsole/web/actions.php:1841
+#: ../../AdminConsole/web/actions.php:1869
+#: ../../AdminConsole/web/actions.php:1922
+#: ../../AdminConsole/web/actions.php:1953
 #, php-format
 msgid "Unknown server '%s'"
 msgstr ""
@@ -2212,11 +2305,11 @@ msgid "Failed to modify application '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:413
-msgid "Empty name"
+msgid "The Web Application name was not specified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:437
-msgid "No configuration file"
+msgid "No configuration file was specified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:450
@@ -2226,8 +2319,8 @@ msgstr ""
 
 #: ../../AdminConsole/web/actions.php:455
 msgid ""
-"Configuration file has more than one main level key, using first, rest will "
-"be ignored"
+"Configuration file has more than one main level key. The first main level "
+"key will be used"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:459
@@ -2250,12 +2343,12 @@ msgid "Incorrect configuration file format - missing "
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:491
-msgid "Unable to add web application"
+msgid "Unable to add Web Application"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:526
 #, php-format
-msgid "Web application '%s' has been successfully uploaded"
+msgid "Web Application '%s' has been successfully uploaded"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:584
@@ -2269,7 +2362,7 @@ msgid "Parameter '%s' is not a valid IP address"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:599
-msgid "Unable to update web application configuration"
+msgid "Unable to update Web Application configuration"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:737
@@ -2283,12 +2376,12 @@ msgstr ""
 
 #: ../../AdminConsole/web/actions.php:756
 #, php-format
-msgid "Failed to clone web application '%s'"
+msgid "Failed to clone Web Application '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:759
 #, php-format
-msgid "Web application '%s' successfully added"
+msgid "Web Application '%s' successfully added"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:773
@@ -2297,64 +2390,61 @@ msgid "Failed to get application's configuration '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:819
+#: ../../AdminConsole/web/actions.php:1632
 #, php-format
 msgid "Unable to import group \"%s\""
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:826
 #: ../../AdminConsole/web/actions.php:833
+#: ../../AdminConsole/web/actions.php:908
 #, php-format
-msgid "ApplicationGroup '%s' successfully modified"
+msgid "Application Group '%s' successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:849
 #, php-format
-msgid "Unable to create applications group '%s'"
+msgid "Unable to create Application Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:853
 #, php-format
-msgid "Applications group '%s' successfully added"
+msgid "Application Group '%s' successfully added"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:864
 #: ../../AdminConsole/web/actions.php:1030
 #, php-format
-msgid "Importing applications group '%s' failed"
+msgid "Importing Application Group '%s' failed"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:870
 #, php-format
-msgid "Unable to remove applications group '%s'"
+msgid "Unable to remove Application Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:873
 #, php-format
-msgid "Applications group '%s' successfully deleted"
+msgid "Application Group '%s' successfully deleted"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:884
 #, php-format
-msgid "Import of applications group '%s' failed"
+msgid "Import of Application Group '%s' failed"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:906
 #, php-format
-msgid "Unable to modify applications group '%s'"
-msgstr ""
-
-#: ../../AdminConsole/web/actions.php:908
-#, php-format
-msgid "Applications group '%s' successfully modified"
+msgid "Unable to modify Application Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:922
-msgid "No license uploaded"
+msgid "No Subscription Keys were uploaded"
 msgstr ""
 
 #. UPLOAD_ERR_NO_FILE
 #: ../../AdminConsole/web/actions.php:936
-msgid "No file uploaded"
+msgid "No files were uploaded"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:951
@@ -2362,37 +2452,39 @@ msgid "The file is empty"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:957
-msgid "Uploaded file is not a valid license"
+msgid "The uploaded file is not a valid Subscription Key"
 msgstr ""
 
 #. problem, what to do ?
 #: ../../AdminConsole/web/actions.php:986
 #: ../../AdminConsole/web/actions.php:990
 #: ../../AdminConsole/web/actions.php:1008
+#: ../../AdminConsole/web/actions.php:1160
+#: ../../AdminConsole/web/actions.php:1185
 #: ../../AdminConsole/web/actions.php:1241
 #, php-format
-msgid "UsersGroup '%s' successfully modified"
+msgid "User Group '%s' successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:998
 #, php-format
-msgid "Usergroup '%s' does not exist"
+msgid "User Group '%s' does not exist"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1003
 #, php-format
 msgid ""
-"Unable to remove a user from usergroup '%s' because it is the default "
-"usergroup"
+"Unable to remove a user from User Group '%s' because it is the default User "
+"Group"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1024
 #, php-format
-msgid "Importing usergroup '%s' failed"
+msgid "Importing User Group '%s' failed"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1036
-msgid "Unable to save the publication"
+msgid "Unable to save the Publication"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1040
@@ -2400,7 +2492,7 @@ msgid "Publication successfully added"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1046
-msgid "Unable to delete the publication"
+msgid "Unable to delete the Publication"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1050
@@ -2408,21 +2500,21 @@ msgid "Publication successfully deleted"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1061
-msgid "You must define a name for your usergroup"
+msgid "You must define a name for your User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1077
 #: ../../AdminConsole/web/actions.php:1088
 #, php-format
-msgid "Unable to create usergroup '%s'"
+msgid "Unable to create User Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1084
-msgid "Unknow usergroup type"
+msgid "Unknown User Group type"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1092
-msgid "UserGroup successfully added"
+msgid "User Group successfully added"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1102
@@ -2430,30 +2522,24 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:1196
 #: ../../AdminConsole/web/actions.php:1232
 #, php-format
-msgid "Failed to import Usergroup '%s'"
+msgid "Failed to import User Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1108
 #, php-format
-msgid "Unable to remove usergroup '%s'"
+msgid "Unable to remove User Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1111
 #, php-format
-msgid "UserGroup '%s' successfully deleted"
+msgid "User Group '%s' successfully deleted"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1147
 #: ../../AdminConsole/web/actions.php:1155
 #: ../../AdminConsole/web/actions.php:1202
 #, php-format
-msgid "Unable to update Usergroup '%s'"
-msgstr ""
-
-#: ../../AdminConsole/web/actions.php:1160
-#: ../../AdminConsole/web/actions.php:1185
-#, php-format
-msgid "UserGroup '%s' successfully modified"
+msgid "Unable to update User Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1167
@@ -2471,11 +2557,11 @@ msgid "Rules of '%s' successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1279
-msgid "Usergroup successfully modified"
+msgid "User Group successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1282
-msgid "Failed to modify usergroup"
+msgid "Failed to modify User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1295
@@ -2508,7 +2594,7 @@ msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1345
 #, php-format
-msgid "Unable to modify user '%s'"
+msgid "Unable to modify User '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1347
@@ -2517,7 +2603,7 @@ msgid "User '%s' successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1355
-msgid "No custom password given for populating the database."
+msgid "No custom password specified for populating the database."
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1366
@@ -2533,7 +2619,7 @@ msgid "User successfully modified"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1412
-msgid "Failed to modify user"
+msgid "Failed to modify User"
 msgstr ""
 
 #: ../../AdminConsole/web/actions.php:1446
@@ -2589,152 +2675,180 @@ msgstr ""
 msgid "News successfully deleted"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1579
+#: ../../AdminConsole/web/actions.php:1611
+msgid "Script successfully added"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1618
+msgid "Unable to delete this script"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1620
+msgid "Script successfully deleted"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1638
+#: ../../AdminConsole/web/actions.php:1645
+#, php-format
+msgid "UserGroup '%s' successfully modified"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1653
 msgid "Password is empty"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1582
+#: ../../AdminConsole/web/actions.php:1656
 msgid "Passwords are not identical"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1585
+#: ../../AdminConsole/web/actions.php:1659
 msgid "Current password is not correct"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1591
+#: ../../AdminConsole/web/actions.php:1665
 msgid "Password successfully changed"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1595
+#: ../../AdminConsole/web/actions.php:1669
 msgid "Password not changed"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1613
+#: ../../AdminConsole/web/actions.php:1687
 #, php-format
 msgid "Unable to delete session '%s'"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1617
+#: ../../AdminConsole/web/actions.php:1691
 #, php-format
 msgid "Session '%s' successfully deleted"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1639
+#: ../../AdminConsole/web/actions.php:1706
+#, php-format
+msgid "Unable to disconnect session '%s'"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1710
+#, php-format
+msgid "Session '%s' successfully disconnected"
+msgstr ""
+
+#: ../../AdminConsole/web/actions.php:1732
 #, php-format
 msgid "Server '%s' successfully deleted"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1657
+#: ../../AdminConsole/web/actions.php:1750
 #, php-format
 msgid "Server '%s' successfully registered"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1661
+#: ../../AdminConsole/web/actions.php:1754
 #, php-format
-msgid "Failed to register Server '%s'"
+msgid "Failed to register server '%s'"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1697
-#: ../../AdminConsole/web/actions.php:1734
-#: ../../AdminConsole/web/actions.php:1753
-#: ../../AdminConsole/web/actions.php:1787
-#: ../../AdminConsole/web/actions.php:1843
-#: ../../AdminConsole/web/actions.php:1882
+#: ../../AdminConsole/web/actions.php:1790
+#: ../../AdminConsole/web/actions.php:1827
+#: ../../AdminConsole/web/actions.php:1846
+#: ../../AdminConsole/web/actions.php:1880
+#: ../../AdminConsole/web/actions.php:1936
+#: ../../AdminConsole/web/actions.php:1975
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1723
+#: ../../AdminConsole/web/actions.php:1816
 msgid "Nothing to save. New display name is identicall to old one"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1742
+#: ../../AdminConsole/web/actions.php:1835
 #, php-format
 msgid "Internal name \"%s\" is invalid"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1767
+#: ../../AdminConsole/web/actions.php:1860
 #, php-format
 msgid "Redirection name \"%s\" is invalid"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1795
-#: ../../AdminConsole/web/actions.php:1934
+#: ../../AdminConsole/web/actions.php:1888
+#: ../../AdminConsole/web/actions.php:2027
 msgid "Task successfully added"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1805
+#: ../../AdminConsole/web/actions.php:1898
 #, php-format
 msgid "Server '%s' is upgrading"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1823
+#: ../../AdminConsole/web/actions.php:1916
 #, php-format
 msgid "RDP port \"%s\" is invalid"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1834
+#: ../../AdminConsole/web/actions.php:1927
 msgid "Nothing to save. RDP port is identicall to old one"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1865
+#: ../../AdminConsole/web/actions.php:1958
 #, php-format
 msgid "%s is not an available role"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1869
+#: ../../AdminConsole/web/actions.php:1962
 #, php-format
 msgid "Nothing to save. Role %s is already disabled"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1873
+#: ../../AdminConsole/web/actions.php:1966
 #, php-format
 msgid "Nothing to save. Role %s is already enabled"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1907
+#: ../../AdminConsole/web/actions.php:2000
 #, php-format
 msgid "Unable to delete archived session '%s'"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1911
+#: ../../AdminConsole/web/actions.php:2004
 #, php-format
 msgid "Archived session '%s' successfully deleted"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1952
+#: ../../AdminConsole/web/actions.php:2045
 msgid "Task successfully deleted"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1963
+#: ../../AdminConsole/web/actions.php:2056
 msgid "You must provide a name to your shared folder"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1974
+#: ../../AdminConsole/web/actions.php:2067
 msgid "Unable to add shared folder"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1978
+#: ../../AdminConsole/web/actions.php:2071
 #, php-format
 msgid "Shared folder '%s' successfully added"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1985
+#: ../../AdminConsole/web/actions.php:2078
 msgid "Unable to create this shared folder access"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1991
-#: ../../AdminConsole/web/actions.php:2009
+#: ../../AdminConsole/web/actions.php:2084
+#: ../../AdminConsole/web/actions.php:2102
 msgid "Shared folder successfully modified"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:1995
-#: ../../AdminConsole/web/actions.php:2013
+#: ../../AdminConsole/web/actions.php:2088
+#: ../../AdminConsole/web/actions.php:2106
 #, php-format
 msgid "Unable to modify shared folder named '%s'"
 msgstr ""
 
-#: ../../AdminConsole/web/actions.php:2003
+#: ../../AdminConsole/web/actions.php:2096
 msgid "Unable to delete this shared folder access"
 msgstr ""
 
@@ -2742,7 +2856,7 @@ msgstr ""
 #: ../../AdminConsole/web/applications_static.php:67
 #: ../../AdminConsole/web/applications_webapp.php:64
 #: ../../AdminConsole/web/wizard.php:176 ../../AdminConsole/web/wizard.php:326
-msgid "No available application"
+msgid "No available applications"
 msgstr ""
 
 #: ../../AdminConsole/web/applications.php:141
@@ -2798,7 +2912,7 @@ msgid "Set custom icon"
 msgstr ""
 
 #: ../../AdminConsole/web/applications.php:282
-msgid "Clone to static application"
+msgid "Clone to Static Application"
 msgstr ""
 
 #: ../../AdminConsole/web/applications.php:291
@@ -2838,7 +2952,9 @@ msgstr ""
 #: ../../AdminConsole/web/applications_static.php:508
 #: ../../AdminConsole/web/applications_webapp.php:372
 #: ../../AdminConsole/web/appsgroup.php:285
-#: ../../AdminConsole/web/usersgroup.php:632
+#: ../../AdminConsole/web/script.php:214
+#: ../../AdminConsole/web/usersgroup.php:644
+#: ../../AdminConsole/web/usersgroup.php:730
 #: ../../AdminConsole/web/users.php:386
 msgid "Delete from this group"
 msgstr ""
@@ -2847,7 +2963,8 @@ msgstr ""
 #: ../../AdminConsole/web/applications_static.php:523
 #: ../../AdminConsole/web/applications_webapp.php:387
 #: ../../AdminConsole/web/appsgroup.php:302
-#: ../../AdminConsole/web/usersgroup.php:649
+#: ../../AdminConsole/web/script.php:229
+#: ../../AdminConsole/web/usersgroup.php:661
 #: ../../AdminConsole/web/users.php:401
 msgid "Add to this group"
 msgstr ""
@@ -2877,11 +2994,6 @@ msgstr ""
 msgid "Web"
 msgstr ""
 
-#. general div
-#: ../../AdminConsole/web/applications_static.php:63
-msgid "Static Applications"
-msgstr ""
-
 #: ../../AdminConsole/web/applications_static.php:107
 #: ../../AdminConsole/web/applications_static.php:360
 #: ../../AdminConsole/web/applications_webapp.php:102
@@ -2892,11 +3004,11 @@ msgstr ""
 
 #: ../../AdminConsole/web/applications_static.php:128
 #: ../../AdminConsole/web/applications_webapp.php:124
-msgid "Are you sure you want to delete these static applications?"
+msgid "Are you sure you want to delete these Static Applications?"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_static.php:142
-msgid "Add a static application"
+msgid "Add a Static Application"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_static.php:189
@@ -2923,7 +3035,7 @@ msgid "Add"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_static.php:220
-msgid "Web links configuration"
+msgid "Web Links Configuration"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_static.php:221
@@ -2943,6 +3055,7 @@ msgstr ""
 #: ../../AdminConsole/web/applications_static.php:444
 #: ../../AdminConsole/web/applications_webapp.php:318
 #: ../../AdminConsole/web/news.php:125 ../../AdminConsole/web/news.php:134
+#: ../../AdminConsole/web/script.php:124 ../../AdminConsole/web/script.php:157
 msgid "Modify"
 msgstr ""
 
@@ -2970,12 +3083,12 @@ msgid "Custom Mime-Type: "
 msgstr ""
 
 #: ../../AdminConsole/web/applications_webapp.php:139
-msgid "Add a web application"
+msgid "Add a Web Application"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_webapp.php:277
 #: ../../AdminConsole/web/applications_webapp.php:407
-msgid "Url prefix"
+msgid "URL prefix"
 msgstr ""
 
 #: ../../AdminConsole/web/applications_webapp.php:311
@@ -3000,7 +3113,7 @@ msgstr ""
 #: ../../AdminConsole/web/appsgroup.php:81
 #: ../../AdminConsole/web/appsgroup.php:230
 #: ../../AdminConsole/web/usersgroup.php:126
-#: ../../AdminConsole/web/usersgroup.php:458
+#: ../../AdminConsole/web/usersgroup.php:470
 msgid "Are you sure you want to delete this group?"
 msgstr ""
 
@@ -3024,34 +3137,33 @@ msgid "Enable"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:197
-#: ../../AdminConsole/web/publications.php:55
 #: ../../AdminConsole/web/sharedfolders.php:103
 #: ../../AdminConsole/web/wizard.php:141
-msgid "Failed to get users groups list"
+msgid "Failed to get User Group data"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:214
-msgid "Application groups management"
+msgid "Application Group management"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:439
+#: ../../AdminConsole/web/usersgroup.php:451
 #: ../../AdminConsole/web/users.php:317
 msgid "Settings"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:231
-#: ../../AdminConsole/web/usersgroup.php:459
+#: ../../AdminConsole/web/usersgroup.php:471
 msgid "Delete this group"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:253
-#: ../../AdminConsole/web/usersgroup.php:480
+#: ../../AdminConsole/web/usersgroup.php:492
 msgid "Update the name"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:262
-#: ../../AdminConsole/web/usersgroup.php:489
+#: ../../AdminConsole/web/usersgroup.php:501
 msgid "Update the description"
 msgstr ""
 
@@ -3060,24 +3172,120 @@ msgid "List of applications in this group"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:357
-#: ../../AdminConsole/web/usersgroup.php:662
+#: ../../AdminConsole/web/usersgroup.php:674
 msgid "List of publications for this group"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:367
 #: ../../AdminConsole/web/publications.php:129
-#: ../../AdminConsole/web/usersgroup.php:671
+#: ../../AdminConsole/web/usersgroup.php:683
 msgid "Are you sure you want to delete this publication?"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:372
-#: ../../AdminConsole/web/usersgroup.php:676
+#: ../../AdminConsole/web/usersgroup.php:688
 msgid "Delete this publication"
 msgstr ""
 
 #: ../../AdminConsole/web/appsgroup.php:389
-#: ../../AdminConsole/web/usersgroup.php:693
+#: ../../AdminConsole/web/usersgroup.php:705
 msgid "Add this publication"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:53
+msgid "Organization"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:53
+msgid "Subscription Key Owner"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:53
+msgid "Email"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:53
+msgid "Start Date (UTC)"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:53
+msgid "End Date  (UTC)"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:65
+msgid "Evaluation"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:68
+#: ../../AdminConsole/web/certificate.php:195
+msgid "Connected User Limit"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:71
+#: ../../AdminConsole/web/certificate.php:127
+msgid "Assigned Users"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:76
+msgid "Invalid Subscription Key"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:79
+#: ../../AdminConsole/web/certificate.php:84
+#: ../../AdminConsole/web/certificate.php:163
+msgid "Subscription Key has expired"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:86
+#: ../../AdminConsole/web/certificate.php:165
+#, php-format
+msgid "Only %d days remaining"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:89
+#: ../../AdminConsole/web/certificate.php:168
+#, php-format
+msgid "OK (%d days remaining)"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:94
+msgid "Are you sure you want to delete this Subscription Key?"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:98
+msgid "Delete this Subscription Key"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:109
+msgid "Install a Subscription Key"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:117
+msgid "Install this Subscription Key"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:134
+msgid "Reset assigned users"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:153
+msgid "Subscription Key Summary"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:160
+msgid "No valid Subscription Keys"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:177
+msgid "Valid from"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:186
+msgid "Valid until"
+msgstr ""
+
+#: ../../AdminConsole/web/certificate.php:211
+msgid "Assigned User Limit"
 msgstr ""
 
 #: ../../AdminConsole/web/checkup.php:42
@@ -3093,7 +3301,7 @@ msgid "Cleanup liaisons"
 msgstr ""
 
 #: ../../AdminConsole/web/checkup.php:122
-msgid "Default usergroup"
+msgid "Default User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/checkup.php:137
@@ -3124,7 +3332,7 @@ msgid "Success"
 msgstr ""
 
 #: ../../AdminConsole/web/configuration-sumup.php:50
-msgid "Last save"
+msgid "Last saved"
 msgstr ""
 
 #: ../../AdminConsole/web/configuration-sumup.php:103
@@ -3139,66 +3347,30 @@ msgstr ""
 msgid "FQDN check"
 msgstr ""
 
-#: ../../AdminConsole/web/configuration-sumup.php:146
-msgid "License"
-msgstr ""
-
 #: ../../AdminConsole/web/configuration-sumup.php:152
 #, php-format
-msgid "Your Premium licence will expire in %d days"
+msgid "Your Premium Edition Subscription Key will expire in %d days"
 msgstr ""
 
 #: ../../AdminConsole/web/configuration-sumup.php:154
-msgid "Your Premium licence has expired."
+msgid "Your Premium Edition Subscription Key has expired."
 msgstr ""
 
 #: ../../AdminConsole/web/configuration-sumup.php:156
 #, php-format
-msgid "Your Premium licence is valid for %d days."
+msgid "Your Premium Edition Subscription Key is valid for %d days."
 msgstr ""
 
 #: ../../AdminConsole/web/configuration-sumup.php:159
-msgid "You don't have any valid Premium licence."
+msgid "You don't have any valid Premium Edition Subscription Keys."
 msgstr ""
 
 #: ../../AdminConsole/web/index.php:50
-msgid "Users and Users groups"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:55
-msgid "Users list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:57
-msgid "Users groups list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:73
-msgid "Servers list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:74
-msgid "Unregistered servers list"
+msgid "Users and User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/index.php:109
-msgid "Applications and applications groups"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:114
-msgid "Applications list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:115
-msgid "Web applications list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:117
-msgid "Applications groups list"
-msgstr ""
-
-#: ../../AdminConsole/web/index.php:119
-msgid "Publications list"
+msgid "Applications and Application Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/index.php:132
@@ -3214,7 +3386,7 @@ msgid "Switch the system to production mode"
 msgstr ""
 
 #: ../../AdminConsole/web/index.php:143
-msgid "The system is on production mode"
+msgid "The system is in production mode"
 msgstr ""
 
 #: ../../AdminConsole/web/index.php:146
@@ -3255,103 +3427,6 @@ msgstr ""
 
 #: ../../AdminConsole/web/index.php:229
 msgid "broken server"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:53
-msgid "Organization"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:53
-msgid "License owner"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:53
-msgid "email"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:53
-msgid "Start date (UTC)"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:53
-msgid "End date  (UTC)"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:65
-#: ../../AdminConsole/web/licensing.php:184
-msgid "Connected users limit"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:68
-msgid "Assigned users"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:73
-msgid "Invalid Ulteo license"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:76
-msgid "License expired"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:81
-#: ../../AdminConsole/web/licensing.php:158
-#, php-format
-msgid "Only %d days remaining"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:84
-#: ../../AdminConsole/web/licensing.php:161
-#, php-format
-msgid "OK (%d days remaining)"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:89
-msgid "Are you sure you want to delete this license?"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:93
-msgid "Delete this license"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:104
-msgid "Install a license"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:112
-msgid "Install this license"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:122
-msgid "Assigned users list"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:129
-msgid "Reset assigned users"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:148
-msgid "Licensing summary"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:152
-msgid "State"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:155
-msgid "No valid Ulteo license"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:169
-msgid "License valid from"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:176
-msgid "License valid until"
-msgstr ""
-
-#: ../../AdminConsole/web/licensing.php:200
-msgid "Assigned users limit"
 msgstr ""
 
 #: ../../AdminConsole/web/login.php:36 ../../AdminConsole/web/login.php:50
@@ -3405,10 +3480,11 @@ msgid "No application with this mime-type"
 msgstr ""
 
 #: ../../AdminConsole/web/mimetypes.php:103
+#: ../../AdminConsole/web/script.php:60
 msgid "OS"
 msgstr ""
 
-#: ../../AdminConsole/web/news.php:36
+#: ../../AdminConsole/web/news.php:36 ../../AdminConsole/web/script.php:36
 msgid "News successfully modified"
 msgstr ""
 
@@ -3421,7 +3497,7 @@ msgid "Content"
 msgstr ""
 
 #: ../../AdminConsole/web/news.php:63
-#: ../../AdminConsole/web/session-reporting.php:250
+#: ../../AdminConsole/web/session-reporting.php:254
 msgid "Date"
 msgstr ""
 
@@ -3484,8 +3560,8 @@ msgid "Profile"
 msgstr ""
 
 #: ../../AdminConsole/web/profiles.php:62
-#: ../../AdminConsole/web/session-reporting.php:249
-#: ../../AdminConsole/web/sessions.php:211
+#: ../../AdminConsole/web/session-reporting.php:253
+#: ../../AdminConsole/web/sessions.php:220
 msgid "User"
 msgstr ""
 
@@ -3518,160 +3594,223 @@ msgstr ""
 msgid "Profile: %s"
 msgstr ""
 
+#: ../../AdminConsole/web/publications.php:55
+msgid "Failed to get User Groups list"
+msgstr ""
+
 #: ../../AdminConsole/web/publications.php:109
-msgid "Users group"
+msgid "User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/publications.php:110
-msgid "Applications group"
+msgid "Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/publications.php:117
 #: ../../AdminConsole/web/summary.php:128
-msgid "No publication"
+msgid "No publications"
 msgstr ""
 
 #: ../../AdminConsole/web/publications.php:172
-msgid "Please select an users group"
+msgid "Please select a User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/publications.php:172
-msgid "Please select an applications group"
+msgid "Please select an Application Group"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:107
+#: ../../AdminConsole/web/reporting.php:109
 msgid "Day"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:136
+#: ../../AdminConsole/web/reporting.php:175
 msgid "Hour"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:166
+#: ../../AdminConsole/web/reporting.php:205
 msgid "Minute"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:276
-#: ../../AdminConsole/web/reporting.php:705
-msgid "Error: \"from\" date is after \"to\" date, switching"
+#: ../../AdminConsole/web/reporting.php:335
+msgid "Error: \"from\" date is after \"to\" date, the dates will be reversed"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:283
-msgid "Error: \"to\" field is in the future, switching to current time"
+#: ../../AdminConsole/web/reporting.php:342
+#: ../../AdminConsole/web/reporting.php:780
+msgid "Error: \"to\" field is in the future, the current time will be used"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:291
+#: ../../AdminConsole/web/reporting.php:347
+msgid "Error: \"from\" field is in the future, the current time will be used"
+msgstr ""
+
+#: ../../AdminConsole/web/reporting.php:355
 #, php-format
 msgid "%s is not writable"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:316
-#: ../../AdminConsole/web/reporting.php:390
+#: ../../AdminConsole/web/reporting.php:384
+#: ../../AdminConsole/web/reporting.php:458
 msgid "Number of launched sessions"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:338
-#: ../../AdminConsole/web/session-reporting.php:320
+#: ../../AdminConsole/web/reporting.php:406
+#: ../../AdminConsole/web/session-reporting.php:324
+#: ../../AdminConsole/web/session-reporting.php:662
 msgid "unknown"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:345
+#: ../../AdminConsole/web/reporting.php:413
 msgid "%SERVER% (%TOTAL% session)"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:345
+#: ../../AdminConsole/web/reporting.php:413
 msgid "%SERVER% (%TOTAL% sessions)"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:350
+#: ../../AdminConsole/web/reporting.php:418
 msgid "Session repartition"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:359
-#: ../../AdminConsole/web/reporting.php:403
+#: ../../AdminConsole/web/reporting.php:427
+#: ../../AdminConsole/web/reporting.php:471
 msgid "%STATUS% (%TOTAL% session)"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:359
-#: ../../AdminConsole/web/reporting.php:403
+#: ../../AdminConsole/web/reporting.php:427
+#: ../../AdminConsole/web/reporting.php:471
 msgid "%STATUS% (%TOTAL% sessions)"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:364
-#: ../../AdminConsole/web/reporting.php:408
+#: ../../AdminConsole/web/reporting.php:432
+#: ../../AdminConsole/web/reporting.php:476
 msgid "Session end status"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:432
+#: ../../AdminConsole/web/reporting.php:500
 #: ../../AdminConsole/web/servers.php:396
 msgid "CPU usage"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:453
+#: ../../AdminConsole/web/reporting.php:521
 #: ../../AdminConsole/web/servers.php:398
 msgid "RAM usage"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:520
+#: ../../AdminConsole/web/reporting.php:588
 msgid "to"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:532
+#: ../../AdminConsole/web/reporting.php:600
 msgid "step"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:548
+#: ../../AdminConsole/web/reporting.php:616
 msgid "Refresh"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:556
-#: ../../AdminConsole/web/reporting.php:569
-#: ../../AdminConsole/web/reporting.php:605
-#: ../../AdminConsole/web/reporting.php:626
-#: ../../AdminConsole/web/reporting.php:641
+#: ../../AdminConsole/web/reporting.php:624
+#: ../../AdminConsole/web/reporting.php:637
+#: ../../AdminConsole/web/reporting.php:673
+#: ../../AdminConsole/web/reporting.php:694
+#: ../../AdminConsole/web/reporting.php:709
 msgid "Abscissa: day of the month"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:558
-#: ../../AdminConsole/web/reporting.php:571
-#: ../../AdminConsole/web/reporting.php:607
-#: ../../AdminConsole/web/reporting.php:628
-#: ../../AdminConsole/web/reporting.php:643
+#: ../../AdminConsole/web/reporting.php:626
+#: ../../AdminConsole/web/reporting.php:639
+#: ../../AdminConsole/web/reporting.php:675
+#: ../../AdminConsole/web/reporting.php:696
+#: ../../AdminConsole/web/reporting.php:711
 msgid "Abscissa: hour of the day"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:560
-#: ../../AdminConsole/web/reporting.php:573
-#: ../../AdminConsole/web/reporting.php:609
-#: ../../AdminConsole/web/reporting.php:630
-#: ../../AdminConsole/web/reporting.php:645
+#: ../../AdminConsole/web/reporting.php:628
+#: ../../AdminConsole/web/reporting.php:641
+#: ../../AdminConsole/web/reporting.php:677
+#: ../../AdminConsole/web/reporting.php:698
+#: ../../AdminConsole/web/reporting.php:713
 msgid "Abscissa: minute of the hour"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:562
-#: ../../AdminConsole/web/reporting.php:575
-#: ../../AdminConsole/web/reporting.php:611
+#: ../../AdminConsole/web/reporting.php:630
+#: ../../AdminConsole/web/reporting.php:643
+#: ../../AdminConsole/web/reporting.php:679
 msgid "Ordinate: number of sessions"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:592
+#: ../../AdminConsole/web/reporting.php:660
 msgid "See archived sessions in this time range"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:632
+#: ../../AdminConsole/web/reporting.php:700
 msgid "Ordinate: CPU usage in percent"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:648
+#: ../../AdminConsole/web/reporting.php:716
 msgid "Ordinate: RAM usage in percent"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:679
+#: ../../AdminConsole/web/reporting.php:747
 msgid "Number of active sessions"
 msgstr ""
 
-#: ../../AdminConsole/web/reporting.php:712
-msgid "Error: \"to\" field is in the future, switch to the current time"
+#: ../../AdminConsole/web/reporting.php:773
+msgid ""
+"Error: \"from\" date is after \"to\" date, the current time will be used"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:56
+msgid "Scripts"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:69
+msgid "Are you sure you want to delete this script?"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:73
+msgid "Delete this script"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:83
+msgid "Add Script"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:91 ../../AdminConsole/web/script.php:134
+#: ../../AdminConsole/web/wizard.php:496 ../../AdminConsole/web/wizard.php:538
+msgid "Name:"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:92 ../../AdminConsole/web/script.php:135
+msgid "OS:"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:93 ../../AdminConsole/web/script.php:144
+#: ../../AdminConsole/web/sessions.php:99
+msgid "Type:"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:98
+#: ../../AdminConsole/web/usersgroup.php:746
+msgid "Add this script"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:121
+msgid "Login Script management"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:175 ../../AdminConsole/web/users.php:219
+msgid "Error while requesting User Group data"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:195 ../../AdminConsole/web/users.php:366
+msgid "User Groups with this user"
+msgstr ""
+
+#: ../../AdminConsole/web/script.php:209
+#: ../../AdminConsole/web/usersgroup.php:725
+#: ../../AdminConsole/web/users.php:381
+msgid "Are you sure you want to delete this user from this group?"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:82
@@ -3735,7 +3874,7 @@ msgid "Are you sure you want to delete this server?"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:309
-msgid "No unregistered server"
+msgid "No unregistered servers"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:328
@@ -3752,7 +3891,7 @@ msgid "Monitoring"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:403
-msgid "Sessions usage"
+msgid "Session usage"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:407
@@ -3781,7 +3920,7 @@ msgstr ""
 #: ../../AdminConsole/web/servers.php:455
 msgid ""
 "Are you sure you want to change the internal name of this server? The server "
-"will switch to broken state if the name is not valid!"
+"will switch to a broken state if the name is not valid!"
 msgstr ""
 
 #: ../../AdminConsole/web/servers.php:469
@@ -3823,235 +3962,261 @@ msgstr ""
 msgid "Role: %s"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:110
-msgid "Sessions Reporting"
-msgstr ""
-
-#: ../../AdminConsole/web/session-reporting.php:116
+#: ../../AdminConsole/web/session-reporting.php:120
 msgid "Search for archived sessions :"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:120
+#: ../../AdminConsole/web/session-reporting.php:124
 msgid "By user"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:122
+#: ../../AdminConsole/web/session-reporting.php:126
 msgid "user login"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:127
+#: ../../AdminConsole/web/session-reporting.php:131
 msgid "By time"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:138
+#: ../../AdminConsole/web/session-reporting.php:142
 msgid "To"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:151
+#: ../../AdminConsole/web/session-reporting.php:155
 #, php-format
 msgid "<strong>%d</strong> result."
 msgid_plural "<strong>%d</strong> results."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../AdminConsole/web/session-reporting.php:153
+#: ../../AdminConsole/web/session-reporting.php:157
 msgid "No result found!"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:248
+#: ../../AdminConsole/web/session-reporting.php:252
 msgid "Session id"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:266
-#: ../../AdminConsole/web/session-reporting.php:269
+#: ../../AdminConsole/web/session-reporting.php:270
+#: ../../AdminConsole/web/session-reporting.php:273
 msgid "Get more information"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:273
-#: ../../AdminConsole/web/session-reporting.php:446
+#: ../../AdminConsole/web/session-reporting.php:277
+#: ../../AdminConsole/web/session-reporting.php:452
 msgid "Are you sure you want to delete this archived session?"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:295
+#: ../../AdminConsole/web/session-reporting.php:299
 msgid "Are you sure you want to delete these archived sessions?"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:314
+#: ../../AdminConsole/web/session-reporting.php:318
+#: ../../AdminConsole/web/session-reporting.php:656
 #, php-format
 msgid "Unknown session %s"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:423
-msgid "Back to archived sessions list"
+#: ../../AdminConsole/web/session-reporting.php:427
+msgid "Back to archived session list"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:423
-msgid "Archived session"
+#: ../../AdminConsole/web/session-reporting.php:427
+msgid "Archived Session"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:426
-#: ../../AdminConsole/web/sessions.php:97
+#: ../../AdminConsole/web/session-reporting.php:428
+msgid "Export as PDF file"
+msgstr ""
+
+#: ../../AdminConsole/web/session-reporting.php:432
+#: ../../AdminConsole/web/sessions.php:98
 msgid "User:"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:430
-msgid "Not existing anymore"
+#: ../../AdminConsole/web/session-reporting.php:436
+msgid "Does not exist"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:433
+#: ../../AdminConsole/web/session-reporting.php:439
 msgid "Mode:"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:435
-#: ../../AdminConsole/web/sessions.php:106
+#: ../../AdminConsole/web/session-reporting.php:441
+#: ../../AdminConsole/web/sessions.php:107
 msgid "Started:"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:438
+#: ../../AdminConsole/web/session-reporting.php:444
 msgid "Stopped:"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:457
-#: ../../AdminConsole/web/session-reporting.php:511
-#: ../../AdminConsole/web/session-reporting.php:537
-#: ../../AdminConsole/web/session-reporting.php:575
-msgid "No information about it in the report"
+#: ../../AdminConsole/web/session-reporting.php:463
+#: ../../AdminConsole/web/session-reporting.php:517
+#: ../../AdminConsole/web/session-reporting.php:543
+#: ../../AdminConsole/web/session-reporting.php:581
+#: ../../AdminConsole/web/session-reporting.php:830
+#: ../../AdminConsole/web/session-reporting.php:894
+msgid "No information available"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:468
-#: ../../AdminConsole/web/session-reporting.php:526
-#: ../../AdminConsole/web/session-reporting.php:555
-msgid "not existing anymore"
+#: ../../AdminConsole/web/session-reporting.php:474
+#: ../../AdminConsole/web/session-reporting.php:532
+#: ../../AdminConsole/web/session-reporting.php:561
+#: ../../AdminConsole/web/session-reporting.php:769
+#: ../../AdminConsole/web/session-reporting.php:796
+#: ../../AdminConsole/web/session-reporting.php:845
+#: ../../AdminConsole/web/session-reporting.php:874
+msgid "does not exist"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:492
+#: ../../AdminConsole/web/session-reporting.php:498
 msgid "Show the dump data"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:492
+#: ../../AdminConsole/web/session-reporting.php:498
 msgid "show"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:493
+#: ../../AdminConsole/web/session-reporting.php:499
 msgid "Hide the dump data"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:493
+#: ../../AdminConsole/web/session-reporting.php:499
 msgid "hide"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:509
-#: ../../AdminConsole/web/sessions.php:134
+#: ../../AdminConsole/web/session-reporting.php:515
+#: ../../AdminConsole/web/sessions.php:135
 #: ../../AdminConsole/web/users.php:411
-msgid "Published applications"
+msgid "Published Applications"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:524
-#: ../../AdminConsole/web/session-reporting.php:553
+#: ../../AdminConsole/web/session-reporting.php:530
+#: ../../AdminConsole/web/session-reporting.php:559
+#: ../../AdminConsole/web/session-reporting.php:872
 #, php-format
 msgid "Unknown application (id: %s)"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:535
-msgid "Used applications"
+#: ../../AdminConsole/web/session-reporting.php:541
+msgid "Used Applications"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:562
+#: ../../AdminConsole/web/session-reporting.php:568
+#: ../../AdminConsole/web/session-reporting.php:881
 msgid ""
 "executed on server %SERVER% during %DURATION%m (started at %STARTED_TIME%, "
 "stopped at %STOPPED_TIME%)"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:573
-msgid "Storages"
+#: ../../AdminConsole/web/session-reporting.php:579
+#: ../../AdminConsole/web/session-reporting.php:892
+msgid "Storage"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:583
-#: ../../AdminConsole/web/sessions.php:80
+#: ../../AdminConsole/web/session-reporting.php:589
+#: ../../AdminConsole/web/sessions.php:81
 msgid "User profile"
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:583
-#: ../../AdminConsole/web/session-reporting.php:591
+#: ../../AdminConsole/web/session-reporting.php:589
+#: ../../AdminConsole/web/session-reporting.php:597
 msgid "on server: "
 msgstr ""
 
-#: ../../AdminConsole/web/session-reporting.php:591
-#: ../../AdminConsole/web/sessions.php:88
-msgid "Shared foler"
+#: ../../AdminConsole/web/session-reporting.php:597
+#: ../../AdminConsole/web/sessions.php:89
+#: ../../AdminConsole/web/summary.php:173 ../../AdminConsole/web/sumup.php:152
+msgid "Shared folder"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:50
+#: ../../AdminConsole/web/sessions.php:51
 msgid "Session - %ID%"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:52
+#: ../../AdminConsole/web/sessions.php:53
 msgid "Information"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:55
+#: ../../AdminConsole/web/sessions.php:56
 msgid "Servers:"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:69
+#: ../../AdminConsole/web/sessions.php:70
 msgid "Desktop server"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:98
-msgid "Type:"
-msgstr ""
-
-#: ../../AdminConsole/web/sessions.php:113
+#: ../../AdminConsole/web/sessions.php:114
 msgid "Status:"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:117
+#: ../../AdminConsole/web/sessions.php:118
 msgid "Running applications"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:120
-msgid "No running application"
+#: ../../AdminConsole/web/sessions.php:121
+msgid "No running applications"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:137
-msgid "No published application"
-msgstr ""
-
-#: ../../AdminConsole/web/sessions.php:155
-#: ../../AdminConsole/web/sessions.php:160
-msgid "Kill this session"
+#: ../../AdminConsole/web/sessions.php:138
+msgid "No published applications"
 msgstr ""
 
 #: ../../AdminConsole/web/sessions.php:156
-#: ../../AdminConsole/web/sessions.php:251
+#: ../../AdminConsole/web/sessions.php:161
+msgid "Kill this session"
+msgstr ""
+
+#: ../../AdminConsole/web/sessions.php:157
+#: ../../AdminConsole/web/sessions.php:267
 msgid "Are you sure you want to kill this session?"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:179
+#: ../../AdminConsole/web/sessions.php:164
+#: ../../AdminConsole/web/sessions.php:169
+msgid "Disconnect this session"
+msgstr ""
+
+#: ../../AdminConsole/web/sessions.php:165
+#: ../../AdminConsole/web/sessions.php:276
+msgid "Are you sure you want to disconnect this session?"
+msgstr ""
+
+#: ../../AdminConsole/web/sessions.php:188
 #, php-format
 msgid "Sessions (total: %s)"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:209
+#: ../../AdminConsole/web/sessions.php:218
 #: ../../AdminConsole/web/summary.php:82
 msgid "Session"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:255
 #: ../../AdminConsole/web/sessions.php:271
+#: ../../AdminConsole/web/sessions.php:296
 msgid "Kill"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:268
-msgid "Are you sure you want to kill selected sessions?"
+#: ../../AdminConsole/web/sessions.php:280
+#: ../../AdminConsole/web/sessions.php:303
+msgid "Disconnect"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:281
+#: ../../AdminConsole/web/sessions.php:293
+msgid "Are you sure you want to kill the selected sessions?"
+msgstr ""
+
+#: ../../AdminConsole/web/sessions.php:300
+msgid "Are you sure you want to disconnect the selected sessions?"
+msgstr ""
+
+#: ../../AdminConsole/web/sessions.php:314
 msgid "Number of sessions"
 msgstr ""
 
-#: ../../AdminConsole/web/sessions.php:303
-msgid "No active session"
+#: ../../AdminConsole/web/sessions.php:336
+msgid "No active sessions"
 msgstr ""
 
 #: ../../AdminConsole/web/sharedfolders.php:56
@@ -4072,12 +4237,12 @@ msgid "Rename"
 msgstr ""
 
 #: ../../AdminConsole/web/sharedfolders.php:176
-#: ../../AdminConsole/web/usersgroup.php:780
+#: ../../AdminConsole/web/usersgroup.php:834
 msgid "Are you sure you want to delete this shared folder access?"
 msgstr ""
 
 #: ../../AdminConsole/web/sharedfolders.php:181
-#: ../../AdminConsole/web/usersgroup.php:785
+#: ../../AdminConsole/web/usersgroup.php:839
 msgid "Delete access to this shared folder"
 msgstr ""
 
@@ -4090,7 +4255,7 @@ msgid "Read only"
 msgstr ""
 
 #: ../../AdminConsole/web/sharedfolders.php:201
-#: ../../AdminConsole/web/usersgroup.php:800
+#: ../../AdminConsole/web/usersgroup.php:854
 msgid "Add access to this shared folder"
 msgstr ""
 
@@ -4115,13 +4280,9 @@ msgstr ""
 msgid "Unable to perform session simulation for user %s"
 msgstr ""
 
-#: ../../AdminConsole/web/summary.php:69 ../../AdminConsole/web/sumup.php:40
-msgid "List of users"
-msgstr ""
-
 #: ../../AdminConsole/web/summary.php:74 ../../AdminConsole/web/users.php:65
 #: ../../AdminConsole/web/wizard.php:174
-msgid "No available user"
+msgid "No available users"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:81
@@ -4129,11 +4290,11 @@ msgid "Folders"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:87
-msgid "In these users groups"
+msgid "In these User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:88
-msgid "Published applications groups"
+msgid "Published Application Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:89
@@ -4145,15 +4306,11 @@ msgid "Access to these folders"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:110
-msgid "Not in any users group"
+msgid "Not in any User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:145
-msgid "No applications in these groups"
-msgstr ""
-
-#: ../../AdminConsole/web/summary.php:173 ../../AdminConsole/web/sumup.php:152
-msgid "Shared folder"
+msgid "No application in these groups"
 msgstr ""
 
 #: ../../AdminConsole/web/summary.php:175
@@ -4209,62 +4366,50 @@ msgstr ""
 msgid "No server available"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:42
+#: ../../AdminConsole/web/tasks.php:43
 #, php-format
 msgid "Unable to find task %s"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:58
+#: ../../AdminConsole/web/tasks.php:59
 #, php-format
 msgid "Unable to find server %s"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:69
+#: ../../AdminConsole/web/tasks.php:70
 msgid "Tasks managment"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:73 ../../AdminConsole/web/tasks.php:158
+#: ../../AdminConsole/web/tasks.php:74 ../../AdminConsole/web/tasks.php:159
 msgid "Creation time"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:78
+#: ../../AdminConsole/web/tasks.php:79
 msgid "Job id"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:84 ../../AdminConsole/web/tasks.php:179
+#: ../../AdminConsole/web/tasks.php:85 ../../AdminConsole/web/tasks.php:180
 msgid "Finished"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:128
+#: ../../AdminConsole/web/tasks.php:129
 msgid "Internal error requestings tasks"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:152
+#: ../../AdminConsole/web/tasks.php:153
 msgid "List of tasks"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:183
+#: ../../AdminConsole/web/tasks.php:184
 msgid "In progress"
 msgstr ""
 
-#: ../../AdminConsole/web/tasks.php:214
+#: ../../AdminConsole/web/tasks.php:217
 msgid "Install an application from a package name"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:33
-msgid "1 day"
-msgstr ""
-
-#: ../../AdminConsole/web/usersgroup.php:34
-msgid "1 week"
-msgstr ""
-
-#: ../../AdminConsole/web/usersgroup.php:72
-msgid "User groups"
-msgstr ""
-
 #: ../../AdminConsole/web/usersgroup.php:79
-msgid "No available user group"
+msgid "No available User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:161
@@ -4284,122 +4429,126 @@ msgid "Time between two updates:"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:228
-#: ../../AdminConsole/web/usersgroup.php:529
+#: ../../AdminConsole/web/usersgroup.php:541
 msgid "Validation type"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:533
+#: ../../AdminConsole/web/usersgroup.php:545
 msgid "All"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:536
+#: ../../AdminConsole/web/usersgroup.php:548
 msgid "At least one"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:233
-#: ../../AdminConsole/web/usersgroup.php:540
+#: ../../AdminConsole/web/usersgroup.php:552
 msgid "Filters"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:283
-msgid "Failed to load usergroup"
+msgid "Failed to load User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/usersgroup.php:326
 msgid "Error while requesting users"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:422
-msgid "User groups management"
+#: ../../AdminConsole/web/usersgroup.php:434
+msgid "User Group Management"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:444
+#: ../../AdminConsole/web/usersgroup.php:456
 msgid "Remove from default"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:447
+#: ../../AdminConsole/web/usersgroup.php:459
 msgid "Define as default"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:508
+#: ../../AdminConsole/web/usersgroup.php:520
 msgid "Update the schedule"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:519
+#: ../../AdminConsole/web/usersgroup.php:531
 msgid "Rules"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:598
+#: ../../AdminConsole/web/usersgroup.php:610
 msgid "Update rules"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:609
+#: ../../AdminConsole/web/usersgroup.php:621
 msgid "List of users in this group"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:616
+#: ../../AdminConsole/web/usersgroup.php:628
 msgid "All available users are in this group."
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:627
+#: ../../AdminConsole/web/usersgroup.php:639
 #: ../../AdminConsole/web/users.php:91 ../../AdminConsole/web/users.php:320
 msgid "Are you sure you want to delete this user?"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:703
+#: ../../AdminConsole/web/usersgroup.php:715
+msgid "List of scripts for this group"
+msgstr ""
+
+#: ../../AdminConsole/web/usersgroup.php:757
 msgid "Policy of this group"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:711
+#: ../../AdminConsole/web/usersgroup.php:765
 msgid "extend from default"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:717
+#: ../../AdminConsole/web/usersgroup.php:771
 msgid "Are you sure you want to delete this rule?"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:722
+#: ../../AdminConsole/web/usersgroup.php:776
 msgid "Delete this rule"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:742
+#: ../../AdminConsole/web/usersgroup.php:796
 msgid "Add this rule"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:811
+#: ../../AdminConsole/web/usersgroup.php:865
 #: ../../AdminConsole/web/users.php:424
-msgid "Session settings configuration"
+msgid "Session Settings configuration"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:828
+#: ../../AdminConsole/web/usersgroup.php:882
 #: ../../AdminConsole/web/users.php:441
 msgid "Default value"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:829
+#: ../../AdminConsole/web/usersgroup.php:883
 #: ../../AdminConsole/web/users.php:442
 msgid "Value"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:851
+#: ../../AdminConsole/web/usersgroup.php:905
 #: ../../AdminConsole/web/users.php:464
-msgid "Remove this overriden setting"
+msgid "Remove this overridden setting"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:866
+#: ../../AdminConsole/web/usersgroup.php:920
 #: ../../AdminConsole/web/users.php:479
 msgid "Save settings"
 msgstr ""
 
-#: ../../AdminConsole/web/usersgroup.php:887
+#: ../../AdminConsole/web/usersgroup.php:941
 #: ../../AdminConsole/web/users.php:500
 msgid "Add this setting"
 msgstr ""
 
 #: ../../AdminConsole/web/users.php:110
-msgid "Are you sure you want to delete selected users?"
+msgid "Are you sure you want to delete the selected users?"
 msgstr ""
 
 #: ../../AdminConsole/web/users.php:152 ../../AdminConsole/web/users.php:182
@@ -4430,10 +4579,6 @@ msgstr ""
 msgid "Custom:"
 msgstr ""
 
-#: ../../AdminConsole/web/users.php:219
-msgid "Error while requesting usergroups"
-msgstr ""
-
 #: ../../AdminConsole/web/users.php:306
 msgid "Locale"
 msgstr ""
@@ -4446,20 +4591,12 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: ../../AdminConsole/web/users.php:366
-msgid "User groups with this user"
-msgstr ""
-
-#: ../../AdminConsole/web/users.php:381
-msgid "Are you sure you want to delete this user from this group?"
-msgstr ""
-
 #: ../../AdminConsole/web/users.php:513
 msgid "Active sessions"
 msgstr ""
 
 #: ../../AdminConsole/web/users.php:561
-msgid "This user doesn't have user profiles yet"
+msgid "This user doesn't have a user profile"
 msgstr ""
 
 #: ../../AdminConsole/web/users.php:565
@@ -4475,45 +4612,39 @@ msgid "User has profile stored on server %SERVER%."
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:40
-msgid "No user group selected"
+msgid "No User Group selected"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:50
-msgid "No user selected"
+msgid "No User selected"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:64 ../../AdminConsole/web/wizard.php:110
-msgid "No group name"
+msgid "No group name specified"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:88
-msgid "No application group selected"
+msgid "No Application Group selected"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:96
-msgid "No application selected"
+msgid "No Application selected"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:178
-msgid "Unable to display users list: too many users"
-msgstr ""
-
-#: ../../AdminConsole/web/wizard.php:184 ../../AdminConsole/web/wizard.php:271
-#: ../../AdminConsole/web/wizard.php:330 ../../AdminConsole/web/wizard.php:420
-#: ../../AdminConsole/web/wizard.php:463
-msgid "Publication Wizard"
+msgid "Unable to display the list of users: too many users"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:184
-msgid "User/group selection"
+msgid "Select User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:196
-msgid "Create a group with users"
+msgid "Create a new User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:202
-msgid "Use usergroups"
+msgid "Use existing User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:255 ../../AdminConsole/web/wizard.php:275
@@ -4524,7 +4655,7 @@ msgid "Next"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:271
-msgid "Create usergroup"
+msgid "Create User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:293 ../../AdminConsole/web/wizard.php:401
@@ -4533,19 +4664,19 @@ msgid "Previous"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:330
-msgid "Applications/groups selection"
+msgid "Select Application Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:342
-msgid "Create a group with applications"
+msgid "Create a new Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:346
-msgid "Use an application group"
+msgid "Use an existing Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:420
-msgid "Create application group"
+msgid "Create Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:463
@@ -4553,28 +4684,24 @@ msgid "Confirmation"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:465
-msgid "Are you sure that you want to create this publication?"
+msgid "Are you sure that you want to create this Publication?"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:474
-msgid "Between this users group"
+msgid "Between this User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:476
-msgid "Between these users groups"
+msgid "Between these User Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:483
 #, php-format
-msgid "Unable to load users group '%s'"
+msgid "Unable to load User Group '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:492
-msgid "Between this newly created users group"
-msgstr ""
-
-#: ../../AdminConsole/web/wizard.php:496 ../../AdminConsole/web/wizard.php:538
-msgid "Name:"
+msgid "Between this newly created User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:497 ../../AdminConsole/web/wizard.php:539
@@ -4591,15 +4718,15 @@ msgid "Unable to load user '%s'"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:520
-msgid "and this applications group"
+msgid "and this Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:522
-msgid "and these applications groups"
+msgid "and these Application Groups"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:534
-msgid "and this newly created applications group"
+msgid "and this newly created Application Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:540
@@ -4611,9 +4738,9 @@ msgid "Confirm"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:598
-msgid "Cannot create usergroup"
+msgid "Cannot create User Group"
 msgstr ""
 
 #: ../../AdminConsole/web/wizard.php:626
-msgid "Cannot create application group"
+msgid "Cannot create Application Group"
 msgstr ""

@@ -980,7 +980,7 @@
 		</operation>
 		
 		<operation name="certificate_add">
-			<documentation>Add a certificate file (base64 encoded)</documentation>
+			<documentation>Add a Subscription Key (base64 encoded)</documentation>
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>

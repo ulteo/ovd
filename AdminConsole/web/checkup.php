@@ -119,7 +119,7 @@ $everything_ok = $checkup['conf']['default_users_group']['status']; // reset
 
 echo '<br /><h2>'._('Configuration').'</h2>';
 
-echo '<h3>'._('Default usergroup').'</h3>';
+echo '<h3>'._('Default User Group').'</h3>';
 
 if (! $everything_ok) {
 	echo '<span class="msg_error">'.$checkup['conf']['default_users_group']['text'].'</span>';

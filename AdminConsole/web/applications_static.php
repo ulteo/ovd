@@ -64,7 +64,7 @@ function show_default() {
 	echo '<div id="apps_list_div">'; // apps_list_div
 
 	if ($is_empty) {
-		echo _('No available application').'<br />';
+		echo _('No available applications').'<br />';
 	}
 	else {
 		echo '<div id="apps_list">'; // apps_list
@@ -217,7 +217,7 @@ function show_default() {
 	}
 
 	echo '<br />';
-	echo '<h2>'._('Web links configuration').'</h2>';
+	echo '<h2>'._('Web Links Configuration').'</h2>';
 	echo _('Default browser for:');
 	$browsers = $_SESSION['service']->default_browser_get();
 	if ( $browsers != array() && !is_null($browsers)) {

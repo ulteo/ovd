@@ -62,7 +62,7 @@ function show_default() {
   echo '<div id="users_list_div">';
 
   if ($users_list_empty)
-    echo _('No available user').'<br />';
+    echo _('No available users').'<br />';
   else {
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<thead>';
@@ -107,7 +107,7 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
+      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete the selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
       echo '<input type="hidden" name="name" value="User" />';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="submit" value="'._('Delete').'"/><br />';
@@ -216,7 +216,7 @@ function show_manage($login) {
 		else {
 			$groups_mine2 = $usersgroupsList->search($login);
 			if (is_null($groups_mine)) {
-				die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
+				die_error(_('Error while requesting User Group data'),__FILE__,__LINE__);
 			}
 			
 			$groups_mine = array();
@@ -408,7 +408,7 @@ function show_manage($login) {
   $apps_s = array();
   if (count($applications) > 0) {
     echo '<br />';
-    echo '<h2>'._('Published applications').'</h2>';
+    echo '<h2>'._('Published Applications').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach ($applications as $application_id => $application_name) {
       echo '<tr>';
@@ -558,7 +558,7 @@ function show_manage($login) {
 		
 		if (! $u->hasAttribute('profiles')) {
 			echo '<p>';
-			echo _('This user doesn\'t have user profiles yet');
+			echo _('This user doesn\'t have a user profile');
 			echo '</p>';
 			if ($can_manage_profiles) {
 				echo '<div>';

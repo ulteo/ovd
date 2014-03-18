@@ -76,7 +76,7 @@ function show_default() {
   echo '<div id="usersgroup_list">';
 
   if (! $has_group)
-    echo _('No available User Group').'<br />';
+    echo _('No available User Groups').'<br />';
   else {
      $all_static = true;
      foreach($groups as $group){
@@ -431,7 +431,7 @@ function show_manage($id) {
 
   page_header();
   echo '<div id="users_div">';
-  echo '<h1><a href="?">'._('User Group management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('User Group Management').'</a> - '.$group->name.'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';

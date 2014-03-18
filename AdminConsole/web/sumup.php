@@ -37,7 +37,7 @@ $searchDiv = $usersList->getForm();
 
 
 page_header();
-echo'<h2>'._('List of users').'</h2>';
+echo'<h2>'._('Users').'</h2>';
 
 echo $searchDiv;
 

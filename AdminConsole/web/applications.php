@@ -60,7 +60,7 @@ function show_default() {
   echo '<div id="apps_list_div">';
 
   if ($is_empty)
-    echo _('No available application').'<br />';
+    echo _('No available applications').'<br />';
   else {
     echo '<div id="apps_list">';
     echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';

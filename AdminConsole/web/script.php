@@ -118,7 +118,7 @@ function show_manage($script_id_) {
 	page_header();
 
 	echo '<div id="script_div">';
-	echo '<h1><a href="?">'._('Login Scripts management').'</a> - '.$script->name.'</h1>';
+	echo '<h1><a href="?">'._('Login Script management').'</a> - '.$script->name.'</h1>';
 
 	echo '<div>';
 	echo '<h2>'._('Modify').'</h2>';
@@ -172,7 +172,7 @@ function show_manage($script_id_) {
 		else {
 			$groups_mine2 = $usersgroupsList->search($login);
 			if (is_null($groups_mine)) {
-				die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
+				die_error(_('Error while requesting User Group data'),__FILE__,__LINE__);
 			}
 			
 			$groups_mine = array();

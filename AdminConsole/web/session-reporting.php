@@ -111,7 +111,7 @@ function show_default() {
 
 
 
-	echo '<h1>'._('Sessions Reporting').'</h1>';
+	echo '<h1>'._('Session Reporting').'</h1>';
 	
 	
 	echo '<div style="margin-bottom: 15px;">';
@@ -424,7 +424,7 @@ function show_manage($id_) {
 	
 	page_header();
 
-	echo '<h1><a title="'._('Back to archived session list').'" href="?">'._('Archived session').'</a> - '.$session->getId();
+	echo '<h1><a title="'._('Back to archived session list').'" href="?">'._('Archived Session').'</a> - '.$session->getId();
 	echo ' <a href="?action=pdf&amp;id='.$session->getId().'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Export as PDF file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 	echo '</h1>';
 
@@ -433,7 +433,7 @@ function show_manage($id_) {
 	if (is_object($user))
 		echo '<a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a>';
 	else
-		echo $session->getUser().' <span><em>'._('Not existing anymore').'</em></span>';
+		echo $session->getUser().' <span><em>'._('Does not exist').'</em></span>';
 	echo '</li>';
 	
 	echo '<li><strong>'._('Mode:').'</strong> '.$mode.'</li>';
@@ -460,7 +460,7 @@ function show_manage($id_) {
 	echo '<div>';
 	echo '<h2>'._('Servers').'</h2>';
 	if (count($servers) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($servers as $server) {
@@ -471,7 +471,7 @@ function show_manage($id_) {
 				echo $server['name'];
 				
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			
 			$infos = array();
@@ -512,9 +512,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Published applications').'</h2>';
+	echo '<h2>'._('Published Applications').'</h2>';
 	if (count($published_applications) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($published_applications as $app_id => $application) {
@@ -529,7 +529,7 @@ function show_manage($id_) {
 				else
 					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			echo '</li>';
 		}
@@ -538,9 +538,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Used applications').'</h2>';
+	echo '<h2>'._('Used Applications').'</h2>';
 	if (count($applications_instances) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($applications_instances as $instance) {
@@ -558,7 +558,7 @@ function show_manage($id_) {
 				else
 					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			
 			echo ' - ';
@@ -576,9 +576,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Storages').'</h2>';
+	echo '<h2>'._('Storage').'</h2>';
 	if (count($storages) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($storages as $storage_id => $storage) {
@@ -594,7 +594,7 @@ function show_manage($id_) {
 				continue;
 			}
 			
-			echo '<li>'._('Shared foler').' - '.$storage['name'].' <em>('.$storage['mode'].')</em> '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')</li>';
+			echo '<li>'._('Shared folder').' - '.$storage['name'].' <em>('.$storage['mode'].')</em> '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')</li>';
 		}
 		
 		echo '</ul>';
@@ -766,7 +766,7 @@ function get_html($id_) {
 	if (is_object($user))
 		$ret.= ''.$user->getAttribute('displayname').' (login: '.$user->getAttribute('login').')';
 	else
-		$ret.= $session->getUser().' <span><em>Not existing anymore</em></span>';
+		$ret.= $session->getUser().' <span><em>'._('does not exist').'</em></span>';
 	$ret.= '</li>';
 	
 	$ret.= '<li><strong>Mode:</strong> '.$mode.'</li>';
@@ -784,7 +784,7 @@ function get_html($id_) {
 	$ret.= '<div>';
 	$ret.= '<h2>Servers</h2>';
 	if (count($servers) == 0)
-		$ret.= 'No information about it in the report';
+		$ret.= 'No information available';
 	else {
 		$ret.= '<ul>';
 		foreach ($servers as $server) {
@@ -793,7 +793,7 @@ function get_html($id_) {
 				$ret.= $server['obj']->getDisplayName().' (id: '.$server['obj']->id.')';
 			else {
 				$ret.= $server['name'];
-				$ret.= ' <span><em>not existing anymore</em></span>';
+				$ret.= ' <span><em>'._('does not exist').'</em></span>';
 			}
 			
 			$infos = array();
@@ -827,7 +827,7 @@ function get_html($id_) {
 	$ret.= '<div>';
 	$ret.= '<h2>Published applications</h2>';
 	if (count($published_applications) == 0)
-		$ret.= _('No information about it in the report');
+		$ret.= _('No information available');
 	else {
 		$ret.= '<ul>';
 		foreach ($published_applications as $app_id => $application) {
@@ -842,7 +842,7 @@ function get_html($id_) {
 				else
 					$ret.= '<span>'.sprintf('Unknown application (id: %s)', $application['id']).'</span>';
 				
-				$ret.= '&nbsp;<span><em>not existing anymore</em></span>';
+				$ret.= '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			$ret.= '</li>';
 		}
@@ -853,7 +853,7 @@ function get_html($id_) {
 	$ret.= '<div>';
 	$ret.= '<h2>Used applications</h2>';
 	if (count($applications_instances) == 0)
-		$ret.= 'No information about it in the report';
+		$ret.= 'No information available';
 	else {
 		$ret.= '<ul>';
 		foreach ($applications_instances as $instance) {
@@ -871,7 +871,7 @@ function get_html($id_) {
 				else
 					$ret.= '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
 				
-				$ret.= '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				$ret.= '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			
 			$ret.= ' - ';
@@ -889,9 +889,9 @@ function get_html($id_) {
 	$ret.= '</div>';
 	
 	$ret.= '<div>';
-	$ret.= '<h2>'._('Storages').'</h2>';
+	$ret.= '<h2>'._('Storage').'</h2>';
 	if (count($storages) == 0)
-		$ret.= _('No information about it in the report');
+		$ret.= _('No information available');
 	else {
 		$ret.= '<ul>';
 		foreach ($storages as $storage_id => $storage) {

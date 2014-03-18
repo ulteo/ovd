@@ -61,7 +61,7 @@ function show_default() {
 	$count = 0;
 	
 	if ($is_empty) {
-		echo _('No available application').'<br />';
+		echo _('No available applications').'<br />';
 	}
 	else {
 		echo '<div id="apps_list">'; // apps_list

@@ -86,7 +86,7 @@ if (isset($_GET['info'])) {
 						continue;
 					}
 					
-					echo '<li>'._('Shared foler').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
+					echo '<li>'._('Shared folder').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
 				}
 			}
 			
@@ -118,7 +118,7 @@ if (isset($_GET['info'])) {
 		echo '<h2>'._('Running applications').'</h2>';
 
 		if (! $session->hasAttribute('instances') || count($session->getAttribute('instances')) == 0) {
-			echo _('No running application');
+			echo _('No running applications');
 		} else {
 			echo '<ul>';
 			echo '<table>';
@@ -132,10 +132,10 @@ if (isset($_GET['info'])) {
 		}
 		
 		echo '<div>';
-		echo '<h2>'._('Published applications').'</h2>';
+		echo '<h2>'._('Published Applications').'</h2>';
 		
 		if (! $session->hasAttribute('applications') || count($session->getAttribute('applications')) == 0) {
-			echo _('No published application');
+			echo _('No published applications');
 		}
 		else {
 			echo '<ul>';
@@ -290,14 +290,14 @@ else {
 			echo '	<tr class="'.$css_class.'">';
 			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
 			echo '  <input type="hidden" name="name" value="Session" />';
 			echo '  <input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
 			echo '</td>';
 			
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
 			echo '  <input type="hidden" name="name" value="Session" />';
 			echo '  <input type="hidden" name="action" value="disc" />';
 			echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
@@ -333,7 +333,7 @@ else {
 			echo $pagechanger;
 		echo '</div>';
 	} else {
-		echo _('No active session');
+		echo _('No active sessions');
 		echo '<br /><br />';
 	}
 

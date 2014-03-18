@@ -306,7 +306,7 @@ function show_unregistered() {
     echo '</div>';
     echo '<br />';
   } else {
-    echo _('No unregistered server');
+    echo _('No unregistered servers');
   }
 
   echo '</div>';
@@ -400,7 +400,7 @@ function show_manage($id_) {
         foreach ($server->roles as $role => $enabled) {
           switch ($role) {
             case Server::SERVER_ROLE_APS:
-              echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
+              echo _('Session usage').': '.$server->getSessionUsage().'%<br />';
               echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
               break;
             case Server::SERVER_ROLE_FS:
@@ -452,7 +452,7 @@ function show_manage($id_) {
 	echo _('Internal name (fqdn)').': ';
 	echo '</td><td>';
 	if ($can_do_action) {
-		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to change the internal name of this server? The server will switch to broken state if the name is not valid!').'\');">';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to change the internal name of this server? The server will switch to a broken state if the name is not valid!').'\');">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="fqdn" />';

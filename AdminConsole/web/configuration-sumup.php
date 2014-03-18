@@ -143,20 +143,20 @@ echo $buf;
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="certificate.php"><?php echo _("Certificate"); ?></a></h2>
+  <h2><a href="certificate.php"><?php echo _("Subscription Keys"); ?></a></h2>
 <?php
     $expirity = $_SESSION['service']->has_valid_certificate();
     if ($expirity !== false) {
       $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
-        echo sprintf(_("Your Premium Edition certificate will expire in %d days"), $expirity);
+        echo sprintf(_("Your Premium Edition Subscription Key will expire in %d days"), $expirity);
       } elseif ($expirity <= 0) {
-        echo _("Your Premium Edition certificate has expired.");
+        echo _("Your Premium Edition Subscription Key has expired.");
       } else {
-        echo sprintf(_("Your Premium Edition certificate is valid for %d days."), $expirity);
+        echo sprintf(_("Your Premium Edition Subscription Key is valid for %d days."), $expirity);
       }
     } else {
-      echo _("You don't have any valid Premium Edition certificate.");
+      echo _("You don't have any valid Premium Edition Subscription Keys.");
     }
 ?>
   </div>

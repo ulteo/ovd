@@ -100,7 +100,7 @@ function show_manage($sharedfolder_id_) {
 	$all_groups = $usersgroupsList->search();
 	if (! is_array($all_groups)) {
 		$all_groups = array();
-		popup_error(_("Failed to get User Group list"));
+		popup_error(_("Failed to get User Group data"));
 	}
 	uasort($all_groups, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();

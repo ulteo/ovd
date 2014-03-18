@@ -123,7 +123,7 @@ foreach ($sliders[$i_init] as $r2 => $d2) {
 $html .= '}
 </script>';
 
-		$html .= '<br /><input type="button" id="reset_loadbalancing" value="'._('Back to default').'" onclick="resetLoadBalancing'.$i_init.'(); return false;" />';
+		$html .= '<br /><input type="button" id="reset_loadbalancing" value="'._('Reset to default').'" onclick="resetLoadBalancing'.$i_init.'(); return false;" />';
 		$html .= '</td>';
 		$html .= '<td style="width: 100%; vertical-align: top; border-left: 1px solid #999;">';
 		$html .= '<table style="width: 50%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">';

@@ -194,7 +194,7 @@ function show_manage($id) {
 	$groups_users_all = $usersgroupsList->search();
 	if (! is_array($groups_users_all)) {
 		$groups_users_all = array();
-		popup_error(_("Failed to get User Group list"));
+		popup_error(_("Failed to get User Group data"));
 	}
 	uasort($groups_users_all, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();

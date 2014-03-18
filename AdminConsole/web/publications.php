@@ -114,7 +114,7 @@ function show_default() {
   echo '<tbody>';
   if (! $has_publish) {
     $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'"><td colspan="3">'._('No publication').'</td></tr>';
+    echo '<tr class="'.$content.'"><td colspan="3">'._('No publications').'</td></tr>';
   } else {
     foreach($publications as $publication){
       $content = 'content'.(($count++%2==0)?1:2);

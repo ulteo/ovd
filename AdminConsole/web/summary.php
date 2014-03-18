@@ -66,12 +66,12 @@ function show_default() {
 	}
 
 	page_header();
-	echo'<h2>'._('List of users').'</h2>';
+	echo'<h2>'._('Users').'</h2>';
 
 	echo $searchDiv;
 
 	if (count($users_info) == 0)
-		echo _('No available user').'<br />';
+		echo _('No available users').'<br />';
 	else {
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 		echo '<thead>';
@@ -125,7 +125,7 @@ function show_default() {
 			
 			if ( count($user_info['apps_grps']) == 0) {
 				echo '<td colspan="2">';
-				echo '<em>'._('No publication').'</em>';
+				echo '<em>'._('No publications').'</em>';
 				echo '</td>';
 			}
 			else {

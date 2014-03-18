@@ -52,9 +52,9 @@ page_header();
 	<ul>
 		<?php
 			if ($show_users)
-				echo '<li><a href="users.php">'._('User list').'</a></li>';
+				echo '<li><a href="users.php">'._('Users').'</a></li>';
 			if ($show_usersgroups)
-				echo '<li><a href="usersgroup.php">'._('User Group list').'</a></li>';
+				echo '<li><a href="usersgroup.php">'._('User Groups').'</a></li>';
 		?>
 	</ul>
 </div>
@@ -70,8 +70,8 @@ page_header();
 if ($show_servers) {
 ?>
 	<ul>
-		<li><a href="servers.php"><?php echo _('Server list'); ?></a></li>
-		<li><a href="servers.php?view=unregistered"><?php echo _('Unregistered Server list'); ?></a></li>
+		<li><a href="servers.php"><?php echo _('Servers'); ?></a></li>
+		<li><a href="servers.php?view=unregistered"><?php echo _('Unregistered Servers'); ?></a></li>
 	</ul>
 <?php
 }
@@ -89,7 +89,7 @@ if ($show_servers) {
 if ($show_configuration) {
 ?>
 	<ul>
-		<li><a href="configuration-sumup.php"><?php echo _('General configuration'); ?></a></li>
+		<li><a href="configuration-sumup.php"><?php echo _('General Configuration'); ?></a></li>
 	</ul>
 <?php
 }
@@ -111,12 +111,12 @@ if ($show_configuration) {
 	<ul>
 		<?php
 		if ($show_applications)
-			echo '<li><a href="applications.php">'._('Application list').'</a></li>';
-		echo '<li><a href="applications_webapp.php">'._('Web Application list').'</a></li>';
+			echo '<li><a href="applications.php">'._('Applications').'</a></li>';
+		echo '<li><a href="applications_webapp.php">'._('Web Applications').'</a></li>';
 		if ($show_applicationsgroups)
-			echo '<li><a href="appsgroup.php">'._('Application Groups list').'</a><br /><br /></li>';
+			echo '<li><a href="appsgroup.php">'._('Application Groups').'</a><br /><br /></li>';
 		if ($show_publications) {
-			echo '<li><a href="publications.php">'._('Publication list').'</a></li>';
+			echo '<li><a href="publications.php">'._('Publications').'</a></li>';
 			echo '<li><a href="wizard.php">'._('Publication Wizard').'</a></li>';
 		}
 		?>

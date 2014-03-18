@@ -332,19 +332,19 @@ function show_page($mode_) {
 	$t0 = $mode_->transform_date($t0);
 	$t1 = $mode_->transform_date($t1);
 	if ($t0>$t1) {
-		popup_error(_('Error: "from" date is after "to" date, switching'));
+		popup_error(_('Error: "from" date is after "to" date, the dates will be reversed'));
 		$buf = $t0;
 		$t0 = $t1;
 		$t1 = $buf;
 	}
 	
 	if ($t1 > time()) {
-		popup_error(_('Error: "to" field is in the future, switching to current time'));
+		popup_error(_('Error: "to" field is in the future, the current time will be used'));
 		$t1 = $mode_->transform_date(time());
 	}
 	
 	if ($t0 > time()) {
-		popup_error(_('Error: "from" field is in the future, switching to current time'));
+		popup_error(_('Error: "from" field is in the future, the current time will be used'));
 		$t0 = $mode_->transform_date(time());
 	}
 	
@@ -770,14 +770,14 @@ function getNB_SESSION($mode_) {
 	$t0 = $mode_->transform_date($t0);
 	$t1 = $mode_->transform_date($t1);
 	if ($t0>$t1) {
-		popup_error(_('Error: "from" date is after "to" date, switching'));
+		popup_error(_('Error: "from" date is after "to" date, the current time will be used'));
 		$buf = $t0;
 		$t0 = $t1;
 		$t1 = $buf;
 	}
 
 	if ($t1 > time()) {
-		popup_error(_('Error: "to" field is in the future, switch to the current time'));
+		popup_error(_('Error: "to" field is in the future, the current time will be used'));
 		$t1 = $mode_->transform_date(time());
 	}
 

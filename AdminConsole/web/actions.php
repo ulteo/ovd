@@ -204,11 +204,11 @@ if ($_REQUEST['name'] == 'Application') {
 			if ($upload['error']) {
 				switch ($upload['error']) {
 					case 1: // UPLOAD_ERR_INI_SIZE
-						popup_error(_('Oversized file for server rules'));
+						popup_error(_('File too large to be used for server rules'));
 						redirect();
 						break;
 					case 3: // UPLOAD_ERR_PARTIAL
-						popup_error(_('The file was corrupted while upload'));
+						popup_error(_('The file was corrupted during the upload'));
 						redirect();
 						break;
 					case 4: // UPLOAD_ERR_NO_FILE
@@ -356,11 +356,11 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if($upload['error']) {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+							popup_error(_('File too large to be used for server rules'));
 							redirect();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
+							popup_error(_('The file was corrupted during the upload'));
 							redirect();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
@@ -410,7 +410,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			$url_prefix = $_REQUEST['url_prefix'];
 			
 			if (empty($name)) {
-				popup_error(_('Empty name'));
+				popup_error(_('The Web Application name was not specified'));
 				redirect();
 			}
 			
@@ -420,11 +420,11 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			if ($upload['error']) {
 				switch ($upload['error']) {
 					case 1: // UPLOAD_ERR_INI_SIZE
-						popup_error(_('Oversized file for server rules'));
+						popup_error(_('File too large to be used for server rules'));
 						redirect();
 						break;
 					case 3: // UPLOAD_ERR_PARTIAL
-						popup_error(_('The file was corrupted while upload'));
+						popup_error(_('The file was corrupted during the upload'));
 						redirect();
 						break;
 					case 4: // UPLOAD_ERR_NO_FILE
@@ -434,7 +434,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 			
 			if (! $have_file) {
-				popup_error(_('No configuration file'));
+				popup_error(_('No configuration file was specified'));
 				redirect();
 			}
 			
@@ -452,7 +452,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 
 			if(count(array_keys($parsed_config)) > 1) {
-				popup_info(_('Configuration file has more than one main level key, using first, rest will be ignored'));
+				popup_info(_('Configuration file has more than one main level key. The first main level key will be used'));
 			}
 
 			if (empty ($url_prefix)) {
@@ -675,11 +675,11 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				if($upload['error']) {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+							popup_error(_('File too large to be used for server rules'));
 							redirect();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
+							popup_error(_('The file was corrupted during the upload'));
 							redirect();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
@@ -823,14 +823,14 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		$ret = $_SESSION['service']->applications_group_add_application($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+			popup_info(sprintf(_('Application Group \'%s\' successfully modified'), $group->name));
 		}
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$ret = $_SESSION['service']->applications_group_remove_application($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+			popup_info(sprintf(_('Application Group \'%s\' successfully modified'), $group->name));
 		}
 	}
 }
@@ -919,7 +919,7 @@ if ($_REQUEST['name'] == 'Certificate') {
 	
 	if ($_REQUEST['action'] == 'add') {
 		if (! array_key_exists('certificate', $_FILES)) {
-			popup_info(_("No certificate uploaded"));
+			popup_info(_("No Subscription Keys were uploaded"));
 			redirect();
 		}
 		
@@ -927,13 +927,13 @@ if ($_REQUEST['name'] == 'Certificate') {
 		if ($upload['error']) {
 			switch ($upload['error']) {
 				case 1: // UPLOAD_ERR_INI_SIZE
-					popup_error(_('Oversized file for server rules'));
+					popup_error(_('File too large to be used for server rules'));
 					break;
 				case 3: // UPLOAD_ERR_PARTIAL
-					popup_error(_('The file was corrupted while upload'));
+					popup_error(_('The file was corrupted during the upload'));
 					break;
 				case 4: // UPLOAD_ERR_NO_FILE
-					popup_error(_('No file uploaded'));
+					popup_error(_('No files were uploaded'));
 					break;
 			}
 			
@@ -954,7 +954,7 @@ if ($_REQUEST['name'] == 'Certificate') {
 		
 		$res = $_SESSION['service']->certificate_add(base64_encode($content));
 		if (! $res) {
-			popup_error(_('Uploaded file is not a valid certificate'));
+			popup_error(_('The uploaded file is not a valid Subscription Key'));
 			redirect();
 		}
 	}
@@ -983,11 +983,11 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 		if ($ret === true) {
 			$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
 			if (is_object($group)) {
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+				popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 			}
 			else {
 				// problem, what to do ?
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']));
+				popup_info(sprintf(_('User Group \'%s\' successfully modified'), $_REQUEST['group']));
 			}
 		}
 	}
@@ -1000,12 +1000,12 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 		}
 
 		if ($group->isDefault()) {
-			popup_error(sprintf(_("Unable to remove a user from User Group '%s' because it is the default usergroup"), $group->name));
+			popup_error(sprintf(_("Unable to remove a user from User Group '%s' because it is the default User Group"), $group->name));
 			redirect();
 		}
 
 		$_SESSION['service']->users_group_remove_user($_REQUEST['element'], $_REQUEST['group']);
-		popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+		popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 		
 		redirect();
 	}
@@ -1033,7 +1033,7 @@ if ($_REQUEST['name'] == 'Publication') {
 		
 		$res = $_SESSION['service']->publication_add($_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (! $res) {
-			popup_error(_('Unable to save the publication'));
+			popup_error(_('Unable to save the Publication'));
 			redirect();
 		}
 		
@@ -1043,7 +1043,7 @@ if ($_REQUEST['name'] == 'Publication') {
 	if ($_REQUEST['action'] == 'del') {
 		$res = $_SESSION['service']->publication_remove($_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (! $res) {
-			popup_error(_('Unable to delete the publication'));
+			popup_error(_('Unable to delete the Publication'));
 			redirect();
 		}
 		
@@ -1238,7 +1238,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 	else
 		$res = $_SESSION['service']->users_group_remove_policy($group->id, $_REQUEST['element']);
 
-	popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+	popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 	redirect();
 }
 
@@ -1342,7 +1342,7 @@ if ($_REQUEST['name'] == 'User') {
 		
 		$res = $_SESSION['service']->user_modify($login, $displayname, $password);
 		if (! $res)
-			die_error(sprintf(_("Unable to modify user '%s'"), $login), __FILE__, __LINE__);
+			die_error(sprintf(_("Unable to modify User '%s'"), $login), __FILE__, __LINE__);
 		
 		popup_info(sprintf(_("User '%s' successfully modified"), $login));
 		redirect('users.php?action=manage&id='.$login);
@@ -1352,7 +1352,7 @@ if ($_REQUEST['name'] == 'User') {
 		$override = ($_REQUEST['override'] == '1');
 		if ($_REQUEST['password'] == 'custom') {
 			if (strlen($_REQUEST['password_str']) == 0) {
-				popup_error(_('No custom password given for populating the database.'));
+				popup_error(_('No custom password specified for populating the database.'));
 				redirect();
 			}
 			
@@ -1409,7 +1409,7 @@ if ($_REQUEST['name'] == 'User_settings') {
 			popup_info(_('User successfully modified'));
 		}
 		else if ($ret === false) {
-			popup_error(_('Failed to modify user'));
+			popup_error(_('Failed to modify User'));
 		}
 	}
 }
@@ -1581,11 +1581,11 @@ if ($_REQUEST['name'] == 'Script') {
 			if ($upload['error']) {
 				switch ($upload['error']) {
 					case 1: // UPLOAD_ERR_INI_SIZE
-						popup_error(_('Oversized file for server rules'));
+						popup_error(_('File too large to be used for server rules'));
 						redirect();
 						break;
 					case 3: // UPLOAD_ERR_PARTIAL
-						popup_error(_('The file was corrupted while upload'));
+						popup_error(_('The file was corrupted during the upload'));
 						redirect();
 						break;
 					case 4: // UPLOAD_ERR_NO_FILE
@@ -1751,7 +1751,7 @@ if ($_REQUEST['name'] == 'Server') {
 				}
 				else {
 					$errors = true;
-					popup_error(sprintf(_("Failed to register Server '%s'"), $buf->getDisplayName()));
+					popup_error(sprintf(_("Failed to register server '%s'"), $buf->getDisplayName()));
 				}
 			}
 		}
