@@ -74,12 +74,13 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected boolean performDesktopIntegration = true;
 	protected DesktopIntegrator desktopIntegrator = null;
 	protected final List<WebAppsServerAccess> webAppsServers;
-	protected RecoverySeamlessDisplay recovery_display = null;
+	protected final List<RecoverySeamlessDisplay> recovery_display;
 
 	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, boolean persistent) {
 		super(smComm, persistent);
 		this.webAppsServers = new ArrayList<WebAppsServerAccess>();
+		this.recovery_display = new ArrayList<RecoverySeamlessDisplay>();
 		
 		String sm = this.smComm.getHost();
 		if (OSTools.isWindows()) {
@@ -118,7 +119,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.desktopIntegrator.addRDPServer(co);
 		}
 		
-		this.recovery_display = new RecoverySeamlessDisplay(co);
+		this.recovery_display.add(new RecoverySeamlessDisplay(co));
 		co.setShell("OvdRemoteApps");
 	}
 
