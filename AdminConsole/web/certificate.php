@@ -56,11 +56,14 @@ function show_default() {
 		echo '<tr>';
 		echo '<td>'.$certificate['organization'].'</td>';
 		echo '<td>'.$certificate['owner'].'</td>';
-		echo '<td>'.$certificate['Email'].'</td>';
+		echo '<td>'.$certificate['email'].'</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $certificate['start']).'</td>';
 		echo '<td>'.date('m/d/Y H:i:s', $certificate['expiry']).'</td>';
 
 		echo '<td>';
+		if($certificate['type'] == "EVAL") {
+			echo _('Evaluation').'<br/>';
+		}
 		if($certificate['concurrent_users'] !== null) {
 			echo _('Connected User Limit').' : '.$certificate['concurrent_users'].'<br/>';
 		}
@@ -77,7 +80,9 @@ function show_default() {
 		}
 		else {
 			$delta = get_expiry_days($certificate['expiry']);
-			if ($delta < 20) {
+			if ($delta < 0) {
+				echo '<td class="msg_error">'._('Subscription Key expired').'</td>';
+			} elseif ($delta < 20) {
 				echo '<td class="msg_warn">'.sprintf(_('Only %d days remaining'), $delta).'</td>';
 			}
 			else {
@@ -154,7 +159,9 @@ function print_summary() {
 	if (! $limits['global_validity']) {
 		echo '<td class="msg_error">'._('No valid Subscription Keys').'</td>';
 	} else {
-		if ($delta < 20) {
+		if ($delta < 0) {
+			echo '<td class="msg_error">'._('Subscription Key expired').'</td>';
+		} elseif ($delta < 20) {
 			echo '<td class="msg_warn">'.sprintf(_('Only %d days remaining'), $delta).'</td>';
 		}
 		else {
