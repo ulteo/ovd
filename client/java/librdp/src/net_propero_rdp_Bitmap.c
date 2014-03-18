@@ -74,7 +74,8 @@ JNIEXPORT jintArray JNICALL Java_net_propero_rdp_Bitmap_nRLEDecompress
   }
 
   (*env)->ReleaseByteArrayElements(env, compressed_pixel, buf, 0);
-
+  (*env)->DeleteLocalRef(env, compressed_pixel);
+  free(decompressed_pixel);
   return rgb_pixel;
 }
 
@@ -109,7 +110,6 @@ JNIEXPORT jintArray JNICALL Java_net_propero_rdp_Bitmap_nJpegDecompress
 
     (*env)->SetIntArrayRegion(env, rgb_pixel, 0, width * height, (jint *)output);
 
-    free(output);
   }
   else
   {
@@ -118,6 +118,8 @@ JNIEXPORT jintArray JNICALL Java_net_propero_rdp_Bitmap_nJpegDecompress
   }
 
   (*env)->ReleaseByteArrayElements(env, jpeg_pixel, buf, 0);
+  (*env)->DeleteLocalRef(env, jpeg_pixel);
+  free(output);
 
   return rgb_pixel;
 }

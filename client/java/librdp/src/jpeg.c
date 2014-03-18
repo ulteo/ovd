@@ -140,7 +140,7 @@ do_decompress(char* comp_data, int comp_data_bytes, int width, int height, char*
 
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
-
+  free(bmp_buffer);
   return FALSE;
 }
 
