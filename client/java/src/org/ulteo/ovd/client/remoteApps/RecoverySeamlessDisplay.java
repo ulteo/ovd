@@ -26,6 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.propero.rdp.Input;
+import net.propero.rdp.Common;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 
@@ -39,6 +40,9 @@ import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.utils.jni.WorkArea;
+import org.ulteo.rdp.seamless.SeamlessChannel;
+
 
 public class RecoverySeamlessDisplay extends TimerTask implements RdpListener, OvdAppListener {
 	private SeamlessFrame f;
@@ -60,13 +64,12 @@ public class RecoverySeamlessDisplay extends TimerTask implements RdpListener, O
 
 	public void run() {
 		RdesktopCanvas canvas = this.co.getCanvas();
-		Rectangle res = new Rectangle(canvas.width, canvas.height);
+		Rectangle res = WorkArea.getWorkAreaSize();
 		Input input = canvas.getInput();
 
-		this.f = new SeamlessFrame(0, 0 , res, 0, this.co.getCommon());
-		this.f.sw_setMyPosition(0, 0, canvas.width, canvas.height);
-		this.f.sw_setExtendedState(SeamlessWindow.STATE_FULLSCREEN);
+		this.f = new RecoverySeamlessDisplayWindow(res, this.co.getCommon());
 		this.f.setVisible(true);
+		this.f.setLocation(res.x, res.y);
 		this.f.addMouseListener(input.getMouseAdapter());
 	}
 
@@ -112,5 +115,19 @@ public class RecoverySeamlessDisplay extends TimerTask implements RdpListener, O
 	public void ovdInstanceStarted(OvdAppChannel channel_, ApplicationInstance appInst_) {}
 	public void ovdInstanceStopped(ApplicationInstance appInst_) {}
 	public void ovdInstanceError(ApplicationInstance appInst_) {}
+
+	private class RecoverySeamlessDisplayWindow extends SeamlessFrame {
+		private int w, h;
+		public RecoverySeamlessDisplayWindow(Rectangle coords, Common common) {
+			super(0, 0, new Rectangle(0,0,coords.width, coords.height), org.ulteo.rdp.seamless.SeamlessChannel.WINDOW_CREATE_FIXEDSIZE, common);
+			this.w = coords.width;
+			this.h = coords.height;
+		}
+
+		@Override
+		public Rectangle getBounds() {
+			return new Rectangle(0, 0, this.w, this.h);
+		}
+	}
 }
 
