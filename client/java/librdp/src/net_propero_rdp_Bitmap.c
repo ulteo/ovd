@@ -100,14 +100,7 @@ JNIEXPORT jintArray JNICALL Java_net_propero_rdp_Bitmap_nJpegDecompress
   output = (BYTE *)malloc(width * height * 4); // ARGB format
   if (output)
   {
-    float diff;
-    clock_t begin_time;
-    begin_time = clock();
-
     jpeg_decompress((BYTE *)buf, output, width, height, bufsize);
-
-    diff = (float)( clock () - begin_time ) /  CLOCKS_PER_SEC;
-
     (*env)->SetIntArrayRegion(env, rgb_pixel, 0, width * height, (jint *)output);
 
   }
