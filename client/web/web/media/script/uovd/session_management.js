@@ -2,6 +2,10 @@
 uovd.SessionManagement = function(params, rdp_provider, http_provider, webapps_provider) {
 	this.parameters = params;
 	this.status_check = null;
+	this.status_check_interval_long  = 10*60*1000; // 10min
+	this.status_check_interval_short = 3*1000;     // 3sec
+	this.status_check_interval_now   = 100;        // 100ms
+	this.status_check_interval = this.status_check_interval_short;
 
 	this.session = null;
 	this.rdp_provider = rdp_provider;
@@ -80,20 +84,23 @@ uovd.SessionManagement = function(params, rdp_provider, http_provider, webapps_p
 				self.session.destroying(type);
 			}
 		}),
-		"ovd.session.starting" : new Array(function(type, source, params) {
-			/* Set the polling interval to 3 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), 3000);
+		"ovd.httpProvider.sessionStatus" : new Array(function(type, source, params) {
+			if(self.session.phase == uovd.SESSION_PHASE_DESTROYED ) { return; }
+			if(self.session.phase == uovd.SESSION_PHASE_STARTED )   { self.status_check_interval = self.status_check_interval_long }
+			else                                                    { self.status_check_interval = self.status_check_interval_short; }
+
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval);
 		}),
-		"ovd.session.started" : new Array(function(type, source, params) {
-			/* Lower the polling interval to 30 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), 10*60*1000);
+		"ovd.session.starting" : new Array(function(type, source, params) {
+			/* Start status checking */
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval_short);
 		}),
 		"ovd.session.destroying" : new Array(function(type, source, params) {
-			/* Set the polling interval to 3 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), 3000);
+			/* Trigger status check now !*/
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval_now);
 
 			/* Disconnect the client */
 			self.rdp_provider.disconnect();
@@ -101,7 +108,7 @@ uovd.SessionManagement = function(params, rdp_provider, http_provider, webapps_p
 		}),
 		"ovd.session.destroyed" : new Array(function(type, source, params) {
 			/* Clear status_check interval */
-			clearInterval(self.status_check);
+			clearTimeout(self.status_check);
 		}),
 		"ovd.rdpProvider.crash" : new Array(function(type, source, params) {
 			self.http_provider.sessionEnd();
