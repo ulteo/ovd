@@ -23,7 +23,7 @@ class SessionManagement_localusers extends SessionManagement_internal {
 	protected $override_password = false;
 	
 	public static function getServerRoles() {
-		return array(Server::SERVER_ROLE_APS);
+		return array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_WEBAPPS);
 	}
 	
 	public static function getApplicationServerTypes() {

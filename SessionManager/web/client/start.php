@@ -245,8 +245,10 @@ if (isset($old_session_id)) {
 //
 	$prepare_servers = array();
 	if ($session->mode == Session::MODE_APPLICATIONS) {
-		foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
-			$prepare_servers[] = $server_id;
+		if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session->servers)) {
+			foreach ($session->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
+				$prepare_servers[] = $server_id;
+			}
 		}
 	}
 

@@ -852,6 +852,10 @@ abstract class SessionManagement extends Module {
 	}
 	
 	public function prepareWebappsAccess($session_) {
+		if (! array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_->servers)) {
+			return true;
+		}
+		
 		$prepare_servers = array();
 		foreach ($session_->servers[Server::SERVER_ROLE_WEBAPPS] as $server_id => $data) {
 			$prepare_servers[] = $server_id;
@@ -955,7 +959,15 @@ abstract class SessionManagement extends Module {
 			$timezone = $this->timezone;
 	
 		if ($session_->mode == Session::MODE_DESKTOP) {
-			$have_external_apps = count($session_->servers[Server::SERVER_ROLE_APS]) > 1 || count($session_->servers[Server::SERVER_ROLE_WEBAPPS]) > 0;
+			$have_external_apps = false;
+			if (array_key_exists(Server::SERVER_ROLE_APS, $session_->servers)) {
+				$have_external_apps |= (count($session_->servers[Server::SERVER_ROLE_APS]) > 1);
+			}
+			
+			if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session_->servers)) {
+				$have_external_apps |= (count($session_->servers[Server::SERVER_ROLE_WEBAPPS]) > 0);
+			}
+			
 			if ($session_->mode == Session::MODE_DESKTOP && $allow_external_applications && $have_external_apps) {
 				$external_apps_token = new Token(gen_unique_string());
 				$external_apps_token->type = 'external_apps';
