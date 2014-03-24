@@ -110,9 +110,10 @@ if ($show_configuration) {
 
 	<ul>
 		<?php
-		if ($show_applications)
+		if ($show_applications) {
 			echo '<li><a href="applications.php">'._('Applications').'</a></li>';
-		echo '<li><a href="applications_webapp.php">'._('Web Applications').'</a></li>';
+			echo '<li><a href="applications_webapp.php">'._('Web Applications').'</a></li>';
+		}
 		if ($show_applicationsgroups)
 			echo '<li><a href="appsgroup.php">'._('Application Groups').'</a><br /><br /></li>';
 		if ($show_publications) {

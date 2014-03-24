@@ -4879,7 +4879,7 @@ class OvdAdminSoap {
 	}
 	
 	public function certificates_list() {
-		$this->check_authorized('manageConfiguration');
+		$this->check_authorized('viewConfiguration');
 
 		if (class_exists("PremiumManager")) {
 			return PremiumManager::certificates_list();
@@ -4889,7 +4889,7 @@ class OvdAdminSoap {
 	}
 
 	public function certificates_limits() {
-		$this->check_authorized('manageConfiguration');
+		$this->check_authorized('viewConfiguration');
 
 		if (class_exists("PremiumManager")) {
 			return PremiumManager::certificates_limits();
