@@ -575,7 +575,7 @@ if (array_key_exists(Server::SERVER_ROLE_WEBAPPS, $session->servers)) {
 		$server_node = $dom->createElement('webapp-server');
 		$server_node->setAttribute('type', 'webapps');
 		$server_node->setAttribute('base-url', $server->getBaseURL());
-		$server_node->setAttribute('webapps-url', $webapps_url);
+		$server_node->setAttribute('webapps-url', $session->settings['webapps-url']);
 		$server_node->setAttribute('login', $user_login_webapps);
 		$server_node->setAttribute('password', $user_password_webapps);
 
