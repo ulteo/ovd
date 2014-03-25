@@ -461,8 +461,6 @@ if (! isset($old_session_id)) {
 			throw_response(INTERNAL_ERROR);
 		}
 	}
-	
-	$save_session = Abstract_Session::save($session);
 }
 
 $_SESSION['session_id'] = $session->id;

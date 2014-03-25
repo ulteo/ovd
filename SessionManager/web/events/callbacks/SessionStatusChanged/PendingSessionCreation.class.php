@@ -88,7 +88,9 @@ class SessionStatusChangedPendingSessionCreation extends EventCallback {
 			Logger::error('main', "SessionStatusChangedPendingSessionCreation:: SessionManagement initialization failed");
 			return false;
 		}
-	
+		
+		// prepareSession can take some time
+		$session = Abstract_Session::load($session->id);
 		$session->need_creation = 0;
 		Abstract_Session::save($session);
 		

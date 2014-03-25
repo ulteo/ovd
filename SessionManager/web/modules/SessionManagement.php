@@ -913,8 +913,6 @@ abstract class SessionManagement extends Module {
 				$session_->orderDeletion(true, Session::SESSION_END_STATUS_ERROR);
 				
 				return false;
-			} else {
-				$session_->setServerStatus($server->id, Session::SESSION_STATUS_READY, NULL, Server::SERVER_ROLE_WEBAPPS);
 			}
 			
 			$ret_dom = new DomDocument('1.0', 'utf-8');
@@ -922,6 +920,12 @@ abstract class SessionManagement extends Module {
 			$node = $ret_dom->getElementsByTagname('session')->item(0);
 			$webapps_url = $node->getAttribute('webapps-scheme').'://'.$server->getExternalName().':'.$node->getAttribute('webapps-port');
 			$session_->settings['webapps-url'] = $webapps_url;
+			
+			// Make sure that session object is uptodate
+			$buf = Abstract_Session::load($session_->id);
+			$buf->setServerStatus($server->id, Session::SESSION_STATUS_READY, NULL, Server::SERVER_ROLE_WEBAPPS);
+			$buf->settings['webapps-url'] = $webapps_url;
+			Abstract_Session::save($buf);
 		}
 		
 		return true;
