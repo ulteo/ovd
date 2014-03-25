@@ -120,7 +120,7 @@ public class BugReporter implements ActionListener {
 			public void run() {
 				BugReport bug = getBug();
 				if (bug == null) {
-					SwingTools.invokeLater(GUIActions.createDialog(I18n._("Please fill description field."), I18n._("Empty field"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
+					SwingTools.invokeLater(GUIActions.createDialog(I18n._("Please fill in the description field."), I18n._("Empty field"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 					return;
 				}
 				

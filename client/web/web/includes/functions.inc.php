@@ -231,7 +231,7 @@ function get_available_translations($lang) {
 
 		'system_compatibility_error_1'	=>	_('System compatibility error'),
 		'system_compatibility_error_2'	=>	_('Java is either not available on your system or in your web browser.'),
-		'system_compatibility_error_3'	=>	_('Please install Java extension for your web browser or contact your administrator.'),
+		'system_compatibility_error_3'	=>	_('Please install the Java extension for your web browser or contact your administrator.'),
 		'system_compatibility_error_4'	=>	_('You have not accepted the Java security window.'),
 		'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
 
@@ -241,7 +241,7 @@ function get_available_translations($lang) {
 		'suspend'						=>	_('Suspend'),
 		'logout'						=>	_('Logout'),
 
-		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separated window'),
+		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separate window'),
 		'desktop_fullscreen_text2'		=>	str_replace(
 									array('[A]', '[/A]'),
 									array('<a href="javascript:;">', '</a>'),
@@ -272,7 +272,7 @@ function get_available_translations($lang) {
 		'window_onbeforeunload'			=>	_('You will be disconnected from your OVD session.'),
 
 		'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
-		'session_time_restriction_expire'=>	_('Your session is going to be disconnected in %MINUTES% minutes because of logon time restriction policy'),
+		'session_time_restriction_expire'=>	_('Your session is going to be disconnected in %MINUTES% minutes because of the logon time restriction policy'),
 
 		'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),
 		'session_end_ok'				=>	_('Your session has ended, you can now close the window'),

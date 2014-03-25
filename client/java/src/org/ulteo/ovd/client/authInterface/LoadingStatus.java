@@ -51,15 +51,15 @@ public enum LoadingStatus {
 			case LOADING_START:
 				return I18n._("Start loading session");
 			case SM_CONNECTION:
-				return  I18n._("Connecting to the session manager");
+				return  I18n._("Connecting to the Session Manager");
 			case SM_START:
-				return I18n._("Get session information from session manager");
+				return I18n._("Get session information from Session Manager");
 			case SM_GET_APPLICATION:
-				return I18n._("Get application data from session manager");
+				return I18n._("Get application data from Session Manager");
 			case CLIENT_INSTALL_APPLICATION:
 				return I18n._("Installing application data on client");
 			case CLIENT_WAITING_SERVER:
-				return I18n._("Waiting server for session");
+				return I18n._("Waiting on server for session");
 			default:
 				return I18n._("Invalid status");
 			}
