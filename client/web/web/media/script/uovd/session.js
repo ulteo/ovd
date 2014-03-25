@@ -73,9 +73,12 @@ uovd.Session.prototype.parseSession = function(xml) {
 				self.servers.push(new uovd.server.Rdp(self, jQuery(this)));
 			});
 
-			xml.find("webapp-server").each( function() {
-				self.servers.push(new uovd.server.WebApps(self, jQuery(this)));
-			});
+			/* Do not handle webapps servers on desktop mode */
+			if(this.mode == uovd.SESSION_MODE_APPLICATIONS) {
+				xml.find("webapp-server").each( function() {
+					self.servers.push(new uovd.server.WebApps(self, jQuery(this)));
+				});
+			}
 		}
 	} catch(error) {
 		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml", "from":"start"});

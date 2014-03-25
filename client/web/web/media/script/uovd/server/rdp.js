@@ -20,9 +20,12 @@ uovd.server.Rdp = function(session, xml) {
 		}
 	}
 
-	xml.find("application").each( function() {
-		self.applications.push(new uovd.Application(self, jQuery(this)));
-	});
+	/* Do not handle applications on desktop mode */
+	if(session.mode == uovd.SESSION_MODE_APPLICATIONS) {
+		xml.find("application").each( function() {
+			self.applications.push(new uovd.Application(self, jQuery(this)));
+		});
+	}
 };
 
 uovd.server.Rdp.prototype = new uovd.server.Base();
