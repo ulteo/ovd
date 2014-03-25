@@ -80,6 +80,16 @@ uovd.SessionManagement = function(params, rdp_provider, http_provider, webapps_p
 				self.http_provider.sessionEnd();
 			}
 
+			if(to == uovd.SERVER_STATUS_CONNECTED) {
+				/* Check for other servers */
+				for(var i=0 ; i<self.session.servers.length ; ++i) {
+					if(self.session.servers[i].status != uovd.SERVER_STATUS_CONNECTED) { return; }
+				}
+
+				/* All connected or ready : notify */
+				self.fireEvent("ovd.session.serversConnected", self, {"servers":self.session.servers});
+			}
+
 			if(to == uovd.SERVER_STATUS_DISCONNECTED) {
 				self.session.destroying(type);
 			}
