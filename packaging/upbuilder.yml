@@ -152,6 +152,8 @@ upbuilder:
       module: "setup-aps"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_aps_$(version).exe": "ulteo-ovd-applicationserver-$(version).exe"
     webdavfs:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -159,6 +161,8 @@ upbuilder:
       module: "setup-webdavfs"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_webdavfs_$(version).exe": "ulteo-webdavfs-$(version).exe"
     nativew:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -166,6 +170,8 @@ upbuilder:
       module: "setup-native-client"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_native-client_$(version).exe": "ulteo-ovd-native-client-$(version).exe"
       clones:
         - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     nativews:
@@ -175,6 +181,8 @@ upbuilder:
       module: "setup-native-client-standalone"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_native-client-standalone_$(version).exe": "ulteo-ovd-native-client-standalone-$(version).exe"
       clones:
         - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     wnos:
