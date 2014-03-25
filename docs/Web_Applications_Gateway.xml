@@ -169,7 +169,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			<title>Ubuntu Precise</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main]]>
           </screen>
@@ -192,7 +192,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			<title>Debian Squeeze</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name_s@ @distrib_version_s@ main]]>
           </screen>
@@ -215,7 +215,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			<title>Debian Wheezy</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name_w@ @distrib_version_w@ main]]>
           </screen>

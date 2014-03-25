@@ -154,7 +154,7 @@ deb @BASE_URI_GOLD@/@distrib_name_l@ @distrib_version_l@ main]]>
 			<title>Ubuntu Precise</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main
 deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
@@ -175,7 +175,7 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
 			<title>Debian Squeeze</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name_s@ @distrib_version_s@ main
 deb @BASE_URI_GOLD@/@distrib_name_s@ @distrib_version_s@ main]]>
@@ -196,7 +196,7 @@ deb @BASE_URI_GOLD@/@distrib_name_s@ @distrib_version_s@ main]]>
 			<title>Debian Wheezy</title>
 			 <itemizedlist>
 		<listitem> 
-			Edit the /etc/apt/sources.list.d/ulteo-ovd.list file and add these lines:          
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name_w@ @distrib_version_w@ main
 deb @BASE_URI_GOLD@/@distrib_name_w@ @distrib_version_w@ main]]>

@@ -144,7 +144,7 @@
         <listitem id="repository_step1">
           <para id="repository_online_step1_para">
             Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
+            <emphasis>/etc/apt/sources.list.d/ulteo_ovd.list</emphasis>
             file and add these lines:
           </para>
           <screen>

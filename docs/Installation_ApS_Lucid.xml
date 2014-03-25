@@ -96,7 +96,7 @@
     <itemizedlist>
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/sources.list.d/ulteo-ovd.list</emphasis>
+	  Edit the <emphasis>/etc/apt/sources.list.d/ulteo_ovd.list</emphasis>
 	  file and add these lines:
         </para>
         <screen>
@@ -107,7 +107,7 @@ deb http://archive.ulteo.com/ovd/desktop hardy main universe ulteo]]>
 
       <listitem>
         <para>
-	  Edit the <emphasis>/etc/apt/preferences.d/ulteo-ovd</emphasis>
+	  Edit the <emphasis>/etc/apt/preferences.d/ovd-desktop</emphasis>
 	  file and add these lines:
         </para>
         <screen>
