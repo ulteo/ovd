@@ -247,6 +247,9 @@ function configureUI(mode) {
 			/* do not use .hide() or applet wil not load */
 			jQuery('#desktopContainer').width(1).height(1).css("overflow", "hidden");
 
+			/* Set background*/
+			jQuery('#sessionContainer').css("background", "");
+
 			/* Show applications mode components */
 			jQuery("#applicationsHeader").show();
 			jQuery("#applicationsContainer").show();
@@ -267,6 +270,9 @@ function configureUI(mode) {
 		(function() {
 			/* Show desktop */
 			jQuery('#desktopContainer').width("100%").height("100%");
+
+			/* Set background*/
+			jQuery('#sessionContainer').css("background", "#000");
 
 			/* Hide applications mode components */
 			jQuery("#applicationsHeader").hide();

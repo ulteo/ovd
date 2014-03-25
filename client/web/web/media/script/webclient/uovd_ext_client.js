@@ -99,6 +99,10 @@ function initialize_framework() {
 		}
 	});
 
+	framework.session_management.addCallback("ovd.session.serversConnected", function(type, source, params) {
+		hideSplash();
+	});
+
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
 		/* Configure unload */
 		window.onbeforeunload = function(e) {};

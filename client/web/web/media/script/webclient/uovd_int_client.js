@@ -429,6 +429,10 @@ function initialize_framework() {
 			hideSplash();
 		}
 	});
+
+	framework.session_management.addCallback("ovd.session.serversConnected", function(type, source, params) {
+		hideSplash();
+	});
 	
 	framework.session_management.addCallback("ovd.session.timeRestriction", function(type, source, params) {
 		if (params["when"] > 10) { // HARDCODED 10 value related to next session_status call. Must define by sessionmanagement constant/var
