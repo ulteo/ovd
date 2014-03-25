@@ -2,6 +2,7 @@ upbuilder:
   deb: "packaging/debian/$(module)"
   rpm: "packaging/rpm/$(module)"
   win: "packaging/windows/$(module)"
+  lin: "packaging/linux/$(module)"
   packages:
     sm:
       src: "SessionManager"
@@ -192,3 +193,25 @@ upbuilder:
       module: "ovd-wnos"
       builder: autotools
       archs: $(consts.ALL_ARCH)
+    nativel:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "archive-native-client"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+      files:
+        "ulteo-ovd-native-client_$(version).tar.gz": "ulteo-ovd-native-client_$(version).tar.gz"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
+    nativex:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "archive-native-client-macosx"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+      files:
+        "ulteo-ovd-native-client_$(version).app.zip": "ulteo-ovd-native-client_$(version).app.zip"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}

@@ -381,7 +381,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.customizeConnection(wasa);
 		}
 		
-		this.desktopIntegrator.start();
+		if (this.desktopIntegrator != null)
+			this.desktopIntegrator.start();
 		
 		do
 		{
