@@ -349,8 +349,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
 
+<xsl:template match="screenshot">  
+	<xsl:text>&#10;\begin{center}</xsl:text>
+    <xsl:apply-templates/>    
+    <xsl:text>\end{center}&#10;</xsl:text>  
+</xsl:template>
 
+<xsl:template match="screeninfo">
+</xsl:template>
+ 
 
   <!-- modify this template to protect # URL inside admonitions -->
   <xsl:template name="ulink-encode">
