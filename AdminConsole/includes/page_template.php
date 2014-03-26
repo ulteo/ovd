@@ -367,7 +367,7 @@ function page_header($params_=array()) {
     $link = array("<a href='/ovd/admin/certificate.php'>", "</a>");
     $expirity = $_SESSION['service']->has_valid_certificate();
     if ($expirity !== false) {
-      $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
+      $expirity = ceil(($expirity - gmmktime()) / (60 * 60 * 24));
       if ($expirity > 0 && $expirity < 20) {
 	$errors[] = sprintf(_("Your %sPremium Edition Subscription Key%s will expire in %d days"), $link[0], $link[1], $expirity);
       } elseif ($expirity <= 0) {

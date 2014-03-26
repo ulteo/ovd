@@ -31,9 +31,9 @@ if (! checkAuthorization('viewConfiguration'))
 show_default();
 
 function get_expiry_days($date) {
-		$delta = $date - gmmktime();
-		return sprintf('%d', $delta/(60 * 60 * 24));
-	}
+	$delta = $date - gmmktime();
+	return sprintf('%d', ceil($delta/(60 * 60 * 24)));
+}
 
 
 function show_default() {
@@ -57,8 +57,8 @@ function show_default() {
 		echo '<td>'.$certificate['organization'].'</td>';
 		echo '<td>'.$certificate['owner'].'</td>';
 		echo '<td>'.$certificate['email'].'</td>';
-		echo '<td>'.date('m/d/Y H:i:s', $certificate['start']).'</td>';
-		echo '<td>'.date('m/d/Y H:i:s', $certificate['expiry']).'</td>';
+		echo '<td>'.gmdate('m/d/Y H:i:s', $certificate['start']).'</td>';
+		echo '<td>'.gmdate('m/d/Y H:i:s', $certificate['expiry']).'</td>';
 
 		echo '<td>';
 		if($certificate['type'] == "EVAL") {
@@ -176,7 +176,7 @@ function print_summary() {
 		echo '<td style="width: 200px;">';
 		echo '<span>'._('Valid from').'</span>';
 		echo '</td>';
-		echo '<td>'.date('m/d/Y H:i:s', $limits['global_from']).'</td>';
+		echo '<td>'.gmdate('m/d/Y H:i:s (e)', $limits['global_from']).'</td>';
 		echo '</tr>';
 	}
 
@@ -185,7 +185,7 @@ function print_summary() {
 		echo '<td style="width: 200px;">';
 		echo '<span>'._('Valid until').'</span>';
 		echo '</td>';
-		echo '<td>'.date('m/d/Y H:i:s', $limits['global_to']).'</td>';
+		echo '<td>'.gmdate('m/d/Y H:i:s (e)', $limits['global_to']).'</td>';
 		echo '</tr>';
 	}
 
