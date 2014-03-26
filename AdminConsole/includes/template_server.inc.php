@@ -7,6 +7,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -489,11 +490,13 @@ function server_display_role_preparation_fs($server_) {
 			}
 
 			if (array_key_exists('groups', $a_networkfolder)) {
-				foreach ($a_networkfolder['groups'] as $group_id => $group_name) {
-					$buf = array();
-					$buf['id'] = $group_id;
-					$buf['name'] = $group_name;
-					$ret['used by sharedfolders'][$a_networkfolder_id] []= $buf;
+				foreach ($a_networkfolder['groups'] as $mode => $networkfolder) {
+					foreach ($networkfolder as $group_id => $group_name) {
+						$buf = array();
+						$buf['id'] = $group_id;
+						$buf['name'] = "$group_name ($mode)";
+						$ret['used by sharedfolders'][$a_networkfolder_id] []= $buf;
+					}
 				}
 			}
 			
