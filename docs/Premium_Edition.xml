@@ -43,14 +43,26 @@
    <section>
 	   <title>@gold_edition@</title>
 	   <para>		   
-		<emphasis>@gold_edition@</emphasis> is a comprehensive platform designed to deliver solutions for workforce mobility, BYOD initiatives, desktop virtual projects and more. It comprises advanced features such as an SSL Gateway and two factor authentication support for enhanced security and integration to Microsoft SharePoint and Alfresco. It delivers seamless applications and desktop sessions from Windows and Linux servers to native Windows and Linux clients, HTML5 enabled browsers and mobile devices. A fully featured administrator web console provides for configuration of server settings, user management, application publishing and server monitoring along with server load balancing for optimum performance and scalability.		
+		<emphasis>@gold_edition@</emphasis> is a comprehensive platform designed 
+		to deliver solutions for workforce mobility, BYOD initiatives, virtual 
+		desktop projects and more. It consiste of several advanced features such 
+		as an SSL Gateway and two factor authentication support for enhanced 
+		security and integration to Microsoft SharePoint and Alfresco. It delivers
+	    seamless applications and desktop sessions from Windows and Linux servers
+	    to native Windows and Linux clients, HTML5 enabled browsers and mobile devices.
+	    A fully featured web-based Administrator Console provides a configuration 
+	    interface for managing server settings, user management, application 
+	    publishing and server monitoring along with server load balancing
+	    for optimum performance and scalability.		
 			<!--
 			TBD This file needs to be re-written to take into account the new language being used for PE. 
 			-->
 			<para>
-				The <emphasis>@gold_edition@</emphasis> allows the users to enable @gold_edition@ features such as SmartCard support 
-				and enables users to connect using a <emphasis>@gold_edition@</emphasis> client. 
-				Ulteo provides the following <emphasis>@gold_edition@</emphasis> clients:
+				The <emphasis>@gold_edition@</emphasis> provides 
+				@gold_edition@ features such as SmartCard support 
+				and enables users to connect using a <emphasis>@gold_edition@</emphasis> 
+				client. Ulteo provides the following <emphasis>@gold_edition@</emphasis>
+				clients:
 				<itemizedlist>
 				<listitem>
 				<para><ulink url="NativeClient.html">Native Client for Windows and Linux</ulink></para>
@@ -62,17 +74,17 @@
 				 <para>Android Client</para>
 				</listitem>
 				</itemizedlist>
-				The OVD Gateway is also available as part of the <emphasis>@gold_edition@</emphasis>. For more information on the Gateway, please refer to the documentation on the 
+				The OVD Gateway is also available as part of the
+				<emphasis>@gold_edition@</emphasis>. For more information on the Gateway, 
+				please refer to the documentation on the 
 				<ulink url="Installation_Gateway_Precise.html">OVD Gateway</ulink>				 
-				
-				
 			</para>		 
 	   </para>
    </section>
     <section id="community">
     <title id="intro_community">Installation</title>     		 		     
         <note>
-			<para>The Premium module is available on all the supported distributions.</para>			
+			<para>The Premium module is available for all the supported distributions.</para>			
 			<itemizedlist>
 				<listitem>Red Hat Enterprise Linux 6</listitem>
 				<listitem>SUSE Linux Enterprise Server 11.SP1</listitem>
@@ -82,12 +94,18 @@
 				<listitem>Debian Wheezy</listitem>				
 				<listitem>OpenSUSE 11.3</listitem>
 			</itemizedlist>
-        </note>  
+        </note>
+        <para>
+        In order to enable the Premium Edition, an additional package for the 
+        Session Manager is required together with a Subscription Key obtained from Ulteo.
+        </para>   
          <section>			
 			<title>Red Hat Enterprise Linux 6</title>
 			 <itemizedlist>
 		<listitem> 			
-			<para>Edit the file <emphasis>/etc/yum.repos.d/ovd.premium.repo</emphasis> with:</para>        
+			<para>Edit the file <emphasis>/etc/yum.repos.d/ovd.premium.repo</emphasis> 
+			to add the following:
+			</para>        
           <screen>
 <![CDATA[[ovd-@VERSIONNOTILD@]
 name=Ulteo OVD @VERSION@
@@ -98,8 +116,9 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+           <para>The Premium Edition package 
+           <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[
@@ -112,15 +131,15 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			<title>SUSE Linux Enterprise Server 11.SP1</title>
 			 <itemizedlist>
 		<listitem> 			
-			<para>Add the Premium repository: </para>        
+			<para>Add the Premium Edition repository: </para>        
           <screen>
 <![CDATA[# zypper ar @BASE_URI_GOLD@/@distrib_name_sl@/@distrib_version_sl@ ovd
 # zypper refresh]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+           <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[
@@ -140,8 +159,8 @@ deb @BASE_URI_GOLD@/@distrib_name_l@ @distrib_version_l@ main]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+            <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[# apt-get update
@@ -161,8 +180,8 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+            <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[# apt-get update
@@ -182,8 +201,8 @@ deb @BASE_URI_GOLD@/@distrib_name_s@ @distrib_version_s@ main]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+           <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[# apt-get update
@@ -203,8 +222,8 @@ deb @BASE_URI_GOLD@/@distrib_name_w@ @distrib_version_w@ main]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+            <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[# apt-get update
@@ -218,15 +237,15 @@ deb @BASE_URI_GOLD@/@distrib_name_w@ @distrib_version_w@ main]]>
 			<title>OpenSUSE 11.3</title>
 			 <itemizedlist>
 		<listitem> 			
-			<para>Add the Premium repository: </para>         
+			<para>Add the Premium Edition repository: </para>         
           <screen>
 <![CDATA[# zypper ar @BASE_URI_GOLD@/@distrib_name_o@/@distrib_version_o@ ovd
 # zypper refresh]]>
           </screen>
           </listitem>
           <listitem>
-           <para>			  
-          You have to install the Premium module <emphasis>ulteo-ovd-session-manager-premium</emphasis>:
+            <para>The Premium Edition <emphasis>ulteo-ovd-session-manager-premium</emphasis> 
+           has to be installed to activate Premium Edition features:
         </para>
         <screen>
 <![CDATA[
@@ -239,27 +258,28 @@ deb @BASE_URI_GOLD@/@distrib_name_w@ @distrib_version_w@ main]]>
    <section id="configuration">
     <title id="conf_pe">Configuration</title>
     <para>
-     Go to the OVD Administration console, you will have a message which notifies you that you don't have any Premium license.
+     Go to the OVD Administration console, you will see a message which 
+     notifies you that you don't have a Premium Edition Subscription Key.
     </para>
     <screenshot>
-      <screeninfo>Installation of Premium license</screeninfo>
+      <screeninfo>Installation of Premium Edition Subscription Key</screeninfo>
       <graphic fileref="img/premium/sm_install_premium.png"></graphic>
     </screenshot>
     <para>
-    Then, go to configuration and licensing tab.
+    Then, go to the Configuration->Subscription Keys tab.
     </para>
     <para>
      <screenshot>
-      <screeninfo>Add Premium license</screeninfo>
+      <screeninfo>Add Subscription Key</screeninfo>
       <graphic fileref="img/premium/sm_add_license.png"></graphic>
     </screenshot>
     </para>
     <para>
-    You have to install your license you received.
-    Once done, you will have details of this license and its status
+    Install the Premium Edition Subscription Key you received.
+    Once done, you can view the details of the Subscription Key and its status
     </para>
      <screenshot>
-      <screeninfo>Premium license activated</screeninfo>
+      <screeninfo>Subscription Key Activated</screeninfo>
       <graphic fileref="img/premium/sm_license_valid.png"></graphic>
     </screenshot>
     

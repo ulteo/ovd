@@ -1,129 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
+<article>
   <transform_var name="gold_product_name" value="Native Client"/>
-  <transform_var name="distrib_pretty_name" value="Ubuntu 12.04 (Precise Pangolin)"/>
-  <transform_var name="distrib_name" value="ubuntu" />
+
+  <transform_var name="distrib_pretty_name"
+                 value="Ubuntu 12.04 (Precise Pangolin)"/>
+
+  <transform_var name="distrib_name" value="ubuntu"/>
+
   <transform_var name="distrib_version" value="precise"/>
+
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+
     <subtitle>Native Client</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+
+    <graphic align="center" fileref="img/ovd.png"/>
 
     <copyright>
       <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com"/></holder>
     </copyright>
   </articleinfo>
-  
-  <xi:include href="common.xml" xpointer="gold" />
-  
+
+  <xi:include href="common.xml" xpointer="gold"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
   <section id="intro">
     <title id="intro_title">Introduction</title>
 
-    <para>
-      This documentation describes the capabilities and use of the Ulteo OVD Native Clients.
-    </para>
+    <para>This documentation describes the capabilities and usage of the Ulteo
+    OVD Native Clients.</para>
   </section>
 
   <section>
     <title>Prerequisites</title>
 
-    <para>
-      The OVD Native client can be installed on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> XP or newer.
-    </para>
-    <para>
-      It can also be installed on @distrib_pretty_name@
-    </para>
+    <para>The OVD Native client can be installed on all <trademark
+    class="registered">Microsoft</trademark> <trademark>Windows</trademark>
+    version higher than Windows XP and included</para>
+
+    <para>It can also be installed on all Linux distribution</para>
+
     <!--
       TBD What are the valid distributions for OVD 4?
     -->
-            
-    <xi:include href="common.xml" xpointer="system_requirements_client" />
+
+    <xi:include href="common.xml" xpointer="system_requirements_client"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
   </section>
-  
+
   <section id="installation_windows">
-    <title id="installation_windows_title">Installation on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark></title>
-    
-    <para>
-      Download and execute the Ulteo OVD Native Client installer, <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-nc.php?suite=@VERSION@">from here</ulink>
-    </para>
+    <title id="installation_windows_title">Installation on <trademark
+    class="registered">Microsoft</trademark>
+    <trademark>Windows</trademark></title>
+
+    <para>Download and execute the Ulteo OVD Native Client installer, <ulink
+    url="http://www.ulteo.com/main/downloads/ulteo-ovd-nc.php?suite=@VERSION@">from
+    here</ulink></para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Installation step 01</screeninfo>
-        <graphic fileref="img/native/install01.png"></graphic>
+
+        <graphic fileref="img/native/install01.png"/>
       </screenshot>
     </para>
 
-    <para>
-      Select where you want to copy the client files
-    </para>
+    <para>Select where you want to copy the client files</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Installation step 03</screeninfo>
-        <graphic fileref="img/native/install03.png"></graphic>
+
+        <graphic fileref="img/native/install03.png"/>
       </screenshot>
     </para>
 
-    <para>
-      The client installation is finished. You can now launch a session.
-    </para>
+    <para>The client installation is finished. You can now launch a
+    session.</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Installation step 04</screeninfo>
-        <graphic fileref="img/native/install04.png"></graphic>
+
+        <graphic fileref="img/native/install04.png"/>
       </screenshot>
     </para>
   </section>
-  
+
   <section id="installation_linux">
-    <title id="installation_linux_title">Installation on @distrib_pretty_name@</title>
-    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_online" />
-    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_offline" />
-    <xi:include href="Installation_Gateway_Precise.xml" xpointer="repository_common" />
+    <title id="installation_linux_title">Installation on
+    @distrib_pretty_name@</title>
+
+    <xi:include href="Installation_Gateway_Precise.xml"
+                xpointer="repository_online"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+    <xi:include href="Installation_Gateway_Precise.xml"
+                xpointer="repository_offline"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+    <xi:include href="Installation_Gateway_Precise.xml"
+                xpointer="repository_common"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <section id="package_install">
       <title>Package Installation</title>
+
       <itemizedlist>
-	<listitem>
-          <para>
-            Install the
-            package <emphasis>ulteo-ovd-native-client</emphasis>:
-          </para>
+        <listitem>
+          <para>Install the package
+          <emphasis>ulteo-ovd-native-client</emphasis>:</para>
+
           <screen>
-<![CDATA[# apt-get install ulteo-ovd-native-client]]>
+# apt-get install ulteo-ovd-native-client
           </screen>
-	</listitem>
+        </listitem>
       </itemizedlist>
     </section>
   </section>
-  
+
   <section id="userinterface">
     <title id="userinterface_title">User Interface</title>
 
-    <para>
-      When you start the Native Client, you have access to the login window that you will use to launch your session.
-    </para>
+    <para>When you start the Native Client, you have access to the login
+    window that you will use to launch your session.</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Login window</screeninfo>
-        <graphic fileref="img/native/authentication.png"></graphic>
+
+        <graphic fileref="img/native/authentication.png"/>
       </screenshot>
     </para>
 
-    <para>
-      You just have to type your login and password, click the "Start!" button and voilà!
-    </para>
+    <para>You just have to type your login and password, click the "Start!"
+    button and you have access to OVD.</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - User session</screeninfo>
-        <graphic fileref="img/native/started.png"></graphic>
+
+        <graphic fileref="img/native/started.png"/>
       </screenshot>
     </para>
   </section>
@@ -131,72 +152,75 @@
   <section>
     <title>Advanced Settings</title>
 
-    <para>
-      In the login window, you can also set advanced parameters by clicking the 
-      "More options ..." button.
-    </para>
+    <para>In the login window, you can also set advanced parameters by
+    clicking the "More options ..." button.</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Advanced login window</screeninfo>
-        <graphic fileref="img/native/more_options_auto.png"></graphic>
+
+        <graphic fileref="img/native/more_options_auto.png"/>
       </screenshot>
     </para>
 
-    <para>
-      The available options will be displayed, each one is described below.
-    </para>
+    <para>The available options will be displayed, each one is described
+    below.</para>
 
     <simplesect id="advanced_settings">
       <title>Advanced Settings Description</title>
 
       <itemizedlist>
         <listitem>
-          <para>
-            <emphasis>Use local credentials:</emphasis> When enabled, the Native Client will send a request to the Session Manager containing your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Native Client will send a request to the Session Manager containing the login and password entered in the login window.
-          </para>
+          <para><emphasis>Use local credentials:</emphasis> When enabled, the
+          Native Client will send a request to the Session Manager containing
+          your current machine's credentials, using for example Kerberos or
+          NTLM. When disabled, the Native Client will send a request to the
+          Session Manager containing the login and password entered in the
+          login window.</para>
         </listitem>
+
         <listitem>
-          <para>
-            <emphasis>Mode:</emphasis> This option allows you to pick which session mode you want to use.
-            <itemizedlist>
+          <para><emphasis>Mode:</emphasis> This option allows you to pick
+          which session mode you want to use. <itemizedlist>
               <listitem>
-                <para>
-                  <emphasis>Auto:</emphasis> The Session Manager will choose between a desktop session or an Application session based on the configuration .
-                </para>
+                <para><emphasis>Auto:</emphasis> The Session Manager will
+                choose between a desktop session or an Application session
+                based on the configuration .</para>
               </listitem>
+
               <listitem>
-                <para>
-                  <emphasis>Application:</emphasis> Launch a window with a list of application available. Applications are launched seamlessly.
-                </para>
+                <para><emphasis>Application:</emphasis> Launches a window with
+                a list of application available. Applications are launched
+                seamlessly.</para>
               </listitem>
+
               <listitem>
-                <para>
-                  <emphasis>Desktop:</emphasis> Launch a full desktop with applications integrated inside it.
-                </para>
+                <para><emphasis>Desktop:</emphasis> Launches a full desktop
+                with applications integrated inside it.</para>
               </listitem>
-            </itemizedlist>
-          </para>
+            </itemizedlist></para>
         </listitem>
+
         <listitem>
-          <para>
-            <emphasis>Resolution:</emphasis> Choose which resolution will be used, it applies only on desktop sessions.
-          </para>
+          <para><emphasis>Resolution:</emphasis> Choose which resolution will
+          be used, valid for desktop sessions only.</para>
         </listitem>
+
         <listitem>
-          <para>
-            <emphasis>Auto-publish shorcuts:</emphasis> Choose if you want to have shorcuts on your actual desktop at the session start. This option applies only when using the session mode set to "application".
-          </para>
+          <para><emphasis>Auto-publish shortcuts:</emphasis> Choose if you
+          want to have shortcuts on your actual desktop at the session start.
+          This option applies only when using the "application" session
+          mode.</para>
         </listitem>
+
         <listitem>
-          <para>
-            <emphasis>Language:</emphasis> This option allows you to pick which language your OVD session will use.
-          </para>
+          <para><emphasis>Language:</emphasis> This option allows you to pick
+          which language your OVD session will use.</para>
         </listitem>
+
         <listitem>
-          <para>
-            <emphasis>Keyboard layout:</emphasis> This option allows you to select which keyboard layout your local keyboard is using.
-          </para>
+          <para><emphasis>Keyboard layout:</emphasis> This option allows you
+          to select which keyboard layout your local keyboard is using.</para>
         </listitem>
       </itemizedlist>
     </simplesect>
@@ -205,32 +229,31 @@
   <section>
     <title>Starting a Session</title>
 
-    <para>
-      When you start a session, a splash screen appears indicating that the session is loading.
-    </para>
+    <para>When you start a session, a splash screen appears indicating that
+    the session is loading.</para>
 
     <para>
       <screenshot>
         <screeninfo>Native Client - Session loading</screeninfo>
-        <graphic fileref="img/native/loading.png"></graphic>
+
+        <graphic fileref="img/native/loading.png"/>
       </screenshot>
     </para>
 
-    <para>
-      Below you will find screenshots for both Desktop and Application mode.
-    </para>
+    <para>Below you will find screenshots for both Desktop and Application
+    mode.</para>
 
     <simplesect>
       <title>Desktop Session</title>
 
-      <para>
-        When the session is ready, your Desktop is available and you can launch applications, explore your files...
-      </para>
+      <para>When the session is ready, your Desktop is available and you can
+      launch applications, explore your files etc.</para>
 
       <para>
         <screenshot>
           <screeninfo>Native Client - Desktop session</screeninfo>
-          <graphic fileref="img/native/desktop.png"></graphic>
+
+          <graphic fileref="img/native/desktop.png"/>
         </screenshot>
       </para>
     </simplesect>
@@ -238,20 +261,20 @@
     <simplesect>
       <title>Application Session</title>
 
-      <para>
-        When the session is ready, your Application session is available and you can launch applications seamlessly.
-      </para>
+      <para>When the session is ready, your Application session is available
+      and you can launch applications seamlessly.</para>
 
       <para>
         <screenshot>
           <screeninfo>Native Client - Application session</screeninfo>
-          <graphic fileref="img/native/started.png"></graphic>
+
+          <graphic fileref="img/native/started.png"/>
         </screenshot>
       </para>
-      
-      <para>
-        You can launch applications by clicking on the arrow button. You can also choose to integrate the applications shorcuts to your desktop by clicking on <emphasis>Display icons</emphasis>.
-      </para>
+
+      <para>You can launch applications by clicking on the arrow button. You
+      can also choose to integrate the applications shorcuts to your desktop
+      by clicking on <emphasis>Display icons</emphasis>.</para>
     </simplesect>
   </section>
 
@@ -261,156 +284,168 @@
     <section id="config-file">
       <title>Default Configuration</title>
 
-      <para>
-        When the <emphasis>Remember me</emphasis> checkbox is enabled, the
-        current configuration is saved in a configuration file. This
-        file is named <emphasis>default.conf</emphasis> and uses the INI
-        syntax.
-      </para>
-      <para>
-        The directory used to store the configuration file depends on the system:
-        <itemizedlist>
-          <listitem>
-            <para>On <trademark class="registered">Microsoft Windows</trademark> systems, it's <emphasis>Application Data\ulteo\ovd\client</emphasis></para>
-          </listitem>
-          <listitem>
-            <para>On a Linux systems, it's <emphasis>~/.ulteo/ovd/client</emphasis></para>
-          </listitem>
-        </itemizedlist>
-      </para>
+      <para>When the <emphasis>Remember me</emphasis> checkbox is enabled, the
+      current configuration is saved in a configuration file. This file is
+      named <emphasis>default.conf</emphasis> and uses the INI syntax.</para>
 
-      <para>
-        Here is the INI tree that is used:
-        <itemizedlist>
+      <para>The directory used to store the configuration file depends on the
+      system: <itemizedlist>
+          <listitem>
+            <para>On <trademark class="registered">Microsoft
+            Windows</trademark> systems, it's <emphasis>Application
+            Data\ulteo\ovd\client</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para>On a Linux systems, it's
+            <emphasis>~/.ulteo/ovd/client</emphasis></para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>Here is the INI tree that is used: <itemizedlist>
           <listitem>
             <para>Section <emphasis role="strong">server</emphasis></para>
+
             <itemizedlist id="config-file-server">
               <listitem>
-                <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
+                <para><emphasis role="strong">host</emphasis>, the server to
+                connect to</para>
               </listitem>
+
               <listitem>
-                <para><emphasis role="strong">port</emphasis>, the port to use if not default (443)</para>
+                <para><emphasis role="strong">port</emphasis>, the port to use
+                if not the default (443)</para>
               </listitem>
             </itemizedlist>
           </listitem>
 
           <listitem>
             <para>Section <emphasis role="strong">user</emphasis></para>
+
             <itemizedlist id="config-file-user">
               <listitem>
-                <para><emphasis role="strong">login</emphasis>, the login you want to use</para>
+                <para><emphasis role="strong">login</emphasis>, the login you
+                want to use</para>
               </listitem>
+
               <listitem>
-                <para>
-                  <emphasis role="strong">use-local-credentials</emphasis>, Can be
-                  <emphasis>true</emphasis> or
-                  <emphasis>false</emphasis> (default).
-                </para>
-                <para>
-                  When this option is used, the <emphasis>login</emphasis>
-                  attribute is useless.
-                </para>
+                <para><emphasis
+                role="strong">use-local-credentials</emphasis>, Can be
+                <emphasis>true</emphasis> or <emphasis>false</emphasis>
+                (default).</para>
+
+                <para>When this option is used, the <emphasis>login</emphasis>
+                attribute is ignored.</para>
               </listitem>
             </itemizedlist>
           </listitem>
 
           <listitem>
             <para>Section <emphasis role="strong">session</emphasis></para>
+
             <itemizedlist id="config-file-session">
               <listitem>
-                <para><emphasis role="strong">language</emphasis>, using the IETF lang code</para>
+                <para><emphasis role="strong">language</emphasis>, specified
+                using the IETF lang code</para>
               </listitem>
 
               <listitem>
-                <para><emphasis role="strong">keymap</emphasis>, using the IETF lang code</para>
+                <para><emphasis role="strong">keymap</emphasis>, specified
+                using the IETF lang code</para>
               </listitem>
 
               <listitem>
-                <para>
-                  <emphasis role="strong">mode</emphasis>, the session mode,
-                  can be <emphasis>applications</emphasis>,
-                  <emphasis>auto</emphasis> or <emphasis>desktop</emphasis>
-                </para>
+                <para><emphasis role="strong">mode</emphasis>, the session
+                mode, can be <emphasis>applications</emphasis>,
+                <emphasis>auto</emphasis> or
+                <emphasis>desktop</emphasis></para>
               </listitem>
 
               <listitem>
-                <para>
-                  <emphasis role="strong">show-progressbar</emphasis>, Can be
-                  <emphasis>true</emphasis> (default) or
-                  <emphasis>false</emphasis>.
-                </para>
+                <para><emphasis role="strong">show-progressbar</emphasis>, Can
+                be <emphasis>true</emphasis> (default) or
+                <emphasis>false</emphasis>.</para>
               </listitem>
             </itemizedlist>
           </listitem>
-          
+
           <listitem>
-            <para>Section <emphasis role="strong">publication</emphasis></para>
+            <para>Section <emphasis
+            role="strong">publication</emphasis></para>
+
             <itemizedlist id="config-file-publication">
               <listitem>
-                <para>
-                  <emphasis role="strong">auto-publish</emphasis>, for
-                  applications mode only, add the application shortcuts on
-                  the Desktop and perform file associations. Can be
-                  <emphasis>true</emphasis> (default) or
-                  <emphasis>false</emphasis>.
-                </para>
+                <para><emphasis role="strong">auto-publish</emphasis>, for
+                applications mode only, add the application shortcuts on the
+                Desktop and perform file associations. Can be
+                <emphasis>true</emphasis> (default) or
+                <emphasis>false</emphasis>.</para>
               </listitem>
             </itemizedlist>
           </listitem>
 
           <listitem>
             <para>Section <emphasis role="strong">screen</emphasis></para>
+
             <itemizedlist id="config-file-screen">
               <listitem>
-                <para>
-                  <emphasis role="strong">size</emphasis>, for desktop mode
-                  only. Can be <emphasis>800x600</emphasis>,
-                  <emphasis>1024x768</emphasis> (default),
-                  <emphasis>1280x678</emphasis>,
-                  <emphasis>maximized</emphasis> or
-                  <emphasis>fullscreen</emphasis>
-                </para>
+                <para><emphasis role="strong">size</emphasis>, for desktop
+                mode only. Can be <emphasis>800x600</emphasis>,
+                <emphasis>1024x768</emphasis> (default),
+                <emphasis>1280x678</emphasis>, <emphasis>maximized</emphasis>
+                or <emphasis>fullscreen</emphasis></para>
               </listitem>
             </itemizedlist>
           </listitem>
 
-         <listitem>
+          <listitem>
             <para>Section <emphasis role="strong">gui</emphasis></para>
+
             <itemizedlist id="config-file-gui">
               <listitem>
-                <para>
-                  <emphasis role="strong">locked-gui</emphasis>,
-                  minimal interface with only login and password
-                  fields
-                </para>
+                <para><emphasis role="strong">locked-gui</emphasis>, minimal
+                interface with only login and password fields</para>
               </listitem>
             </itemizedlist>
           </listitem>
-        </itemizedlist>
-      </para>
+        </itemizedlist></para>
 
       <simplesect>
-        <title><trademark class="registered">Microsoft Windows</trademark> Registry</title>
-        
-        <para>
-          On <trademark class="registered">Microsoft Windows</trademark>
-          systems, it's also possible to read the default configuration
-          from the registry by use the option <emphasis>--reg</emphasis>
-        </para>
+        <title><trademark class="registered">Microsoft Windows</trademark>
+        Registry</title>
 
-        <para>
-          The Native Client reads the HKEY_LOCAL_MACHINE first and then,
-          the HKEY_CURRENT_USER tree. The path to the registry data is
-          <emphasis>Software\Ulteo\OVD\NativeClient</emphasis>.
-        </para>
+        <para>On <trademark class="registered">Microsoft Windows</trademark>
+        systems, it's also possible to read the default configuration from the
+        registry by use the option <emphasis>--reg</emphasis></para>
+
+        <para>The Native Client reads the HKEY_LOCAL_MACHINE first and then,
+        the HKEY_CURRENT_USER tree. The path to the registry data is
+        <emphasis>Software\Ulteo\OVD\NativeClient</emphasis>.</para>
 
         <itemizedlist>
-          <xi:include xpointer="xpointer(//*[@id='config-file-server']/node())" />
-          <xi:include xpointer="xpointer(//*[@id='config-file-user']/node())" />
-          <xi:include xpointer="xpointer(//*[@id='config-file-session']/node())" />
-          <xi:include xpointer="xpointer(//*[@id='config-file-publication']/node())" />
-          <xi:include xpointer="xpointer(//*[@id='config-file-screen']/node())" />
-          <xi:include xpointer="xpointer(//*[@id='config-file-gui']/node())" />
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-server']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-user']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-session']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-publication']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-screen']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+          <xi:include href=""
+                      xpointer="xpointer(//*[@id='config-file-gui']/node())"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
         </itemizedlist>
       </simplesect>
     </section>
@@ -418,28 +453,59 @@
     <section id="sso">
       <title>Single Sign-On</title>
 
-      <para>
-        On <trademark class="registered">Microsoft Windows</trademark>
-        system, it's possible to perform SSO connection using the
-        local credentials.
-      </para>
-      <para>
-        To enable this feature, you have to check the "Use local
-        creadential" checkbox or define it in the configuration (file
-        or registry).
-      </para>
+      <para>On <trademark class="registered">Microsoft Windows</trademark>
+      system, it's possible to perform SSO connection using the local
+      credentials.</para>
+
+      <para>To enable this feature, you have to check the "Use local
+      creadential" checkbox or define it in the configuration (file or
+      registry).</para>
 
       <important>
-        <para>
-          This feature requires server side configuration.
-        </para>
-        <para>
-          You have to use an Apache authentication module (Kerberos or
-          NTLM) and enable the "Apache auth module" in the
-          Administration Console.
-        </para>
+        <para>This feature requires server side configuration.</para>
+
+        <para>You have to use an Apache authentication module (Kerberos or
+        NTLM) and enable the "Apache auth module" in the Administration
+        Console.</para>
       </important>
     </section>
   </section>
-  <xi:include href="colophon.xml" />
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>
+<?xxe-serial-numbers hsvxw5l5 mathieu
+(1z141z5 (1z141z6) (1z141z7) (1z141z8) (1z141z9) (1z141za (1z141zb)
+(1z141zc) (1z141zd) (1z141ze (1z141zf) (1z141zg (1z141zh)))) (-) (1z141zi
+(1z141zj) (1z141zk)) (1z141zl (1z141zm) (1z141zn (1z141zo) (1z141zp))
+(1z141zq) (-)) (1z141zr (1z141zs (1z141zt) (1z141zu)) (1z141zv (1z141zw))
+(1z141zx (1z141zy (1z141zz) (1z14200))) (1z14201) (1z14202 (1z14203
+(1z14204) (1z14205))) (1z14206) (1z14207 (1z14208 (1z14209) (1z1420a))))
+(1z1420b (1z1420c) (-) (-) (1z1420d) (1z1420e (1z1420f) (1z1420g (1z1420h
+(1z1420i (1z1420j)) (1z1420k))))) (1z1420l (1z1420m) (1z1420n) (1z1420o
+(1z1420p (1z1420q) (1z1420r))) (1z1420s) (1z1420t (1z1420u (1z1420v)
+(1z1420w)))) (1z1420x (1z1420y) (1z1420z) (1z14210 (1z14211 (1z14212)
+(1z14213))) (1z14214) (1z14215 (1z14216) (1z14217 (1z14218 (1z14219
+(1z1421a))) (1z1421b (1z1421c (1z1421d) (1z1421e (1z1421f (1z1421g
+(1z1421h))) (1z1421i (1z1421j (1z1421k))) (1z1421l (1z1421m (1z1421n))))))
+(1z1421o (1z1421p (1z1421q))) (1z1421r (1z1421s (1z1421t))) (1z1421u
+(1z1421v (1z1421w))) (1z1421x (1z1421y (1z1421z)))))) (1z14220 (1z14221)
+(1z14222) (1z14223 (1z14224 (1z14225) (1z14226))) (1z14227) (1z14228
+(1z14229) (1z1422a) (1z1422b (1z1422c (1z1422d) (1z1422e)))) (1z1422f
+(1z1422g) (1z1422h) (1z1422i (1z1422j (1z1422k) (1z1422l))) (1z1422m
+(1z1422n)))) (1z1422o (1z1422p) (1z1422q (1z1422r) (1z1422s (1z1422t)
+(1z1422u)) (1z1422v (1z1422w (1z1422x (1z1422y (1z1422z) (1z14230)))
+(1z14231 (1z14232 (1z14233))))) (1z14234 (1z14235 (1z14236 (1z14237
+(1z14238)) (1z14239 (1z1423a (1z1423b (1z1423c))) (1z1423d (1z1423e
+(1z1423f))))) (1z1423g (1z1423h (1z1423i)) (1z1423j (1z1423k (1z1423l
+(1z1423m))) (1z1423n (1z1423o (1z1423p) (1z1423q) (1z1423r)) (1z1423s
+(1z1423t))))) (1z1423u (1z1423v (1z1423w)) (1z1423x (1z1423y (1z1423z
+(1z14240))) (1z14241 (1z14242 (1z14243))) (1z14244 (1z14245 (1z14246)
+(1z14247) (1z14248) (1z14249))) (1z1424a (1z1424b (1z1424c) (1z1424d)
+(1z1424e))))) (1z1424f (1z1424g (1z1424h)) (1z1424i (1z1424j (1z1424k
+(1z1424l) (1z1424m) (1z1424n))))) (1z1424o (1z1424p (1z1424q)) (1z1424r
+(1z1424s (1z1424t (1z1424u) (1z1424v) (1z1424w) (1z1424x) (1z1424y)
+(1z1424z))))) (1z14250 (1z14251 (1z14252)) (1z14253 (1z14254 (1z14255
+(1z14256))))))) (1z14257 (1z14258 (1z14259)) (1z1425a (1z1425b) (1z1425c))
+(1z1425d (1z1425e)) (1z1425f (-) (-) (-) (-) (-) (-) (-) (-) (-) (-)
+(-)))) (1z1425g (1z1425h) (1z1425i (1z1425j)) (1z1425k) (1z1425l (1z1425m)
+(1z1425n)))) (-))?>

@@ -89,8 +89,8 @@ SELinux status:              disabled
     <xi:include href="Support_Debian_Squeeze.xml" xpointer="repository_title"
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <para id="repository_para">@distrib_pretty_name@ use the RPM packaging
-    system. So you need to have an internet connexion on your
+    <para id="repository_para">@distrib_pretty_name@ uses the RPM packaging
+    system. An Internet connection that provides HTTP access is required on your
     @distrib_pretty_name@ system and add an Ulteo RPM repository into your
     system.</para>
 
@@ -105,11 +105,11 @@ SELinux status:              disabled
 
       <itemizedlist>
         <listitem id="repository_online_step1">
-          <para id="repository_online_step1_para">Add the ovd
+          <para id="repository_online_step1_para">Add the OVD
           repository:</para>
 
           <screen>
-# zypper ar @BASE_URI@/@distrib_name@/@distrib_version@ ovd
+# zypper ar @BASE_URI@/@distrib_name@/@distrib_version@ OVD
           </screen>
         </listitem>
 

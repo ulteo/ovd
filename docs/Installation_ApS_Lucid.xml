@@ -15,8 +15,8 @@
 
   <para>
     The purpose of this document is to describe how to install an Ulteo OVD
-    Application Server on a Ubuntu 10.04 (Lucid Lynx) operating system without 
-    any Ulteo OVD application subsystem, using directly the local applications.    
+    Application Server on the Ubuntu 10.04 (Lucid Lynx) operating system without 
+    the Ulteo OVD application subsystem, to serve the local applications.    
   </para>
 
   <important>
@@ -41,37 +41,36 @@
       
       <listitem>
         <para>
-          An internet connection that allows HTTP or the Ulteo OVD
+          An Internet connection that provides HTTP access or the Ulteo OVD
           to install Ubuntu packages.
         </para>
       </listitem>
       
       <listitem>
         <para>
-          Ulteo OVD Session Manager is installed and configured.
+          The Ulteo OVD Session Manager is installed and configured.
         </para>
       </listitem>
     </itemizedlist>
 
     <important>
       <para>
-	The Application Server system has to be a dedicated system
-	for Ulteo OVD usage. It may also host another Ulteo OVD
+	The Application Server has to be a system dedicated 
+	for Ulteo OVD usage only. It may also host another Ulteo OVD
 	server role. However, if multiple roles are installed on the same system, Ulteo 
-	does not garantees the system will work correctly.
+	does not guarantee that the system will work correctly.
       </para>
     </important>
 
     <important>
       <para>
-	In this document, we are using
-	<emphasis>sm.test.demo</emphasis> for the Session Manager
+	In this document, we use 
+	<emphasis>sm.test.demo</emphasis> as the Session Manager
 	address.
       </para>
       
       <para>
-	You need to set that name according to your own domain
-	name.
+	You need to use the name appropriate to your own environment.
       </para>
     </important>
 
@@ -161,10 +160,10 @@ Pin-Priority: 1001]]>
 
       <listitem>
         <para>
-	  The only installation data required is the host/IP address where the
-      session manager can be accessed. (we use
-      <ulink url="sm.test.demo" /> here for the example, but of
-	  course, you have to set your own domain name).
+	  The only installation data required is the host/IP address of the
+      Session Manager. (We use
+      <ulink url="sm.test.demo" /> here as an example, but of
+	  course, you have to specify your own domain name).
 	</para>
 
 	<para>
@@ -183,7 +182,7 @@ Pin-Priority: 1001]]>
 
   <para>
     The configuration is now done. The service should be started at
-    the end of the installation, you should see the server appear in
+    the end of the installation and you should see the server appear in
     the <emphasis>unregistered server</emphasis> page of your Session
     Manager.
   </para>

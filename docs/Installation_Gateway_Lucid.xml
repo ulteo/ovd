@@ -37,8 +37,8 @@
       
       <listitem>
         <para>
-          An internet connexion that allow HTTP or the Ulteo OVD DVD
-          to install debian packages.
+          An Internet connection that provides HTTP access or the Ulteo OVD DVD
+          to install Debian packages.
         </para>
       </listitem>
       
@@ -51,10 +51,10 @@
 
     <important id="prerequisites_gw_important">
       <para>
-	The Gateway Server has to be a dedicated system
-	for Ulteo OVD usage. It may also host another Ulteo OVD
+	The Gateway Server has to be a system dedicated 
+	for Ulteo OVD usage only. It may also host another Ulteo OVD
 	server role. However, if multiple roles are installed on the same system, Ulteo 
-	does not garantees the system will work correctly.
+	does not guarantee that the system will work correctly.
       </para>
     </important>
 
@@ -76,7 +76,7 @@
 
 
   <section id="configuration_gw">
-    <title>Packages Configuration</title>
+    <title>Package Configuration</title>
       
      <section id="repository_online">
        <xi:include href="&base;" xpointer="repository_online_title" />
@@ -106,10 +106,10 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
            or from the Ulteo OVD DVD. The second one is only available
            <ulink
            url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_version@.tar.gz">online</ulink>,
-           using your @GOLD_NAME@ account credentials.
+           using your @GOLD_NAME@ Edition account credentials.
          </para>
          <para>
-           You have to download or copy the two archives to the
+           Download or copy the two archives to the
            <emphasis>/root/</emphasis> path of your workstation.
          </para>
        </listitem>
@@ -141,7 +141,7 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main
 </section>
 
   <section id="installation_gw">
-    <title>Packages Installation</title>
+    <title>Package Installation</title>
 
     <itemizedlist>
       <listitem>
@@ -155,10 +155,10 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main
 
       <listitem>
         <para>
-          The only installation data required is the host/IP address where the
-          session manager can be accessed. (we use
-          <ulink url="sm.test.demo" /> here for the example, but of
-          course, you have to set your own domain name).
+          The only installation data required is the host/IP address of the
+          Session Manager. (We use
+          <ulink url="sm.test.demo" /> here as an example, but of
+          course, you have to specify your own domain name).
         </para>
 
         <para>
@@ -176,33 +176,34 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main
 
   <para>
     The configuration is now done. The service should be started at
-    the end of the installation, you should see the server appear in
+    the end of the installation and you should see the server appear in
     the <emphasis>unregistered server</emphasis> page of your Session
     Manager.
   </para>
   </section>
   <section id="webclient_gw">
-	<title>Web Client Configuration</title>
-	<para>Due to security reasons, the Gateway doesn't deliver communications to the Web Portal by default. If you want provide access to the Web Portal via the Gateway, you have to change the default configuration.</para>	 
-        <para>
-          Edit the slaveserver.conf file in <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
-        </para>
-        <screen>
+	<title>Web Portal Configuration</title>
+	<para>For security reasons, the Gateway doesn't allow communication 
+	to the Web Portal by default. If you want to provide access 
+	to the Web Portal via the Gateway, you have to change the default configuration.
+	</para>	 
+    <para>Edit the slaveserver.conf file in 
+    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
+    </para>
+    <screen>
 		<![CDATA[# web_client = http[s]://ip[:port]/]]>
-        </screen>
-        <para>
-          You have to set it with the Url of your Web Portal. 
-          For instance:
-          <screen>
+    </screen>
+    <para>You have to uncomment the variable and set the value to the 
+    URL of your Web Portal. For example:
+        <screen>
 			<![CDATA[web_client = http://webportal.test.demo/]]>
-		  </screen>
-        </para> 
-        <para>
-			Now, you have to restart the slaverserver service.
-			  <screen>
+		</screen>
+    </para> 
+    <para>Now, restart the slaverserver service.
+		<screen>
 			<![CDATA[# /etc/init.d/ulteo-ovd-slaveserver restart]]>
-		  </screen>
-        </para>     
+		</screen>
+     </para>     
   </section>
   <xi:include href="colophon.xml" />  
 </article>

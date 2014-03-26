@@ -79,7 +79,7 @@
 
 			<listitem>
 				<para>
-					Then you have to configure the Session Manager to use this module, go in "Configuration", then "Authentication settings" and check the "Auto authentication" checkbox.
+					Then you have to configure the Session Manager to use this module, go to "Configuration", then "Authentication settings" and check the "Auto authentication" checkbox.
 				</para>
 
 				<note>

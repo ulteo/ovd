@@ -17,18 +17,18 @@
     <title id="pre_title">Prerequisites</title>
 
     <para>
-      This documentation provides a description of session
-      management within Ulteo OVD.
+      This documentation provides an introduction to configuring OVD 
+      and using OVD as an end-user.
     </para>
 
     <para>
-      This is not an installation documentation. You need to have
-      already installed a Session Manager and at least one Application
-      Server and a File Server.
+      This is not an installation document. You need to have
+      installed the Session Manager and at least one Application
+      Server and a File Server before you can start using OVD.
     </para>
     <para>
       If you are not very familiar with Ulteo OVD architecture, the
-      easiest way to setup OVD servers is by using the Virtual appliance.
+      easiest way to setup OVD servers is to use the Virtual appliance.
     </para>
   </section>
 
@@ -81,25 +81,25 @@
     <title>Publishing Applications</title>
     
     <para>
-      A publication is an association between a user group and an
-      applications group. It's an authorization for user groups' members to
-      launch the applications included in the applications group.
+      A publication is an association between a User Group and an
+      Application Group. It's an authorization for User Group members to
+      launch the applications included in the Application Group.
     </para>
 
     <para>
-      By default, there is no user group or applications group installed
-      (or if you choose to read the user groups from your
-      directory) so you have to create these. It is the same process for
-      both user groups and applications groups: first, you have to create a group
-      by giving a name in the <emphasis>group</emphasis> page, then, you
-      have to add users/applications in it.
+      By default, there is no User Group or Application Group installed
+      (or if you choose to read the User Groups from your
+      directory) so you have to create them. It is the same process for
+      both User Groups and Application Groups: first, you have to create a group
+      by giving it a name in the <emphasis>Group</emphasis> page, then, you
+      have to add users/applications to it.
     </para>
 
     <para>
-      Finally, you can switch on the <emphasis>Publication</emphasis>
+      Finally, you can use the <emphasis>Publication</emphasis>
       page (from <emphasis>users</emphasis>
-      or <emphasis>applications</emphasis> main page) and associate
-      user groups with applications groups.
+      or <emphasis>Applications</emphasis> main page) to associate
+      User Groups with Application Aroups.
     </para>
   </section>
 
@@ -108,8 +108,8 @@
     <title>Server Checks</title>
 
     <para>
-      On the previous step, we saw how to associate user groups with
-      applications groups. The applications are installed on Application
+      In the previous step, we saw how to associate User Groups with
+      Application Groups. The applications are installed on Application
       Server so you need to check on the <emphasis>Servers</emphasis>
       page if the servers you need are registered and in production
       state.
@@ -155,8 +155,8 @@
       To have a global overview off the publication and server status,
       it is a good idea to see the <emphasis>Summary</emphasis> page
       (from <emphasis>Status</emphasis> main section). This page shows
-      for each user, which user group he belongs to, which
-      applications and application groups he can access and finally
+      for each user, which User Group he belongs to, which
+      Applications and Application Groups he can access and finally
       there are online servers that match the published applications in order to 
       be able to start a session.
     </para>
