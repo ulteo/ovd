@@ -1,4 +1,5 @@
 scripts_DATA = encodings.js \
+               base64.js \
                exttunnel.js \
                guacamole.js \
                keyboard.js \

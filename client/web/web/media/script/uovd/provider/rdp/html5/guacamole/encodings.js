@@ -68,10 +68,12 @@ function utf8_decode(utftext) {
 }
 
 function base64_decode(text) {
-	return window.atob(text);
+	if(window.atob) { return window.atob(text); }
+	else            { return base64.decode(text); }
 }
 
 
 function base64_encode(text) {
-	return window.btoa(text);
+	if(window.btoa) { return window.btoa(text); }
+	else            { return base64.encode(text); }
 }

@@ -166,6 +166,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_manager.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/base64.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/exttunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tmouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
