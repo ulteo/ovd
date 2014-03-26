@@ -92,8 +92,11 @@ if (defined('RDP_PROVIDER_HTML5_INSTALLED'))
 
 list($translations, $js_translations) = get_available_translations($user_language);
 
-if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))
-	$user_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
+if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap'])) {
+	$cookie_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
+	if (language_is_supported($keymaps, $cookie_keymap))
+		$user_keymap = $cookie_keymap;
+}
 
 $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))

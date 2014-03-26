@@ -276,7 +276,19 @@ function initialize_settings() {
 	if(defaults.keymap_autodetect && ! defaults.force_keymap) {
 		var detection = function(detected) {
 			if(!detected) { detected = jQuery('#session_language').prop('value'); /* !!! user agent */ }
-			settings.keymap = detected;
+			if (detected.indexOf(",") >= 0) {
+				/* Multiple keymaps returned */
+				var keymaps = detected.split(",");
+				for (var i in keymaps) {
+					var keymap = jQuery('#session_keymap > option[value="'+keymaps[i]+'"]');
+					if (keymap[0]) {
+						settings.keymap = keymaps[i];
+						break;
+					}
+				}
+			} else {
+				settings.keymap = detected;
+			}
 			validate_settings();
 		};
 
