@@ -59,6 +59,7 @@ BOOL WindowUtil_isVisible(HWND hwnd) {
 BOOL WindowUtil_isGood(HWND hwnd) {
 	char className[256];
 	char *excludedClasses[] = {
+		"MSO_BORDEREFFECT_WINDOW_CLASS", /* MS Office 2013 window shadows */
 		"TabThumbnailWindow",            /* IE11 tab preview */
 		"Internet Explorer_Hidden",      /* IE11 (???) */
 		"Alternate Owner",               /* IE11 (???) */
