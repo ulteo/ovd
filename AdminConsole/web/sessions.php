@@ -294,6 +294,7 @@ else {
 			echo '  <input type="hidden" name="name" value="Session" />';
 			echo '  <input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
+			echo '</form>';
 			echo '</td>';
 			
 			echo '<td>';
@@ -301,6 +302,7 @@ else {
 			echo '  <input type="hidden" name="name" value="Session" />';
 			echo '  <input type="hidden" name="action" value="disc" />';
 			echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
+			echo '</form>';
 			echo '</td>';
 
 			echo '	</tr>';
