@@ -420,7 +420,7 @@ function show_manage($id) {
 			$unuse_settings[$categ] = array();
 			
 			foreach($settings as $setting_id => $setting_attributes) {
-				$p = $prefs->load_element($setting_attributes, 'general_'.$categ);
+				$p = $prefs->load_element($setting_attributes, 'general.'.$categ);
 				$session_prefs[$categ][$setting_id] = $p;
 				
 				if (array_key_exists($categ , $categs2) && array_key_exists($setting_id, $categs2[$categ])) {
@@ -938,7 +938,7 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 	if ($prefs_of_a_group != array()) {
 		foreach ($prefs_of_a_group as $container => $prefs_of_a_group_value) {
 			echo '<fieldset class="prefssessionusergroup">';
-			echo '<legend>'.$prefs->getPrettyName('general_'.$container).'</legend>';
+			echo '<legend>'.$prefs->getPrettyName('general.'.$container).'</legend>';
 			
 			echo '<form action="actions.php" method="post">';
 			$key_name = 'general';
