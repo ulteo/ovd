@@ -3,122 +3,143 @@
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
 # Automatically generated, 2011.
 # Author: Julien LANGLOIS <julien@ulteo.com>, 2010, 2011.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: uovdclient\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-02-21 17:28+0200\n"
-"Last-Translator: Julien LANGLOIS\n"
+"POT-Creation-Date: 2014-03-25 10:12+0200\n"
+"PO-Revision-Date: 2014-03-25 16:49+0200\n"
+"Last-Translator: Julien <julien@ulteo.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.1.5\n"
+"X-Generator: Pootle 2.1.6\n"
 
-#. { //persistent session
-#. ?>
-#. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
-#. <?php
-#. }
-#: ../../client/web/web/index.php:405
-msgid "Example: %EXAMPLE%"
-msgstr "Exemple : %EXAMPLE%"
+#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+msgid ""
+"JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
+"seems JavaScript is either disabled or not supported by your browser. To use "
+"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
+"try again[/A]."
+msgstr ""
+"Vous devez activer JavaScript pour utiliser Ulteo OVD. Il semble que "
+"JavaScript soit désactivé ou non supporté par votre navigateur. Pour "
+"utiliser OVD Web Portal, veuillez activer JavaScript dans votre navigateur "
+"puis [A]essayez à nouveau[/A]."
 
 # 80%
-#: ../../client/web/web/translate.php:65
+#: ../../client/web/web/includes/functions.inc.php:199
 msgid "Close"
 msgstr "Fermer"
 
-#: ../../client/web/web/translate.php:67
+#: ../../client/web/web/includes/functions.inc.php:201
 msgid "Session Manager"
 msgstr "Session Manager"
 
-#: ../../client/web/web/translate.php:68
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
 msgid "Login"
 msgstr "Identifiant"
 
-#: ../../client/web/web/translate.php:69
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+#: ../../client/web/web/includes/functions.inc.php:203
+msgid "Login (detected)"
+msgstr "Identifiant (détécté)"
+
+#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
 msgid "Password"
 msgstr "Mot de passe"
 
-#: ../../client/web/web/translate.php:70
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
 msgid "Use local credentials"
 msgstr "Utiliser les identifiants locaux"
 
-#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
-#: ../../client/web/web/translate.php:82
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/web/web/includes/functions.inc.php:206
+#: ../../client/web/web/includes/functions.inc.php:212
+#: ../../client/web/web/includes/functions.inc.php:217
 msgid "Yes"
 msgstr "Oui"
 
-#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
-#: ../../client/web/web/translate.php:83
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/web/web/includes/functions.inc.php:207
+#: ../../client/web/web/includes/functions.inc.php:213
+#: ../../client/web/web/includes/functions.inc.php:218
 msgid "No"
 msgstr "Non"
 
-#: ../../client/web/web/translate.php:73
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
 msgid "Mode"
 msgstr "Mode"
 
-#: ../../client/web/web/translate.php:74
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
 msgid "Desktop"
 msgstr "Bureau"
 
-#: ../../client/web/web/translate.php:75
+#: ../../client/web/web/includes/functions.inc.php:210
 msgid "Portal"
 msgstr "Portail"
 
-#: ../../client/web/web/translate.php:76
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
 msgid "Fullscreen"
 msgstr "Plein écran"
 
-#: ../../client/web/web/translate.php:79
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
 msgid "Language"
 msgstr "Langue"
 
-#: ../../client/web/web/translate.php:80
+#: ../../client/web/web/includes/functions.inc.php:215
 msgid "Keyboard layout"
 msgstr "Disposition du clavier"
 
-#: ../../client/web/web/translate.php:81
+#: ../../client/web/web/includes/functions.inc.php:216
 msgid "Debug"
 msgstr "Debug"
 
-#: ../../client/web/web/translate.php:86
+#: ../../client/web/web/includes/functions.inc.php:220
+msgid "Keyboard method"
+msgstr "Mode de clavier"
+
+#: ../../client/web/web/includes/functions.inc.php:221
+msgid "Scancode"
+msgstr "Scancode"
+
+#: ../../client/web/web/includes/functions.inc.php:222
+msgid "Unicode"
+msgstr "Unicode"
+
+#: ../../client/web/web/includes/functions.inc.php:223
+msgid "Unicode use local IME"
+msgstr "Unicode utilisant l'IME locale"
+
+#: ../../client/web/web/includes/functions.inc.php:225
 msgid "Advanced settings"
 msgstr "Réglages avancés"
 
-#: ../../client/web/web/translate.php:87
+#: ../../client/web/web/includes/functions.inc.php:226
 msgid "Connect"
 msgstr "Connexion"
 
-#: ../../client/web/web/translate.php:89
+#: ../../client/web/web/includes/functions.inc.php:228
 msgid "Checking for system compatibility"
 msgstr "Vérification de la compatibilité du système"
 
-#: ../../client/web/web/translate.php:90
+#: ../../client/web/web/includes/functions.inc.php:229
 msgid ""
 "If this is your first time here, a Java security window will show up and you "
-"have to accept it to use the service."
+"will have to accept it to use the service."
 msgstr ""
-"Si c'est votre première visite sur ce site, une fenêtre de sécurité java va "
-"s'afficher et vous allez devoir cliquer sur accepter afin d'utiliser ce "
-"service"
+"Si c'est votre première connexion, une fenêtre de sécurité Java va "
+"s'afficher. Vous devez accepter l'exécution pour utiliser le service "
 
-#: ../../client/web/web/translate.php:91
+#: ../../client/web/web/includes/functions.inc.php:230
 msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
@@ -126,114 +147,133 @@ msgstr ""
 "Il est conseillé de cocher la case \"<em>Toujours faire confiance aux contenu "
 "de cet éditeur</em>\"."
 
-#: ../../client/web/web/translate.php:93
+#: ../../client/web/web/includes/functions.inc.php:232
 msgid "System compatibility error"
 msgstr "Erreur de compatibilité du système"
 
 # 90%
 # 100%
 # 80%
-#: ../../client/web/web/translate.php:94
-msgid "Java is not available either on your system or in your web browser."
+# 79%
+#: ../../client/web/web/includes/functions.inc.php:233
+msgid "Java is either not available on your system or in your web browser."
 msgstr "Java n'est ni installé sur votre système ni dans votre navigateur web."
 
-#: ../../client/web/web/translate.php:95
+#: ../../client/web/web/includes/functions.inc.php:234
 msgid ""
-"Please install Java extension for your web browser or contact your "
+"Please install the Java extension for your web browser or contact your "
 "administrator."
 msgstr ""
-"Veuillez installer l'extension Java pour votre navigateur web ou alors "
-"contactez votre administrateur."
+"Veuillez installer l'extension Java pour votre navigateur ou contacter votre "
+"administrateur"
 
-#: ../../client/web/web/translate.php:96
+#: ../../client/web/web/includes/functions.inc.php:235
 msgid "You have not accepted the Java security window."
 msgstr "Vous n'avez pas accepté l'alerte de sécurité Java."
 
-#: ../../client/web/web/translate.php:97
+#: ../../client/web/web/includes/functions.inc.php:236
 msgid "You <strong>cannot</strong> have access to this service."
 msgstr "Vous <strong>ne pouvez pas</strong> accéder à ce service."
 
-#: ../../client/web/web/translate.php:99
+#: ../../client/web/web/includes/functions.inc.php:238
 msgid "Loading Open Virtual Desktop"
-msgstr "Chargement Open Virtual Destkop"
+msgstr "Chargement Open Virtual Desktop"
 
-#: ../../client/web/web/translate.php:100
+#: ../../client/web/web/includes/functions.inc.php:239
+msgid "Disconnecting Open Virtual Desktop"
+msgstr "Déconnection de Open Virtual Desktop"
+
+#: ../../client/web/web/includes/functions.inc.php:240
 msgid "Welcome!"
 msgstr "Bienvenue !"
 
 # 85%
-#: ../../client/web/web/translate.php:101
+#: ../../client/web/web/includes/functions.inc.php:241
 msgid "Suspend"
 msgstr "Mettre en veille"
 
-#: ../../client/web/web/translate.php:102
+#: ../../client/web/web/includes/functions.inc.php:242
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: ../../client/web/web/translate.php:104
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+# 97%
+#: ../../client/web/web/includes/functions.inc.php:244
+msgid "The Ulteo OVD session runs in a separate window"
+msgstr "La session Ulteo OVD tourne dans une fenêtre séparée"
+
+#: ../../client/web/web/includes/functions.inc.php:248
+msgid "Click [A]here[/A] to switch back to your session"
+msgstr "Cliquez [A]ici[/A] pour retourner dans votre session"
+
+#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
 msgid "My applications"
 msgstr "Mes applications"
 
-#: ../../client/web/web/translate.php:105
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
 msgid "Running applications"
 msgstr "Applications utilisées"
 
-#: ../../client/web/web/translate.php:106
+#: ../../client/web/web/includes/functions.inc.php:253
 msgid "My files"
 msgstr "Mes fichiers"
 
-#: ../../client/web/web/translate.php:117
+#: ../../client/web/web/includes/functions.inc.php:257
+msgid "Example: %EXAMPLE%"
+msgstr "Exemple : %EXAMPLE%"
+
+#: ../../client/web/web/includes/functions.inc.php:259
 msgid "Usage: missing \"sessionmanager_host\" parameter"
 msgstr "Utilisation : le paramètre \"sessionmanager_host\" est manquant"
 
-#: ../../client/web/web/translate.php:118
+#: ../../client/web/web/includes/functions.inc.php:260
 msgid "Usage: missing \"login\" parameter"
 msgstr "Utilisation : le paramètre \"login\" est manquant"
 
-#: ../../client/web/web/translate.php:119
+#: ../../client/web/web/includes/functions.inc.php:261
 msgid "Usage: missing \"password\" parameter"
 msgstr "Utilisation : le paramètre \"password\" est manquant"
 
 # 91%
 # 100%
 # 97%
-#: ../../client/web/web/translate.php:120
+#: ../../client/web/web/includes/functions.inc.php:262
 msgid "Unable to reach the Session Manager"
 msgstr "Impossible de contacter le Session Manager"
 
 # 98%
 # 100%
-#: ../../client/web/web/translate.php:122
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
+#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
 msgid "Authentication failed: please double-check your password and try again"
 msgstr ""
 "Erreur d'authentification : veuillez vérifier votre mot de passe et "
 "réessayer"
 
-#: ../../client/web/web/translate.php:123
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:378
+#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
 msgid ""
-"The system is on maintenance mode, please contact your administrator for "
+"The system is in maintenance mode, please contact your administrator for "
 "more information"
 msgstr ""
 "Le système est en maintenance, veuillez contacter votre administrateur pour "
-"plus d'informations"
+"plus d'information"
 
-#: ../../client/web/web/translate.php:124
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
+# 98%
+#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
 msgid "An internal error occurred, please contact your administrator"
 msgstr ""
 "Une erreur interne est survenue, veuillez contacter votre administrateur"
 
-#: ../../client/web/web/translate.php:125
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:382
+#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
 msgid "You specified an invalid login, please double-check and try again"
-msgstr "L'identifiant est invalide, veuillez revérifier and réessayer"
+msgstr "L'identifiant est invalide, veuillez revérifier et réessayer"
 
-#: ../../client/web/web/translate.php:126
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:384
+#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
 msgid ""
 "The service is not available, please contact your administrator for more "
 "information"
@@ -241,185 +281,242 @@ msgstr ""
 "Le service n'est pas disponible, veuillez contacter votre administrateur "
 "pour plus d'informations"
 
-#: ../../client/web/web/translate.php:127
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
-msgid "You are not authorized to launch a session. Please contact your administrator for more information"
-msgstr "Vous n'êtes pas autorisé à lancer une session. Veuillez contacter votre administrateur"
+#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
+msgid ""
+"You are not authorized to launch a session. Please contact your "
+"administrator for more information"
+msgstr ""
+"Vous n'êtes pas autorisé à lancer une session. Veuillez contacter votre "
+"administrateur pour plus d'informations"
 
-#: ../../client/web/web/translate.php:128
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
+#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
 msgid "You already have an active session"
 msgstr "Vous avez déjà une session active"
 
-#: ../../client/web/web/translate.php:130
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+#: ../../client/web/web/includes/functions.inc.php:272
+msgid "You will be disconnected from your OVD session."
+msgstr "Vous allez être déconnecté de votre session OVD."
+
+#: ../../client/web/web/includes/functions.inc.php:274
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr ""
 "Votre session va s'arrêter dans 3 minutes, veuillez sauvegarder vos "
 "documents dès maintenant !"
 
-msgid "Your session is going to be disconnected in %MINUTES% minutes because of logon time restriction policy"
-msgstr "Votre session va être déconnectée dans %MINUTES% minutes pour cause de politique de restriction d'accès"
+#: ../../client/web/web/includes/functions.inc.php:275
+msgid ""
+"Your session is going to be disconnected in %MINUTES% minutes because of the "
+"logon time restriction policy"
+msgstr ""
+"Votre session va être déconnectée dans %MINUTES% minutes à cause de la "
+"politique de restriction horaire"
 
-#: ../../client/web/web/translate.php:132
+#: ../../client/web/web/includes/functions.inc.php:277
 msgid "Server: session closed unexpectedly"
 msgstr "Serveur : fermeture inattendue de session"
 
-#: ../../client/web/web/translate.php:133
+#: ../../client/web/web/includes/functions.inc.php:278
 msgid "Your session has ended, you can now close the window"
 msgstr "Votre session est terminée, vous pouvez fermer la fenêtre"
 
-#: ../../client/web/web/translate.php:134
+#: ../../client/web/web/includes/functions.inc.php:279
 msgid "Your session has ended unexpectedly"
 msgstr "Votre session s'est terminée de manière inattendue"
 
-#: ../../client/web/web/translate.php:135
+#: ../../client/web/web/includes/functions.inc.php:280
 msgid "error details"
 msgstr "détails de l'erreur"
 
-#: ../../client/web/web/translate.php:136
+#: ../../client/web/web/includes/functions.inc.php:281
 msgid "Close this window"
 msgstr "Fermer cette fenêtre"
 
-#: ../../client/web/web/translate.php:137
-msgid ""
-"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
-"false;\">here</a> to start a new session"
-msgstr ""
-"Cliquez <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
-"false;\">ici</a> pour démarrer une nouvelle session"
+#: ../../client/web/web/includes/functions.inc.php:285
+msgid "Click [A]here[/A] to start a new session"
+msgstr "Cliquez [A]ici[/A] pour démarrer une nouvelle session"
 
-#: ../../client/web/web/translate.php:139
+#: ../../client/web/web/includes/functions.inc.php:288
 msgid "suspend"
 msgstr "veille"
 
-#: ../../client/web/web/translate.php:140
+#: ../../client/web/web/includes/functions.inc.php:289
 msgid "resume"
 msgstr "reprise"
 
-#: ../../client/web/web/login.php:280
+#: ../../client/web/web/includes/functions.inc.php:290
+msgid "Are you sure you want to logout (# apps running) ?"
+msgstr ""
+"Êtes-vous sûr ce vouloir couper votre session (# applications en cours "
+"d'exécution) ?"
+
+#: ../../client/web/web/classes/Ajaxplorer.class.php:61
 msgid "Profile"
 msgstr "Profile"
 
-#: ../../client/web/web/external.php:212
-msgid "Do not close this Ulteo OVD window!"
-msgstr "Ne fermez pas cette fenêtre Ulteo OVD !"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Fichier texte (*.txt)"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occurred, please contact your administrator"
-msgstr "Une erreur est apparue, veuillez contacter votre administrateur"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
-msgid "Warning!"
-msgstr "Attention !"
-
-# 83%
-# 100%
-# 100%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
-msgid "Error!"
-msgstr "Erreur !"
-
-# 91%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
-msgid "Unable to reach the Session Manager!"
-msgstr "Impossible de contacter le Session Manager !"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
-msgid "Invalid host field!"
-msgstr "Champs hôte invalide"
-
-# 96%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
-msgid "You must specify the host field!"
-msgstr "Vous devez renseigner le champs serveur !"
-
-# 96%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
-msgid "You must specify a username!"
-msgstr "Vous devez renseigner un utilisateur !"
-
-# 96%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:686
-msgid "You must specify a password!"
-msgstr "Vous devez renseigner un mot de passe !"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
-msgid "Internal error: Bad session mode return"
-msgstr "Erreur interne : mauvais mode de session retourné"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
-msgid "Session is going to end"
-msgstr "Votre session va s'arrêter"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
-msgid "Internal error: unsupported session mode"
-msgstr "Erreur interne : ce type de session n'est pas supporté"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "You have been disconnected"
-msgstr "Vous avez été déconnecté"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "Your session has ended"
-msgstr "Votre session s'est arrêtée"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-msgid "Protocol xml error: "
-msgstr "Erreur de protocole XML : "
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:840
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:847
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:854
+# 97%
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occurred. Please try again."
+msgstr "Une erreur est apparue. Veuillez recommencer."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
 msgid "Error"
 msgstr "Erreur"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
-msgid "OVD News"
-msgstr "Infos OVD"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "Rapport de bogue sauvegardé dans %s"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
-msgid "Welcome {user}"
-msgstr "Bienvenue {user}"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "Rapport de bogue sauvegardé"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
-msgid "Display icons"
-msgstr "Afficher les icônes"
+# 81%
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill in the description field."
+msgstr "Veuillez remplir le champs de description."
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
-msgid "Hide icons"
-msgstr "Cacher les icônes"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "Champs vide"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Rapport de bogue Ulteo OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Valider"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Date"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Version"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Système"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Description et étapes pour reproduire :"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Rapporter un bogue"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Maximized"
+msgstr "Maximisé"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:867
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Fewer options"
+msgstr "Moins d'options"
+
+# 93%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:948
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1029
+msgid "More options..."
+msgstr "Plus d'options ..."
+
+# 85%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1013
+msgid "Start!"
+msgstr "Démarrer !"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1016
+msgid "Server"
+msgstr "Serveur"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1018
+msgid "Resolution"
+msgstr "Résolution"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Keyboard"
+msgstr "Clavier"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1022
+msgid "Auto"
+msgstr "Automatique"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1023
+msgid "Application"
+msgstr "Application"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Remember me"
+msgstr "Se rappeler de moi"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Auto-publish shortcuts"
+msgstr "Publier automatiquement les raccourcis"
+
+#. Initialize UI components
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:83
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:81
+msgid "Logoff"
+msgstr "Fermer la session"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:70
 msgid "Disconnect"
 msgstr "Déconnecter"
 
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:94
+msgid "Close the application"
+msgstr "Fermer l'application"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:96
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:65
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:135
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:99
+msgid "Ok"
+msgstr "Ok"
+
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
 msgid "Start loading session"
-msgstr "Début de chargement de la session"
+msgstr "Début du chargement de la session"
 
+# 93%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
-msgid "Connecting to the session manager"
+msgid "Connecting to the Session Manager"
 msgstr "Connexion au Session Manager"
 
+# 95%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
-msgid "Get session information from session manager"
+msgid "Get session information from Session Manager"
 msgstr "Récupération des informations de session depuis le Session Manager"
 
+# 95%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
-msgid "Get application data from session manager"
+msgid "Get application data from Session Manager"
 msgstr "Récupération de données sur les applications depuis le Session Manager"
 
 # 89%
@@ -428,162 +525,438 @@ msgstr "Récupération de données sur les applications depuis le Session Manage
 msgid "Installing application data on client"
 msgstr "Installation des données d'applications sur le client"
 
+# 89%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
-msgid "Waiting server for session"
+msgid "Waiting on server for session"
 msgstr "En attente du serveur pour la session"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
-msgstr "Etat invalide"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
-msgid "Maximized"
-msgstr "Maximisé"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
-msgid "Fewer options"
-msgstr "Moins d'options"
+msgstr "État invalide"
 
 # 93%
 # 100%
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
-msgid "More options..."
-msgstr "Plus d'options ..."
-
-# 85%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
-msgid "Start!"
-msgstr "Démarrer !"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
-msgid "Server"
-msgstr "Serveur"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
-msgid "Resolution"
-msgstr "Résolution"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
-msgid "Keyboard"
-msgstr "Clavier"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
-msgid "Auto"
-msgstr "Automatique"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
-msgid "Application"
-msgstr "Application"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
-msgid "Remember me"
-msgstr "Se rappeler de moi"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
-msgid "Auto-publish shortcuts"
-msgstr "Publier automatiquement les raccourcis "
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
-msgid "Go back to authentication"
-msgstr "Retourner à l'authentification"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
-msgid "Do you really want to close the window?"
-msgstr "Etes-vous sûr de vouloir fermer cette fenêtre ?"
-
-# 93%
-# 100%
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionDialog.java:43
 msgid "Disconnecting!"
 msgstr "Déconnexion en cours !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:58
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:136
 msgid "Now loading"
 msgstr "Chargement en cours"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
-msgid "Cancel"
-msgstr "Annuler"
+# 98%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
+msgid "An error occurred, please contact your administrator"
+msgstr "Une erreur est apparue, veuillez contacter votre administrateur"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
-msgid "Report a bug"
-msgstr "Rapporter un bogue"
+# 91%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:651
+msgid "Unable to reach the Session Manager!"
+msgstr "Impossible de contacter le Session Manager !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
-msgid "Ulteo OVD Bug Report"
-msgstr "Rapport de bogue Ulteo OVD"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:658
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+msgid "Warning!"
+msgstr "Attention !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
-msgid "Validate"
-msgstr "Valider"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:718
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:722
+msgid "Invalid host field!"
+msgstr "Champs hôte invalide !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
-msgid "Date"
-msgstr "Date"
+# 96%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:752
+msgid "You must specify the host field!"
+msgstr "Vous devez renseigner le champs serveur !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
-msgid "Version"
-msgstr "Version"
+# 96%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:757
+msgid "You must specify a username!"
+msgstr "Vous devez renseigner un utilisateur !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
-msgid "System"
-msgstr "Système"
+# 96%
+# 100%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:760
+msgid "You must specify a password!"
+msgstr "Vous devez renseigner un mot de passe !"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
-msgid "JVM"
-msgstr "JVM"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
+msgid "Unable to find a valid certificate"
+msgstr "Impossible de trouver une license valide"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
-msgid "Description and steps to reproduce:"
-msgstr "Description et étapes pour reproduire :"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid "Session is going to end"
+msgstr "Votre session va s'arrêter"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
-msgid "MM/dd/yy hh:mm:ss"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+msgid "Internal error: unsupported session mode"
+msgstr "Erreur interne : ce type de session n'est pas supporté"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "You have been disconnected"
+msgstr "Vous avez été déconnecté"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "Your session has ended"
+msgstr "Votre session s'est arrêtée"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Protocol xml error: "
+msgstr "Erreur de protocole XML : "
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:52
+msgid "OVD News"
+msgstr "Infos OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Enable desktop integration"
+msgstr "Activer l'intégration au bureau local"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Disable desktop integration"
+msgstr "Désactiver l'intégration au bureau local"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Bienvenue {user}"
+
+msgid "Main gestures"
+msgstr "Principaux mouvements"
+
+msgid "Right click"
+msgstr "Clic droit"
+
+msgid "View gestures"
+msgstr "Gestuelles de mouvements"
+
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
 msgstr ""
+"Le système est en maintenance, veuillez contacter votre administrateur pour "
+"plus d'informations"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
-msgid "Text file (*.txt)"
-msgstr "Fichier texte (*.txt)"
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Vous n'êtes pas autorisé à lancer une session de ce type"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occurred. Please try again."
-msgstr "Une erreur est apparue. Veuillez recommencer."
-
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved to "
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
 msgstr ""
+"Un problème réseau empêche la communication entre le client et le serveur. "
+"Vous pouvez attendre que la connexion s'établisse à nouveau ou vous "
+"déconnecter maintenant."
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved"
-msgstr "Rapport de bogue sauvegardé"
+msgid "Gestures"
+msgstr "Gestuelle"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
-msgid "Please fill description field."
-msgstr "Veuillez remplir le champs de description."
+msgid "An error occured, please contact your administrator"
+msgstr "Une erreur est apparue, veuillez contacter votre administrateur"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
-msgid "Empty field"
-msgstr "Champs vide"
+msgid "Toolbar"
+msgstr "Barre d'outils"
 
-#: iPad OVDProfileViewController.m:493
-#: iPad OVDProfileViewController.m:498
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr ""
+"Pour vous connecter, vous devez entrer votre identifiant, votre mot de passe "
+"et le nom du serveur sur lequel vous voulez vous connecter."
+
+msgid "Show toolbar"
+msgstr "Afficher la barre d'outil"
+
+msgid "Zoom"
+msgstr "Zoom"
+
 msgid "Network is down"
-msgstr "Réseau non disponible"
+msgstr "Réseau indisponible"
 
-#: iPad OVDProfileViewController.m:499
-msgid "A network issue prevents the dialog between the client and the server. You can wait until the connection is up again or logout now."
-msgstr "Un problème réseau empêche la communication entre le client et le serveur. Vous pouvez attendre que la connexion s'établisse à nouveau ou vous déconnectez maintenant."
+msgid "Connection"
+msgstr "Connexion"
 
-#: iPad OVDProfileViewController.m:300
+msgid "Move view"
+msgstr "Déplacer la vue"
+
+msgid "Show keyboard"
+msgstr "Affiche le clavier"
+
 msgid "Help"
 msgstr "Aide"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr ""
+"Une erreur interne est survenue, veuillez contacter votre administrateur"
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr ""
+"Le bouton point d'interrogation affiche cette page d'aide. Celui avec la "
+"croix ferme la session."
+
+msgid "Click"
+msgstr "Clic"
+
+msgid "Session resolution"
+msgstr "Résolution de la session"
+
+msgid "The password will be saved"
+msgstr "Le mot de passe sera sauvegardé"
+
+msgid "Modem (56 Kbits/s)"
+msgstr "Modem (56 Kbits/s)"
+
+msgid "RDP Compression"
+msgstr "Compression RDP"
+
+msgid "Toggle keyboard"
+msgstr "Afficher/cacher le clavier"
+
+msgid "Android controls remains visible on screen"
+msgstr "Garder visible les boutons de contrôle Android"
+
+msgid "Do you want to disconnect the current session ?"
+msgstr "Voulez-vous suspendre la session courante ?"
+
+msgid "Manual resolution"
+msgstr "Résolution manuelle"
+
+msgid "Advanced options"
+msgstr "Options avancées"
+
+msgid "LAN (100 Mbits/s)"
+msgstr "Réseau local (100 Mbits/s)"
+
+msgid "Enhanced keyboard"
+msgstr "Clavier évolué"
+
+msgid "Force wide screen"
+msgstr "Forcer le mode paysage"
+
+msgid "Ulteo website"
+msgstr "Site web Ulteo"
+
+msgid "Screen resolution not changed"
+msgstr "La résolution courante de l'écran sera utilisée"
+
+msgid "Dim the system bar with clock while showing the desktop"
+msgstr "Cacher la barre système avec l'horloge pendant la session"
+
+msgid "WAN (10 Mbits/s)"
+msgstr "Connexion par Internet (10 Mbits/s)"
+
+msgid "Always show the system bar with clock"
+msgstr "Toujours afficher la barre système avec l'horloge"
+
+# 85%
+msgid "The login screen shows the Session Manager data"
+msgstr "Affiche le champ Session Manager dans l'écran de connexion"
+
+msgid ""
+"No Internet connection has been detected on this\n"
+"\t\tdevice. Please enable Wifi/3G before using this application"
+msgstr ""
+"Aucune connexion Internet n'a été détecté sur ce système. Veuillez activer "
+"le Wifi ou la 3G avant d'utiliser cette application"
+
+# 95%
+msgid "Hide the Session Manager in login screen"
+msgstr "Cache le champ Session Manager dans l'écran de connexion"
+
+msgid "Satellite (2 Mbits/s)"
+msgstr "Satellite (2 Mbits/s)"
+
+msgid "Dim system bar"
+msgstr "Cacher la barre système"
+
+msgid ""
+"The networks connection appears to be down, You can wait for reconnection or "
+"logout"
+msgstr ""
+"La connexion réseau semble interrompue. Veuillez attendre d'être reconnecté "
+"ou fermez la session"
+
+msgid "Not specified"
+msgstr "Non spécifié"
+
+msgid "Active desktop session"
+msgstr "Session bureau active"
+
+msgid "Hide session manager in login screen"
+msgstr "Cache le champ Session Manager dans l'écran de connexion"
+
+msgid "Manual selection of screen resolution"
+msgstr "Sélection manuelle de la résolution d'écran"
+
+msgid "Set the session manager url"
+msgstr "Définir l'URL du Session Manager"
+
+msgid "Use enhanced keyboard"
+msgstr "Utilise le clavier évolué"
+
+msgid "Create shortcut"
+msgstr "Créer un raccourci"
+
+msgid "Waiting server for session"
+msgstr "En attente du serveur pour la session"
+
+msgid "Do not use enhanced keyboard"
+msgstr "N'utilise pas le clavier évolué"
+
+msgid "Session manager Url"
+msgstr "URL du Session Manager"
+
+msgid "Wide screen resolution will be forced"
+msgstr "Force l'utilisation du mode paysage dans la session"
+
+msgid "Disable RDP compression"
+msgstr "Désactiver la compression RDP"
+
+msgid "Automatic detection of screen resolution"
+msgstr "Détection automatique de la résolution d'écran"
+
+msgid "The desktop will take all screen space"
+msgstr "Le bureau prendra tout l'espace disponible"
+
+msgid "The password will not be saved"
+msgstr "Le mot de passe ne sera pas sauvegardé"
+
+msgid "Session"
+msgstr "Session"
+
+msgid "Set the screen dimensions of the session"
+msgstr "Définie la résolution d'écran de la session"
+
+# 96%
+msgid "Broadband Low (256 Kbits/s)"
+msgstr "Bas débit (256 Kbits/s)"
+
+msgid "Broadband High (10 Mbits/s)"
+msgstr "Haut débit (10 Mbits/s)"
+
+# 86%
+msgid "Connection type"
+msgstr "Type de connexion"
+
+msgid "Connection error"
+msgstr "Erreur de connexion"
+
+msgid "Enable RDP compression"
+msgstr "Activer la compression RDP"
+
+msgid "Save the password"
+msgstr "Sauvegarder le mot de passe"
+
+#~ msgid ""
+#~ "Please install Java extension for your web browser or contact your "
+#~ "administrator."
+#~ msgstr ""
+#~ "Veuillez installer l'extension Java pour votre navigateur web ou alors "
+#~ "contactez votre administrateur."
+
+#~ msgid "The Ulteo OVD session runs in a separated window"
+#~ msgstr "La session Ulteo OVD tourne dans une fenêtre séparée"
+
+#~ msgid ""
+#~ "Your session is going to be disconnected in %MINUTES% minutes because of "
+#~ "logon time restriction policy"
+#~ msgstr ""
+#~ "Vous allez être déconnecté de votre session dans %MINUTES% minutes à cause "
+#~ "de la politique de restriction d'heure de connexion"
+
+#~ msgid "Connecting to the session manager"
+#~ msgstr "Connexion au Session Manager"
+
+#~ msgid "Get session information from session manager"
+#~ msgstr "Récupération des informations de session depuis le Session Manager"
+
+#~ msgid "Get application data from session manager"
+#~ msgstr "Récupération de données sur les applications depuis le Session Manager"
+
+#~ msgid "Please fill description field."
+#~ msgstr "Veuillez remplir le champs de description."
+
+#~ msgid "The login screen shows the session manager input"
+#~ msgstr "Affiche le champ Session Manager dans l'écran de connexion"
+
+#~ msgid "Hide the session manager in login screen"
+#~ msgstr "Cache le champ Session Manager dans l'écran de connexion"
+
+#~ msgid "Broadband low (256 Kbits/s)"
+#~ msgstr "Bas débit (256 Kbits/s)"
+
+#~ msgid "Connexion type"
+#~ msgstr "Type de connexion"
+
+#~ msgid "Unable to find a valid licence"
+#~ msgstr "Impossible de trouver une licence valide"
+
+#~ msgid ""
+#~ "A network issue is preventing communication between the client and the server. You "
+#~ "can wait until the connection is up again or logout now."
+#~ msgstr ""
+#~ "Un problème de réseau empêche la communication entre le client et le "
+#~ "serveur. Vous pouvez attendre jusqu'à ce que la connexion soit à nouveau "
+#~ "disponible ou déconnectez-vous maintenant."
+
+# 77%
+#, fuzzy
+#~ msgid "MoveView"
+#~ msgstr "Déplacer la vue"
+
+#~ msgid ""
+#~ "If this is your first time here, a Java security window will show up and you "
+#~ "have to accept it to use the service."
+#~ msgstr ""
+#~ "Si c'est votre première visite sur ce site, une fenêtre de sécurité java va "
+#~ "s'afficher et vous allez devoir cliquer sur accepter afin d'utiliser ce "
+#~ "service"
+
+# 90%
+# 100%
+# 80%
+#~ msgid "Java is not available either on your system or in your web browser."
+#~ msgstr "Java n'est ni installé sur votre système ni dans votre navigateur web."
+
+#~ msgid "An error occured. Please try again."
+#~ msgstr "Une erreur est apparue. Veuillez recommencer."
+
+#~ msgid "Example: sm.ulteo.com"
+#~ msgstr "Exemple : sm.ulteo.com"
+
+#~ msgid ""
+#~ "Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">here</a> to start a new session"
+#~ msgstr ""
+#~ "Cliquez <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">ici</a> pour démarrer une nouvelle session"
+
+#~ msgid "Do not close this Ulteo OVD window!"
+#~ msgstr "Ne fermez pas cette fenêtre Ulteo OVD !"
+
+#~ msgid "Display icons"
+#~ msgstr "Afficher les icônes"
+
+#~ msgid "Hide icons"
+#~ msgstr "Cacher les icônes"
+
+# 83%
+# 100%
+#~ msgid "Error!"
+#~ msgstr "Erreur !"
+
+#~ msgid "Internal error: Bad session mode return"
+#~ msgstr "Erreur interne : mauvais mode de session retourné"
+
+#~ msgid "Do you really want to close the window?"
+#~ msgstr "Etes-vous sûr de vouloir fermer cette fenêtre ?"
+
+#~ msgid "Go back to authentication"
+#~ msgstr "Retourner à l'authentification"
 
 #~ msgid "Host"
 #~ msgstr "Serveur"
@@ -610,7 +983,7 @@ msgstr "Aide"
 #~ "You are advised to check the \"<i>Always trust content from this publisher</"
 #~ "i>\" checkbox."
 #~ msgstr ""
-#~ "Il est conseillé de cocher la case \"<i>Toujours faire confiance aux contenu "
+#~ "Il est conseillé de cocher la case \"<i>Toujours faire confiance au contenu "
 #~ "de cet éditeur</ i>\""
 
 # 90%
@@ -630,13 +1003,6 @@ msgstr "Aide"
 #~ msgid "Authentication failed, please double-check your password and try again"
 #~ msgstr ""
 #~ "Erreur d'authentification, veuillez vérifier votre mot de passe et réessayer"
-
-#~ msgid ""
-#~ "The system is in maintenance mode, please contact your administrator for "
-#~ "more information"
-#~ msgstr ""
-#~ "Le système est en maintenance, veuillez contacter votre administrator pour "
-#~ "plus d'information"
 
 #~ msgid "You must specify the host field !"
 #~ msgstr "Vous devez remplir le champs serveur !"

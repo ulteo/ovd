@@ -1,122 +1,142 @@
-# Slovak translations for uovdclient package.
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011 Ulteo SAS.
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
-# Automatically generated, 2011.
-# Author: Martin Kusovsky <kusovsky@avispro.sk>, 2010, 2011.
-#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: uovdclient\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 16:14+0100\n"
-"PO-Revision-Date: 2011-06-14 08:09+0200\n"
-"Last-Translator: Martin Kusovsky\n"
-"Language-Team: Slovak\n"
+"POT-Creation-Date: 2014-03-25 10:12+0200\n"
+"PO-Revision-Date: 2014-03-25 16:40+0200\n"
+"Last-Translator: Martin <kusovsky@avispro.sk>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Pootle 2.1.5\n"
+"X-Generator: Pootle 2.1.6\n"
 
-#. { //persistent session
-#. ?>
-#. <td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="" title="" /><br /><span id="suspend_gettext">&nbsp;</span></a></td>
-#. <?php
-#. }
-#: ../../client/web/web/index.php:405
-msgid "Example: %EXAMPLE%"
-msgstr "Príklad: %EXAMPLE%"
+#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+msgid ""
+"JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
+"seems JavaScript is either disabled or not supported by your browser. To use "
+"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
+"try again[/A]."
+msgstr ""
+"Vo Vašom prehliadači musí byť povolený JavaScript . Váš prehliadač sa javí, "
+"ako by nepodporoval JavaScript, resp, JavaScript v ňom nie je povolený. Pre "
+"využitie Ulteo OVD povoľte JavaScript v nastaveniach prehliadača a [A]skúste "
+"znova[/A]."
 
-#: ../../client/web/web/translate.php:65
+#: ../../client/web/web/includes/functions.inc.php:199
 msgid "Close"
 msgstr "Zavrieť"
 
-#: ../../client/web/web/translate.php:67
+#: ../../client/web/web/includes/functions.inc.php:201
 msgid "Session Manager"
 msgstr "Session Manager"
 
-#: ../../client/web/web/translate.php:68
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:985
+#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
 msgid "Login"
 msgstr "Prihlasovacie meno"
 
-#: ../../client/web/web/translate.php:69
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:986
+#: ../../client/web/web/includes/functions.inc.php:203
+msgid "Login (detected)"
+msgstr "Prihlásenie (detekované)"
+
+#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
 msgid "Password"
 msgstr "Heslo"
 
-#: ../../client/web/web/translate.php:70
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1001
+#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
 msgid "Use local credentials"
 msgstr "Použi lokálne údaje pre prihlásenie"
 
-#: ../../client/web/web/translate.php:71 ../../client/web/web/translate.php:77
-#: ../../client/web/web/translate.php:82
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/web/web/includes/functions.inc.php:206
+#: ../../client/web/web/includes/functions.inc.php:212
+#: ../../client/web/web/includes/functions.inc.php:217
 msgid "Yes"
 msgstr "Áno"
 
-#: ../../client/web/web/translate.php:72 ../../client/web/web/translate.php:78
-#: ../../client/web/web/translate.php:83
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
+#: ../../client/web/web/includes/functions.inc.php:207
+#: ../../client/web/web/includes/functions.inc.php:213
+#: ../../client/web/web/includes/functions.inc.php:218
 msgid "No"
 msgstr "Nie"
 
-#: ../../client/web/web/translate.php:73
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:991
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
 msgid "Mode"
 msgstr "Mód"
 
-#: ../../client/web/web/translate.php:74
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:998
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
 msgid "Desktop"
 msgstr "Plocha"
 
-#: ../../client/web/web/translate.php:75
+#: ../../client/web/web/includes/functions.inc.php:210
 msgid "Portal"
 msgstr "Portál"
 
-#: ../../client/web/web/translate.php:76
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:78
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1009
+#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
 msgid "Fullscreen"
 msgstr "Celá obrazovka"
 
-#: ../../client/web/web/translate.php:79
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:993
+#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
 msgid "Language"
 msgstr "Jazyk"
 
-#: ../../client/web/web/translate.php:80
+#: ../../client/web/web/includes/functions.inc.php:215
 msgid "Keyboard layout"
 msgstr "Klávesnica"
 
-#: ../../client/web/web/translate.php:81
+#: ../../client/web/web/includes/functions.inc.php:216
 msgid "Debug"
 msgstr "Ladenie"
 
-#: ../../client/web/web/translate.php:86
+#: ../../client/web/web/includes/functions.inc.php:220
+msgid "Keyboard method"
+msgstr "Metóda klávesnice"
+
+#: ../../client/web/web/includes/functions.inc.php:221
+msgid "Scancode"
+msgstr "Skenovať"
+
+#: ../../client/web/web/includes/functions.inc.php:222
+msgid "Unicode"
+msgstr "Unikód"
+
+#: ../../client/web/web/includes/functions.inc.php:223
+msgid "Unicode use local IME"
+msgstr "Unikód (použi lokálne nastavenia)"
+
+#: ../../client/web/web/includes/functions.inc.php:225
 msgid "Advanced settings"
 msgstr "Rozšírené nastavenia"
 
-#: ../../client/web/web/translate.php:87
+#: ../../client/web/web/includes/functions.inc.php:226
 msgid "Connect"
 msgstr "Pripojiť"
 
-#: ../../client/web/web/translate.php:89
+#: ../../client/web/web/includes/functions.inc.php:228
 msgid "Checking for system compatibility"
 msgstr "Kontrola kompatibility systému"
 
-#: ../../client/web/web/translate.php:90
+#: ../../client/web/web/includes/functions.inc.php:229
 msgid ""
 "If this is your first time here, a Java security window will show up and you "
-"have to accept it to use the service."
+"will have to accept it to use the service."
 msgstr ""
-"Ak ste tu prvý krát, ukáže sa Vám bezpečnostné okno Java. V ňom je potrebné "
-"akceptovať použitie tejto služby."
+"Ak ste tu prvý krát, zobrazí sa Vám Java security window. Akceptujte "
+"použitie tejto služby."
 
-#: ../../client/web/web/translate.php:91
+#: ../../client/web/web/includes/functions.inc.php:230
 msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
@@ -124,103 +144,119 @@ msgstr ""
 "Budete požiadaný zaškrtnúť \"<em>Always trust content from this "
 "publisher</em>\"."
 
-#: ../../client/web/web/translate.php:93
+#: ../../client/web/web/includes/functions.inc.php:232
 msgid "System compatibility error"
 msgstr "Chyba kompatibility systému"
 
-#: ../../client/web/web/translate.php:94
-msgid "Java is not available either on your system or in your web browser."
+# 79%
+# 100%
+#: ../../client/web/web/includes/functions.inc.php:233
+msgid "Java is either not available on your system or in your web browser."
 msgstr ""
 "Nie je dostupná Java vo Vašom systéme resp. vo Vašom webovom prehliadači."
 
-#: ../../client/web/web/translate.php:95
+#: ../../client/web/web/includes/functions.inc.php:234
 msgid ""
-"Please install Java extension for your web browser or contact your "
+"Please install the Java extension for your web browser or contact your "
 "administrator."
-msgstr ""
-"Prosím nainštalujte Java doplnok do Vášho web prehliadača, alebo kontaktujte "
-"systémového administrátora."
+msgstr "Prosím nainštalujte JAVA do Vášho browsera"
 
-#: ../../client/web/web/translate.php:96
+#: ../../client/web/web/includes/functions.inc.php:235
 msgid "You have not accepted the Java security window."
 msgstr "Neakceptovali ste bezpečnostné okno Javy."
 
-#: ../../client/web/web/translate.php:97
+#: ../../client/web/web/includes/functions.inc.php:236
 msgid "You <strong>cannot</strong> have access to this service."
 msgstr "Nemáte <strong>prístup</strong> k tejto službe."
 
-#: ../../client/web/web/translate.php:99
+#: ../../client/web/web/includes/functions.inc.php:238
 msgid "Loading Open Virtual Desktop"
 msgstr "Načítavam virtuálnu pracovnú plochu"
 
-#: ../../client/web/web/translate.php:100
+#: ../../client/web/web/includes/functions.inc.php:239
+msgid "Disconnecting Open Virtual Desktop"
+msgstr "Odpájam Ulteo"
+
+#: ../../client/web/web/includes/functions.inc.php:240
 msgid "Welcome!"
 msgstr "Vitajte!"
 
-#: ../../client/web/web/translate.php:101
+#: ../../client/web/web/includes/functions.inc.php:241
 msgid "Suspend"
 msgstr "Prerušiť"
 
-#: ../../client/web/web/translate.php:102
+#: ../../client/web/web/includes/functions.inc.php:242
 msgid "Logout"
 msgstr "Odhlásiť"
 
-#: ../../client/web/web/translate.php:104
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:116
+# 97%
+#: ../../client/web/web/includes/functions.inc.php:244
+msgid "The Ulteo OVD session runs in a separate window"
+msgstr "Ulteo OVD beží v oddelenom okne"
+
+#: ../../client/web/web/includes/functions.inc.php:248
+msgid "Click [A]here[/A] to switch back to your session"
+msgstr "Kliknite [A]sem[/A] pre návrat do Vášho pripojenia."
+
+#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
 msgid "My applications"
 msgstr "Moje aplikácie"
 
-#: ../../client/web/web/translate.php:105
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:132
+#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
 msgid "Running applications"
 msgstr "Bežiace aplikácie"
 
-#: ../../client/web/web/translate.php:106
+#: ../../client/web/web/includes/functions.inc.php:253
 msgid "My files"
 msgstr "Moje súbory"
 
-#: ../../client/web/web/translate.php:117
+#: ../../client/web/web/includes/functions.inc.php:257
+msgid "Example: %EXAMPLE%"
+msgstr "Napríklad: %EXAMPLE%"
+
+#: ../../client/web/web/includes/functions.inc.php:259
 msgid "Usage: missing \"sessionmanager_host\" parameter"
 msgstr "Chýba parameter \"sessionmanager_host\" "
 
-#: ../../client/web/web/translate.php:118
+#: ../../client/web/web/includes/functions.inc.php:260
 msgid "Usage: missing \"login\" parameter"
 msgstr "Chýba parameter \"login\""
 
-#: ../../client/web/web/translate.php:119
+#: ../../client/web/web/includes/functions.inc.php:261
 msgid "Usage: missing \"password\" parameter"
 msgstr "Chýba parameter \"password\""
 
-#: ../../client/web/web/translate.php:120
+#: ../../client/web/web/includes/functions.inc.php:262
 msgid "Unable to reach the Session Manager"
 msgstr "Nemôžem kontaktovať Session Manager"
 
-#: ../../client/web/web/translate.php:122
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:376
+#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
 msgid "Authentication failed: please double-check your password and try again"
 msgstr "Autentifikácia zlyhala: prosím overte Vaše heslo a prihláste sa znova"
 
-#: ../../client/web/web/translate.php:123
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:378
+#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
 msgid ""
-"The system is on maintenance mode, please contact your administrator for "
+"The system is in maintenance mode, please contact your administrator for "
 "more information"
-msgstr ""
-"Systém je v móde údržby, kontaktujte prosím Vášho administrátora pre ďalšie "
-"informácie"
+msgstr "Systém je v móde údržby, kontaktujte prosím administrátora systému."
 
-#: ../../client/web/web/translate.php:124
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:380
+# 98%
+#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
 msgid "An internal error occurred, please contact your administrator"
 msgstr "Vyskytla sa interná chyba, kontaktujte prosím Vášho administrátora."
 
-#: ../../client/web/web/translate.php:125
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:382
+#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
 msgid "You specified an invalid login, please double-check and try again"
 msgstr "Zadali ste nesprávne prihlasovacie meno. Skúste znova."
 
-#: ../../client/web/web/translate.php:126
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:384
+#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
 msgid ""
 "The service is not available, please contact your administrator for more "
 "information"
@@ -228,309 +264,635 @@ msgstr ""
 "Služba je nedostupná, kontaktujte prosím Vášho administrátora pre ďalšie "
 "informácie"
 
-#: ../../client/web/web/translate.php:127
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:386
-msgid "You are not authorized to launch a session in this mode"
-msgstr "Nie ste autorizovaný spustiť ulteo v tomto móde"
+#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
+msgid ""
+"You are not authorized to launch a session. Please contact your "
+"administrator for more information"
+msgstr "Nemáte právo spustiť reláciu. Kontaktujte prosím Vášho administrátora."
 
-#: ../../client/web/web/translate.php:128
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:388
+#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
 msgid "You already have an active session"
 msgstr "Už ste raz pripojený"
 
-#: ../../client/web/web/translate.php:130
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
+#: ../../client/web/web/includes/functions.inc.php:272
+msgid "You will be disconnected from your OVD session."
+msgstr "Budete odpojený z Vašej Ulteo OVD relácie."
+
+#: ../../client/web/web/includes/functions.inc.php:274
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr ""
 "Vaše pripojenie skončí o 3 minúty, prosím ihneď uložte všetky Vaše dáta!"
 
-#: ../../client/web/web/translate.php:132
+#: ../../client/web/web/includes/functions.inc.php:275
+msgid ""
+"Your session is going to be disconnected in %MINUTES% minutes because of the "
+"logon time restriction policy"
+msgstr ""
+"Vaša session bude odpojená po  %MINUTES% minútach, kvôli nastaveniam servera"
+
+#: ../../client/web/web/includes/functions.inc.php:277
 msgid "Server: session closed unexpectedly"
 msgstr "Server: prihlásenie bolo neočakávane ukončené"
 
-#: ../../client/web/web/translate.php:133
+#: ../../client/web/web/includes/functions.inc.php:278
 msgid "Your session has ended, you can now close the window"
 msgstr "Vaše prihlásenie bolo ukončené, môžete zavrieť okno"
 
-#: ../../client/web/web/translate.php:134
+#: ../../client/web/web/includes/functions.inc.php:279
 msgid "Your session has ended unexpectedly"
 msgstr "Vaše prihlásenie bolo neočakávane ukončené"
 
-#: ../../client/web/web/translate.php:135
+#: ../../client/web/web/includes/functions.inc.php:280
 msgid "error details"
 msgstr "detaily chyby"
 
-#: ../../client/web/web/translate.php:136
+#: ../../client/web/web/includes/functions.inc.php:281
 msgid "Close this window"
 msgstr "Zavrite okno"
 
-#: ../../client/web/web/translate.php:137
-msgid ""
-"Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
-"false;\">here</a> to start a new session"
-msgstr ""
-"Kliknite <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
-"false;\">sem</a> pre nové prihlásenie"
+#: ../../client/web/web/includes/functions.inc.php:285
+msgid "Click [A]here[/A] to start a new session"
+msgstr "Kliknite [A]sem[/A] pre naštartovanie novej relácie"
 
-#: ../../client/web/web/translate.php:139
+#: ../../client/web/web/includes/functions.inc.php:288
 msgid "suspend"
 msgstr "prerušiť"
 
-#: ../../client/web/web/translate.php:140
+#: ../../client/web/web/includes/functions.inc.php:289
 msgid "resume"
 msgstr "pokračovať"
 
-#: ../../client/web/web/login.php:280
+#: ../../client/web/web/includes/functions.inc.php:290
+msgid "Are you sure you want to logout (# apps running) ?"
+msgstr "Naozaj sa chcete odhlásiť (# apps running) ?"
+
+#: ../../client/web/web/classes/Ajaxplorer.class.php:61
 msgid "Profile"
 msgstr "Profil"
 
-#: ../../client/web/web/external.php:212
-msgid "Do not close this Ulteo OVD window!"
-msgstr "Nezatvárajte toto ulteo okno!"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Textový súbor (*.txt)"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:390
-msgid "An error occurred, please contact your administrator"
-msgstr "Vyskytla sa chyba, kontaktujte prosím Vášho administrátora"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:543
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:45
-msgid "Warning!"
-msgstr "Upozornenie!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:553
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:559
-msgid "Error!"
-msgstr "Chyba!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:557
-msgid "Unable to reach the Session Manager!"
-msgstr "Nemôžem kontaktovať Session Manager!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:642
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:646
-msgid "Invalid host field!"
-msgstr "Neplatné pole pre server!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:678
-msgid "You must specify the host field!"
-msgstr "Musíte vyplniť pole pre server!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:683
-msgid "You must specify a username!"
-msgstr "Musíte vyplniť prihlasovacie meno!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:686
-msgid "You must specify a password!"
-msgstr "Musíte vyplniť heslo!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:733
-msgid "Internal error: Bad session mode return"
-msgstr "Interná chyba: Zlý mód prihlásenia"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:745
-msgid "Session is going to end"
-msgstr "Prihlásenie bude ukončené"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:772
-msgid "Internal error: unsupported session mode"
-msgstr "Interná chyba: nepodporovaný mód prihlásenia"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "You have been disconnected"
-msgstr "Boli ste odhlásený."
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:807
-msgid "Your session has ended"
-msgstr "Vaše prihlásenie bolo ukončené."
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-msgid "Protocol xml error: "
-msgstr "Chyba v protokole XML:"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:823
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:830
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:840
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:847
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:854
+# 97%
+# 100%
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occurred. Please try again."
+msgstr "Vyskytla sa chyba. Skúste znova."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
 msgid "Error"
 msgstr "Chyba"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:49
-msgid "OVD News"
-msgstr "OVD novinky"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "Chybový report bol uložený do %s"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
-msgid "Welcome {user}"
-msgstr "Vitajte {user}"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "Chybové hlásenie uložené"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:40
-msgid "Display icons"
-msgstr "Ikony obrazovky"
+# 81%
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill in the description field."
+msgstr "Prosím vyplňte popis chyby. "
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:41
-msgid "Hide icons"
-msgstr "Skryť ikony"
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "Prázdne pole"
 
-#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:46
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Ulteo OVD nahlásenie chyby"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Potvrdiť"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Dátum"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Verzia"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Systém"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Popis a kroky pre zopakovanie:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Nahlás chybu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Maximized"
+msgstr "Maximalizované"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:867
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Fewer options"
+msgstr "Menej možností"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:948
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1029
+msgid "More options..."
+msgstr "Viac možností ..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1013
+msgid "Start!"
+msgstr "Štart!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1016
+msgid "Server"
+msgstr "Server"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1018
+msgid "Resolution"
+msgstr "Rozlíšenie"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Keyboard"
+msgstr "Klávesnica"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1022
+msgid "Auto"
+msgstr "Automaticky"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1023
+msgid "Application"
+msgstr "Aplikácia"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Remember me"
+msgstr "Zapamätaj si ma"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Auto-publish shortcuts"
+msgstr "Automaticky-publikovať skratky"
+
+#. Initialize UI components
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:83
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:81
+msgid "Logoff"
+msgstr "Odhlásiť"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:70
 msgid "Disconnect"
 msgstr "Odhlásiť"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:94
+msgid "Close the application"
+msgstr "Zavrieť aplikáciu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:96
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:65
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:135
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:99
+msgid "Ok"
+msgstr "OK"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
 msgid "Start loading session"
 msgstr "Začiatok načítavania prihlásenia"
 
+# 93%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
-msgid "Connecting to the session manager"
-msgstr "Pripájam sa na session manager"
+msgid "Connecting to the Session Manager"
+msgstr "Pripájam sa na Session Manager"
 
+# 95%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
-msgid "Get session information from session manager"
-msgstr "Preberám informácia prihlásenia zo session manager"
+msgid "Get session information from Session Manager"
+msgstr "Preberám informácia prihlásenia zo Session Manager"
 
+# 95%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
-msgid "Get application data from session manager"
-msgstr "Preberám dáta zo session manager"
+msgid "Get application data from Session Manager"
+msgstr "Preberám dáta zo Session Manager"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
 msgid "Installing application data on client"
 msgstr "Inštalujem dáta na klientovi"
 
+# 89%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
-msgid "Waiting server for session"
+msgid "Waiting on server for session"
 msgstr "Čakám na server pre prihlásenie"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
 msgstr "Neplatný status"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:77
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1008
-msgid "Maximized"
-msgstr "Maximalizované"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:824
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1005
-msgid "Fewer options"
-msgstr "Menej možností"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:906
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1003
-msgid "More options..."
-msgstr "Viac možností ..."
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:987
-msgid "Start!"
-msgstr "Štart!"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:990
-msgid "Server"
-msgstr "Server"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:992
-msgid "Resolution"
-msgstr "Rozlíšenie"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:994
-msgid "Keyboard"
-msgstr "Klávesnica"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:996
-msgid "Auto"
-msgstr "Automaticky"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:997
-msgid "Application"
-msgstr "Aplikácia"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:999
-msgid "Remember me"
-msgstr "Zapamätaj si ma"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1000
-msgid "Auto-publish shortcuts"
-msgstr "Automaticky-publikovať skratky"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:32
-msgid "Go back to authentication"
-msgstr "Naspäť na prihlásenie"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LogoutPopup.java:44
-msgid "Do you really want to close the window?"
-msgstr "Naozaj chcete zavrieť okno?"
-
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:40
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionFrame.java:68
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionDialog.java:43
 msgid "Disconnecting!"
 msgstr "Odhlasovanie!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:52
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:109
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:58
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:136
 msgid "Now loading"
 msgstr "Načítavam"
 
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:59
-#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:108
-msgid "Cancel"
-msgstr "Zrušiť"
+# 98%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
+msgid "An error occurred, please contact your administrator"
+msgstr "Vyskytla sa chyba, kontaktujte prosím Vášho administrátora"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
-msgid "Report a bug"
-msgstr "Nahlás chybu"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:651
+msgid "Unable to reach the Session Manager!"
+msgstr "Nemôžem kontaktovať Session Manager!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:73
-msgid "Ulteo OVD Bug Report"
-msgstr "Ulteo OVD nahlásenie chyby"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:658
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+msgid "Warning!"
+msgstr "Upozornenie!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:117
-msgid "Validate"
-msgstr "Potvrdiť"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:718
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:722
+msgid "Invalid host field!"
+msgstr "Neplatné pole pre server!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:128
-msgid "Date"
-msgstr "Dátum"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:752
+msgid "You must specify the host field!"
+msgstr "Musíte vyplniť pole pre server!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:130
-msgid "Version"
-msgstr "Verzia"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:757
+msgid "You must specify a username!"
+msgstr "Musíte vyplniť prihlasovacie meno!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:132
-msgid "System"
-msgstr "Systém"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:760
+msgid "You must specify a password!"
+msgstr "Musíte vyplniť heslo!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:134
-msgid "JVM"
-msgstr "JVM"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
+msgid "Unable to find a valid certificate"
+msgstr "Nemôžem nájsť platný certifikát"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:168
-msgid "Description and steps to reproduce:"
-msgstr "Popis a kroky pre zopakovanie:"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid "Session is going to end"
+msgstr "Prihlásenie bude ukončené"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:184
-msgid "MM/dd/yy hh:mm:ss"
-msgstr "MM/dd/yy hh:mm:ss"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+msgid "Internal error: unsupported session mode"
+msgstr "Interná chyba: nepodporovaný mód prihlásenia"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
-msgid "Text file (*.txt)"
-msgstr "Textový súbor (*.txt)"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "You have been disconnected"
+msgstr "Boli ste odhlásený."
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-msgid "An error occurred. Please try again."
-msgstr "Vyskytla sa chyba. Skúste znova."
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "Your session has ended"
+msgstr "Vaše prihlásenie bolo ukončené."
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved to "
-msgstr "Chybové hlásenie uložené do"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Protocol xml error: "
+msgstr "Chyba v protokole XML:"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
-msgid "Bug report saved"
-msgstr "Chybové hlásenie uložené"
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:52
+msgid "OVD News"
+msgstr "OVD novinky"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
-msgid "Please fill description field."
-msgstr "Prosím vyplnte popis chyby. "
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Enable desktop integration"
+msgstr "Povoliť integráciu plochy"
 
-#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:120
-msgid "Empty field"
-msgstr "Prázdne pole"
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Disable desktop integration"
+msgstr "Zakázať integráciu plochy"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Vitajte {user}"
+
+msgid "Main gestures"
+msgstr "Hlavné gestá"
+
+msgid "Right click"
+msgstr "Pravý klik"
+
+msgid "View gestures"
+msgstr "Zobraziť gestá"
+
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Systém je v móde údržby, kontaktujte prosím Vášho administrátora pre ďalšie "
+"informácie"
+
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Nie ste autorizovaný spustiť ulteo v tomto móde"
+
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
+msgstr "Chyba siete. Počkajte na obnovu spojenia, alebo sa odhláste."
+
+msgid "Gestures"
+msgstr "Gestá"
+
+msgid "An error occured, please contact your administrator"
+msgstr "Vyskytla sa chyba, kontaktujte prosím Vášho administrátora"
+
+msgid "Toolbar"
+msgstr "Panel nástrojov"
+
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr ""
+"Pre prihlásenie musíte zadať Vaše meno, heslo a názov servera, na ktorý sa "
+"chcete pripojiť."
+
+msgid "Show toolbar"
+msgstr "Zobraziť toolbar"
+
+msgid "Zoom"
+msgstr "Priblíženie"
+
+msgid "Network is down"
+msgstr "Sieť nie je dostupná"
+
+msgid "Connection"
+msgstr "Pripojenie"
+
+msgid "Move view"
+msgstr "Presuň náhľad"
+
+msgid "Show keyboard"
+msgstr "Zobraziť klávesnicu"
+
+msgid "Help"
+msgstr "Pomoc"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr "Vyskytla sa interná chyba, kontaktujte prosím Vášho administrátora."
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr "Vaša žiadosť vyvolala tento help. Krížikom ukončíte reláciu."
+
+msgid "Click"
+msgstr "Klik"
+
+msgid "Session resolution"
+msgstr "Rozlíšenie relácie"
+
+msgid "The password will be saved"
+msgstr "Heslo bolo uložené"
+
+msgid "Modem (56 Kbits/s)"
+msgstr "Modem (56 Kbits/s)"
+
+msgid "RDP Compression"
+msgstr "RDP kompresia"
+
+msgid "Toggle keyboard"
+msgstr "Vyberte klávesnicu"
+
+msgid "Android controls remains visible on screen"
+msgstr "Ovládače Android ostanú viditeľné na obrazovke"
+
+msgid "Do you want to disconnect the current session ?"
+msgstr "Chcete odpojiť aktuálnu reláciu?"
+
+msgid "Manual resolution"
+msgstr "Rozlíšenie zadané ručne"
+
+msgid "Advanced options"
+msgstr "Rozšírené nastavenia"
+
+msgid "LAN (100 Mbits/s)"
+msgstr "LAN (100 Mbits/s)"
+
+msgid "Enhanced keyboard"
+msgstr "Rozšírená klávesnica"
+
+msgid "Force wide screen"
+msgstr "Použi celú obrazovku"
+
+msgid "Ulteo website"
+msgstr "Ulteo web stránka"
+
+msgid "Screen resolution not changed"
+msgstr "Rozlíšenie obrazovky nebolo zmenené"
+
+msgid "Dim the system bar with clock while showing the desktop"
+msgstr "Stlmiť systémovú lištu pri zobrazení plochy"
+
+msgid "WAN (10 Mbits/s)"
+msgstr "WAN (10 Mbits/s)"
+
+msgid "Always show the system bar with clock"
+msgstr "Vždy zobraz systémovú lištu"
+
+# 85%
+msgid "The login screen shows the Session Manager data"
+msgstr "Prihlasovacia obrazovka zobrazí vstup do Session Manager"
+
+msgid ""
+"No Internet connection has been detected on this\n"
+"\t\tdevice. Please enable Wifi/3G before using this application"
+msgstr ""
+"Chýba internetové pripojenie na tomto\n"
+"\t\t zariadení. Prosím povoľte Wifi/3G pre použitím tejto aplikácie."
+
+# 95%
+msgid "Hide the Session Manager in login screen"
+msgstr "Skryť Session Manager na prihlasovacej obrazovke"
+
+msgid "Satellite (2 Mbits/s)"
+msgstr "Satelit (2 Mbits/s)"
+
+msgid "Dim system bar"
+msgstr "Stlmiť systémovú lištu"
+
+msgid ""
+"The networks connection appears to be down, You can wait for reconnection or "
+"logout"
+msgstr ""
+"Zdá sa, že bolo prerušené pripojenie k sieti. Môžete počkať na "
+"znovupripojenie, alebo sa odhláste."
+
+msgid "Not specified"
+msgstr "Nešpecifikované"
+
+msgid "Active desktop session"
+msgstr "Aktívna relácia"
+
+msgid "Hide session manager in login screen"
+msgstr "Skryť session manager na prihlasovacej obrazovke"
+
+msgid "Manual selection of screen resolution"
+msgstr "Ručná voľba rozlíšenia orazovky"
+
+msgid "Set the session manager url"
+msgstr "Nastavenie adresy session manager"
+
+msgid "Use enhanced keyboard"
+msgstr "Použi rozšírenú klávesnicu"
+
+msgid "Create shortcut"
+msgstr "Vytvor odkaz"
+
+msgid "Waiting server for session"
+msgstr "Čakám na server pre prihlásenie"
+
+msgid "Do not use enhanced keyboard"
+msgstr "Nepoužiť rozšírenú klávesnicu"
+
+msgid "Session manager Url"
+msgstr "Adresa session manager"
+
+msgid "Wide screen resolution will be forced"
+msgstr "Bola použitá širokouhlá obrazovka"
+
+msgid "Disable RDP compression"
+msgstr "Zakázať RDP kompresiu"
+
+msgid "Automatic detection of screen resolution"
+msgstr "Automatická detekcia rozlíšenie obrazovky."
+
+msgid "The desktop will take all screen space"
+msgstr "Plocha zaberie celú obrazovku"
+
+msgid "The password will not be saved"
+msgstr "Heslo nebolo uložené"
+
+msgid "Session"
+msgstr "Relácia"
+
+msgid "Set the screen dimensions of the session"
+msgstr "Nastav veľkosť relácie"
+
+# 96%
+msgid "Broadband Low (256 Kbits/s)"
+msgstr "Broadband low (256 Kbits/s)"
+
+msgid "Broadband High (10 Mbits/s)"
+msgstr "Broadband High (10 Mbits/s)"
+
+# 86%
+msgid "Connection type"
+msgstr "Typ pripojenia"
+
+msgid "Connection error"
+msgstr "Chyba pripojenia"
+
+msgid "Enable RDP compression"
+msgstr "Povoliť RDP kompresiu"
+
+msgid "Save the password"
+msgstr "Uložiť heslo"
+
+#~ msgid ""
+#~ "Please install Java extension for your web browser or contact your "
+#~ "administrator."
+#~ msgstr ""
+#~ "Prosím nainštalujte Java doplnok do Vášho web prehliadača, alebo kontaktujte "
+#~ "systémového administrátora."
+
+#~ msgid "The Ulteo OVD session runs in a separated window"
+#~ msgstr "Ulteo OVD beží v oddelenom okne"
+
+#~ msgid ""
+#~ "Your session is going to be disconnected in %MINUTES% minutes because of "
+#~ "logon time restriction policy"
+#~ msgstr "Vaša relácia bude odpojená po %MINUTES% minútach."
+
+#~ msgid "Connecting to the session manager"
+#~ msgstr "Pripájam sa na session manager"
+
+#~ msgid "Get session information from session manager"
+#~ msgstr "Preberám informácia prihlásenia zo session manager"
+
+#~ msgid "Get application data from session manager"
+#~ msgstr "Preberám dáta zo session manager"
+
+#~ msgid "Please fill description field."
+#~ msgstr "Prosím vyplnte popis chyby. "
+
+#~ msgid "The login screen shows the session manager input"
+#~ msgstr "Prihlasovacia obrazovka zobrazí vstup do session manager"
+
+#~ msgid "Hide the session manager in login screen"
+#~ msgstr "Skryť session manager na prihlasovacej obrazovke"
+
+#~ msgid "Broadband low (256 Kbits/s)"
+#~ msgstr "Broadband low (256 Kbits/s)"
+
+#~ msgid "Connexion type"
+#~ msgstr "Typ pripojenia"
+
+#~ msgid ""
+#~ "If this is your first time here, a Java security window will show up and you "
+#~ "have to accept it to use the service."
+#~ msgstr ""
+#~ "Ak ste tu prvý krát, ukáže sa Vám bezpečnostné okno Java. V ňom je potrebné "
+#~ "akceptovať použitie tejto služby."
+
+#~ msgid "Java is not available either on your system or in your web browser."
+#~ msgstr ""
+#~ "Nie je dostupná Java vo Vašom systéme resp. vo Vašom webovom prehliadači."
+
+#~ msgid "An error occured. Please try again."
+#~ msgstr "Vyskytla sa chyba. Skúste znova."
+
+#~ msgid "Example: sm.ulteo.com"
+#~ msgstr "Príklad: sm.ulteo.com"
+
+#~ msgid ""
+#~ "Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">here</a> to start a new session"
+#~ msgstr ""
+#~ "Kliknite <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">sem</a> pre nové prihlásenie"
+
+#~ msgid "Do not close this Ulteo OVD window!"
+#~ msgstr "Nezatvárajte toto ulteo okno!"
+
+#~ msgid "Display icons"
+#~ msgstr "Ikony obrazovky"
+
+#~ msgid "Hide icons"
+#~ msgstr "Skryť ikony"
+
+#~ msgid "Error!"
+#~ msgstr "Chyba!"
+
+#~ msgid "Internal error: Bad session mode return"
+#~ msgstr "Interná chyba: Zlý mód prihlásenia"
+
+#~ msgid "Do you really want to close the window?"
+#~ msgstr "Naozaj chcete zavrieť okno?"
+
+#~ msgid "Go back to authentication"
+#~ msgstr "Naspäť na prihlásenie"
+
+#~ msgid "MM/dd/yy hh:mm:ss"
+#~ msgstr "MM/dd/yy hh:mm:ss"
+
+#~ msgid "Bug report saved to "
+#~ msgstr "Chybové hlásenie uložené do"
