@@ -90,6 +90,7 @@ public class DesktopIntegrator extends Thread {
 					Logger.error("The webapp " + app.getName() + " shortcut could not be created");
 				}
 			}
+			this.fireShortcutGenerationIsDone(server);
 		}
 		
 		// download mimetypes icons
@@ -158,6 +159,15 @@ public class DesktopIntegrator extends Thread {
 	}
 
 	private void fireShortcutGenerationIsDone(RdpConnectionOvd co) {
+		if (co == null)
+			return;
+
+		for (DesktopIntegrationListener listener : this.listeners) {
+			listener.shortcutGenerationIsDone(co);
+		}
+	}
+
+	private void fireShortcutGenerationIsDone(WebAppsServerAccess co) {
 		if (co == null)
 			return;
 

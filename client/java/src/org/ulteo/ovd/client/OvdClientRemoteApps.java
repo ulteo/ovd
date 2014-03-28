@@ -408,6 +408,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (co.getOvdAppChannel().isReady())
 			this.publish(co);
 	}
+	@Override
+	public void shortcutGenerationIsDone(WebAppsServerAccess co) {
+		this.publish(co);
+	}
 	
 	/**
 	 * toggle all publish/unpublish applications from all {@link RdpConnectionOvd} in the 
