@@ -103,7 +103,7 @@ public class Language {
 //			{"Sorbian", "", "sb"},
 			{"Spanish", "Español", "es"},
 //			{"Spanish (Spain)", "Español (España)", "es-es"},
-//			{"Swedish", "Svenska", "sv"},
+			{"Swedish", "Svenska", "sv"},
 //			{"Thai", "", "th"},
 //			{"Tswana", "", "tn"},
 //			{"Turkish", "Türkçe", "tr"},

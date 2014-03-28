@@ -412,6 +412,7 @@ class Preferences {
 			'ro_RO',
 			'ru_RU',
 			'sk_SK',
+			'sv_SE',
 			'zh_CN',
 		));
 		$this->add($c,'general','session_settings_defaults');

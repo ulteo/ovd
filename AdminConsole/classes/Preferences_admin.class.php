@@ -554,6 +554,7 @@ class Preferences_admin {
 			'sk_SK' => 'Slovenčina - Slovak',
 			'ro_RO' => 'Română - Romanian',
 			'ru_RU' => 'Русский - Russian',
+			'sv_SE' => 'Svenska - Swedish',
 			'zh_CN' => '中文简体 - Chinese',
 			
 			'debug' => _('debug'),

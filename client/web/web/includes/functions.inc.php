@@ -81,7 +81,7 @@ function get_available_languages() {
 // 		array('id' => 'sl', 'english_name' => 'Slovenian'),
 // 		array('id' => 'sb', 'english_name' => 'Sorbian'),
 		array('id' => 'es', 'english_name' => 'Spanish (Spain)', 'local_name' => 'Español (España)'),
-// 		array('id' => 'sv', 'english_name' => 'Swedish', 'local_name' => 'Svenska'),
+		array('id' => 'sv-se', 'english_name' => 'Swedish', 'local_name' => 'Svenska'),
 // 		array('id' => 'th', 'english_name' => 'Thai'),
 // 		array('id' => 'tn', 'english_name' => 'Tswana'),
 // 		array('id' => 'tr', 'english_name' => 'Turkish', 'local_name' => 'Türkçe'),
