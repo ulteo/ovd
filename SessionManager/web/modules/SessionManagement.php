@@ -607,7 +607,7 @@ abstract class SessionManagement extends Module {
 		if (count($allowed_servers)>0) {
 			foreach ($servers as $id => $server) {
 				// can be server id or fqdn
-				if (! in_array($server->id, $allowed_servers) && ! in_array($server->fqdn, $allowed_servers))
+				if (! in_array($server->id, $allowed_servers) && ! in_array($server->fqdn, $allowed_servers) && ! in_array($server->getExternalName(), $allowed_servers))
 					unset($servers[$id]);
 			}
 		}
