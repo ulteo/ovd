@@ -77,6 +77,7 @@ make DESTDIR=%{buildroot} install
 %post -n ulteo-ovd-administration-console
 A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/administration_console
+INSTALLDIR=/usr/share/ulteo/administration_console
 
 %if ! %{defined rhel}
 a2enmod php5 > /dev/null
@@ -85,6 +86,17 @@ a2enmod php5 > /dev/null
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-administration-console.conf ]; then
     ln -sfT $CONFDIR/apache2.conf $A2CONFDIR/ovd-administration-console.conf
+fi
+
+# Update wsdl
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files"
+   php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
 fi
 
 # restart apache server

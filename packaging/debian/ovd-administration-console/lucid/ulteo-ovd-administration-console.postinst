@@ -5,6 +5,7 @@
 CONFDIR=/etc/ulteo/administration_console
 CONFFILE=$CONFDIR/config.inc.php
 SPOOLDIR=/var/spool/ulteo/administration_console
+INSTALLDIR=/usr/share/ulteo/administration_console
 
 ############################# APACHE CONFIGURATION #############################
 
@@ -15,6 +16,14 @@ A2USER=www-data
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-administration-console.conf ]; then
     ln -sfT $CONFDIR/apache2.conf $A2CONFDIR/ovd-administration-console.conf
+fi
+
+# Update wsdl
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files."
+   php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
+   [ $? -ne 0 ] && exit 1
 fi
 
 # restart apache server

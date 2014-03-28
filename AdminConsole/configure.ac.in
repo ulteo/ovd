@@ -94,6 +94,7 @@ web/media/script/lib/prototype/Makefile
 web/media/script/lib/scriptaculous/Makefile
 web/media/script/lib/Makefile
 web/media/style/Makefile
+web/tools/Makefile
 web/media/image/loadbalancing/Makefile
 web/media/image/menu/Makefile
 web/media/image/Makefile

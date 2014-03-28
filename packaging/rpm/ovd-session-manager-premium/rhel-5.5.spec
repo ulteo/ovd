@@ -100,6 +100,17 @@ then
    fi
 fi
 
+# Update wsdl
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files."
+   php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
 %clean -n ulteo-ovd-session-manager-premium
 rm -rf %{buildroot}
 
