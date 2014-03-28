@@ -398,6 +398,7 @@ class Preferences {
 			'en_GB',
 			'el_GR',
 			'es_ES',
+			'eu_ES',
 			'fa_IR',
 			'fi_FI',
 			'fr_FR',

@@ -60,6 +60,7 @@ public class Language {
 //			{"Afrikaans", "", "af"},
 //			{"Albanian", "", "sq"},
 			{"Arabic", "العربية", "ar"}, 
+			{"Basque", "Euskara", "eu", "es"},
 			{"Bulgarian", "Български", "bg"}, 
 //			{"Belarusian", "", "be"},
 			{"Catalan", "Català", "ca", "es"},

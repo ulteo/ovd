@@ -76,6 +76,7 @@ scripts_DATA = ad.png \
                es.png \
                es-es.png \
                et.png \
+               eu-es.png \
                fa-ir.png \
                fam.png \
                fi.png \

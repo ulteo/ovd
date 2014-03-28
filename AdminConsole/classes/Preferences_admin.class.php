@@ -539,6 +539,7 @@ class Preferences_admin {
 			'el_GR' => 'Ελληνικά - Greek',
 			'en_GB' => 'English',
 			'es_ES' => 'Español - Spanish',
+			'eu_ES' => 'Euskara - Basque',
 			'fa_IR' => 'فارسی - Persian',
 			'fi_FI' => 'Suomi - Finnish',
 			'fr_FR' => 'Français - French',
