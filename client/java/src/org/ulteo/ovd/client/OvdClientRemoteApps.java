@@ -159,6 +159,12 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			
 			co.cleanOVDApp();
 		}
+		for (WebAppsServerAccess server : this.webAppsServers) {
+			for (WebApplication app : server.getWebApplications()) {
+				this.system.clean(app);
+			}
+		}
+		
 		this.system.refresh();
 	}
 
