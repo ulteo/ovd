@@ -39,6 +39,7 @@
 * Copyright (C) 2014 Ulteo SAS
 * http://www.ulteo.com
 * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2014
+* Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 *
 * This program is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License
@@ -160,6 +161,7 @@ Guacamole.Keyboard = function(element) {
      * @private
      */
     var keyidentifier_keysym = {
+        "Add": [0x2B],
         "Again": [0xFF66],
         "AllCandidates": [0xFF3D],
         "Alphanumeric": [0xFF30],
@@ -181,7 +183,9 @@ Guacamole.Keyboard = function(element) {
         "Compose": [0xFF20],
         "Control": [0xFFE3, 0xFFE3, 0xFFE4],
         "ContextMenu": [0xFF67],
+        "Decimal": [0x2E],
         "Delete": [0xFFFF],
+        "Divide": [0x2F],
         "Down": [0xFF54],
         "End": [0xFF57],
         "Enter": [0xFF0D],
@@ -240,6 +244,7 @@ Guacamole.Keyboard = function(element) {
         "Left": [0xFF51],
         "Meta": [0xFFE7],
         "ModeChange": [0xFF7E],
+        "Multiply": [0x2A],
         "NumLock": [0xFF7F],
         "PageDown": [0xFF55],
         "PageUp": [0xFF56],
@@ -255,6 +260,7 @@ Guacamole.Keyboard = function(element) {
         "Separator": [0xFFAC],
         "Shift": [0xFFE1, 0xFFE1, 0xFFE2],
         "SingleCandidate": [0xFF3C],
+        "Subtract": [0x2D],
         "Super": [0xFFEB, 0xFFEB, 0xFFEC],
         "Tab": [0xFF09],
         "Up": [0xFF52],
