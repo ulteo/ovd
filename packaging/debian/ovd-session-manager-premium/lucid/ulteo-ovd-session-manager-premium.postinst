@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+
+# Update database
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database"
+   php $INSTALLDIR/tools/update_database.php 2>/dev/null
+   [ $? -ne 0 ] && exit 1
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0

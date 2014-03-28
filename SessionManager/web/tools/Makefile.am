@@ -1,4 +1,5 @@
-scripts_DATA = can_update.php
+scripts_DATA = can_update.php \
+               update_database.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/tools
 

@@ -101,6 +101,7 @@ fi
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
 
 %if ! %{defined rhel}
 a2enmod php5 > /dev/null
@@ -145,6 +146,17 @@ then
         -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
     chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
     chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# Update database
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database."
+   php $INSTALLDIR/tools/update_database.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
 fi
 
 # restart apache server

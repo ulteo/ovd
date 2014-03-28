@@ -87,6 +87,19 @@ make DESTDIR=%{buildroot}/tmp install
 mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager
 mv %{buildroot}/tmp/usr/share/ulteo/sessionmanager/premium %{buildroot}/usr/share/ulteo/sessionmanager/
 
+%post -n ulteo-ovd-session-manager-premium
+# Update database
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database."
+   php $INSTALLDIR/tools/update_database.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
 %clean -n ulteo-ovd-session-manager-premium
 rm -rf %{buildroot}
 
