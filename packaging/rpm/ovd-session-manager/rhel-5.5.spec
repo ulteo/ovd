@@ -86,6 +86,17 @@ sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*
 A2USER=%{apache_user}
 sed -i "s/@APACHE_USER@/${A2USER}/" %{buildroot}/etc/ulteo/sessionmanager/sessionmanager.cron
 
+%pre -n ulteo-ovd-session-manager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+# Check if update is possible
+if [ -f $INSTALLDIR/tools/can_update.php ]
+then
+   php $INSTALLDIR/tools/can_update.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/%{httpd}/conf.d

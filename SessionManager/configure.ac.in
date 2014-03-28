@@ -99,6 +99,7 @@ scripts/Makefile
 web/Makefile
 web/client/Makefile
 web/crons/Makefile
+web/tools/Makefile
 web/webservices/Makefile
 web/modules/Makefile
 web/modules/SessionManagement/Makefile

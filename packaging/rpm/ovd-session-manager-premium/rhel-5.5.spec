@@ -70,6 +70,18 @@ web services for the Ulteo Open Virtual Desktop.
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart --enable-premium
 make
 
+%pre -n ulteo-ovd-session-manager-premium
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+# Check if update is possible
+if [ -f $INSTALLDIR/tools/can_update.php ]
+then
+   php $INSTALLDIR/tools/can_update.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
 %install -n ulteo-ovd-session-manager-premium
 make DESTDIR=%{buildroot}/tmp install
 mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager

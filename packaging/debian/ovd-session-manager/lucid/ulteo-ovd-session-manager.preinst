@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+
+# Check if update is possible
+if [ -f $INSTALLDIR/tools/can_update.php ]
+then
+   php $INSTALLDIR/tools/can_update.php 2>/dev/null
+   [ $? -ne 0 ] && exit 1
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
