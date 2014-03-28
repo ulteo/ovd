@@ -37,6 +37,7 @@ scripts_DATA = ad.png \
                by.png \
                bz.png \
                ca.png \
+               ca-es.png \
                cc.png \
                cd.png \
                cf.png \

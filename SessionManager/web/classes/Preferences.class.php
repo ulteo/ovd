@@ -187,6 +187,7 @@ class Preferences {
 		$c->setContentAvailable(array(
 			'auto',
 			'ar_AE',
+			'ca_ES',
 			'de_DE',
 			'en_GB',
 			'es_ES',
@@ -391,6 +392,7 @@ class Preferences {
 		$c->setContentAvailable(array(
 			'ar_AE',
 			'bg_BG',
+			'ca_ES',
 			'da-dk',
 			'de_DE',
 			'en_GB',

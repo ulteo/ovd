@@ -1,0 +1,898 @@
+# Copyright (C) 2010 Ulteo SAS.
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-25 10:12+0200\n"
+"PO-Revision-Date: 2014-03-17 13:31+0200\n"
+"Last-Translator: Xavier <xpanisello@salou.cat>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Translate Toolkit 1.10.0\n"
+
+#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+msgid ""
+"JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
+"seems JavaScript is either disabled or not supported by your browser. To use "
+"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
+"try again[/A]."
+msgstr ""
+"Per utilitzar Ulteo OVD cal disposar de JavaScript, sembla que el seu "
+"navegador no és compatible, o no esta instal·lat o esta inhabilitat. "
+"Comprova-ho i torna a [A]intentar-ho[/A]."
+
+#: ../../client/web/web/includes/functions.inc.php:199
+msgid "Close"
+msgstr "Tancar"
+
+#: ../../client/web/web/includes/functions.inc.php:201
+msgid "Session Manager"
+msgstr "Gestor de Sessions"
+
+#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
+msgid "Login"
+msgstr "Usuari"
+
+#: ../../client/web/web/includes/functions.inc.php:203
+msgid "Login (detected)"
+msgstr "Usuari (detectat)"
+
+#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
+msgid "Password"
+msgstr "Contrasenya"
+
+#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
+msgid "Use local credentials"
+msgstr "Utilitza credencials locals"
+
+#: ../../client/web/web/includes/functions.inc.php:206
+#: ../../client/web/web/includes/functions.inc.php:212
+#: ../../client/web/web/includes/functions.inc.php:217
+msgid "Yes"
+msgstr "Si"
+
+#: ../../client/web/web/includes/functions.inc.php:207
+#: ../../client/web/web/includes/functions.inc.php:213
+#: ../../client/web/web/includes/functions.inc.php:218
+msgid "No"
+msgstr "No"
+
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
+msgid "Mode"
+msgstr "Mode"
+
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
+msgid "Desktop"
+msgstr "Escriptori"
+
+#: ../../client/web/web/includes/functions.inc.php:210
+msgid "Portal"
+msgstr "Portal"
+
+#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
+msgid "Fullscreen"
+msgstr "Pantalla Sencera"
+
+#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
+msgid "Language"
+msgstr "Idioma"
+
+#: ../../client/web/web/includes/functions.inc.php:215
+msgid "Keyboard layout"
+msgstr "Disposició del teclat"
+
+#: ../../client/web/web/includes/functions.inc.php:216
+msgid "Debug"
+msgstr "Depurar"
+
+#: ../../client/web/web/includes/functions.inc.php:220
+msgid "Keyboard method"
+msgstr "Tipus de teclat"
+
+#: ../../client/web/web/includes/functions.inc.php:221
+msgid "Scancode"
+msgstr "Scancode"
+
+#: ../../client/web/web/includes/functions.inc.php:222
+msgid "Unicode"
+msgstr "Unicode"
+
+#: ../../client/web/web/includes/functions.inc.php:223
+msgid "Unicode use local IME"
+msgstr "El Unicode utilitza el IME local"
+
+#: ../../client/web/web/includes/functions.inc.php:225
+msgid "Advanced settings"
+msgstr "Configuració Avançada"
+
+#: ../../client/web/web/includes/functions.inc.php:226
+msgid "Connect"
+msgstr "Connectar"
+
+#: ../../client/web/web/includes/functions.inc.php:228
+msgid "Checking for system compatibility"
+msgstr "Comprovant compatibilitat del sistema"
+
+#: ../../client/web/web/includes/functions.inc.php:229
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"will have to accept it to use the service."
+msgstr ""
+"Si és el primer cop que entreu apareixerà una finestra de seguretat de Java, "
+"cal que accepteu l'ús d'aquest servei."
+
+#: ../../client/web/web/includes/functions.inc.php:230
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr ""
+"Tingueu present de marcar la casella \"<em>Confiar sempre en el contingut "
+"d'aquest proveïdor</em>\"."
+
+#: ../../client/web/web/includes/functions.inc.php:232
+msgid "System compatibility error"
+msgstr "Error de compatibilitat del sistema"
+
+#: ../../client/web/web/includes/functions.inc.php:233
+msgid "Java is either not available on your system or in your web browser."
+msgstr "No teniu Java disponible al vostre sistema o navegador."
+
+#: ../../client/web/web/includes/functions.inc.php:234
+msgid ""
+"Please install the Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+
+#: ../../client/web/web/includes/functions.inc.php:235
+msgid "You have not accepted the Java security window."
+msgstr "No heu acceptat la finestra de seguretat de Java."
+
+#: ../../client/web/web/includes/functions.inc.php:236
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "<strong>No</strong> podeu tenir accés a aquest servei."
+
+#: ../../client/web/web/includes/functions.inc.php:238
+msgid "Loading Open Virtual Desktop"
+msgstr "Carregant l'Open Virtual Desktop"
+
+#: ../../client/web/web/includes/functions.inc.php:239
+msgid "Disconnecting Open Virtual Desktop"
+msgstr "Desconnectant d'Open Virtual Desktop"
+
+#: ../../client/web/web/includes/functions.inc.php:240
+msgid "Welcome!"
+msgstr "Benvingut/da!"
+
+#: ../../client/web/web/includes/functions.inc.php:241
+msgid "Suspend"
+msgstr "Suspendre"
+
+#: ../../client/web/web/includes/functions.inc.php:242
+msgid "Logout"
+msgstr "Desconnectar"
+
+#: ../../client/web/web/includes/functions.inc.php:244
+msgid "The Ulteo OVD session runs in a separate window"
+msgstr ""
+
+#: ../../client/web/web/includes/functions.inc.php:248
+msgid "Click [A]here[/A] to switch back to your session"
+msgstr "Clica [A]aquí[/A] per tornar a la sessió"
+
+#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
+msgid "My applications"
+msgstr "Les meves aplicacions"
+
+#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
+msgid "Running applications"
+msgstr "Aplicacions executant-se"
+
+#: ../../client/web/web/includes/functions.inc.php:253
+msgid "My files"
+msgstr "Els meus arxius"
+
+#: ../../client/web/web/includes/functions.inc.php:257
+msgid "Example: %EXAMPLE%"
+msgstr "Exemple: %EXAMPLE%"
+
+#: ../../client/web/web/includes/functions.inc.php:259
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "Ús: manca el paràmetre \"sessionmanager_host\""
+
+#: ../../client/web/web/includes/functions.inc.php:260
+msgid "Usage: missing \"login\" parameter"
+msgstr "Ús: manca el paràmetre \"login\""
+
+#: ../../client/web/web/includes/functions.inc.php:261
+msgid "Usage: missing \"password\" parameter"
+msgstr "Ús: manca el paràmetre \"password\""
+
+#: ../../client/web/web/includes/functions.inc.php:262
+msgid "Unable to reach the Session Manager"
+msgstr "Impossible arribar al Gestor de Sessions"
+
+#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
+msgid "Authentication failed: please double-check your password and try again"
+msgstr ""
+"Errada d'autenticació: si us plau comproveu la vostra contrasenya i proveu "
+"de nou"
+
+#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
+msgid ""
+"The system is in maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"El sistema és en mode manteniment, poseu-vos en contacte amb l'administrador "
+"per a més informació."
+
+#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
+msgid "An internal error occurred, please contact your administrator"
+msgstr "Error intern, si us plau poseu-vos en contacte amb l'administrador"
+
+#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
+msgid "You specified an invalid login, please double-check and try again"
+msgstr "El nom d'usuari no és correcte, si us plau, torneu a escriure'l"
+
+#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"El servei no esta disponible, si us plau poseu-vos en contacte amb "
+"l'administrador per obtenir més informació"
+
+#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
+msgid ""
+"You are not authorized to launch a session. Please contact your "
+"administrator for more information"
+msgstr ""
+"No estas autoritzat per iniciar una sessió. Posa't en contacte amb "
+"l'administrador per obtenir més informació"
+
+#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
+msgid "You already have an active session"
+msgstr "Encara tens una altra sessió activa"
+
+#: ../../client/web/web/includes/functions.inc.php:272
+msgid "You will be disconnected from your OVD session."
+msgstr "Se li desconnectarà la sessió OVD"
+
+#: ../../client/web/web/includes/functions.inc.php:274
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr ""
+"La seva sessió es tancarà en 3 minuts, si us plau, guardeu les dades ara!"
+
+#: ../../client/web/web/includes/functions.inc.php:275
+msgid ""
+"Your session is going to be disconnected in %MINUTES% minutes because of the "
+"logon time restriction policy"
+msgstr ""
+
+#: ../../client/web/web/includes/functions.inc.php:277
+msgid "Server: session closed unexpectedly"
+msgstr "Servidor: la sessió s'ha tancat inesperadament"
+
+#: ../../client/web/web/includes/functions.inc.php:278
+msgid "Your session has ended, you can now close the window"
+msgstr "La vostra sessió ha finalitzat, ja pot tancar la finestra"
+
+#: ../../client/web/web/includes/functions.inc.php:279
+msgid "Your session has ended unexpectedly"
+msgstr "La sessió ha finalitzat inesperadament"
+
+#: ../../client/web/web/includes/functions.inc.php:280
+msgid "error details"
+msgstr "detalls de l'error"
+
+#: ../../client/web/web/includes/functions.inc.php:281
+msgid "Close this window"
+msgstr "Tancar aquesta finestra"
+
+#: ../../client/web/web/includes/functions.inc.php:285
+msgid "Click [A]here[/A] to start a new session"
+msgstr "Click [A]aquí[/A] per iniciar una sessió nova"
+
+# També podria ser aturar, depen de l'àmbit
+#: ../../client/web/web/includes/functions.inc.php:288
+msgid "suspend"
+msgstr "suspendre"
+
+#: ../../client/web/web/includes/functions.inc.php:289
+msgid "resume"
+msgstr "reprendre"
+
+#: ../../client/web/web/includes/functions.inc.php:290
+msgid "Are you sure you want to logout (# apps running) ?"
+msgstr "Segur que vols desconnectar-te (# apps en marxa) ?"
+
+#: ../../client/web/web/classes/Ajaxplorer.class.php:61
+msgid "Profile"
+msgstr "Perfil"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Arxiu de text (*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occurred. Please try again."
+msgstr "S'ha produït un error. Si us plau torna a provar-ho."
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
+msgid "Error"
+msgstr "Error"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "Informe d'error guardat en %s"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "Informe d'error guardat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill in the description field."
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "Camp buit"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Informe d'errors d'Ulteo OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Validar"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Data"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Versió"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Sistema"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Descripció i passos per reproduir:"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Informar d'un error"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Maximized"
+msgstr "Maximitzada"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:867
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Fewer options"
+msgstr "Menys opcions"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:948
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1029
+msgid "More options..."
+msgstr "Més opcions..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1013
+msgid "Start!"
+msgstr "Iniciar!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1016
+msgid "Server"
+msgstr "Servidor"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1018
+msgid "Resolution"
+msgstr "Resolució"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Keyboard"
+msgstr "Teclat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1022
+msgid "Auto"
+msgstr "Auto"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1023
+msgid "Application"
+msgstr "Aplicació"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Remember me"
+msgstr "Recorda'm"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Auto-publish shortcuts"
+msgstr "Publicar automàticament les dreceres"
+
+#. Initialize UI components
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:83
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:81
+msgid "Logoff"
+msgstr "Tancar la sessió"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:70
+msgid "Disconnect"
+msgstr "Desconnectar"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:94
+msgid "Close the application"
+msgstr "Tancar l'aplicació"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:96
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:65
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:135
+msgid "Cancel"
+msgstr "Cancel·lar"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:99
+msgid "Ok"
+msgstr "Bé"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "Iniciar la càrrega de la sessió"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the Session Manager"
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from Session Manager"
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from Session Manager"
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "Instal·lant dades de l'aplicació al client"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting on server for session"
+msgstr ""
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "Estat no vàlid"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionDialog.java:43
+msgid "Disconnecting!"
+msgstr "Desconnectant!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:58
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:136
+msgid "Now loading"
+msgstr "Carregant"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
+msgid "An error occurred, please contact your administrator"
+msgstr "S'ha produït un error, poseu-vos en contacte amb l'administrador"
+
+# 97%
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:651
+msgid "Unable to reach the Session Manager!"
+msgstr "No es troba el Gestor de Sessions!"
+
+# També podria "advertència"
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:658
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+msgid "Warning!"
+msgstr "Compte!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:718
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:722
+msgid "Invalid host field!"
+msgstr "Camp de servidor incorrecte!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:752
+msgid "You must specify the host field!"
+msgstr "Cal que especifiqueu el camp de servidor!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:757
+msgid "You must specify a username!"
+msgstr "Cal que poseu el nom d'usuari!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:760
+msgid "You must specify a password!"
+msgstr "Cal que poseu una contrasenya!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
+msgid "Unable to find a valid certificate"
+msgstr "No es troba cap certificat vàlid"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid "Session is going to end"
+msgstr "La sessió es tancarà"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+msgid "Internal error: unsupported session mode"
+msgstr "Error intern: mode de sessió sense suport"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "You have been disconnected"
+msgstr "Ha estat desconnectat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "Your session has ended"
+msgstr "La seva sessió ha finalitzat"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Protocol xml error: "
+msgstr "Error en protocol xml: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:52
+msgid "OVD News"
+msgstr "Notícies d'OVD"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Enable desktop integration"
+msgstr "Habilitar la integració d'escriptori"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Disable desktop integration"
+msgstr "Desactivar la integració d'escriptori"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Benvingut {user}"
+
+msgid "Main gestures"
+msgstr "Moviments bàsics"
+
+msgid "Right click"
+msgstr "Clic dret"
+
+msgid "View gestures"
+msgstr "Veure moviments"
+
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"El sistema es troba en mode manteniment, si us plau contacteu amb "
+"l'administrador per a més informació"
+
+msgid "You are not authorized to launch a session in this mode"
+msgstr "No teniu autorització per iniciar sessió en aquest mode"
+
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
+msgstr ""
+"Un problema de xarxa entorpeix la comunicació entre el client i el servidor. "
+"Pots esperar la re-connexió o tanca la sessió."
+
+msgid "Gestures"
+msgstr "Moviments"
+
+# 85%
+msgid "An error occured, please contact your administrator"
+msgstr ""
+"S'ha produ¨t un error, si us plau poseu-vos en contacte amb l'administrador"
+
+msgid "Toolbar"
+msgstr "Barra d'eines"
+
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr ""
+"Per iniciar sessió cal posar el nom d'usuari, la contrasenya i el servidor "
+"on vols connectar-te."
+
+msgid "Show toolbar"
+msgstr "Mostrar la barra d'eines"
+
+msgid "Zoom"
+msgstr "Zoom"
+
+msgid "Network is down"
+msgstr "La xarxa esta desconnectada"
+
+msgid "Connection"
+msgstr "Connexió"
+
+msgid "Move view"
+msgstr "Moure la vista"
+
+msgid "Show keyboard"
+msgstr "Mostra el teclat"
+
+msgid "Help"
+msgstr "Ajut"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr "Error intern, si us plau poseu-vos en contacte amb l'administrador"
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr ""
+"El signe d'interrogació mostra aquesta l'ajuda. La creu et treu de la "
+"sessió."
+
+msgid "Click"
+msgstr "Clic"
+
+msgid "Session resolution"
+msgstr "Resolució de la sessió"
+
+msgid "The password will be saved"
+msgstr "La contrasenya es guardarà"
+
+msgid "Modem (56 Kbits/s)"
+msgstr "Mòdem (56Kbits/s)"
+
+msgid "RDP Compression"
+msgstr "Compressió RDP"
+
+msgid "Toggle keyboard"
+msgstr "Commutar teclat"
+
+msgid "Android controls remains visible on screen"
+msgstr "Els controls Android es mantenen visibles a la pantalla"
+
+msgid "Do you want to disconnect the current session ?"
+msgstr "Segur que vols desconnectar la sessió actual?"
+
+msgid "Manual resolution"
+msgstr "Resolució manual"
+
+msgid "Advanced options"
+msgstr "Opcions avançades"
+
+msgid "LAN (100 Mbits/s)"
+msgstr "LAN (100 Mbits/s)"
+
+msgid "Enhanced keyboard"
+msgstr "Teclat millorat"
+
+msgid "Force wide screen"
+msgstr "Força l'amplada de pantalla"
+
+msgid "Ulteo website"
+msgstr "Lloc web d'Ulteo"
+
+msgid "Screen resolution not changed"
+msgstr "No s'ha canviat la resolució de la pantalla"
+
+msgid "Dim the system bar with clock while showing the desktop"
+msgstr ""
+"Enfosqueix la barra del sistema amb el rellotge mentre es mostra "
+"l'escriptori"
+
+msgid "WAN (10 Mbits/s)"
+msgstr "WAN (10 Mbits/s)"
+
+msgid "Always show the system bar with clock"
+msgstr "Mostra sempre la barra del sistema amb el rellotge"
+
+msgid "The login screen shows the Session Manager data"
+msgstr ""
+
+msgid ""
+"No Internet connection has been detected on this\n"
+"\t\tdevice. Please enable Wifi/3G before using this application"
+msgstr ""
+"No s'ha detectat cap connexió en aquest\n"
+"\t \t dispositiu. Activa la connexió Wifi/3G abans d'iniciar l'aplicació "
+
+msgid "Hide the Session Manager in login screen"
+msgstr ""
+
+msgid "Satellite (2 Mbits/s)"
+msgstr "Satèl·lit (2 Mbits/s)"
+
+msgid "Dim system bar"
+msgstr "Enfosqueix la barra del sistema"
+
+msgid ""
+"The networks connection appears to be down, You can wait for reconnection or "
+"logout"
+msgstr ""
+"Sembla que la connexió de xarxa esta fallant, pots esperar la reconnexió o "
+"tanca la sessió"
+
+msgid "Not specified"
+msgstr "No s'ha especificat"
+
+msgid "Active desktop session"
+msgstr "Activar la sessió d'escriptori"
+
+msgid "Hide session manager in login screen"
+msgstr "Amaga el gestor de sessions en l'inici de sessió"
+
+msgid "Manual selection of screen resolution"
+msgstr "Selecció manual de la resolució de pantalla"
+
+msgid "Set the session manager url"
+msgstr "Indica la url del gestor de sessions"
+
+msgid "Use enhanced keyboard"
+msgstr "Utilitza el teclat millorat"
+
+msgid "Create shortcut"
+msgstr "Crea una drecera"
+
+msgid "Waiting server for session"
+msgstr "Esperant sessió d'un servidor"
+
+msgid "Do not use enhanced keyboard"
+msgstr "No utilitzar el teclat millorat"
+
+msgid "Session manager Url"
+msgstr "Url del gestor de sessions"
+
+msgid "Wide screen resolution will be forced"
+msgstr "Es forçarà la resolució de pantalla ampla"
+
+msgid "Disable RDP compression"
+msgstr "Desconnectar la compressió RDP"
+
+msgid "Automatic detection of screen resolution"
+msgstr "Detecció automàtica de resolució de pantalla"
+
+msgid "The desktop will take all screen space"
+msgstr "L'escriptori utilitzarà tot l'espai de la pantalla"
+
+msgid "The password will not be saved"
+msgstr "La contrasenya no es guardarà"
+
+msgid "Session"
+msgstr "Sessió"
+
+msgid "Set the screen dimensions of the session"
+msgstr "Establir les dimensions de la pantalla de la sessió"
+
+msgid "Broadband Low (256 Kbits/s)"
+msgstr ""
+
+msgid "Broadband High (10 Mbits/s)"
+msgstr "Banda ampla ràpida (10 Mbits/s)"
+
+msgid "Connection type"
+msgstr ""
+
+msgid "Connection error"
+msgstr "Error de connexió"
+
+msgid "Enable RDP compression"
+msgstr "Activa la compressió RDP"
+
+msgid "Save the password"
+msgstr "Guarda la contrasenya"
+
+#~ msgid ""
+#~ "Please install Java extension for your web browser or contact your "
+#~ "administrator."
+#~ msgstr ""
+#~ "Si us plau instal.leu l'extensió Java del vostre navegador web o contacteu "
+#~ "l'administrador del sistema."
+
+#~ msgid "The Ulteo OVD session runs in a separated window"
+#~ msgstr "La sessió de Ulteo OVD s'executa en una finestra diferent"
+
+#~ msgid ""
+#~ "Your session is going to be disconnected in %MINUTES% minutes because of "
+#~ "logon time restriction policy"
+#~ msgstr ""
+#~ "La teva sessió es desconnectarà en %MINUTES% minuts en aplicació de la "
+#~ "política de limitació horària"
+
+#~ msgid "Connecting to the session manager"
+#~ msgstr "Connectant amb el gestor de sessions"
+
+#~ msgid "Get session information from session manager"
+#~ msgstr "Obtenir informació de la sessió del gestor de sessions"
+
+#~ msgid "Get application data from session manager"
+#~ msgstr "Obtenir informació d'aplicació del gestor de sessions"
+
+#~ msgid "Please fill description field."
+#~ msgstr "Si us plau, completi el camp descripció"
+
+#~ msgid "The login screen shows the session manager input"
+#~ msgstr "La pantalla d'inici de sessió mostra el gestor de sessions"
+
+#~ msgid "Hide the session manager in login screen"
+#~ msgstr "Amaga el gestor de sessions en la pantalla d'inici de sessió"
+
+#~ msgid "Broadband low (256 Kbits/s)"
+#~ msgstr "Banda ampla lenta (256 Kbits/s)"
+
+#~ msgid "Connexion type"
+#~ msgstr "Tipus de connexió"
+
+#~ msgid "Unable to find a valid licence"
+#~ msgstr "No es troba cap llicència vàlida"
+
+#~ msgid "MoveView"
+#~ msgstr "MoureVista"
+
+#~ msgid ""
+#~ "If this is your first time here, a Java security window will show up and you "
+#~ "have to accept it to use the service."
+#~ msgstr ""
+#~ "Si aquest és el primer cop que entreu aquí, tot seguit s'obrirà una finestra "
+#~ "de seguretat de Java, i heu de prémer acceptar per poder fer ús del servei."
+
+#~ msgid "Java is not available either on your system or in your web browser."
+#~ msgstr "No teniu Java activat al vostre sistema o navegador."
+
+#~ msgid "An error occured. Please try again."
+#~ msgstr "S'ha produït un error. Si us plau torna a provar-ho."
+
+#~ msgid "Example: sm.ulteo.com"
+#~ msgstr "Exemple: sm.ulteo.com"
+
+#~ msgid ""
+#~ "Click <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">here</a> to start a new session"
+#~ msgstr ""
+#~ "Cliqueu <a href=\"javascript:;\" onclick=\"hideEnd(); showLogin(); return "
+#~ "false;\">aqui</a> per iniciar una nova sessió"
+
+#~ msgid "Do not close this Ulteo OVD window!"
+#~ msgstr "No tanqueu aquesta finestra d'Ulteo OVD!"
+
+# Podria ser "icones de pantalla" no se si display és el verb o el nom.
+#~ msgid "Display icons"
+#~ msgstr "Mostrar les icones"
+
+#~ msgid "Hide icons"
+#~ msgstr "Amaga les icones"
+
+#~ msgid "Error!"
+#~ msgstr "Error!"
+
+#~ msgid "Internal error: Bad session mode return"
+#~ msgstr "Error intern: ha retornat un mode de sessió erroni"
+
+#~ msgid "Do you really want to close the window?"
+#~ msgstr "Realment voleu tancar la finestra?"
+
+#~ msgid "Go back to authentication"
+#~ msgstr "Anar a l'autenticació"

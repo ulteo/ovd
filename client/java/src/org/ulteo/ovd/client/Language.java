@@ -62,6 +62,7 @@ public class Language {
 			{"Arabic", "العربية", "ar"}, 
 			{"Bulgarian", "Български", "bg"}, 
 //			{"Belarusian", "", "be"},
+			{"Catalan", "Català", "ca", "es"},
 			{"Chinese", "中文", "zh", "cn"},
 //			{"Croatian", "", "hr"},
 //			{"Czech", "Česky", "cs"},

@@ -532,6 +532,7 @@ class Preferences_admin {
 			
 			'auto' => _('Autodetect'),
 			'ar_AE' => 'العربي - Arabic',
+			'ca_ES' => 'Català - Catalan',
 			'bg_BG' => 'Български - Bulgarian',
 			'da-dk' => 'Dansk - Danish',
 			'de_DE' => 'Deutsch - German',
