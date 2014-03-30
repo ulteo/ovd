@@ -3,11 +3,12 @@
 . /usr/share/debconf/confmodule
 
 INSTALLDIR=/usr/share/ulteo/sessionmanager
+A2USER=www-data
 
 # Check if update is possible
 if [ -f $INSTALLDIR/tools/can_update.php ]
 then
-   php $INSTALLDIR/tools/can_update.php 2>/dev/null
+   su $A2USER -c "php $INSTALLDIR/tools/can_update.php" 2>/dev/null
    [ $? -ne 0 ] && exit 1
 fi
 
