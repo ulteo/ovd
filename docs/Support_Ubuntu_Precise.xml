@@ -60,7 +60,7 @@
         <para>
 		Remove all kernels higher than linux-image-3.2.0.60
 		  <screen>
-<![CDATA[# sudo apt-get remove linux-image-XXX]]>
+<![CDATA[# sudo apt-get remove --purge linux-image-XXX]]>
           </screen>
         </para> 
         </listitem>
