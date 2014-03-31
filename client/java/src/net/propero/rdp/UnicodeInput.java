@@ -132,14 +132,22 @@ public class UnicodeInput extends Input {
 			if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_NUMPAD && !e.isActionKey()) {
 				if (! numLockOn) {
 					numLockOn = true;
-					sendScancode(getTime(), RDP_KEYPRESS, 0x45);
-					sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
+					serverNumLockOn = true;
+					sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+					sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
 				}
 			}
 			if (e.getKeyCode() == KeyEvent.VK_NUM_LOCK ) {
 				numLockOn = !numLockOn;
-				sendScancode(getTime(), RDP_KEYPRESS, 0x45);
-				sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
+				serverNumLockOn = numLockOn;
+				sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+				sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
+			}
+			
+			if ( numLockOn != serverNumLockOn) {
+				serverNumLockOn = numLockOn;
+				sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+				sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
 			}
 			
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
