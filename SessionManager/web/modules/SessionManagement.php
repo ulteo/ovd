@@ -335,10 +335,8 @@ abstract class SessionManagement extends Module {
 			switch ($role) {
 				case Server::SERVER_ROLE_APS:
 					$default_settings = $this->user->getSessionSettings('session_settings_defaults');
-					$servers = $this->chooseApplicationServers(false);
-					if (! is_array($servers) && $default_settings['bypass_servers_restrictions'] == 1) {
-						$servers = $this->chooseApplicationServers(true);
-					}
+					$bypass_servers_restrictions = ($default_settings['bypass_servers_restrictions'] == 1);
+					$servers = $this->chooseApplicationServers($bypass_servers_restrictions);
 					
 					if (! is_array($servers)) {
 						return false;
