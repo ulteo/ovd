@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-25 10:12+0200\n"
-"PO-Revision-Date: 2014-03-17 23:50+0200\n"
+"PO-Revision-Date: 2014-03-30 22:39+0200\n"
 "Last-Translator: Unai <unai.gangoiti@ehu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: eu\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Translate Toolkit 1.10.0\n"
+"X-Generator: Pootle 2.1.6\n"
 
 #: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
 msgid ""
@@ -157,6 +157,8 @@ msgid ""
 "Please install the Java extension for your web browser or contact your "
 "administrator."
 msgstr ""
+"Instala ezazu Java luzapena zure nabigatzailean edo kudeatzailearekin "
+"kontaktuan jar zaitez"
 
 #: ../../client/web/web/includes/functions.inc.php:235
 msgid "You have not accepted the Java security window."
@@ -188,7 +190,7 @@ msgstr "Irten"
 
 #: ../../client/web/web/includes/functions.inc.php:244
 msgid "The Ulteo OVD session runs in a separate window"
-msgstr ""
+msgstr "Ulteo OVD saioa lehio desberdin batean ari da"
 
 #: ../../client/web/web/includes/functions.inc.php:248
 msgid "Click [A]here[/A] to switch back to your session"
@@ -296,6 +298,8 @@ msgid ""
 "Your session is going to be disconnected in %MINUTES% minutes because of the "
 "logon time restriction policy"
 msgstr ""
+"Zure saioa %MINUTES% minutu barru deskonektatuko da, saioaren denbora "
+"murrizte politika dela eta"
 
 #: ../../client/web/web/includes/functions.inc.php:277
 msgid "Server: session closed unexpectedly"
@@ -364,7 +368,7 @@ msgstr "Erregistro txostena gorde da"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Please fill in the description field."
-msgstr ""
+msgstr "Mesedez, deskribapenaren hutsunea bete ezazu"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
@@ -480,15 +484,15 @@ msgstr "Hasi saioa betetzen"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
 msgid "Connecting to the Session Manager"
-msgstr ""
+msgstr "Saioaren kudeatzailearekin konektatzen"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
 msgid "Get session information from Session Manager"
-msgstr ""
+msgstr "Hartu saioaren informazioa saio kudetzailearengandik"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
 msgid "Get application data from Session Manager"
-msgstr ""
+msgstr "Hartu aplikazioaren informazioa saio kudetzailearengandik"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
 msgid "Installing application data on client"
@@ -496,7 +500,7 @@ msgstr "Aplikazioaren data bezeroan jartzen"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
 msgid "Waiting on server for session"
-msgstr ""
+msgstr "Saio bat lortu arte zerbitzariaren zain"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
@@ -707,7 +711,7 @@ msgid "Always show the system bar with clock"
 msgstr "Beti erakutzu erlojudun sistemaren barra"
 
 msgid "The login screen shows the Session Manager data"
-msgstr ""
+msgstr "Sartzeko pantaila saio kudeatzailearerako sarrera erakutsiko du"
 
 msgid ""
 "No Internet connection has been detected on this\n"
@@ -717,7 +721,7 @@ msgstr ""
 "\t \t honetan. Mesedez, aktiba ezazu Wifi/3G aplikazio hau erabili aurretik"
 
 msgid "Hide the Session Manager in login screen"
-msgstr ""
+msgstr "Sartzeko pantailan saio kudeatzailea eskutatu"
 
 msgid "Satellite (2 Mbits/s)"
 msgstr "Satelite (2 Mbits/s)"
@@ -784,13 +788,13 @@ msgid "Set the screen dimensions of the session"
 msgstr "Saioaren pantaila neurriak jarri"
 
 msgid "Broadband Low (256 Kbits/s)"
-msgstr ""
+msgstr "Banda zabal motela (256 Kbits/s)"
 
 msgid "Broadband High (10 Mbits/s)"
 msgstr "Banda zabal azkarra (10 Mbits/s)"
 
 msgid "Connection type"
-msgstr ""
+msgstr "Konexio mota"
 
 msgid "Connection error"
 msgstr "Conexio akatsa"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-25 10:12+0200\n"
-"PO-Revision-Date: 2014-03-16 14:14+0200\n"
+"PO-Revision-Date: 2014-03-30 21:37+0200\n"
 "Last-Translator: Unai <unai.gangoiti@ehu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Translate Toolkit 1.10.0\n"
+"X-Generator: Pootle 2.1.6\n"
 
 #: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
 msgid ""
@@ -158,6 +158,8 @@ msgid ""
 "Please install the Java extension for your web browser or contact your "
 "administrator."
 msgstr ""
+"Por favor, instale la extensión de Java para su navegador o contacte con el "
+"administrador."
 
 #: ../../client/web/web/includes/functions.inc.php:235
 msgid "You have not accepted the Java security window."
@@ -190,7 +192,7 @@ msgstr "Salir"
 
 #: ../../client/web/web/includes/functions.inc.php:244
 msgid "The Ulteo OVD session runs in a separate window"
-msgstr ""
+msgstr "La sesión de Ulteo OVD se está ejecutando en una ventana separada"
 
 #: ../../client/web/web/includes/functions.inc.php:248
 msgid "Click [A]here[/A] to switch back to your session"
@@ -294,6 +296,8 @@ msgid ""
 "Your session is going to be disconnected in %MINUTES% minutes because of the "
 "logon time restriction policy"
 msgstr ""
+"Su sesión será desconectada en %MINUTES% minutos debido a la política de "
+"restricción de tiempo de sesión"
 
 #: ../../client/web/web/includes/functions.inc.php:277
 msgid "Server: session closed unexpectedly"
@@ -365,7 +369,7 @@ msgstr "Reporte de errores guardado"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Please fill in the description field."
-msgstr ""
+msgstr "Por favor complete el campo descripción."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
@@ -483,15 +487,15 @@ msgstr "Iniciar la carga de la sesión"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
 msgid "Connecting to the Session Manager"
-msgstr ""
+msgstr "Conectando con el gestor de sesiones"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
 msgid "Get session information from Session Manager"
-msgstr ""
+msgstr "Obtener información de la sesión del gestor de sesiones"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
 msgid "Get application data from Session Manager"
-msgstr ""
+msgstr "Obtener información de la aplicación del gestor de sesiones"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
 msgid "Installing application data on client"
@@ -499,7 +503,7 @@ msgstr "Instalando datos de la aplicación en el cliente"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
 msgid "Waiting on server for session"
-msgstr ""
+msgstr "Esperando un servidor para la sesión"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
@@ -711,7 +715,7 @@ msgid "Always show the system bar with clock"
 msgstr "Mostrar siembre la barra de sistema con la hora"
 
 msgid "The login screen shows the Session Manager data"
-msgstr ""
+msgstr "La pantalla de inicio de sesión muestra datos del gestor de sesiones"
 
 msgid ""
 "No Internet connection has been detected on this\n"
@@ -722,7 +726,7 @@ msgstr ""
 "aplicación"
 
 msgid "Hide the Session Manager in login screen"
-msgstr ""
+msgstr "Ocultar el gestor de sesiones en la ventana de validación"
 
 msgid "Satellite (2 Mbits/s)"
 msgstr "Satélite (2 Mbits/s)"
@@ -788,13 +792,13 @@ msgid "Set the screen dimensions of the session"
 msgstr "Configurar las dimensiones de pantalla de la sesión"
 
 msgid "Broadband Low (256 Kbits/s)"
-msgstr ""
+msgstr "Banda ancha lenta (256 Kbits/s)"
 
 msgid "Broadband High (10 Mbits/s)"
 msgstr "Banda ancha rápida (10 Mbits/s)"
 
 msgid "Connection type"
-msgstr ""
+msgstr "Tipo de conexión"
 
 msgid "Connection error"
 msgstr "Error de conexión"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-25 10:11+0100\n"
-"PO-Revision-Date: 2014-03-28 14:59+0200\n"
+"PO-Revision-Date: 2014-03-28 18:50+0200\n"
 "Last-Translator: Pier Paolo <pptiezzi@erreuno.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -2979,13 +2979,13 @@ msgstr "Non riesco a cancellare la cartella di rete '%s'"
 # 77%
 #: ../../AdminConsole/web/actions.php:1459
 msgid "Network folders successfully deleted"
-msgstr "La cancellazione della cartella condivisa è avvenuta corettamente"
+msgstr "La cancellazione delle cartelle condivise è avvenuta corettamente"
 
 # 94%
 # 100%
 #: ../../AdminConsole/web/actions.php:1473
 msgid "Shared folder successfully renamed"
-msgstr "La rinomina della cartella condivisa è avvenuta correttamente"
+msgstr "La cartella condivisa è stata rinominata con successo"
 
 #: ../../AdminConsole/web/actions.php:1475
 msgid "Update of the shared folder failed"
@@ -2993,12 +2993,12 @@ msgstr "Non è riuscito l'aggiornamento della cartella condivisa"
 
 #: ../../AdminConsole/web/actions.php:1516
 msgid "Unable to associate the user to the profile"
-msgstr ""
+msgstr "Impossibile associare l'utente al profilo"
 
 #: ../../AdminConsole/web/actions.php:1520
 #, php-format
 msgid "Profile successfully created for user '%s'"
-msgstr ""
+msgstr "Il profilo per l'utente '%s' è stato creato."
 
 # 79%
 # 100%
@@ -3016,42 +3016,39 @@ msgstr "La cancellazione del profilo '%s' è avvenuta correttamente"
 
 #: ../../AdminConsole/web/actions.php:1560
 msgid "News successfully added"
-msgstr "L'aggiunta delle notizie è avvenuta correttamente"
+msgstr "L'aggiunta delle News è avvenuta correttamente"
 
 #: ../../AdminConsole/web/actions.php:1567
 msgid "Unable to delete this news"
-msgstr "Non riesco a cancellare queste notizie"
+msgstr "Non riesco a cancellare questa News"
 
 #: ../../AdminConsole/web/actions.php:1569
 msgid "News successfully deleted"
-msgstr "La cancellazione delle notizie è avvenuta correttamente"
+msgstr "La cancellazione della News è avvenuta correttamente"
 
 # 76%
 # 100%
 #: ../../AdminConsole/web/actions.php:1611
-#, fuzzy
 msgid "Script successfully added"
-msgstr "L'aggiunta delle notizie è avvenuta correttamente"
+msgstr "Lo script è stato aggiunto correttamente"
 
 # 78%
 # 100%
 #: ../../AdminConsole/web/actions.php:1618
-#, fuzzy
 msgid "Unable to delete this script"
-msgstr "Non riesco a cancellare queste notizie"
+msgstr "Non riesco a cancellare questo script"
 
 # 77%
 # 100%
 #: ../../AdminConsole/web/actions.php:1620
-#, fuzzy
 msgid "Script successfully deleted"
-msgstr "La cancellazione delle notizie è avvenuta correttamente"
+msgstr "La cancellazione dello script è avvenuta correttamente"
 
 #: ../../AdminConsole/web/actions.php:1638
 #: ../../AdminConsole/web/actions.php:1645
 #, php-format
 msgid "UserGroup '%s' successfully modified"
-msgstr "Il gruppo di utenti '%s' è stato modificato correttamente"
+msgstr "Il Gruppo dell'utente '%s' è stato modificato correttamente"
 
 #: ../../AdminConsole/web/actions.php:1653
 msgid "Password is empty"
@@ -3063,7 +3060,7 @@ msgstr "Le password non coincidono"
 
 #: ../../AdminConsole/web/actions.php:1659
 msgid "Current password is not correct"
-msgstr ""
+msgstr "La password corrente è incorretta"
 
 #: ../../AdminConsole/web/actions.php:1665
 msgid "Password successfully changed"
@@ -3086,26 +3083,26 @@ msgstr "La cancellazione della sessione '%s' è avvenuta correttamente"
 # 75%
 # 100%
 #: ../../AdminConsole/web/actions.php:1706
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to disconnect session '%s'"
-msgstr "Non riesco a cancellare la sessione '%s'"
+msgstr "Non riesco a disconnettere la sessione '%s'"
 
 # 81%
 # 100%
 #: ../../AdminConsole/web/actions.php:1710
-#, fuzzy, php-format
+#, php-format
 msgid "Session '%s' successfully disconnected"
-msgstr "La cancellazione della sessione '%s' è avvenuta correttamente"
+msgstr "La sessione '%s' è stata disconnessa"
 
 #: ../../AdminConsole/web/actions.php:1732
 #, php-format
 msgid "Server '%s' successfully deleted"
-msgstr "La cancellazione del server '%s' è avvenuta correttamente"
+msgstr "Il server '%s' è stato cancellato"
 
 #: ../../AdminConsole/web/actions.php:1750
 #, php-format
 msgid "Server '%s' successfully registered"
-msgstr "La registrazione del server '%s' è avvenuta correttamente"
+msgstr "Il server '%s' è stato registrato"
 
 # 96%
 #: ../../AdminConsole/web/actions.php:1754
@@ -3121,21 +3118,21 @@ msgstr "La registrazione del server '%s' non è riuscita"
 #: ../../AdminConsole/web/actions.php:1975
 #, php-format
 msgid "Server '%s' successfully modified"
-msgstr "La modifica del server '%s' è avvenuta correttamente"
+msgstr "Il server '%s' è stato modificato"
 
 #: ../../AdminConsole/web/actions.php:1816
 msgid "Nothing to save. New display name is identicall to old one"
-msgstr ""
+msgstr "Nulla da salvare. Il nuovo nome è identico al vecchio"
 
 #: ../../AdminConsole/web/actions.php:1835
 #, php-format
 msgid "Internal name \"%s\" is invalid"
-msgstr ""
+msgstr "Il nome interno '%s' non è valido"
 
 #: ../../AdminConsole/web/actions.php:1860
 #, php-format
 msgid "Redirection name \"%s\" is invalid"
-msgstr ""
+msgstr "Il nome di redirezione \"%s\" non è valido"
 
 #: ../../AdminConsole/web/actions.php:1888
 #: ../../AdminConsole/web/actions.php:2027
@@ -3150,44 +3147,42 @@ msgstr "Il server '%s' si sta aggiornando"
 #: ../../AdminConsole/web/actions.php:1916
 #, php-format
 msgid "RDP port \"%s\" is invalid"
-msgstr ""
+msgstr "La porta RDP \"%s\" non è valida"
 
 #: ../../AdminConsole/web/actions.php:1927
 msgid "Nothing to save. RDP port is identicall to old one"
-msgstr ""
+msgstr "Nulla da salvare. La porta RDP è identica alla vecchia"
 
 #: ../../AdminConsole/web/actions.php:1958
 #, php-format
 msgid "%s is not an available role"
-msgstr ""
+msgstr "'%s' non è una regola disponibile"
 
 #: ../../AdminConsole/web/actions.php:1962
 #, php-format
 msgid "Nothing to save. Role %s is already disabled"
-msgstr ""
+msgstr "Nulla da salvare. La regola '%s' è già disabilitata"
 
 #: ../../AdminConsole/web/actions.php:1966
 #, php-format
 msgid "Nothing to save. Role %s is already enabled"
-msgstr ""
+msgstr "Nulla da salvare. La regola '%s' è già abilitata"
 
 # 76%
 #: ../../AdminConsole/web/actions.php:2000
-#, php-format
-#, fuzzy, php-format
+#, php-format, php-format
 msgid "Unable to delete archived session '%s'"
-msgstr "Non riesco a cancellare la sessione '%s'"
+msgstr "Non riesco a cancellare la sessione memorizzata '%s'"
 
 # 76%
 #: ../../AdminConsole/web/actions.php:2004
-#, php-format
-#, fuzzy, php-format
+#, php-format, php-format
 msgid "Archived session '%s' successfully deleted"
-msgstr "La cancellazione della sessione '%s' è avvenuta correttamente"
+msgstr "La sessione memorizzata '%s' è stata cancellata"
 
 #: ../../AdminConsole/web/actions.php:2045
 msgid "Task successfully deleted"
-msgstr "La cancellazione del compito è avvenuto correttamente"
+msgstr "La cancellazione del compito è avvenuta correttamente"
 
 # 88%
 # 100%
@@ -3205,7 +3200,7 @@ msgstr "Non riesco ad aggiungere una cartella condivisa"
 #, php-format
 #, php-format,
 msgid "Shared folder '%s' successfully added"
-msgstr "L'aggiunta della cartella condivisa '%s' è avvenuta correttamente"
+msgstr "La cartella condivisa '%s' è stata aggiunta"
 
 #: ../../AdminConsole/web/actions.php:2078
 msgid "Unable to create this shared folder access"
@@ -3216,7 +3211,7 @@ msgstr "Non riesco a creare un accesso a questa cartella condivisa"
 #: ../../AdminConsole/web/actions.php:2084
 #: ../../AdminConsole/web/actions.php:2102
 msgid "Shared folder successfully modified"
-msgstr "La modifica della cartella condivisa è avvenuta correttamente"
+msgstr "La cartella condivisa è stata modificata"
 
 #: ../../AdminConsole/web/actions.php:2088
 #: ../../AdminConsole/web/actions.php:2106
@@ -3253,7 +3248,7 @@ msgstr "Rimuovi gli applicativi orfani"
 
 #: ../../AdminConsole/web/applications.php:159
 msgid "Unkonwn application"
-msgstr ""
+msgstr "Applicazione sconosciuta"
 
 #: ../../AdminConsole/web/applications.php:172
 msgid "Available"
@@ -3295,9 +3290,8 @@ msgstr "Impostare l'icona personalizzata"
 # 100%
 # 100%
 #: ../../AdminConsole/web/applications.php:282
-#, fuzzy
 msgid "Clone to Static Application"
-msgstr "Clonare l'applicativo statico"
+msgstr "Clonare in una Applicazione statica"
 
 #: ../../AdminConsole/web/applications.php:291
 msgid "Are you sure you want to remove this application?"
@@ -3324,13 +3318,15 @@ msgstr "Compiti attivi in questa applicazione"
 #: ../../AdminConsole/web/applications_static.php:496
 #: ../../AdminConsole/web/applications_webapp.php:360
 msgid "Groups with this application"
-msgstr "Gruppi con questa applicazione"
+msgstr "I Gruppi di Applicazioni con questa applicazione"
 
 #: ../../AdminConsole/web/applications.php:419
 #: ../../AdminConsole/web/applications_static.php:503
 #: ../../AdminConsole/web/applications_webapp.php:367
 msgid "Are you sure you want to delete this application from this group?"
-msgstr "Sei sicuro di voler cancellare questa applicazione da questo gruppo?"
+msgstr ""
+"Sei sicuro di voler cancellare questa applicazione da questo gruppo di "
+"applicazioni?"
 
 #: ../../AdminConsole/web/applications.php:424
 #: ../../AdminConsole/web/applications_static.php:508
@@ -3351,7 +3347,7 @@ msgstr "Cancella da questo gruppo"
 #: ../../AdminConsole/web/usersgroup.php:661
 #: ../../AdminConsole/web/users.php:401
 msgid "Add to this group"
-msgstr "Aggiungi questo gruppo"
+msgstr "Aggiungi a questo gruppo"
 
 #: ../../AdminConsole/web/applications.php:454
 #: ../../AdminConsole/web/mimetypes.php:51
@@ -3360,7 +3356,7 @@ msgstr "Nessun tipo mime disponibile"
 
 #: ../../AdminConsole/web/applications.php:520
 msgid "Select an icon from an Application Server"
-msgstr "Scegli un'icona dal server di applicazioni"
+msgstr "Scegli un'icona da un server di applicazioni"
 
 # 81%
 # 100%
@@ -3432,9 +3428,8 @@ msgstr "Aggiungere"
 # 100%
 # 91%
 #: ../../AdminConsole/web/applications_static.php:220
-#, fuzzy
 msgid "Web Links Configuration"
-msgstr "Configurazione del collegamento web"
+msgstr "Configurazione dei collegamenti web"
 
 # 95%
 # 100%
@@ -3449,9 +3444,8 @@ msgstr "Aggiornamento"
 # 77%
 #: ../../AdminConsole/web/applications_static.php:378
 #: ../../AdminConsole/web/applications_webapp.php:252
-#, fuzzy
 msgid "Clone to new application"
-msgstr "Clonare l'applicativo statico"
+msgstr "Clonare in una nuova applicazione"
 
 #: ../../AdminConsole/web/applications_static.php:382
 #: ../../AdminConsole/web/applications_static.php:444
@@ -3489,9 +3483,8 @@ msgstr "Tipo mime personalizzato"
 # 100%
 # 100%
 #: ../../AdminConsole/web/applications_webapp.php:139
-#, fuzzy
 msgid "Add a Web Application"
-msgstr "Aggiungi un'applicazione statica"
+msgstr "Aggiungi a una Applicazione Web"
 
 #: ../../AdminConsole/web/applications_webapp.php:277
 #: ../../AdminConsole/web/applications_webapp.php:407
@@ -3556,17 +3549,15 @@ msgstr "Abilita"
 #: ../../AdminConsole/web/appsgroup.php:197
 #: ../../AdminConsole/web/sharedfolders.php:103
 #: ../../AdminConsole/web/wizard.php:141
-#, fuzzy
 msgid "Failed to get User Group data"
-msgstr "Ll'importazione del gruppo di utenti '%s' non è riuscita"
+msgstr "Impossibile ottenere dati dal Gruppo Utenti"
 
 # 93%
 # 100%
 # 100%
 #: ../../AdminConsole/web/appsgroup.php:214
-#, fuzzy
 msgid "Application Group management"
-msgstr "Gestione dei gruppi di applicazioni"
+msgstr "Gestione dei Gruppi di Applicazioni"
 
 #: ../../AdminConsole/web/appsgroup.php:229
 #: ../../AdminConsole/web/usersgroup.php:451
@@ -3591,7 +3582,7 @@ msgstr "Aggiorna la descrizione"
 
 #: ../../AdminConsole/web/appsgroup.php:270
 msgid "List of applications in this group"
-msgstr "Elenco delle applicazioni entro questo gruppo"
+msgstr "Elenco delle applicazioni in questo gruppo"
 
 #: ../../AdminConsole/web/appsgroup.php:357
 #: ../../AdminConsole/web/usersgroup.php:674
@@ -3616,11 +3607,11 @@ msgstr "Aggiungi questa pubblicazione"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Organization"
-msgstr ""
+msgstr "Organizzazione"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Subscription Key Owner"
-msgstr ""
+msgstr "Proprietario della Sottoscrizione"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Email"
@@ -3628,99 +3619,97 @@ msgstr ""
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Start Date (UTC)"
-msgstr ""
+msgstr "Data Inizio (UTC)"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "End Date  (UTC)"
-msgstr ""
+msgstr "Data Fine (UTC)"
 
 #: ../../AdminConsole/web/certificate.php:65
 msgid "Evaluation"
-msgstr ""
+msgstr "Valutazione"
 
 #: ../../AdminConsole/web/certificate.php:68
 #: ../../AdminConsole/web/certificate.php:195
 msgid "Connected User Limit"
-msgstr ""
+msgstr "Limite dell'Utente connesso"
 
 #: ../../AdminConsole/web/certificate.php:71
 #: ../../AdminConsole/web/certificate.php:127
 msgid "Assigned Users"
-msgstr ""
+msgstr "Utenti assegnati"
 
 #: ../../AdminConsole/web/certificate.php:76
 msgid "Invalid Subscription Key"
-msgstr ""
+msgstr "Codice di licenza non valido"
 
 #: ../../AdminConsole/web/certificate.php:79
 msgid "Subscription Key has expired"
-msgstr ""
+msgstr "Il codice di licenza è scaduto"
 
 #: ../../AdminConsole/web/certificate.php:84
 #: ../../AdminConsole/web/certificate.php:163
 msgid "Subscription Key expired"
-msgstr ""
+msgstr "Codice di licenza scaduto"
 
 #: ../../AdminConsole/web/certificate.php:86
 #: ../../AdminConsole/web/certificate.php:165
 #, php-format
 msgid "Only %d days remaining"
-msgstr ""
+msgstr "Rimangono solo '%d' giorni"
 
 #: ../../AdminConsole/web/certificate.php:89
 #: ../../AdminConsole/web/certificate.php:168
 #, php-format
 msgid "OK (%d days remaining)"
-msgstr ""
+msgstr "OK (rimangono '%d' giorni)"
 
 # 90%
 # 81%
 #: ../../AdminConsole/web/certificate.php:94
-#, fuzzy
 msgid "Are you sure you want to delete this Subscription Key?"
-msgstr "Sei sicuro di voler cancellare questo server?"
+msgstr "Sei sicuro di voler cancellare questo codice di licenza?"
 
 #: ../../AdminConsole/web/certificate.php:98
 msgid "Delete this Subscription Key"
-msgstr ""
+msgstr "Cancella questo codice di licenza"
 
 #: ../../AdminConsole/web/certificate.php:109
 msgid "Install a Subscription Key"
-msgstr ""
+msgstr "Installa un codice licenza"
 
 #: ../../AdminConsole/web/certificate.php:117
 msgid "Install this Subscription Key"
-msgstr ""
+msgstr "Installa questo codice di licenza"
 
 #: ../../AdminConsole/web/certificate.php:134
 msgid "Reset assigned users"
-msgstr ""
+msgstr "reset utenti assegnati"
 
 #: ../../AdminConsole/web/certificate.php:153
 msgid "Subscription Key Summary"
-msgstr ""
+msgstr "Sommario codice di licenza"
 
 #: ../../AdminConsole/web/certificate.php:160
 msgid "No valid Subscription Keys"
-msgstr ""
+msgstr "Codice di licenza non valido"
 
 #: ../../AdminConsole/web/certificate.php:177
 msgid "Valid from"
-msgstr ""
+msgstr "Valido da"
 
 #: ../../AdminConsole/web/certificate.php:186
 msgid "Valid until"
-msgstr ""
+msgstr "Valido fino a"
 
 #: ../../AdminConsole/web/certificate.php:211
 msgid "Assigned User Limit"
-msgstr ""
+msgstr "Limite dell'Utente assegnato"
 
 # 75%
 #: ../../AdminConsole/web/checkup.php:42
-#, fuzzy
 msgid "Unable to load checkup"
-msgstr "Non riesco a caricare il gruppo di utenti"
+msgstr "Non riesco a caricare il checkup"
 
 #: ../../AdminConsole/web/checkup.php:52
 msgid "PHP Modules"
@@ -3732,9 +3721,8 @@ msgstr "Ripulire le relazioni"
 
 # 88%
 #: ../../AdminConsole/web/checkup.php:122
-#, fuzzy
 msgid "Default User Group"
-msgstr "Gruppo di utenti di default"
+msgstr "Gruppo Utenti di default"
 
 #: ../../AdminConsole/web/checkup.php:137
 msgid "Cleanup configuration"
@@ -3786,36 +3774,34 @@ msgstr "Prova del FQDN"
 #: ../../AdminConsole/web/configuration-sumup.php:152
 #, php-format
 msgid "Your Premium Edition Subscription Key will expire in %d days"
-msgstr ""
+msgstr "La tua licenza Premium Edition scadrà tra '%d' giorni"
 
 #: ../../AdminConsole/web/configuration-sumup.php:154
 msgid "Your Premium Edition Subscription Key has expired."
-msgstr ""
+msgstr "La tua licenza Premium Edition è scaduta"
 
 #: ../../AdminConsole/web/configuration-sumup.php:156
 #, php-format
 msgid "Your Premium Edition Subscription Key is valid for %d days."
-msgstr ""
+msgstr "La tua licenza Premium Edition è valida per '%d' giorni"
 
 #: ../../AdminConsole/web/configuration-sumup.php:159
 msgid "You don't have any valid Premium Edition Subscription Keys."
-msgstr ""
+msgstr "Non hai nessuna licenza Premium Edition valida"
 
 # 90%
 # 100%
 # 100%
 #: ../../AdminConsole/web/index.php:50
-#, fuzzy
 msgid "Users and User Groups"
-msgstr "Utenti e gruppi di utenti"
+msgstr "Utenti e Gruppi di Utenti"
 
 # 91%
 # 100%
 # 100%
 #: ../../AdminConsole/web/index.php:109
-#, fuzzy
 msgid "Applications and Application Groups"
-msgstr "Applicazioni e gruppi di applicazioni"
+msgstr "Applicazioni e Gruppi di Applicazioni"
 
 #: ../../AdminConsole/web/index.php:133
 msgid "System"
@@ -3831,7 +3817,7 @@ msgstr "Poni il sistema in modalità produzione"
 
 #: ../../AdminConsole/web/index.php:144
 msgid "The system is in production mode"
-msgstr "Passo il sistema in modalità produzione"
+msgstr "Il sistema è in modalità produzione"
 
 #: ../../AdminConsole/web/index.php:147
 msgid "Are you sure you want to switch the system to maintenance mode?"
@@ -3859,7 +3845,7 @@ msgstr "il server in linea"
 
 #: ../../AdminConsole/web/index.php:218
 msgid "offline servers"
-msgstr "i server non in linea"
+msgstr "i servers non in linea"
 
 #: ../../AdminConsole/web/index.php:220
 msgid "offline server"
@@ -3867,7 +3853,7 @@ msgstr "il server non in linea"
 
 #: ../../AdminConsole/web/index.php:228
 msgid "broken servers"
-msgstr "server rotti"
+msgstr "servers rotti"
 
 #: ../../AdminConsole/web/index.php:230
 msgid "broken server"
@@ -3900,9 +3886,8 @@ msgstr "Scarica l'intero file di log"
 
 # 92%
 #: ../../AdminConsole/web/logs.php:82
-#, fuzzy
 msgid "Slave Servers"
-msgstr "Server slave"
+msgstr "Servers slave"
 
 #: ../../AdminConsole/web/logs.php:92
 msgid "Log"
@@ -3911,7 +3896,7 @@ msgstr "Log"
 #: ../../AdminConsole/web/logs.php:125 ../../AdminConsole/web/logs.php:167
 #, php-format
 msgid "Unable to get log %s"
-msgstr ""
+msgstr "Impossibile ottenere il log '%s'"
 
 # 94%
 # 100%
@@ -3935,7 +3920,7 @@ msgstr "OS"
 
 #: ../../AdminConsole/web/news.php:36 ../../AdminConsole/web/script.php:36
 msgid "News successfully modified"
-msgstr "La modifica delle notizie è avvenuta correttamente"
+msgstr "La modifica della News è avvenuta correttamente"
 
 #: ../../AdminConsole/web/news.php:63
 msgid "Title"
@@ -3952,15 +3937,15 @@ msgstr "Data"
 
 #: ../../AdminConsole/web/news.php:76
 msgid "Are you sure you want to delete this news?"
-msgstr "Sei sicuro di voler cancellare queste notizie?"
+msgstr "Sei sicuro di voler cancellare questa News?"
 
 #: ../../AdminConsole/web/news.php:80
 msgid "Delete this news"
-msgstr "Cancella questa notizia"
+msgstr "Cancella questa News"
 
 #: ../../AdminConsole/web/news.php:90
 msgid "Add news"
-msgstr "Aggiungere delle notizie"
+msgstr "Aggiungere News"
 
 # 83%
 #: ../../AdminConsole/web/news.php:98
@@ -3982,7 +3967,7 @@ msgstr "Data"
 
 #: ../../AdminConsole/web/news.php:101
 msgid "Add this news"
-msgstr "Aggiungere queste notizie"
+msgstr "Aggiungere questa News"
 
 # 97%
 # 100%
@@ -3996,7 +3981,7 @@ msgstr "Non è stata trovata alcuna azione"
 
 #: ../../AdminConsole/web/password.php:44
 msgid "Current password"
-msgstr ""
+msgstr "Password corrente"
 
 #: ../../AdminConsole/web/password.php:49 ../../AdminConsole/web/users.php:346
 msgid "New password"
@@ -4042,17 +4027,16 @@ msgstr "Cancella questo profilo"
 # 100%
 # 86%
 #: ../../AdminConsole/web/profiles.php:113
-#, fuzzy
 msgid "Are you sure you want to delete selected profiles?"
-msgstr "Sei sicuro di voler cancellare questi profili di utente?"
+msgstr "Sei sicuro di voler cancellare i profili selezionati?"
 
 #: ../../AdminConsole/web/profiles.php:116
 msgid "Delete profiles"
-msgstr ""
+msgstr "Cancella profili"
 
 #: ../../AdminConsole/web/profiles.php:126
 msgid "No profile"
-msgstr ""
+msgstr "Non esiste profilo"
 
 #: ../../AdminConsole/web/profiles.php:155
 #, php-format

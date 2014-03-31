@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-25 10:11+0100\n"
-"PO-Revision-Date: 2014-03-25 16:53+0200\n"
+"PO-Revision-Date: 2014-03-30 04:12+0200\n"
 "Last-Translator: Satoshi <satoshi.yuza@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -44,7 +44,7 @@ msgstr "Full CPU: 接続するユーザーが最適なサーバーを選択す�
 
 #: ../../AdminConsole/classes/ConfigElement_sliders_loadbalancing.class.php:155
 msgid "Both CPU and RAM are used as criterias, with a little randomization..."
-msgstr "判定条件としてCPUとRAMの利用率により無作為に分散"
+msgstr "判定条件としてCPUとRAMの利用率により無作為に分散..."
 
 #: ../../AdminConsole/classes/ConfigElement_week_time_select.class.php:37
 msgid "Sunday"
@@ -144,7 +144,7 @@ msgstr "LDAP暗号(SSL)を利用"
 #: ../../AdminConsole/classes/Configuration_mode_ad.class.php:190
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:243
 msgid "Authentication (require a user with read right on the tree)"
-msgstr "認証 (ツリーの参照権限を持つユーザーが必要です。)"
+msgstr "認証 (ツリーの参照権限を持つユーザーが必要です)"
 
 # 83%
 #: ../../AdminConsole/classes/Configuration_mode_ad.class.php:192
@@ -180,8 +180,8 @@ msgid ""
 "Use <strong>Active Directory</strong> to handle users in OVD sessions <em>"
 "(not compatible with Linux applications)</em>"
 msgstr ""
-"OVDセッションでユーザーを管理するために<strong>Active Directory</strong>を利用 <em>(Linux "
-"アプリケーションとの互換性はありません。)</em>"
+"OVDセッションでユーザーを管理するために <strong>Active Directory</strong> を利用 <em>(Linux "
+"アプリケーションとの互換性はありません)</em>"
 
 #: ../../AdminConsole/classes/Configuration_mode_ad.class.php:230
 msgid "Use <strong>Internal</strong> method to handle users in OVD sessions"
@@ -254,7 +254,7 @@ msgstr "SSLを利用"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:238
 msgid "Base DN:"
-msgstr "Base DN:"
+msgstr "ベースDN:"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:249
 msgid "Anonymous bind"
@@ -266,7 +266,7 @@ msgstr "Bind DN (接頭辞なし):"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:252
 msgid "Bind password:"
-msgstr "Bind password:"
+msgstr "Bindパスワード:"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:257
 #: ../../AdminConsole/includes/page_template.php:53
@@ -291,15 +291,15 @@ msgstr "Specific OU (オプション):"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:261
 msgid "Distinguished name field:"
-msgstr "Distinguished name field:"
+msgstr "識別名フィールド:"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:262
 msgid "Display name field:"
-msgstr "表示名:"
+msgstr "表示名フィールド:"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:263
 msgid "Locale field"
-msgstr "Locale field"
+msgstr "Locale フィールド"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:269
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:304
@@ -316,13 +316,13 @@ msgstr "LDAPのUser Groupsを利用する"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:285
 msgid "Name field:"
-msgstr "Name field:"
+msgstr "Name フィールド:"
 
 # 93%
 # 100%
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:286
 msgid "Description field (optional):"
-msgstr "Description field (オプション):"
+msgstr "説明フィールド (オプション):"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:291
 msgid "Use the following field from the user entry"
@@ -331,11 +331,11 @@ msgstr "ユーザー項目から以下のフィールドを利用"
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:293
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:311
 msgid "which is"
-msgstr "which is"
+msgstr "条件"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:299
 msgid "Group DN"
-msgstr "Group DN"
+msgstr "グループ DN"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:304
 msgid "Group name"
@@ -347,7 +347,7 @@ msgstr "グループ項目から以下のフィールドを利用"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:317
 msgid "User DN"
-msgstr "User DN"
+msgstr "ユーザー DN"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:322
 #: ../../AdminConsole/classes/Preferences_admin.class.php:411
@@ -598,7 +598,7 @@ msgstr "新規サーバー追加時に自動的に本稼働モードへ切替"
 msgid ""
 "When an Application Server has reached its \"max sessions\" limit, disable "
 "session launch on it ?"
-msgstr "アプリケーションサーバが\"最大セッション\"に到達した際にセッションの起動を無効にしますか？"
+msgstr "アプリケーションサーバが\"最大セッション\"に到達した際にセッションの起動を無効にしますか?"
 
 # 97%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:339
@@ -637,7 +637,7 @@ msgstr "デスクトップの開始を許可するサーバー"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:348
 msgid "Authorize to launch a desktop session without desktop process"
-msgstr "デスクトップのプロセスがなくともデスクトップセッションの起動を許可する"
+msgstr "デスクトップ・プロセス無しでデスクトップセッションを起動"
 
 # 92%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:350
@@ -654,7 +654,7 @@ msgstr "セッション"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:354
 msgid "Default mode for session"
-msgstr "既定モード"
+msgstr "セッションのデフォルト・モード"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:355
 msgid "Default language for session"
@@ -672,7 +672,7 @@ msgstr "稼働セッションの最大値"
 msgid ""
 "User can launch a session even if some of his published applications are not "
 "available"
-msgstr "配布アプリケーションが利用付加の場合でもユーザーはセッションを起動できる。"
+msgstr "配布アプリケーションが利用不可でもセッションを起動"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:359
 msgid "User can use a console in the session"
@@ -680,11 +680,11 @@ msgstr "コンソールを利用可能"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:360
 msgid "Use known drives"
-msgstr "既知のドライブを利用する。"
+msgstr "既知のドライブを利用"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:361
 msgid "Multimedia"
-msgstr "マルティメディア"
+msgstr "マルチメディアの利用"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:362
 msgid "Redirect client drives"
@@ -696,7 +696,7 @@ msgstr "クライアントのプリンターをリダイレクト"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:364
 msgid "Redirect Smart card readers"
-msgstr "スマートカード・リーダーへリダイレクトする"
+msgstr "スマートカード・リーダーへリダイレクト"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:365
 msgid "RDP bpp"
@@ -712,7 +712,7 @@ msgstr "セッションの持続"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:369
 msgid "Follow me"
-msgstr "Follow me"
+msgstr "フォロー・ミー"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:370
 msgid "Enable user profiles"
@@ -750,7 +750,7 @@ msgstr "強制的に共有フォルダを許可する"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:379
 msgid "User selectable parameters"
-msgstr ""
+msgstr "ユーザーにパラメータの選択を許可する"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:380
 msgid "Time restriction"
@@ -825,11 +825,11 @@ msgstr "ユーザーパスワード"
 # 100%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:414
 msgid "Database User Group table name"
-msgstr "Database users groups table name"
+msgstr "データベースのユーザーグループのテーブル名"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:421
 msgid "Table of users"
-msgstr "ユーザー テーブル"
+msgstr "ユーザーのテーブル"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:423
 msgid "Hash method"
@@ -846,7 +846,7 @@ msgstr "MySQLサーバーのアドレス"
 msgid ""
 "The user login that must be used to access the database (to list users "
 "accounts)."
-msgstr "ユーザーログインはデータベースに接続し利用します。 (to list users accounts)"
+msgstr "ユーザーログインは(ユーザーアカウントをリスト化するために)データベースに接続する必要があります。"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:427
 #: ../../AdminConsole/classes/Preferences_admin.class.php:509
@@ -854,7 +854,7 @@ msgstr "ユーザーログインはデータベースに接続し利用します
 msgid ""
 "The user password that must be used to access the database (to list users "
 "accounts)."
-msgstr "ユーザーパスワードはデータベースに接続し利用します。(to list users accounts)"
+msgstr "ユーザーパスワードは(ユーザーアカウントをリスト化するために)データベースに接続する必要があります。"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:428
 #: ../../AdminConsole/classes/Preferences_admin.class.php:474
@@ -988,7 +988,7 @@ msgstr "DNSレコードの逆参照を行い接続元アドレスに関連付け
 msgid ""
 "When a server status is down or broken, and it is sending monitoring, try to "
 "switch it back to ready ?"
-msgstr "サーバーがダウンもしくは壊れている場合に、監視の通知を行い、準備ができるまで切り替えを試みますか？"
+msgstr "サーバーがダウンもしく故障している場合に、監視の通知を行い、準備ができるまで切り替えを試みますか？"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:480
 msgid ""
@@ -1236,7 +1236,7 @@ msgstr "12時間"
 #: ../../AdminConsole/classes/Preferences_admin.class.php:574
 #: ../../AdminConsole/web/usersgroup.php:33
 msgid "1 day"
-msgstr "1 日"
+msgstr "1日"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:575
 msgid "2 days"
@@ -1245,16 +1245,15 @@ msgstr "2日間"
 #: ../../AdminConsole/classes/Preferences_admin.class.php:576
 #: ../../AdminConsole/web/usersgroup.php:34
 msgid "1 week"
-msgstr "1 週間"
+msgstr "1週間"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:577
 msgid "1 month"
-msgstr "１ヶ月"
+msgstr "1ヶ月"
 
 # 83%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:578
 #: ../../AdminConsole/classes/Preferences_admin.class.php:579
-#, fuzzy
 msgid "1 year"
 msgstr "1年間"
 
@@ -1649,7 +1648,7 @@ msgid_plural ""
 "<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
 "but there are more. Please restrict your search field."
 msgstr[0] ""
-"<strong>不完全なコンテンツ:</strong> 検索対象が多いため、<strong>%"
+"<strong>一部の内容:</strong> 検索対象が多いため、<strong>%"
 "d件</strong>のみ表示されています。検索条件で絞り込みを行ってください。"
 
 #: ../../AdminConsole/classes/UsersGroupsList.class.php:121
@@ -1877,7 +1876,7 @@ msgstr "管理者パスワード変更"
 #: ../../AdminConsole/web/certificate.php:47
 #: ../../AdminConsole/web/configuration-sumup.php:146
 msgid "Subscription Keys"
-msgstr ""
+msgstr "サブスクリプションキー"
 
 #: ../../AdminConsole/includes/page_template.php:250
 msgid "Sessions"
@@ -1943,19 +1942,19 @@ msgstr "Administration"
 #: ../../AdminConsole/includes/page_template.php:372
 #, php-format
 msgid "Your %sPremium Edition Subscription Key%s will expire in %d days"
-msgstr "あなたの%sプレミアム・エディション証明書%sは%d日で失効します。"
+msgstr "あなたの%sプレミアム版サブスクリプションキー%sは%d日で失効します。"
 
 # 75%
 #: ../../AdminConsole/includes/page_template.php:374
 #, php-format
 msgid "Your %sPremium Edition Subscription Key%s has expired."
-msgstr "あなたの%sプレミアム・エディション証明書%sは失効しました。"
+msgstr "あなたの%sプレミアム版サブスクリプションキー%sは失効しました。"
 
 # 77%
 #: ../../AdminConsole/includes/page_template.php:377
 #, php-format
 msgid "You don't have any valid %sPremium Edition Subscription Keys%s."
-msgstr "あなたは%sプレミアム・エディション証明書%sを所有していません。"
+msgstr "あなたは%sプレミアム版サブスクリプションキー%sを所有していません。"
 
 #: ../../AdminConsole/includes/page_template.php:507
 #: ../../AdminConsole/includes/page_template_static.php:95
@@ -2334,7 +2333,7 @@ msgstr "アプリケーション '%s' を追加しました。"
 #: ../../AdminConsole/web/actions.php:930
 #: ../../AdminConsole/web/actions.php:1584
 msgid "File too large to be used for server rules"
-msgstr ""
+msgstr "ファイルはサーバールールに利用するには大き過ぎます"
 
 # 80%
 #. UPLOAD_ERR_PARTIAL
@@ -2344,9 +2343,8 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:682
 #: ../../AdminConsole/web/actions.php:933
 #: ../../AdminConsole/web/actions.php:1588
-#, fuzzy
 msgid "The file was corrupted during the upload"
-msgstr "ファイルアップロードに失敗しました。"
+msgstr "ファイルがアップロード時に破損しました。"
 
 #: ../../AdminConsole/web/actions.php:223
 #: ../../AdminConsole/web/actions.php:375
@@ -2423,11 +2421,11 @@ msgstr "アプリケーション '%s' を修正できません。"
 
 #: ../../AdminConsole/web/actions.php:413
 msgid "The Web Application name was not specified"
-msgstr ""
+msgstr "Webアプリケーション名が指定されませんでした。"
 
 #: ../../AdminConsole/web/actions.php:437
 msgid "No configuration file was specified"
-msgstr ""
+msgstr "設定ファイルが指定されませんでした。"
 
 #: ../../AdminConsole/web/actions.php:450
 #: ../../AdminConsole/web/actions.php:710
@@ -2438,7 +2436,7 @@ msgstr "設定ファイルのフォーマットが不正です。"
 msgid ""
 "Configuration file has more than one main level key. The first main level "
 "key will be used"
-msgstr ""
+msgstr "設定ファイルが一つ以上のメインレベルキーを所有しています。メインレベルキーは一つ目のものが利用されます。"
 
 #: ../../AdminConsole/web/actions.php:459
 msgid "No URL prefix"
@@ -2487,7 +2485,7 @@ msgstr "引数 '%s' は、無効なIPアドレスです。"
 # 100%
 #: ../../AdminConsole/web/actions.php:599
 msgid "Unable to update Web Application configuration"
-msgstr "Webアプリケーションの設定を更新できません。"
+msgstr "Webアプリケーションの設定を更新できません"
 
 #: ../../AdminConsole/web/actions.php:737
 msgid "Unable to change configuration"
@@ -2588,12 +2586,12 @@ msgstr "アプリケーショングループ '%s' を修正出来ません。"
 
 #: ../../AdminConsole/web/actions.php:922
 msgid "No Subscription Keys were uploaded"
-msgstr ""
+msgstr "サブスクリプション証明書がアップロードされませんでした。"
 
 #. UPLOAD_ERR_NO_FILE
 #: ../../AdminConsole/web/actions.php:936
 msgid "No files were uploaded"
-msgstr ""
+msgstr "ファイルはアップロードされませんでした"
 
 #: ../../AdminConsole/web/actions.php:951
 msgid "The file is empty"
@@ -2601,7 +2599,7 @@ msgstr "ファイルは空です。"
 
 #: ../../AdminConsole/web/actions.php:957
 msgid "The uploaded file is not a valid Subscription Key"
-msgstr ""
+msgstr "アップロードされたファイルは不正なサブスクリプション証明書です"
 
 # 97%
 # 100%
@@ -2628,7 +2626,7 @@ msgstr "ユーザーグループ '%s' は、存在していません。"
 msgid ""
 "Unable to remove a user from User Group '%s' because it is the default User "
 "Group"
-msgstr ""
+msgstr "デフォルトグループであるためユーザーグループ '%s' からユーザーを削除できませんでした"
 
 # 90%
 # 100%
@@ -2639,9 +2637,8 @@ msgstr "ユーザーグループ '%s' のインポートに失敗しました。
 
 # 96%
 #: ../../AdminConsole/web/actions.php:1036
-#, fuzzy
 msgid "Unable to save the Publication"
-msgstr "配布設定を保存できませんでした。"
+msgstr "配布設定を保存できませんでした"
 
 #: ../../AdminConsole/web/actions.php:1040
 msgid "Publication successfully added"
@@ -2649,9 +2646,8 @@ msgstr "配布設定が追加されました。"
 
 # 96%
 #: ../../AdminConsole/web/actions.php:1046
-#, fuzzy
 msgid "Unable to delete the Publication"
-msgstr "配布設定を削除できません。"
+msgstr "配布設定を削除できません"
 
 #: ../../AdminConsole/web/actions.php:1050
 msgid "Publication successfully deleted"
@@ -2716,7 +2712,7 @@ msgstr "ユーザーグループ '%s' を削除しました。"
 #: ../../AdminConsole/web/actions.php:1202
 #, php-format
 msgid "Unable to update User Group '%s'"
-msgstr "ユーザーグループ '%s' の更新に失敗しました。"
+msgstr "ユーザーグループ '%s' の更新に失敗しました"
 
 #: ../../AdminConsole/web/actions.php:1167
 msgid "Not enough rights"
@@ -2774,9 +2770,9 @@ msgstr "ユーザー '%s' を削除しました。"
 
 # 96%
 #: ../../AdminConsole/web/actions.php:1345
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to modify User '%s'"
-msgstr "ユーザー '%s' を変更出来ません。"
+msgstr "ユーザー '%s' を変更出来ません"
 
 #: ../../AdminConsole/web/actions.php:1347
 #, php-format
@@ -2785,7 +2781,6 @@ msgstr "ユーザー '%s' を変更しました。"
 
 # 87%
 #: ../../AdminConsole/web/actions.php:1355
-#, fuzzy
 msgid "No custom password specified for populating the database."
 msgstr "データベースに登録するためのパスワードが存在しません。"
 
@@ -2805,9 +2800,8 @@ msgstr "ユーザーは変更されました。"
 # 80%
 # 95%
 #: ../../AdminConsole/web/actions.php:1412
-#, fuzzy
 msgid "Failed to modify User"
-msgstr "ユーザー変更に失敗しました。"
+msgstr "ユーザー変更に失敗しました"
 
 # 81%
 #: ../../AdminConsole/web/actions.php:1446
@@ -2832,7 +2826,7 @@ msgstr "共有フォルダ名を変更しました。"
 
 #: ../../AdminConsole/web/actions.php:1475
 msgid "Update of the shared folder failed"
-msgstr "共有フォルダの更新に失敗しました。"
+msgstr "共有フォルダの更新に失敗しました"
 
 #: ../../AdminConsole/web/actions.php:1516
 msgid "Unable to associate the user to the profile"
@@ -2944,9 +2938,9 @@ msgstr "サーバー '%s' を登録しました。"
 
 # 96%
 #: ../../AdminConsole/web/actions.php:1754
-#, fuzzy, php-format
+#, php-format
 msgid "Failed to register server '%s'"
-msgstr "サーバー '%s' の登録に失敗しました。"
+msgstr "サーバー '%s' の登録に失敗しました"
 
 #: ../../AdminConsole/web/actions.php:1790
 #: ../../AdminConsole/web/actions.php:1827
@@ -3010,13 +3004,13 @@ msgstr "ロール %sは、すでに有効になっています。保存されま
 #: ../../AdminConsole/web/actions.php:2000
 #, php-format
 msgid "Unable to delete archived session '%s'"
-msgstr "アーカイブセッション '%s' を削除できません。"
+msgstr "アーカイブ・セッション '%s' を削除できません。"
 
 # 76%
 #: ../../AdminConsole/web/actions.php:2004
 #, php-format
 msgid "Archived session '%s' successfully deleted"
-msgstr "アーカイブセッション '%s' を削除しました。"
+msgstr "アーカイブ・セッション '%s' を削除しました。"
 
 #: ../../AdminConsole/web/actions.php:2045
 msgid "Task successfully deleted"
@@ -3062,9 +3056,8 @@ msgstr "共有フォルダへのアクセス権を削除できませんでした
 #: ../../AdminConsole/web/applications_static.php:67
 #: ../../AdminConsole/web/applications_webapp.php:64
 #: ../../AdminConsole/web/wizard.php:176 ../../AdminConsole/web/wizard.php:326
-#, fuzzy
 msgid "No available applications"
-msgstr "利用可能なアプリケーションが存在しません。"
+msgstr "利用可能なアプリケーションが存在しません"
 
 #: ../../AdminConsole/web/applications.php:141
 msgid "Orphan Applications"
@@ -3253,9 +3246,8 @@ msgstr "追加"
 # 95%
 # 91%
 #: ../../AdminConsole/web/applications_static.php:220
-#, fuzzy
 msgid "Web Links Configuration"
-msgstr "ウエブリンク設定"
+msgstr "ウェブリンク設定"
 
 # 95%
 #: ../../AdminConsole/web/applications_static.php:221
@@ -3369,9 +3361,8 @@ msgstr "有効化"
 #: ../../AdminConsole/web/appsgroup.php:197
 #: ../../AdminConsole/web/sharedfolders.php:103
 #: ../../AdminConsole/web/wizard.php:141
-#, fuzzy
 msgid "Failed to get User Group data"
-msgstr "ユーザーグループ一覧の取得に失敗しました。"
+msgstr "ユーザーグループ一覧の取得に失敗しました"
 
 # 93%
 # 100%
@@ -3393,7 +3384,7 @@ msgstr "このグループを削除"
 #: ../../AdminConsole/web/appsgroup.php:253
 #: ../../AdminConsole/web/usersgroup.php:492
 msgid "Update the name"
-msgstr "名称を更新"
+msgstr "名前を更新"
 
 #: ../../AdminConsole/web/appsgroup.php:262
 #: ../../AdminConsole/web/usersgroup.php:501
@@ -3431,7 +3422,7 @@ msgstr "組織"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Subscription Key Owner"
-msgstr ""
+msgstr "サブスクリプション証明書所有者"
 
 # 80%
 # 100%
@@ -3443,17 +3434,17 @@ msgstr "Email"
 # 100%
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Start Date (UTC)"
-msgstr "開始日 (UTC)"
+msgstr "開始日時 (UTC)"
 
 # 93%
 # 100%
 #: ../../AdminConsole/web/certificate.php:53
 msgid "End Date  (UTC)"
-msgstr "終了日 (UTC)"
+msgstr "終了日時  (UTC)"
 
 #: ../../AdminConsole/web/certificate.php:65
 msgid "Evaluation"
-msgstr ""
+msgstr "評価版"
 
 # 85%
 # 100%
@@ -3471,16 +3462,16 @@ msgstr "ユーザー割当"
 
 #: ../../AdminConsole/web/certificate.php:76
 msgid "Invalid Subscription Key"
-msgstr ""
+msgstr "不正なサブスクリプション証明書"
 
 #: ../../AdminConsole/web/certificate.php:79
 msgid "Subscription Key has expired"
-msgstr ""
+msgstr "サブスクリプションキーは有効期限が切れました"
 
 #: ../../AdminConsole/web/certificate.php:84
 #: ../../AdminConsole/web/certificate.php:163
 msgid "Subscription Key expired"
-msgstr ""
+msgstr "サブスクリプションキーが有効期限切れ"
 
 #: ../../AdminConsole/web/certificate.php:86
 #: ../../AdminConsole/web/certificate.php:165
@@ -3497,21 +3488,20 @@ msgstr "OK(残り%d日)"
 # 90%
 # 81%
 #: ../../AdminConsole/web/certificate.php:94
-#, fuzzy
 msgid "Are you sure you want to delete this Subscription Key?"
-msgstr "このスクリプトを削除しますか？"
+msgstr "このサブスクリプションキーを削除しますか？"
 
 #: ../../AdminConsole/web/certificate.php:98
 msgid "Delete this Subscription Key"
-msgstr ""
+msgstr "このサブスクリプションキーを削除"
 
 #: ../../AdminConsole/web/certificate.php:109
 msgid "Install a Subscription Key"
-msgstr ""
+msgstr "サブスクリプションキーをインストール"
 
 #: ../../AdminConsole/web/certificate.php:117
 msgid "Install this Subscription Key"
-msgstr ""
+msgstr "このサブスクリプションキーをインストール"
 
 #: ../../AdminConsole/web/certificate.php:134
 msgid "Reset assigned users"
@@ -3519,30 +3509,30 @@ msgstr "割当済みユーザーをリセット"
 
 #: ../../AdminConsole/web/certificate.php:153
 msgid "Subscription Key Summary"
-msgstr ""
+msgstr "サブスクリプションキーの要約"
 
 #: ../../AdminConsole/web/certificate.php:160
 msgid "No valid Subscription Keys"
-msgstr ""
+msgstr "サブスクリプションキーが無効"
 
 #: ../../AdminConsole/web/certificate.php:177
 msgid "Valid from"
-msgstr ""
+msgstr "不正なfrom"
 
 #: ../../AdminConsole/web/certificate.php:186
 msgid "Valid until"
-msgstr ""
+msgstr "不正なuntil"
 
 # 85%
 # 100%
 #: ../../AdminConsole/web/certificate.php:211
 msgid "Assigned User Limit"
-msgstr "割り当てユーザー数"
+msgstr "ユーザー制限を割当"
 
 # 75%
 #: ../../AdminConsole/web/checkup.php:42
 msgid "Unable to load checkup"
-msgstr "調査が出来ません。"
+msgstr "負荷の診断が出来ません"
 
 #: ../../AdminConsole/web/checkup.php:52
 msgid "PHP Modules"
@@ -3554,28 +3544,27 @@ msgstr "結合を解除"
 
 # 88%
 #: ../../AdminConsole/web/checkup.php:122
-#, fuzzy
 msgid "Default User Group"
-msgstr "デフォルトのユーザーグループ"
+msgstr "デフォルト・ユーザーグループ"
 
 #: ../../AdminConsole/web/checkup.php:137
 msgid "Cleanup configuration"
-msgstr "設定を解除"
+msgstr "設定を初期化"
 
 #. configuration saved
 #: ../../AdminConsole/web/configuration-partial.php:49
 #: ../../AdminConsole/web/configuration.php:56
 msgid "Configuration successfully saved"
-msgstr "設定が保存されました。"
+msgstr "設定が保存されました"
 
 #: ../../AdminConsole/web/configuration-partial.php:112
 #: ../../AdminConsole/web/configuration.php:113
 msgid "Preferences not loaded"
-msgstr "Preferences not loaded"
+msgstr "設定が読み込めませんでした"
 
 #: ../../AdminConsole/web/configuration-profile.php:160
 msgid "Saved successfully"
-msgstr "保存しました。"
+msgstr "保存しました"
 
 #: ../../AdminConsole/web/configuration-profile.php:167
 msgid "Test"
@@ -3607,29 +3596,28 @@ msgstr "FQDNチェック"
 # 83%
 # 78%
 #: ../../AdminConsole/web/configuration-sumup.php:152
-#, fuzzy, php-format
+#, php-format
 msgid "Your Premium Edition Subscription Key will expire in %d days"
-msgstr "あなたのプレミアムエディション証明書は%d日で失効します。"
+msgstr "あなたのプレミアム版サブスクリプションは%d日で失効します。"
 
 #: ../../AdminConsole/web/configuration-sumup.php:154
 msgid "Your Premium Edition Subscription Key has expired."
-msgstr ""
+msgstr "あなたのプレミアム版サブスクリプションキーは有効期限が切れました。"
 
 # 84%
 # 83%
 # 77%
 #: ../../AdminConsole/web/configuration-sumup.php:156
-#, fuzzy, php-format
+#, php-format
 msgid "Your Premium Edition Subscription Key is valid for %d days."
-msgstr "あなたのプレミアムエディション証明書は%d日間有効です。"
+msgstr "あなたのプレミアム版サブスクリプションキーは%d日間有効です。"
 
 # 78%
 # 79%
 # 76%
 #: ../../AdminConsole/web/configuration-sumup.php:159
-#, fuzzy
 msgid "You don't have any valid Premium Edition Subscription Keys."
-msgstr "あなたは有効なプレミアムエディション証明書を所有していません。"
+msgstr "あなたは有効なプレミアム版サブスクリプションキーを所有していません。"
 
 # 90%
 # 100%
@@ -3693,11 +3681,11 @@ msgstr "オフラインサーバー"
 
 #: ../../AdminConsole/web/index.php:228
 msgid "broken servers"
-msgstr "壊れたサーバー"
+msgstr "故障中のサーバー"
 
 #: ../../AdminConsole/web/index.php:230
 msgid "broken server"
-msgstr "壊れたサーバー"
+msgstr "故障中のサーバー"
 
 #: ../../AdminConsole/web/login.php:36 ../../AdminConsole/web/login.php:50
 msgid "There was an error with your authentication"
@@ -3773,7 +3761,7 @@ msgstr "内容"
 #: ../../AdminConsole/web/news.php:63
 #: ../../AdminConsole/web/session-reporting.php:254
 msgid "Date"
-msgstr "日付"
+msgstr "日時"
 
 #: ../../AdminConsole/web/news.php:76
 msgid "Are you sure you want to delete this news?"
@@ -3800,7 +3788,7 @@ msgstr "内容:"
 # 80%
 #: ../../AdminConsole/web/news.php:100
 msgid "Date:"
-msgstr "日付:"
+msgstr "日時:"
 
 #: ../../AdminConsole/web/news.php:101
 msgid "Add this news"
@@ -3897,9 +3885,8 @@ msgstr "アプリケーショングループ"
 # 93%
 #: ../../AdminConsole/web/publications.php:117
 #: ../../AdminConsole/web/summary.php:128
-#, fuzzy
 msgid "No publications"
-msgstr "配布設定がありません。"
+msgstr "配布設定がありません"
 
 # 85%
 # 100%
@@ -3927,16 +3914,16 @@ msgstr "分毎"
 
 #: ../../AdminConsole/web/reporting.php:335
 msgid "Error: \"from\" date is after \"to\" date, the dates will be reversed"
-msgstr ""
+msgstr "エラー: \"開始\" 日時が \"終了\" 日時の後であり、逆になっています"
 
 #: ../../AdminConsole/web/reporting.php:342
 #: ../../AdminConsole/web/reporting.php:780
 msgid "Error: \"to\" field is in the future, the current time will be used"
-msgstr ""
+msgstr "エラー: \"終了\" フィールドが未来の日時であるため、現在時刻が使用されます"
 
 #: ../../AdminConsole/web/reporting.php:347
 msgid "Error: \"from\" field is in the future, the current time will be used"
-msgstr ""
+msgstr "エラー: \"開始\" フィールドが未来の日時であるため、現在時刻が使用されます。"
 
 #: ../../AdminConsole/web/reporting.php:355
 #, php-format
@@ -4039,7 +4026,7 @@ msgstr "縦軸: セッション数"
 
 #: ../../AdminConsole/web/reporting.php:660
 msgid "See archived sessions in this time range"
-msgstr "この時間軸で、アーカイブセッションを参照"
+msgstr "この時間軸でアーカイブ・セッションを閲覧"
 
 #: ../../AdminConsole/web/reporting.php:700
 msgid "Ordinate: CPU usage in percent"
@@ -4056,7 +4043,7 @@ msgstr "アクティブセッション数"
 #: ../../AdminConsole/web/reporting.php:773
 msgid ""
 "Error: \"from\" date is after \"to\" date, the current time will be used"
-msgstr ""
+msgstr "エラー: \"from\" の日時が \"to\" の日時後であるため、現在時刻が使用されます"
 
 #: ../../AdminConsole/web/script.php:56
 msgid "Scripts"
@@ -4096,13 +4083,11 @@ msgstr "スクリプトを追加"
 
 # 95%
 #: ../../AdminConsole/web/script.php:121
-#, fuzzy
 msgid "Login Script management"
-msgstr "ログインスクリプトを管理"
+msgstr "ログインスクリプト管理"
 
 # 78%
 #: ../../AdminConsole/web/script.php:175 ../../AdminConsole/web/users.php:219
-#, fuzzy
 msgid "Error while requesting User Group data"
 msgstr "ユーザーグループをリクエスト中にエラー"
 
@@ -4180,9 +4165,8 @@ msgstr "このサーバーを削除しますか？"
 
 # 95%
 #: ../../AdminConsole/web/servers.php:309
-#, fuzzy
 msgid "No unregistered servers"
-msgstr "未登録のサーバは、存在しません。"
+msgstr "未登録のサーバは存在しません"
 
 #: ../../AdminConsole/web/servers.php:328
 msgid "Warning: server is offline"
@@ -4199,7 +4183,6 @@ msgstr "モニタリング"
 
 # 92%
 #: ../../AdminConsole/web/servers.php:403
-#, fuzzy
 msgid "Session usage"
 msgstr "セッション使用量"
 
@@ -4231,7 +4214,7 @@ msgstr "インターナル名(fqdn)"
 msgid ""
 "Are you sure you want to change the internal name of this server? The server "
 "will switch to a broken state if the name is not valid!"
-msgstr ""
+msgstr "このサーバーのインターナル名を変更したいですか？名前に誤りがあった場合、サーバーの状態は故障中に切り替わります!"
 
 # 93%
 #: ../../AdminConsole/web/servers.php:469
@@ -4276,7 +4259,7 @@ msgstr "ロール: %s"
 
 #: ../../AdminConsole/web/session-reporting.php:120
 msgid "Search for archived sessions :"
-msgstr "アーカイブセッションの検索:"
+msgstr "アーカイブ・セッションの検索:"
 
 #: ../../AdminConsole/web/session-reporting.php:124
 msgid "By user"
@@ -4323,13 +4306,13 @@ msgstr "詳細情報"
 #: ../../AdminConsole/web/session-reporting.php:277
 #: ../../AdminConsole/web/session-reporting.php:452
 msgid "Are you sure you want to delete this archived session?"
-msgstr "このアーカイブセッションを本当に削除しますか？"
+msgstr "このアーカイブ・セッションを本当に削除しますか？"
 
 # 91%
 # 76%
 #: ../../AdminConsole/web/session-reporting.php:299
 msgid "Are you sure you want to delete these archived sessions?"
-msgstr "これらのアーカイブセッションを削除しますか？"
+msgstr "これらのアーカイブ・セッションを削除しますか？"
 
 #: ../../AdminConsole/web/session-reporting.php:318
 #: ../../AdminConsole/web/session-reporting.php:656
@@ -4341,14 +4324,13 @@ msgstr "不明なセッション %s"
 # 100%
 #: ../../AdminConsole/web/session-reporting.php:427
 msgid "Back to archived session list"
-msgstr "アーカイブセッション一覧に戻る"
+msgstr "アーカイブ・セッション一覧に戻る"
 
 # 75%
 # 93%
 #: ../../AdminConsole/web/session-reporting.php:427
-#, fuzzy
 msgid "Archived Session"
-msgstr "アーカイブセッション"
+msgstr "アーカイブ・セッション"
 
 #: ../../AdminConsole/web/session-reporting.php:428
 msgid "Export as PDF file"
@@ -4361,7 +4343,7 @@ msgstr "ユーザー:"
 
 #: ../../AdminConsole/web/session-reporting.php:436
 msgid "Does not exist"
-msgstr ""
+msgstr "存在しません"
 
 #: ../../AdminConsole/web/session-reporting.php:439
 msgid "Mode:"
@@ -4384,7 +4366,7 @@ msgstr "停止:"
 #: ../../AdminConsole/web/session-reporting.php:830
 #: ../../AdminConsole/web/session-reporting.php:894
 msgid "No information available"
-msgstr ""
+msgstr "利用可能な情報がありません"
 
 #: ../../AdminConsole/web/session-reporting.php:474
 #: ../../AdminConsole/web/session-reporting.php:532
@@ -4394,7 +4376,7 @@ msgstr ""
 #: ../../AdminConsole/web/session-reporting.php:845
 #: ../../AdminConsole/web/session-reporting.php:874
 msgid "does not exist"
-msgstr ""
+msgstr "存在しません"
 
 #: ../../AdminConsole/web/session-reporting.php:498
 msgid "Show the dump data"
@@ -4416,7 +4398,6 @@ msgstr "非表示"
 #: ../../AdminConsole/web/session-reporting.php:515
 #: ../../AdminConsole/web/sessions.php:135
 #: ../../AdminConsole/web/users.php:411
-#, fuzzy
 msgid "Published Applications"
 msgstr "アプリケーションを配布"
 
@@ -4430,7 +4411,6 @@ msgstr "不明なアプリケーション (id: %s)"
 # 76%
 # 94%
 #: ../../AdminConsole/web/session-reporting.php:541
-#, fuzzy
 msgid "Used Applications"
 msgstr "アプリケーションを利用"
 
@@ -4439,12 +4419,13 @@ msgstr "アプリケーションを利用"
 msgid ""
 "executed on server %SERVER% during %DURATION%m (started at %STARTED_TIME%, "
 "stopped at %STOPPED_TIME%)"
-msgstr "サーバー%SERVER%は%DURATION%分間を稼働してます。(開始 %STARTED_TIME%, 停止%STOPPED_TIME%)"
+msgstr ""
+"サーバー %SERVER% は %DURATION% 分間稼働しました (開始時刻  %STARTED_TIME% , 停止時刻 %"
+"STOPPED_TIME%)"
 
 # 87%
 #: ../../AdminConsole/web/session-reporting.php:579
 #: ../../AdminConsole/web/session-reporting.php:892
-#, fuzzy
 msgid "Storage"
 msgstr "ストレージ"
 
@@ -4492,16 +4473,14 @@ msgstr "稼働中のアプリケーション"
 # 77%
 # 95%
 #: ../../AdminConsole/web/sessions.php:121
-#, fuzzy
 msgid "No running applications"
-msgstr "アプリケーションは未稼働です。"
+msgstr "アプリケーションは稼働していません"
 
 # 79%
 # 96%
 #: ../../AdminConsole/web/sessions.php:138
-#, fuzzy
 msgid "No published applications"
-msgstr "配布されたアプリケーションがありません。"
+msgstr "配布されたアプリケーションがありません"
 
 #: ../../AdminConsole/web/sessions.php:156
 #: ../../AdminConsole/web/sessions.php:161
@@ -4547,16 +4526,14 @@ msgstr "切断"
 
 # 92%
 #: ../../AdminConsole/web/sessions.php:293
-#, fuzzy
 msgid "Are you sure you want to kill the selected sessions?"
-msgstr "このセッションを切断しますか？"
+msgstr "あなたは選択したセッションを切断しますか?"
 
 # 83%
 # 93%
 #: ../../AdminConsole/web/sessions.php:300
-#, fuzzy
 msgid "Are you sure you want to disconnect the selected sessions?"
-msgstr "このセッションを切断しますか？"
+msgstr "あなたは選択したセッションを切断しますか?"
 
 #: ../../AdminConsole/web/sessions.php:314
 msgid "Number of sessions"
@@ -4564,9 +4541,8 @@ msgstr "セッション数"
 
 # 94%
 #: ../../AdminConsole/web/sessions.php:336
-#, fuzzy
 msgid "No active sessions"
-msgstr "アクティブなセッションがありません。"
+msgstr "アクティブなセッションがありません"
 
 #: ../../AdminConsole/web/sharedfolders.php:56
 msgid "Are you sure you want to delete this shared folder?"
@@ -4632,9 +4608,8 @@ msgstr "ユーザー %sのセッションをシミュレーション出来ませ
 # 94%
 #: ../../AdminConsole/web/summary.php:74 ../../AdminConsole/web/users.php:65
 #: ../../AdminConsole/web/wizard.php:174
-#, fuzzy
 msgid "No available users"
-msgstr "利用可能なユーザーが存在しません。"
+msgstr "利用可能なユーザーが存在しません"
 
 #: ../../AdminConsole/web/summary.php:81
 msgid "Folders"
@@ -4774,9 +4749,8 @@ msgstr "パッケージ名からアプリケーションをインストール"
 # 100%
 # 95%
 #: ../../AdminConsole/web/usersgroup.php:79
-#, fuzzy
 msgid "No available User Groups"
-msgstr "利用可能なユーザーグループが存在しません。"
+msgstr "利用可能なユーザーグループが存在しません"
 
 #: ../../AdminConsole/web/usersgroup.php:161
 msgid "Static"
@@ -4829,7 +4803,6 @@ msgstr "ユーザーをリクエスト中にエラー"
 # 100%
 # 95%
 #: ../../AdminConsole/web/usersgroup.php:434
-#, fuzzy
 msgid "User Group Management"
 msgstr "ユーザーグループ管理"
 
@@ -4925,9 +4898,8 @@ msgstr "この設定を追加"
 
 # 92%
 #: ../../AdminConsole/web/users.php:110
-#, fuzzy
 msgid "Are you sure you want to delete the selected users?"
-msgstr "このユーザーを削除しますか？"
+msgstr "あなたは選択したユーザーを削除しますか？"
 
 #: ../../AdminConsole/web/users.php:152 ../../AdminConsole/web/users.php:182
 msgid "Populate"
@@ -4977,9 +4949,8 @@ msgstr "アクティブなセッション"
 
 # 82%
 #: ../../AdminConsole/web/users.php:561
-#, fuzzy
 msgid "This user doesn't have a user profile"
-msgstr "このユーザーは、まだプロファイルを所有していません。"
+msgstr "このユーザーはユーザープロファイルを所有していません"
 
 #: ../../AdminConsole/web/users.php:565
 msgid "Are you sure you want to create a profile for this user?"
@@ -5001,13 +4972,12 @@ msgstr "ユーザーグループが選択されていません。"
 
 # 93%
 #: ../../AdminConsole/web/wizard.php:50
-#, fuzzy
 msgid "No User selected"
-msgstr "ユーザーが選択されていません。"
+msgstr "ユーザーが選択されていません"
 
 #: ../../AdminConsole/web/wizard.php:64 ../../AdminConsole/web/wizard.php:110
 msgid "No group name specified"
-msgstr ""
+msgstr "グループ名が指定されていません"
 
 # 93%
 # 100%
@@ -5017,29 +4987,27 @@ msgstr "アプリケーショングループが選択されていません。"
 
 # 95%
 #: ../../AdminConsole/web/wizard.php:96
-#, fuzzy
 msgid "No Application selected"
-msgstr "アプリケーションが選択されていません。"
+msgstr "アプリケーションが選択されていません"
 
 # 97%
 # 100%
 # 76%
 #: ../../AdminConsole/web/wizard.php:178
-#, fuzzy
 msgid "Unable to display the list of users: too many users"
-msgstr "ユーザー一覧を表示できません。ユーザ数が多すぎます。"
+msgstr "ユーザー一覧を表示できません: ユーザ数が多すぎます"
 
 #: ../../AdminConsole/web/wizard.php:184
 msgid "Select User Groups"
-msgstr ""
+msgstr "ユーザーグループを選択"
 
 #: ../../AdminConsole/web/wizard.php:196
 msgid "Create a new User Group"
-msgstr ""
+msgstr "新規ユーザーグループを作成"
 
 #: ../../AdminConsole/web/wizard.php:202
 msgid "Use existing User Groups"
-msgstr ""
+msgstr "既存ユーザーグループを利用"
 
 #: ../../AdminConsole/web/wizard.php:255 ../../AdminConsole/web/wizard.php:275
 #: ../../AdminConsole/web/wizard.php:296 ../../AdminConsole/web/wizard.php:335
@@ -5061,19 +5029,17 @@ msgstr "前へ"
 
 # 76%
 #: ../../AdminConsole/web/wizard.php:330
-#, fuzzy
 msgid "Select Application Groups"
-msgstr "アプリケーショングループを表示"
+msgstr "アプリケーショングループを選択"
 
 # 80%
 #: ../../AdminConsole/web/wizard.php:342
-#, fuzzy
 msgid "Create a new Application Group"
-msgstr "アプリケーショングループを作成"
+msgstr "新規アプリケーショングループを作成"
 
 #: ../../AdminConsole/web/wizard.php:346
 msgid "Use an existing Application Group"
-msgstr ""
+msgstr "既存アプリケーショングループを利用"
 
 # 77%
 # 91%
@@ -5088,7 +5054,6 @@ msgstr "確認"
 
 # 98%
 #: ../../AdminConsole/web/wizard.php:465
-#, fuzzy
 msgid "Are you sure that you want to create this Publication?"
 msgstr "この配布設定を作成しますか？"
 
