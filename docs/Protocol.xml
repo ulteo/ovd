@@ -97,14 +97,14 @@
     </para>
 
     <para>
-      Applications Servers only answer to the Session Manager whose
+      Applications Servers only respond to the Session Manager whose
       address is stored in their configuration file.
     </para>
 
     <section id="security">
       <title>Security</title>
       <para>
-	At the moment, a server is authenticated using the DNS resolution system.
+	A server is authenticated using the DNS resolution system.
       </para>
 
       <para>

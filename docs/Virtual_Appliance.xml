@@ -15,7 +15,7 @@
    <title>Introduction</title>
    <para>
     The purpose of this documentation is to describe how to use the virtual appliance which embeds
-    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, Web Portal, FileServer and Linux Application Server
+    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, Web Portal, FileServer and Linux Application Server. Note that the Virtual Appliance delivers the Community Edition of Ulteo. To upgrade to the OVD Premium Edition, refer to the information <ulink url="Premium_Edition.html">here</ulink>
   </para>
   </section>
   <section id="installation">

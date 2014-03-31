@@ -36,7 +36,7 @@ def perform_transform(content):
 		version = os.environ["OVD_VERSION"]
 	else:
 		version = file("VERSION", "r").readline().strip()
-		version += "~dev"
+#		version += "~dev"
 	transform_vars["VERSION"] = version
 	transform_vars["VERSIONNOTILD"] = version.replace("~", "-")
 	
@@ -48,7 +48,7 @@ def perform_transform(content):
 	if os.environ.has_key("GOLD_NAME"):
 		gold_name = os.environ["GOLD_NAME"]
 	else:
-		gold_name = "gold"
+		gold_name = "Premium"
 	
 	base_uri_gold = list(urlparse.urlsplit(base_uri + "/" + gold_name))
 	#base_uri_gold[1] = "LOGIN:PASSWORD@" + base_uri_gold[1]

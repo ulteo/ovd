@@ -32,16 +32,22 @@
   <section id="introduction">
    <title>Introduction</title>
    <para>
-	<emphasis>Ulteo Open Virtual Desktop 4.0</emphasis> supports the delivery of native web applications alongside Windows and Linux. The @product_name@ is intended to provide a single sign on (SSO) capability for web applications as well as the ability to integrate web applications into the OVD infrastructure.   	   
-    This documentation describes how to configure OVD to integrate Web Applications into an OVD user session. 
-       
+	<emphasis>Ulteo Open Virtual Desktop 4.0</emphasis> supports the delivery of 
+	native Web Applications alongside Windows and Linux. The @product_name@ is 
+	intended to provide a single sign on (SSO) capability for Web Applications 
+	as well as the ability to integrate Web Applications into the OVD infrastructure.   	   
+    This documentation describes how to configure OVD to integrate Web Applications 
+    into an OVD user session.        
   </para>
   </section>
   
   <section id="overview">
 	<title>Overview</title>
-   <para>The <emphasis>@product_name@</emphasis> is defined as a new role named ulteo-ovd-slaveserver-role-web. The role can be installed as an additional role on an existing server with the OVD farm or as a dedicated role on a standalone server </para>
-   
+   <para>The <emphasis>@product_name@</emphasis> is defined as a new role named
+    ulteo-ovd-slaveserver-role-web. The role can be installed as an additional 
+    role on an existing server with the OVD farm or as a dedicated role on 
+    a standalone server 
+   </para>   
    <para>
 	   <screenshot>
       <screeninfo>@product_name@</screeninfo>
@@ -53,23 +59,27 @@
 	   The <emphasis>@product_name@</emphasis> can be used in two modes:
 	    <itemizedlist>
 		<listitem>
-			path: The path mode defines the full path for a web application 
+			path: The path mode defines the full path for a Web Application 
 			such as <emphasis>http://ulteo.demo/webapps/webappname</emphasis>			
 		</listitem>
 		<listitem>
-			domain: The domain mode will use the dns configuration for a domain in order to access the web application such as <emphasis>http://webappname.ulteo.demo/</emphasis>			
+			domain: The domain mode will use the dns configuration for a domain 
+			in order to access the Web Application such as
+			 <emphasis>http://webappname.ulteo.demo/</emphasis>			
 		</listitem>
 		</itemizedlist>		
    </para>
    <para>
-	   The publication and configuration of a web application is performed on the Applications tab on the OVD Administration Console.
+	   The publication and configuration of a Web Application is performed 
+	   on the Applications tab on the OVD Administration Console.
    </para>
     
   </section>
   
   <section id="installation">
 	    <title>Installation</title>	  
-	     <para>The <emphasis>@product_name@</emphasis> can be installed on all the supported distributions </para> 
+	     <para>The <emphasis>@product_name@</emphasis> can be installed on all 
+	     the supported distributions </para> 
 	        <section>			
 			<title>Red Hat Enterprise Linux 6</title>
 			 <itemizedlist>
@@ -279,19 +289,30 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 		<title>Configuration</title>
   <section id="format">
 	  <title>Configuration file</title>
-			In order to integrate a web application, a JSON configuration file is required. More details on the JSON format can be found in Wikipedia: <ulink url="http://en.wikipedia.org/wiki/JSON"></ulink>.
-			One JSON file is required for each Web Application. Once created, the JSON config file can be uploaded using the OVD Admin Console. The configuration of the JSON file is described below.
-		 	Configuration parameters described in this section can be assigned the value of a setting that is defined in the Admin Console. This is done by using variables to contain those values. They can be used in handlers and filters on any nesting level. 
+			In order to integrate a Web Application, a JSON configuration file is 
+			required. More details on the JSON format can be found in Wikipedia: 
+			<ulink url="http://en.wikipedia.org/wiki/JSON"></ulink>.
+			One JSON file is required for each Web Application. Once created, the 
+			JSON config file can be uploaded using the OVD Admin Console. The 
+			configuration of the JSON file is described below.
+		 	Configuration parameters described in this section can be assigned the 
+		 	value of a setting that is defined in the Admin Console. This is done 
+		 	by using variables to contain those values. They can be used in handlers 
+		 	and filters on any nesting level. 
    
 	<section id="configuration_s" >
 		<title>Configuration Section</title>
 		<para>
-			 Parameters described in this section are variables which are configurable in OVD Administration Console. They can be used in handlers and filters on any nesting level. The syntax for using a variable is of the form $(VARNAME).
+			 Parameters described in this section are variables which are configurable 
+			 in OVD Administration Console. They can be used in handlers and filters 
+			 on any nesting level. The syntax for using a variable is of the 
+			 form $(VARNAME).
 		</para>
 		<para>
 			 There are five types of variable:	
 			<itemizedlist>
-				<listitem>url – text input field in Admin console (checked if it's valid)</listitem>
+				<listitem>url – text input field in Admin console (checked if 
+				it's valid)</listitem>
 				<listitem>string – text input field in Admin Console</listitem>
 				<listitem>boolean – checkbox input field in Admin Console</listitem>
 				<listitem>user_login – login of current logged in user</listitem>
@@ -299,8 +320,10 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			</itemizedlist>    
 		</para>
 		<para>
-			In the configuration section, you define variables which will be used in the handlers section
-			You have to set minimum, the type and the value. The variables will be shown on a form in the appropriate web application in the OVD Administration Console
+			In the configuration section, you define variables which will be 
+			used in the handlers section. You have to set minimum, the type 
+			and the value. The variables will be shown on a form in the 
+			appropriate Web Application in the OVD Administration Console
 		</para>
 		<para>
 				Example:
@@ -323,30 +346,38 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 				</screen>
 			</para>
 		<para>
-			Any other type used in the JSON file will be displayed in Admin Console as a read-only text input field.
+			Any other type used in the JSON file will be displayed in 
+			Administration Console as a read-only text input field.
 		</para>
 		<para>
-			The optional parameter <emphasis>title</emphasis> is used in the Admin Console as the label for the input field.
+			The optional parameter <emphasis>title</emphasis> is used in 
+			the Administration Console as the label for the input field.
 		</para>		
 	</section>
 	<section id="handlers">
 		<title>Handlers Section</title>
 		<para>
-			This section defines the handlers and the order in which the handlers should be used to handle traffic between a user’s browser and a web application.
+			This section defines the handlers and the order in which the
+			handlers should be used to handle traffic between a user’s 
+			browser and a Web Application.
 		</para>
 		<para>
-			Each handler should have a unique name (key). The parameter <emphasis>type</emphasis> is required and defines the type of handler. Optional parameter filters describes filters that should be processed during request handling.
+			Each handler should have a unique name (key). The parameter
+			<emphasis>type</emphasis> is required and defines the type of 
+			handler. Optional parameter filters describes filters that 
+			should be processed during request handling.
 		</para>
 		<section id="ServerHandler">
 			<title>ServerHandler</title>
 			<para>
-				ServerHandler - manages the basic configuration for the target web application
+				ServerHandler - manages the basic configuration for the target Web Application
 			</para>
 			<para>
 			Parameters:
 				<itemizedlist>
 					<listitem>
-						<emphasis>baseURI</emphasis> – (required) – address of the web application
+						<emphasis>baseURI</emphasis> – (required) – address of the 
+						Web Application
 					</listitem>
 					<listitem>
 						<emphasis>next_handler</emphasis> – (required) – name of the next handler
@@ -367,7 +398,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 		<section id="ClientHandler">
 			<title>ClientHandler</title>
 			<para>
-				ClientHandler opens a connection to the target web application, downloads the requested date and returns it to the user’s browser.
+				ClientHandler opens a connection to the target Web Application, downloads the requested date and returns it to the user’s browser.
 			</para>		
 			<para>
 				Example:
@@ -497,7 +528,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 				On first request, @product_name@ will open page configured in path parameter. In content of this page will find all input fields listed in form parameter and insert values. After this it will submit form that contains listed input fields.
 			</para>
 			<para>
-				If server response has 302 code and Location header matches regexp attribute or server response has 200 code and response content matches content_regexp attribute then @product_name@ will relogin (submit again data) to web application.
+				If server response has 302 code and Location header matches regexp attribute or server response has 200 code and response content matches content_regexp attribute then @product_name@ will relogin (submit again data) to the Web Application.
 			</para>
 			<para>
 				Example:
@@ -526,15 +557,22 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 						<emphasis>managed</emphasis> (optional) - (array) - array of cookie names that should be managed by @product_name@. Those cookies will not be visible in user’s browser. 
 					</listitem>
 					<listitem>
-						<emphasis>suppressed</emphasis> (optional) - (array) - array of cookie names that should be removed by @product_name@. If user’s browser will send such cookie in will be dropped and web application will not get it. If web application set such cookie is will be dropped, so user’s browser will not get it
+						<emphasis>suppressed</emphasis> (optional) - (array) - array of 
+						cookie names that should be removed by @product_name@. If the
+						user’s browser does send such a cookie it will be dropped and 
+						the Web Application will not receive it. If Web Application does 
+						set such a cookie is will be dropped, and the user’s browser
+						will not receive it
 					</listitem>
 					<listitem>
-						<emphasis>replayed</emphasis> (optional) - (array) - array of cookie names that shouldn’t be changed
+						<emphasis>replayed</emphasis> (optional) - (array) - array of 
+						cookie names that shouldn’t be changed
 					</listitem>					
 				</itemizedlist>
 			</para>
 			<para>
-				If cookie is not defined in managed, suppressed or replayed lists it will be dropped (such as it would be on suppressed list).
+				If cookie is not defined in managed, suppressed or replayed lists it
+				 will be dropped (such as it would be on suppressed list).
 			</para>			
 			<para>
 				Example:

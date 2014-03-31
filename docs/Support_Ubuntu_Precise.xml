@@ -43,15 +43,24 @@
         <para>
 			Install the previous kernel
 		<screen>
-<![CDATA[# sudo apt-get install linux-image-3.2.0-59-virtual]]>
+<![CDATA[# sudo apt-get update
+# sudo apt-get install linux-image-3.2.0-60-virtual]]>
           </screen>          
         </para>  
         </listitem>
         <listitem>  
         <para>
-		Remove the latest
+		List all kernels installed
 		  <screen>
-<![CDATA[# sudo apt-get remove linux-image-3.8.0]]>
+<![CDATA[# dpkg -l | grep linux-image ]]>
+          </screen>
+        </para> 
+        </listitem>
+        <listitem>  
+        <para>
+		Remove all kernels higher than linux-image-3.2.0.60
+		  <screen>
+<![CDATA[# sudo apt-get remove linux-image-XXX]]>
           </screen>
         </para> 
         </listitem>

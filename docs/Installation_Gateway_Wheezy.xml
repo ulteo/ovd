@@ -4,9 +4,9 @@
            [<!ENTITY parent "Installation_Gateway_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="gold_product_name" value="Gateway"/>
-  <transform_var name="distrib_pretty_name" value="Ubuntu 12.04 (Precise Pangolin)"/>
-  <transform_var name="distrib_name" value="ubuntu" />
-  <transform_var name="distrib_version" value="precise"/>
+  <transform_var name="distrib_pretty_name" value="Debian 7 (Wheezy)"/>
+  <transform_var name="distrib_name" value="debian" />
+  <transform_var name="distrib_version" value="wheezy"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
     <subtitle>Installing OVD Gateway on @distrib_pretty_name@</subtitle>
@@ -23,7 +23,25 @@
     on a @distrib_pretty_name@.
   </para>
   <xi:include href="common.xml" xpointer="gold" />
-  <xi:include href="&parent;" xpointer="prerequisites_gw" />
+  <section id="prerequisites_gw">
+    <xi:include href="&parent;" xpointer="prerequisites_gw_title" />
+
+    <para>
+      @distrib_pretty_name@ is the latest stable version of Debian. It can
+      be downloaded <ulink url="http://www.debian.org/">here</ulink>.     
+    </para>
+
+    <para id="prerequisites_root">
+      All operation have to be done as super user (root).
+    </para>
+    <para>
+		You need to have :
+    </para>
+    <xi:include href="&parent;" xpointer="prerequisites_gw_list" />
+    <xi:include href="&parent;" xpointer="prerequisites_gw_important" />
+    <xi:include href="&parent;" xpointer="system_requirements" />
+    <xi:include href="&parent;" xpointer="warning_name_examples" />
+  </section>
   <xi:include href="&parent;" xpointer="configuration_gw" />
   <xi:include href="&parent;" xpointer="installation_gw" />
   <xi:include href="&parent;" xpointer="webclient_gw" />  

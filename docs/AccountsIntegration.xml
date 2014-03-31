@@ -4,7 +4,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Accounts Integration</subtitle>
+    <subtitle>User Account Integration</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -17,7 +17,7 @@
     In order to simplify the installations steps, the default
     configuration of the Session Manager provides a static user
     list. It is also possible to manage static users from the
-    interface or to define users from an external directory database.
+    user interface or to define users from an external directory database.
   </para>
 
   <para>
@@ -40,32 +40,31 @@
     The <emphasis>Profile</emphasis> setting is made of the following parts:
     <itemizedlist>
       <listitem>
-	<para>database access (host, login ...)</para>
+	<para>Database access (host, login ...)</para>
       </listitem>
 
       <listitem>
-	<para>user management configuration</para>
+	<para>User management configuration</para>
       </listitem>
 
       <listitem>
-	<para>usergroups management configuration.</para>
+	<para>User Group management configuration.</para>
       </listitem>
     </itemizedlist>
 
     <note>
       <para>
-	Use usergroups from a remote database is an
-	option. By default, usergroups are managed by the
-	internal system.
-      </para>
+	It is possible to use User Groups stored in a remote database.
+	By default, User Groups are managed by the internal system.
+      </para> 
     </note>
   </para>
 
   <section>
-    <title>Internal accounts</title>
+    <title>Internal Accounts</title>
 
     <para>
-      The internal accounts managment is set by default.
+    Internal Account Management is the default setting.
     </para>
 
     <screenshot>
@@ -101,7 +100,7 @@
 
 
   <section>
-    <title>LDAP integration</title>
+    <title>LDAP Integration</title>
 
     <para>
       Here is a classic LDAP configuration. You have to give the LDAP
@@ -119,20 +118,20 @@
     </screenshot>
 
     <simplesect>
-      <title>User groups</title>
+      <title>User Groups</title>
 
       <para>
-	There are two ways to manage LDAP user groups:
+	There are two ways to manage LDAP User Groups:
 	<itemizedlist>
 	  <listitem>
 	    <para><emphasis role="strong">Member of:</emphasis> find
-	    user groups with the MemberOf field of users attributes</para>
+	    User Groups with the MemberOf field of users attributes</para>
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="strong">Posix group:</emphasis>
 	    group information is retrieved by listing a node which
-	    provides the list of user groups. In order to match users
-	    and user groups, the <emphasis>memberuid</emphasis> field
+	    provides the list of User Groups. In order to match Users
+	    and User Groups, the <emphasis>memberuid</emphasis> field
 	    is used.
 	    </para>
 
@@ -142,13 +141,13 @@
       </para>
 
       <screenshot>
-	<screeninfo>Session Manager - LDAP integration user groups</screeninfo>
+	<screeninfo>Session Manager - LDAP integration User Groups</screeninfo>
 	<graphic fileref="img/profile-ldap-ug.png"></graphic>
       </screenshot>
     </simplesect>
 
     <simplesect>
-      <title>Home directory</title>
+      <title>Home Directory</title>
 
       <para>
 	It's possible to configure your integration to define 
@@ -176,11 +175,11 @@
 
 
   <section>
-    <title>Active Directory integration</title>
+    <title>Active Directory Integration</title>
 
     <para>
-      The AD module derives from the LDAP one but allows an easier
-      configuration.
+      The AD module is derived from the LDAP module but is easier
+      to configure.
     </para>
 
     <screenshot>
@@ -192,7 +191,7 @@
       <para>
         If you want to specify a
 	sub <emphasis role="strong">Organization Unit</emphasis> (OU),
-	you have to get the path separated by a coma.
+	you have to provide the path separated by commas.
       </para>
       <para>
         For instance: <emphasis>Developers,web,ajax</emphasis>.
@@ -200,10 +199,10 @@
     </note>
 
     <simplesect>
-      <title>User groups</title>
+      <title>User Groups</title>
 
       <para>
-	The AD user groups integration is using the LDAP MemberOf field.
+	The AD User Group integration uses the LDAP MemberOf field.
       </para>
     </simplesect>
 

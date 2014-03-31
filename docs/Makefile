@@ -15,6 +15,11 @@ SRC=\
 	Installation_ApS_Windows.xml \
 	Installation_Gateway_Lucid.xml \
 	Installation_Gateway_Precise.xml \
+	Installation_Gateway_Wheezy.xml \
+	Installation_Gateway_Squeeze.xml \
+	Installation_Gateway_RHEL6.0.xml \
+	Installation_Gateway_SLES_11.SP1.xml \
+	Installation_Gateway_openSUSE_11.3.xml \
 	Internationalization.xml \
 	NativeClient.xml \
 	Protocol.xml \
@@ -48,6 +53,7 @@ pdf: $(PDF)
 
 # Add the depends between sources
 Installation_Gateway_Lucid.html Installation_Gateway_Lucid.pdf: common.xml
+Installation_Gateway_RHEL6.0.html Installation_Gateway_RHEL6.0.pdf: common.xml
 NativeClient.html NativeClient.pdf: common.xml
 Support_Debian_Lenny.html Support_Debian_Lenny.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
 Support_Debian_Squeeze.html Support_Debian_Squeeze.pdf: Support_Ubuntu_Lucid.xml
