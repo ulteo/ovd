@@ -786,10 +786,12 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			Logger.debug("No Certificate system found");
 		} catch (InvocationTargetException e) {
 			Logger.debug("Certificate error: " + e.getCause().getMessage());
-			throw new UnsupportedOperationException(I18n._("Unable to find a valid certificate"));
+			this.loadingFrame.setVisible(false);
+			return false;
 		} catch (Exception e) {
 			Logger.debug("Certificate system error: " + e.getClass().getName() + " " + e.getMessage());
-			throw new UnsupportedOperationException(I18n._("Unable to find a valid certificate"));
+			this.loadingFrame.setVisible(false);
+			return false;
 		}
 		
 		Properties request = new Properties(this.opts.sessionMode);
