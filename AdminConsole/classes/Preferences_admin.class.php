@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013, 2014
  * Author David LECHEVALIER <david@ulteo.com> 2014
  * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
  *
@@ -302,6 +302,7 @@ class Preferences_admin {
 			'general_user_default_group' => _('Default user group'),
 			'general_domain_integration' => _('Domain integration'),
 			'general_max_items_per_page' => _('Maximum items per page'),
+			'general_max_sessions_number' => _('Maximum number of running sessions'),
 			'general_default_browser' => _('Default browser'),
 			'general_liaison' => _('Liaisons'),
 			
@@ -354,7 +355,6 @@ class Preferences_admin {
 			'general_session_settings_defaults_session_mode' => _('Default mode for session'),
 			'general_session_settings_defaults_language' => _('Default language for session'),
 			'general_session_settings_defaults_timeout' => _('Default timeout for session'),
-			'general_session_settings_defaults_max_sessions_number' => _('Maximum number of running sessions'),
 			'general_session_settings_defaults_launch_without_apps' => _('User can launch a session even if some of his published applications are not available'),
 			'general_session_settings_defaults_allow_shell' => _('User can use a console in the session'),
 			'general_session_settings_defaults_bypass_servers_restrictions' => _('Bypass server restrictions'),
@@ -465,8 +465,9 @@ class Preferences_admin {
 		);
 		
 		$this->descriptions = array(
-			'log_flags' => _('Select debug options you want to enable.'),
-			'max_items_per_page' => _('The maximum number of items that can be displayed.'),
+			'general_log_flags' => _('Select debug options you want to enable.'),
+			'general_max_items_per_page' => _('The maximum number of items that can be displayed.'),
+			'general_max_sessions_number' => _('The maximum number of sessions that can be started on the farm (0 is unlimited).'),
 			
 			'general_sql_type' => _('The type of your database.'),
 			'general_sql_host' => _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'),
@@ -481,7 +482,6 @@ class Preferences_admin {
 			'general_remote_desktop_settings_allowed_desktop_servers' => _('An empty list means all servers can host a desktop (no restriction on desktop server choice)'),
 			'general_remote_desktop_settings_authorize_no_desktop' => _('Useful for web integration starting a maximised application as only windows into the remote screen'),
 			
-			'general_session_settings_defaults_max_sessions_number' => _('The maximum number of sessions that can be started on the farm (0 is unlimited).'),
 			'general_session_settings_defaults_bypass_servers_restrictions' => _('If there is no server available for a session according to server restrictions and this setting is enabled, the system will try to use servers without taking care of server restrictions (so it become as a priority system)'),
 			'general_session_settings_defaults_use_known_drives' => _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'),
 			'general_session_settings_defaults_redirect_client_drives' => _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"),
