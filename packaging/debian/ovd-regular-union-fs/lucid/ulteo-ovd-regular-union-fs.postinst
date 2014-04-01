@@ -1,0 +1,9 @@
+#!/bin/sh
+
+FUSECONFFILE=/etc/fuse.conf
+
+sed -ri "s/^# *(user_allow_other)/\1/" $FUSECONFFILE
+
+#DEBHELPER#
+
+exit 0

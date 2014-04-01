@@ -60,6 +60,7 @@ void log_release();
 
 void log_setProgram(const char* program);
 void log_setLevel(LogLevel level);
+LogLevel log_str2Level(char* buf);
 void log_setOutputFile(const char* filename);
 void log_enableStdOutput(bool enable);
 void log_enableDevelOutput(bool enable);

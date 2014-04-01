@@ -45,21 +45,24 @@ public class DesktopIntegrator extends Thread {
 
 	private List<RdpConnectionOvd> integratedConnections = null;
 
-	public DesktopIntegrator(SystemAbstract system_, List<RdpConnectionOvd> connections_, SessionManagerCommunication sm_) {
-		if (system_ == null || connections_ == null || sm_ == null)
+	public DesktopIntegrator(SystemAbstract system_, SessionManagerCommunication sm_) {
+		if (system_ == null || sm_ == null)
 			throw new NullPointerException("'DesktopIntegrator' does not accept a null parameter in constructor");
 		this.webAppServers = new ArrayList<WebAppsServerAccess>();
 		this.system = system_;
-		this.connections = connections_;
+		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
 
 		this.listeners = Collections.synchronizedList(new ArrayList<DesktopIntegrationListener>());
 		this.integratedConnections = Collections.synchronizedList(new ArrayList<RdpConnectionOvd>());
 	}
 	
-	public void setWebAppServers(List<WebAppsServerAccess> servers) {
-		this.webAppServers.clear();
-		this.webAppServers.addAll(servers);
+	public void addRDPServer(RdpConnectionOvd server) {
+		this.connections.add(server);
+	}
+	
+	public void addWebAppServer(WebAppsServerAccess server) {
+		this.webAppServers.add(server);
 	}
 
 	@Override
@@ -87,6 +90,7 @@ public class DesktopIntegrator extends Thread {
 					Logger.error("The webapp " + app.getName() + " shortcut could not be created");
 				}
 			}
+			this.fireShortcutGenerationIsDone(server);
 		}
 		
 		// download mimetypes icons
@@ -155,6 +159,15 @@ public class DesktopIntegrator extends Thread {
 	}
 
 	private void fireShortcutGenerationIsDone(RdpConnectionOvd co) {
+		if (co == null)
+			return;
+
+		for (DesktopIntegrationListener listener : this.listeners) {
+			listener.shortcutGenerationIsDone(co);
+		}
+	}
+
+	private void fireShortcutGenerationIsDone(WebAppsServerAccess co) {
 		if (co == null)
 			return;
 

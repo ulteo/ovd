@@ -321,6 +321,21 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 		return $SQL->DoQuery('DELETE FROM #1 WHERE @2 = %3 AND @4 = %5LIMIT 1', self::$table_publication, 'id', $sharedfolder_->id, 'group', $usergroup_->getUniqueID());
 	}
 	
+	public function get_publications() {
+		Logger::debug('main', 'SharedFolderDB::internal::get_publications');
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM #1', self::$table_publication);
+		$rows = $SQL->FetchAllResults();
+		
+		$publications = array();
+		foreach ($rows as $row) {
+			array_push($publications, array('group' => $row['group'], 'share' => $row['id'], 'mode' => $row['mode']));
+		}
+		
+		return $publications;
+	}
+	
 	public function get_usersgroups($sharedfolder_) {
 		Logger::debug('main', 'SharedFolderDB::internal::get_usersgroups('.$sharedfolder_->id.')');
 		$SQL = SQL::getInstance();

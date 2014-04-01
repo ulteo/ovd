@@ -1,10 +1,10 @@
 #! /usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2011-2013 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -36,25 +36,30 @@ def perform_transform(content):
 		version = os.environ["OVD_VERSION"]
 	else:
 		version = file("VERSION", "r").readline().strip()
-		version += "~dev"
+#		version += "~dev"
 	transform_vars["VERSION"] = version
+	transform_vars["VERSIONNOTILD"] = version.replace("~", "-")
 	
 	if os.environ.has_key("BASE_URI"):
 		base_uri = os.environ["BASE_URI"]
-		
 	else:
 		base_uri = "http://archive.ulteo.com/ovd/" + version
 	
 	if os.environ.has_key("GOLD_NAME"):
 		gold_name = os.environ["GOLD_NAME"]
 	else:
-		gold_name = "gold"
+		gold_name = "Premium"
 	
 	base_uri_gold = list(urlparse.urlsplit(base_uri + "/" + gold_name))
-	base_uri_gold[1] = "LOGIN:PASSWORD@" + base_uri_gold[1]
+	#base_uri_gold[1] = "LOGIN:PASSWORD@" + base_uri_gold[1]
 	base_uri_gold = urlparse.urlunsplit(base_uri_gold)
-	
-	transform_vars["BASE_URI"] = base_uri
+		
+	# added for private beta 4
+	base_uri = list(urlparse.urlsplit(base_uri))
+	#base_uri[1] = "LOGIN:PASSWORD@" + base_uri[1]
+	base_uri = urlparse.urlunsplit(base_uri)
+		
+	transform_vars["BASE_URI"] = base_uri 
 	transform_vars["GOLD_NAME"] = gold_name
 	transform_vars["BASE_URI_GOLD"] = base_uri_gold
 	

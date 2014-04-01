@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
@@ -7,8 +7,9 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
  * Author Samuel BOVEE <samuel@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- *
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
+ * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -40,6 +41,7 @@ import javax.swing.UIManager;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,6 +54,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JLabel;
 
 import javax.swing.JOptionPane;
@@ -76,6 +80,7 @@ import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.pcsc.PCSC;
+import net.propero.rdp.Bitmap;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
@@ -131,6 +136,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
 			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_WINDOWS);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
+			}
 		}
 		else if(OSTools.isLinux()) {
 			try {
@@ -140,6 +152,13 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			} catch (FileNotFoundException ex) {
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
+			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_UNIX);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
 			}
 		}
 
@@ -466,7 +485,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	private static final String ERROR_INTERNAL = "internal_error";
 	private static final String ERROR_INVALID_USER = "invalid_user";
 	private static final String ERROR_SERVICE_NOT_AVAILABLE = "service_not_available";
-	private static final String ERROR_UNAUTHORIZED_SESSION_MODE = "unauthorized_session_mode";
+	private static final String ERROR_UNAUTHORIZED = "unauthorized";
 	private static final String ERROR_ACTIVE_SESSION = "user_with_active_session";
 	private static final String ERROR_DEFAULT = "default";
 
@@ -475,19 +494,19 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 			if (key.equals(ERROR_AUTHENTICATION_FAILED))
 				return I18n._("Authentication failed: please double-check your password and try again");
 			else if (key.equals(ERROR_IN_MAINTENANCE))
-				return I18n._("The system is on maintenance mode, please contact your administrator for more information");
+				return I18n._("The system is in maintenance mode, please contact your administrator for more information");
 			else if (key.equals(ERROR_INTERNAL))
-				return I18n._("An internal error occured, please contact your administrator");
+				return I18n._("An internal error occurred, please contact your administrator");
 			else if (key.equals(ERROR_INVALID_USER))
 				return I18n._("You specified an invalid login, please double-check and try again");
 			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
 				return I18n._("The service is not available, please contact your administrator for more information");
-			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
-				return I18n._("You are not authorized to launch a session in this mode");
+			else if (key.equals(ERROR_UNAUTHORIZED))
+				return I18n._("You are not authorized to launch a session. Please contact your administrator for more information");
 			else if (key.equals(ERROR_ACTIVE_SESSION))
 				return I18n._("You already have an active session");
 			
-			return I18n._("An error occured, please contact your administrator");
+			return I18n._("An error occurred, please contact your administrator");
 		}
 		public static boolean has(String key) {
 			if (key.equals(ERROR_AUTHENTICATION_FAILED))
@@ -500,7 +519,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 				return true;
 			else if (key.equals(ERROR_SERVICE_NOT_AVAILABLE))
 				return true;
-			else if (key.equals(ERROR_UNAUTHORIZED_SESSION_MODE))
+			else if (key.equals(ERROR_UNAUTHORIZED))
 				return true;
 			else if (key.equals(ERROR_ACTIVE_SESSION))
 				return true;
@@ -657,7 +676,7 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame) {
 			if (this.client_actions != null)
-				this.client_actions.disconnect();
+				this.client_actions.disconnect(false);
 		}
 		else if (e.getSource() == this.authFrame.getStartButton()) {
 			this.start();
@@ -755,6 +774,26 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		dialog.addCallbackListener(this);
 
 		this.loadingFrame.updateProgression(LoadingStatus.SM_CONNECTION, 0);
+		
+		try {
+			Class<?> certificate_class = Class.forName("org.ulteo.ovd.premium.Certificate");
+			Constructor<?> certificate_constructor = certificate_class.getConstructor(SessionManagerCommunication.class);
+			Object l = certificate_constructor.newInstance(dialog);
+			Logger.debug("Certificate system successfully loaded");
+			java.lang.reflect.Method certificate_check = certificate_class.getMethod("check");
+			certificate_check.invoke(l);
+		} catch (ClassNotFoundException e) {
+			Logger.debug("No Certificate system found");
+		} catch (InvocationTargetException e) {
+			Logger.debug("Certificate error: " + e.getCause().getMessage());
+			this.loadingFrame.setVisible(false);
+			return false;
+		} catch (Exception e) {
+			Logger.debug("Certificate system error: " + e.getClass().getName() + " " + e.getMessage());
+			this.loadingFrame.setVisible(false);
+			return false;
+		}
+		
 		Properties request = new Properties(this.opts.sessionMode);
 		request.setLang(this.opts.lang);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
@@ -831,10 +870,10 @@ public class NativeClient implements ActionListener, Runnable, org.ulteo.ovd.sm.
 		this.client_actions = ((NativeClientActions)client);
 		if (! this.loadingFrame.cancelled()) {
 			Runtime.getRuntime().addShutdownHook(new ShutdownTask(client));
-			client.perform();
+			((OvdClientPerformer) client).perform();
 		}
 		else
-			this.client_actions.disconnect();
+			this.client_actions.disconnect(false);
 		
 		boolean exit = this.client_actions.haveToQuit();
 		boolean is_user_deconnection = this.client_actions.isUserDisconnection();

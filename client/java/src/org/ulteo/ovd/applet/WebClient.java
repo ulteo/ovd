@@ -6,6 +6,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,11 +40,14 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import netscape.javascript.JSObject;
-import org.w3c.dom.Document;
 
+import net.propero.rdp.Bitmap;
+import netscape.javascript.JSObject;
+
+import org.w3c.dom.Document;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.ClientInfos;
 import org.ulteo.ovd.client.OvdClient;
@@ -69,7 +73,7 @@ import org.ulteo.utils.AbstractFocusManager;
 import org.ulteo.utils.LayoutDetector;
 import org.ulteo.utils.LibraryLoader;
 import org.ulteo.utils.jni.WorkArea;
-
+import net.propero.rdp.Bitmap;
 
 public class WebClient extends Applet implements FocusListener {
 	protected boolean finished_init = false;
@@ -151,6 +155,14 @@ public class WebClient extends Applet implements FocusListener {
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
 			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_RDP_WINDOWS);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				Logger.error(ex.getMessage());
+				Bitmap.disableLibraryLoading();
+			}
+			
 		}
 		else if (OSTools.isLinux()) {
 			try {
@@ -166,6 +178,13 @@ public class WebClient extends Applet implements FocusListener {
 			} catch (FileNotFoundException ex) {
 				org.ulteo.Logger.warn(ex.getMessage());
 				PCSC.disableLibraryLoading();
+			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_RDP_UNIX);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				Bitmap.disableLibraryLoading();
+				Logger.error(ex.getMessage());
 			}
 		}
 	}

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -47,6 +48,7 @@ from Config import Config
 from SessionManagement import SessionManagement
 from Manager import Manager
 import MPQueue
+from Scripts import Scripts
 
 
 class Role(AbstractRole):
@@ -69,11 +71,13 @@ class Role(AbstractRole):
 		self.applications_id_SM = {}
 		self.applications_mutex = threading.Lock()
 		
-		self.loop = True
-		
 		self.static_apps = ApplicationsStatic(self.main_instance.smRequestManager)
 		self.static_apps_must_synced = False
 		self.static_apps_lock = threading.Lock()
+		
+		self.scripts = Scripts(self.main_instance.smRequestManager)
+		self.scripts_lock = threading.Lock()
+		self.scripts_must_synced = False
 	
 	
 	def init(self):
@@ -81,9 +85,8 @@ class Role(AbstractRole):
 		
 		try:
 			TS.getList()
-		except Exception, err:
-			Logger.error("RDP server dialog failed ... exiting")
-			Logger.debug("RDP server dialog: "+str(err))
+		except Exception:
+			Logger.exception("RDP server dialog failed ... exiting")
 			return
 		
 		if not System.groupExist(self.manager.ts_group_name):
@@ -133,17 +136,26 @@ class Role(AbstractRole):
 	
 	def switch_to_production(self):
 		self.setStaticAppsMustBeSync(True)
+		self.setScriptsMustBeSync(True)
 	
 	
-	def stop(self):
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		
+		for session in self.sessions.values():
+			self.manager.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+			self.spool_action("destroy", session.id)
+	
+	
+	def force_stop(self):
+		AbstractRole.force_stop(self)
+		
 		for thread in self.threads:
 			thread.terminate()
 		
 		for thread in self.threads:
 			thread.join()
 		
-		self.loop = False
-	
 	
 	def finalize(self):
 		Logger._instance.setThreadedMode(False)
@@ -177,6 +189,7 @@ class Role(AbstractRole):
 		Logger._instance.close()
 		for thread in self.threads:
 			thread.start()
+			thread.known_death = False
 		Logger._instance.lock.release()
 		
 		t0_update_app = time.time()
@@ -184,6 +197,12 @@ class Role(AbstractRole):
 		self.status = Role.STATUS_RUNNING
 		
 		while self.loop:
+			if self.status == Role.STATUS_ERROR:
+				break
+			
+			if self.status == Role.STATUS_STOPPING and len(self.sessions) == 0:
+				break
+			
 			while True:
 				try:
 					session = self.sessions_sync.get_nowait()
@@ -191,7 +210,8 @@ class Role(AbstractRole):
 					break
 				except (EOFError, socket.error):
 					Logger.debug("APS:: Role stopping")
-					return
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if not self.sessions.has_key(session.id):
 					Logger.warn("Session %s do not exist, session information are ignored"%(session.id))
@@ -205,15 +225,18 @@ class Role(AbstractRole):
 				else:
 					self.sessions[session.id] = session
 			
+			if self.status == Role.STATUS_ERROR:
+				break
+			
 			self.update_locked_sessions()
 			
 			for session in self.sessions.values():
 				try:
 					ts_id = TS.getSessionID(session.user.name)
-				except Exception, err:
-					Logger.error("RDP server dialog failed ... exiting")
-					Logger.debug("RDP server dialog: "+str(err))
-					return
+				except Exception:
+					Logger.exception("RDP server dialog failed ... exiting")
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if ts_id is None:
 					if session.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE]:
@@ -230,10 +253,10 @@ class Role(AbstractRole):
 				
 				try:
 					ts_status = TS.getState(ts_id)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... exiting")
-					Logger.debug("RDP server dialog: "+str(err))
-					return
+				except Exception:
+					Logger.exception("RDP server dialog failed ... exiting")
+					self.status = Role.STATUS_ERROR
+					break
 				
 				if session.status == Session.SESSION_STATUS_INITED:
 					if ts_status is TS.STATUS_LOGGED:
@@ -262,6 +285,14 @@ class Role(AbstractRole):
 				self.static_apps.synchronize()
 				self.setStaticAppsMustBeSync(False)
 			
+			if self.isScriptsMustBeSync():
+				self.scripts.synchronize()
+				self.setScriptsMustBeSync(False)
+			
+			for thread in self.threads:
+				if not thread.known_death and not thread.is_alive():
+					Logger.error("SessionManagement process (pid: %d, name: %s) is dead (return code: %d) while managed session '%s'"%(thread.pid, repr(thread.name), thread.exitcode, repr(thread.current_session_id.value)))
+					thread.known_death = True
 			
 			t1 = time.time()
 			if t1-t0_update_app > 30:
@@ -271,6 +302,7 @@ class Role(AbstractRole):
 			else:
 				time.sleep(1)
 		
+		self.force_stop()
 		self.status = Role.STATUS_STOP
 	
 	
@@ -304,7 +336,24 @@ class Role(AbstractRole):
 		finally:
 			self.static_apps_lock.release()
 	
+	def setScriptsMustBeSync(self, value):
+		try:
+			self.scripts_lock.acquire()
+			self.scripts_must_synced = (value is True)
+		except:
+			Logger.warn("Unable to lock mutex scripts")
+		finally:
+			self.scripts_lock.release()
 	
+	def isScriptsMustBeSync(self):
+		try:
+			self.scripts_lock.acquire()
+			return self.scripts_must_synced
+		except:
+			Logger.warn("Unable to lock mutex scripts")
+		finally:
+			self.scripts_lock.release()
+			
 	def canManageApplications(self):
 		return self.main_instance.ulteo_system
 	

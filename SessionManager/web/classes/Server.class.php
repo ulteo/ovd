@@ -280,7 +280,7 @@ class Server {
 	}
 
 	public function isOnline() {
-		if ($this->getAttribute('status') != 'ready') {
+		if (! in_array($this->getAttribute('status'), array('ready', 'pending'))) {
 			Logger::debug('main', 'Server::isOnline server "'.$this->fqdn.':'.$this->web_port.'" is not "ready"');
 			return false;
 		}
@@ -292,7 +292,7 @@ class Server {
 			$this->getStatus();
 		}
 
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
+		if ($this->hasAttribute('status') && (in_array($this->getAttribute('status'), array('ready', 'pending'))))
 			return true;
 
 		if ($warn === true && $this->getAttribute('locked') == 0) {
@@ -458,6 +458,11 @@ class Server {
 
 		switch ($this->getAttribute('status')) {
 			case 'pending':
+				$sessions = Abstract_Session::getByServer($this->id);
+				foreach ($sessions as $session) {
+					Logger::warning('main', 'Server \''.$this->fqdn.'\' status is now "pending", killing Session \''.$session->id.'\'');
+					$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_SERVER_DOWN);
+				}
 				break;
 			case 'down':
 				$sessions = Abstract_Session::getByServer($this->id);
@@ -634,6 +639,45 @@ class Server {
 		if ($node->getAttribute('status') != 'wait_destroy')
 			return false;
 
+		return true;
+	}
+	
+	public function orderSessionDisconnect($session_id_) {
+		Logger::debug('main', 'Starting Server::orderSessionDisconnect for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
+		
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::orderSessionDisconnect for session \''.$session_id_.'\' server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+		
+		$xml = query_url($this->getBaseURL().'/aps/session/disconnect/'.$session_id_);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::orderSessionDisconnect server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+		
+		$dom = new DomDocument('1.0', 'utf-8');
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+		
+		if (! $dom->hasChildNodes())
+			return false;
+		
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+		
+		if (! $node->hasAttribute('id'))
+			return false;
+		
+		if (! $node->hasAttribute('status'))
+			return false;
+		
+		if ($node->getAttribute('status') != 'logged')
+			return false;
+		
 		return true;
 	}
 
@@ -990,6 +1034,18 @@ class Server {
 
 		return $res;
 	}
+	
+	public function getScripts() {
+		Logger::debug('main', 'SERVER::getScripts');
+		$scripts = array();
+		$scripts_tmp = Abstract_Script::load_all();
+		foreach ($scripts_tmp as $script) {
+			if (strtolower($script->getAttribute("os")) == strtolower($this->type) && $this->isOnline()) {
+				$scripts[] = $script;
+			}
+		}
+		return $scripts;
+	}
 
 	public function updateApplications($force_server_refresh = false) {
 		Logger::debug('main', 'Server::updateApplications');
@@ -1198,6 +1254,25 @@ class Server {
 			return false;
 		}
 
+		return true;
+	}
+	
+	public function syncScripts() {
+		if (! is_array($this->roles) || ! array_key_exists(Server::SERVER_ROLE_APS, $this->roles)) {
+			Logger::critical('main', 'Server::syncScripts - Not an Aps');
+			return false;
+		}
+		
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::syncScripts server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+		
+		if (! query_url($this->getBaseURL().'/aps/scripts/sync')) {
+			Logger::error('main', 'Server::syncScripts - Unable to ask for synchronization');
+			return false;
+		}
+		
 		return true;
 	}
 	

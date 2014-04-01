@@ -64,7 +64,7 @@
   VIAddVersionKey FileVersion "${FILE_VERSION}"
   VIAddVersionKey FileDescription "Ulteo OVD Application Server service"
   VIAddVersionKey LegalCopyright "Copyright (C) ${COPYRIGHT_YEAR} Ulteo SAS"
-  VIProductVersion "${PRODUCT_VERSION}"
+  VIProductVersion "${FILE_VERSION}"
 
 ;--------------------------------
 ;Interface Settings
@@ -242,7 +242,7 @@ Section "un.pre" UnPostCmd
   UserMgr::DeleteAccount "OVDAdmin"
   
   DetailPrint "Remove PDF printer driver"
-  nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
+  nsExec::execToStack 'start /w rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
   DeleteRegKey HKLM "SOFTWARE\GPL Ghostscript\8.71"
 
   DetailPrint "Remove PATH Environment variable"

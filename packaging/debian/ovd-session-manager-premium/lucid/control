@@ -1,0 +1,15 @@
+Source: ovd-session-manager-premium
+Section: net
+Priority: optional
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: debhelper (>= 6), cdbs, po-debconf, intltool
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-session-manager-premium
+Architecture: all
+Pre-depends: debconf
+Depends:
+ ulteo-ovd-session-manager
+Description: Ulteo Open Virtual Desktop - Session Manager Premium Edition
+ This package provides the Session Manager Premium Edition web services
+ for the Ulteo Open Virtual Desktop.

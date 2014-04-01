@@ -74,6 +74,25 @@ class UsersGroup {
 		}
 	}
 	
+	public function serverGroups(){
+		Logger::debug('main', 'USERSGROUP::serversGroups (for id='.$this->getUniqueID().')');
+		$ApplicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$groups = Abstract_Liaison::load('UsersGroupServersGroup', $this->getUniqueID(), NULL);
+		if (! is_array($groups)) {
+			Logger::error('main', 'USERSGROUP::serversGroups (for id='.$this->getUniqueID().') result query is false');
+			return NULL;
+		}
+		
+		$result = array();
+		foreach ($groups as $UGAG_liaison){
+			$g = Abstract_ServersGroup::load($UGAG_liaison->group);
+			if (is_object($g))
+				$result[$UGAG_liaison->group]= $g;
+		}
+		
+		return $result;
+	}
+	
 	public function usersLogin(){
 		Logger::debug('main', 'USERSGROUP::usersLogin (for id='.$this->getUniqueID().')');
 		$logins = array();

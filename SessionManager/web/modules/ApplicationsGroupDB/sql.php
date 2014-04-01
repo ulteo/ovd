@@ -159,10 +159,6 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		return true;
 	}
 	
-	public static function liaisonType() {
-		return array(array('type' => 'UsersGroup', 'owner' => 'sql'));
-	}
-	
 	protected function generateFromRow($row_){
 		$group = new AppsGroup($row_['id'], $row_['name'], $row_['description'], (bool)$row_['published']);
 		return $group;

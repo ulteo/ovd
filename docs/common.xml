@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
+<article>
   <important id="gold">
-    <para>
-      The Ulteo OVD @gold_product_name@ is a <emphasis
-      role="strong">@GOLD_NAME@ module</emphasis>. @GOLD_NAME@ modules are
-      commercial Open-Source modules that are not available in the
-      free download section. To access executable @GOLD_NAME@ modules, you
-      need a dedicated login and password.
-    </para>
-    <para>
-      In order to get access to @GOLD_NAME@ modules, contact us at <ulink
-      url="http://www.ulteo.com/home/contact-us" />.
-    </para>
+    <para>The Ulteo OVD @gold_product_name@ is part of the <emphasis
+    role="strong">@GOLD_NAME@ Edition </emphasis>. The @GOLD_NAME@ Edition
+    contains functionality on a commercial Open-Source basis. To activate the
+    @GOLD_NAME@ Edition, you need an Ulteo OVD Premium Edition Subscription
+    Key and a dedicated login and password. To upgrade to the OVD @GOLD_NAME@
+    Edition, refer to the information <ulink
+    url="Premium_Edition.html">here</ulink></para>
   </important>
 
-    <simplesect id="system_requirements_client">
-      <title>System requirements</title>
-      <itemizedlist>
-        <listitem><para>
-          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 512MB RAM
-        </para></listitem>
-        <listitem><para>
-          Production envrionments: Ulteo recommends 1GB RAM whenever possible or more
-        </para></listitem>
-      </itemizedlist>
-    </simplesect>
+  <simplesect id="system_requirements_client">
+    <title>System requirements</title>
 
-    <simplesect id="system_requirements_server_linux_all">
-      <title>System requirements</title>
-      <itemizedlist id="system_requirements_server_linux_all_content">
-        <listitem><para>
-          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
-        </para></listitem>
-        <listitem><para>
-            Production environments: Ulteo does not recommends to use
-            this installation method for production environments
-          </para></listitem>
-      </itemizedlist>
-    </simplesect>
+    <itemizedlist>
+      <listitem>
+        <para>Evaluations/POCs: Minimum prerequisites are 1 CPU core and 512MB
+        RAM</para>
+      </listitem>
+
+      <listitem>
+        <para>Production environments: Ulteo recommends 1GB RAM whenever
+        possible or more</para>
+      </listitem>
+    </itemizedlist>
+  </simplesect>
+
+  <simplesect id="system_requirements_server_linux_all">
+    <title>System requirements</title>
+
+    <itemizedlist id="system_requirements_server_linux_all_content">
+      <listitem>
+        <para>Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB
+        RAM</para>
+      </listitem>
+
+      <listitem>
+        <para>Production environments: Please note, Ulteo does not recommend
+        using this installation method for production environments</para>
+      </listitem>
+    </itemizedlist>
+  </simplesect>
 </article>

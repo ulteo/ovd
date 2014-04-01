@@ -22,6 +22,8 @@
 #include "common/log.h"
 #include "common/memory.h"
 #include "common/str.h"
+#include "common/signal.h"
+#include <pthread.h>
 
 
 
@@ -212,9 +214,7 @@ static Share* shares_get(const char* name) {
 
 
 bool shares_activated(const char* name) {
-	int i;
 	Share* s;
-	List* l;
 	bool res = true;
 
 	if (shareList == NULL)
@@ -232,13 +232,11 @@ bool shares_activated(const char* name) {
 
 
 long long shares_getQuota(const char* name) {
-	int i;
 	Share* s;
-	List* l;
 	long long quota;
 
 	if (shareList == NULL)
-		return true;
+		return -1;
 
 	pthread_mutex_lock(&shareMutex);
 
@@ -254,9 +252,7 @@ long long shares_getQuota(const char* name) {
 
 
 long long shares_getSpaceUsed(const char* name) {
-	int i;
 	Share* s;
-	List* l;
 	long long spaceUsed;
 
 	if (shareList == NULL)
@@ -276,9 +272,7 @@ long long shares_getSpaceUsed(const char* name) {
 
 
 bool shares_quotaExceed(const char* name) {
-	int i;
 	Share* s;
-	List* l;
 	bool res;
 
 	if (shareList == NULL)
@@ -302,9 +296,7 @@ bool shares_quotaExceed(const char* name) {
 
 
 void shares_updateSpace(const char* name, long size) {
-	int i;
 	Share* s;
-	List* l;
 
 	if (shareList == NULL)
 		return;

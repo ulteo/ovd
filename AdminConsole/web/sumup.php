@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewSummary'))
 	redirect('index.php');
@@ -37,7 +37,7 @@ $searchDiv = $usersList->getForm();
 
 
 page_header();
-echo'<h2>'._('List of users').'</h2>';
+echo'<h2>'._('Users').'</h2>';
 
 echo $searchDiv;
 
@@ -77,23 +77,14 @@ else{
 			if ( count($users_grps) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $group_id => $group_name){
-					if (! array_key_exists($group_id, $users_groups_cache)) {
-						$users_groups_cache[$group_id] = $_SESSION['service']->users_group_info($group_id);
-					}
-					
-					$ugrp = $users_groups_cache[$group_id];
-					if (is_null($ugrp)) {
-						continue;
-					}
-					
 					echo '<tr>';
 					echo '<td>
-					<a href="usersgroup.php?action=manage&id='.$group_id.'">'.$ugrp->name.'</a></td>';
-					if ($ugrp->published)
-						echo '<td>('._('Yes').')</td>';
-					else
-						echo '<td>('._('No').')</td>';
+					<a href="usersgroup.php?action=manage&id='.$group_id.'">'.$group_name.'</a></td>';
 					echo '</tr>';
+				}
+				
+				if ($user_info['groups_partial_list'] === true) {
+					echo '<tr><td>...</td></tr>';
 				}
 				echo '</table>';
 			}

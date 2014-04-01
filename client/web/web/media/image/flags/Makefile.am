@@ -37,6 +37,7 @@ scripts_DATA = ad.png \
                by.png \
                bz.png \
                ca.png \
+               ca-es.png \
                cc.png \
                cd.png \
                cf.png \
@@ -75,6 +76,7 @@ scripts_DATA = ad.png \
                es.png \
                es-es.png \
                et.png \
+               eu-es.png \
                fa-ir.png \
                fam.png \
                fi.png \
@@ -217,7 +219,7 @@ scripts_DATA = ad.png \
                sq.png \
                sr.png \
                st.png \
-               sv.png \
+               sv-se.png \
                sy.png \
                sz.png \
                tc.png \

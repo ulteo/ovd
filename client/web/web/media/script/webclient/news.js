@@ -2,7 +2,7 @@ News = function(session_management, node) {
 	this.node = jQuery(node);
 	this.session_management = session_management;
 	this.news_interval = null;
-	this.tbody_node = null;
+	this.ul_node = null;
 	this.handler = jQuery.proxy(this.handleEvents, this);
 
 	/* Do NOT remove ovd.session.started in destructor as it is used as a delayed initializer */
@@ -17,16 +17,9 @@ News.prototype.handleEvents = function(type, source, params) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.session.destroying", this.handler);
 
-			/* Insert table */
-			this.tbody_node = jQuery(document.createElement("tbody"));
-			var table_node = jQuery(document.createElement("table"));
-			table_node.css({'width': '100%', 'margin-left': 'auto', 'margin-right': 'auto'});
-			table_node.prop('border', '0');
-			table_node.prop('cellspacing', '0');
-			table_node.prop('cellpadding', '0');
-			table_node.append(this.tbody_node);
-
-			this.node.append(table_node);
+			/* Insert news list */
+			this.ul_node = jQuery(document.createElement("ul"));
+			this.node.append(this.ul_node);
 
 			/* Set polling interval for news.php */
 			this._check_news();
@@ -63,35 +56,22 @@ News.prototype._parse_news = function(xml) {
 		}
 
 		var span_title_node = jQuery(document.createElement("span"));
-		span_title_node.css('font-weight', 'bold');
-		span_title_node.html('● '+title);
+		span_title_node.addClass('title');
+		span_title_node.html(title);
 
-		var a_node = jQuery(document.createElement("a"));
-		a_node.on('click', function() {
+		var span_date_node = jQuery(document.createElement("span"));
+		span_date_node.addClass('date');
+		span_date_node.html(date.toLocaleDateString());
+
+		var li_node = jQuery(document.createElement("li"));
+		li_node.on('click', function() {
 			showNews(title+" <em>("+date.toLocaleDateString()+")</em>", message);
 			showLock();
 		});
-		a_node.prop('href', 'javascript:;');
-		a_node.append(span_title_node);
+		li_node.append(span_date_node);
+		li_node.append(span_title_node);
 
-		var span_date_node = jQuery(document.createElement("span"));
-		span_date_node.css({'font-size': '1.1em', 'color': 'black'});
-		span_date_node.html('<em>'+date.toLocaleDateString()+'</em>');
-
-		var td_lien = jQuery(document.createElement("td"));
-		td_lien.css('text-align', 'left');
-		td_lien.append(a_node);
-
-		var td_date = jQuery(document.createElement("td"));
-		td_date.css('text-align', 'left');
-		td_date.append(span_date_node);
-
-		var tr_node = jQuery(document.createElement("tr"));
-		tr_node.prop("id", "news_"+id);
-		tr_node.append(td_lien);
-		tr_node.append(td_date);
-
-		self.tbody_node.append(tr_node);
+		self.ul_node.append(li_node);
 	});
 };
 

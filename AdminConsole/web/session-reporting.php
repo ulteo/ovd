@@ -1,9 +1,9 @@
 <?php
 /**
-* Copyright (C) 2010-2013 Ulteo SAS
+* Copyright (C) 2010-2014 Ulteo SAS
 * http://www.ulteo.com
 * Author Julien LANGLOIS <julien@ulteo.com> 2010, 2012, 2013
-* Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+* Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -21,8 +21,8 @@
 **/
 
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 
 if (! checkAuthorization('viewStatus'))
@@ -33,6 +33,10 @@ if (isset($_REQUEST['action'])) {
 	if ($_REQUEST['action']=='manage') {
 		if (isset($_REQUEST['id']))
 			show_manage($_REQUEST['id']);
+	}
+	if ($_REQUEST['action']=='pdf') {
+		if (isset($_REQUEST['id']))
+			show_pdf($_REQUEST['id']);
 	}
 }
 
@@ -107,7 +111,7 @@ function show_default() {
 
 
 
-	echo '<h1>'._('Sessions Reporting').'</h1>';
+	echo '<h1>'._('Session Reporting').'</h1>';
 	
 	
 	echo '<div style="margin-bottom: 15px;">';
@@ -420,14 +424,16 @@ function show_manage($id_) {
 	
 	page_header();
 
-	echo '<h1><a title="'._('Back to archived sessions list').'" href="?">'._('Archived session').'</a> - '.$session->getId().'</h1>';
+	echo '<h1><a title="'._('Back to archived session list').'" href="?">'._('Archived Session').'</a> - '.$session->getId();
+	echo ' <a href="?action=pdf&amp;id='.$session->getId().'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Export as PDF file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+	echo '</h1>';
 
 	echo '<ul>';
 	echo '<li><strong>'._('User:').'</strong> ';
 	if (is_object($user))
 		echo '<a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a>';
 	else
-		echo $session->getUser().' <span><em>'._('Not existing anymore').'</em></span>';
+		echo $session->getUser().' <span><em>'._('Does not exist').'</em></span>';
 	echo '</li>';
 	
 	echo '<li><strong>'._('Mode:').'</strong> '.$mode.'</li>';
@@ -454,7 +460,7 @@ function show_manage($id_) {
 	echo '<div>';
 	echo '<h2>'._('Servers').'</h2>';
 	if (count($servers) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($servers as $server) {
@@ -465,7 +471,7 @@ function show_manage($id_) {
 				echo $server['name'];
 				
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			
 			$infos = array();
@@ -506,9 +512,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Published applications').'</h2>';
+	echo '<h2>'._('Published Applications').'</h2>';
 	if (count($published_applications) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($published_applications as $app_id => $application) {
@@ -523,7 +529,7 @@ function show_manage($id_) {
 				else
 					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			echo '</li>';
 		}
@@ -532,9 +538,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Used applications').'</h2>';
+	echo '<h2>'._('Used Applications').'</h2>';
 	if (count($applications_instances) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($applications_instances as $instance) {
@@ -552,7 +558,7 @@ function show_manage($id_) {
 				else
 					echo '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
 				
-				echo '&nbsp;<span><em>'._('not existing anymore').'</em></span>';
+				echo '&nbsp;<span><em>'._('does not exist').'</em></span>';
 			}
 			
 			echo ' - ';
@@ -570,9 +576,9 @@ function show_manage($id_) {
 	echo '</div>';
 	
 	echo '<div>';
-	echo '<h2>'._('Storages').'</h2>';
+	echo '<h2>'._('Storage').'</h2>';
 	if (count($storages) == 0)
-		echo _('No information about it in the report');
+		echo _('No information available');
 	else {
 		echo '<ul>';
 		foreach ($storages as $storage_id => $storage) {
@@ -588,7 +594,7 @@ function show_manage($id_) {
 				continue;
 			}
 			
-			echo '<li>'._('Shared foler').' - '.$storage['name'].' <em>('.$storage['mode'].')</em> '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')</li>';
+			echo '<li>'._('Shared folder').' - '.$storage['name'].' <em>('.$storage['mode'].')</em> '._('on server: ').$storage['server_name'].' ('.$storage['server_id'].')</li>';
 		}
 		
 		echo '</ul>';
@@ -598,4 +604,315 @@ function show_manage($id_) {
 	
 	page_footer();
 	die();
+}
+
+
+function show_pdf($id_) {
+	define('K_PATH_IMAGES', dirname(__FILE__).'/media/image/');
+	define('PDF_HEADER_LOGO', 'header.png');
+ 	define('PDF_HEADER_LOGO_WIDTH', 20);
+	require_once(dirname(dirname(__FILE__)).'/includes/tcpdf/tcpdf.php');
+	
+	$html = get_html($id_);
+	
+	// create new PDF document
+	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+	// set document information
+	$pdf->SetCreator(PDF_CREATOR);
+	$pdf->SetAuthor('Ulteo OVD Administration Console '.OVD_VERSION);
+	$pdf->SetTitle('Archived session - '.$id_);
+	$pdf->SetSubject('Archived session - '.$id_);
+	$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Archived session - '.$id_, 'Ulteo OVD Administration Console '.OVD_VERSION);
+
+	// set header and footer fonts
+	$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+	$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+	// set default monospaced font
+	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+	// set margins
+	$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+	$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+	$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+	// set auto page breaks
+	$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+	// set image scale factor
+	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+	$pdf->AddPage();
+	$pdf->writeHTML($html, true, false, true, false, '');
+	$pdf->lastPage();
+	$pdf->Output('Ulteo-OVD-Archived-session-'.$id_.'.pdf', 'D');
+	die();
+}
+
+function get_html($id_) {
+	$session = $_SESSION['service']->session_report_info($id_);
+	if (! $session) {
+		popup_error(sprintf(_('Unknown session %s'), $id_));
+		return false;
+	}
+
+	$user = $_SESSION['service']->user_info($session->getUser());
+	
+	$mode = '<em>'._('unknown').'</em>';
+	$servers = array();
+	$published_applications = array();
+	$applications_instances = array();
+	$storages = array();
+	
+	$dom = new DomDocument('1.0', 'utf-8');
+	$ret = @$dom->loadXML($session->getData());
+	if ($ret) {
+		$root_node = $dom->documentElement;
+		if ($root_node->hasAttribute('mode'))
+			$mode = $root_node->getAttribute('mode');
+		
+		foreach ($dom->getElementsByTagName('server') as $node) {
+			if (! ($node->hasAttribute('id') &&
+				$node->hasAttribute('role')
+				)) {
+				// Not enough information to continue ...
+				continue;
+			}
+			
+			$server = array();
+			$server['id'] = $node->getAttribute('id');
+			if ($node->hasAttribute('fqdn')) {
+				$server['fqdn'] = $node->getAttribute('fqdn');
+				$server['name'] = $server['fqdn'];
+			}
+			else
+				$server['name'] = $server['id'];
+			$server['role'] = $node->getAttribute('role');
+			$server['desktop_server'] = ($node->hasAttribute('desktop_server'));
+			if ($node->hasAttribute('type'))
+				$server['type'] = $node->getAttribute('type');
+			
+			$server['dump'] = array();
+			foreach($node->childNodes as $child_node) {
+				if ($child_node->nodeName != 'dump')
+					continue;
+				
+				if (! $child_node->hasAttribute('name'))
+					continue;
+				
+				$name = $child_node->getAttribute('name');
+				$server['dump'][$name] = base64_decode ($child_node->textContent);
+			}
+			
+			$server_obj = $_SESSION['service']->server_info($server['id']);
+			if (is_object($server_obj))
+				$server['obj'] = $server_obj;
+			
+			$servers[]= $server; // can be the same server twice with different role ... ToDO: fix that on backend side
+		}
+		
+		foreach ($dom->getElementsByTagName('storage') as $node) {
+			$s = nodeattrs2array($node);
+			$storages[$s['rid']] = $s;
+		}
+		
+		foreach ($dom->getElementsByTagName('application') as $node) {
+			if (! $node->hasAttribute('id')) {
+				// Not enough information to continue ...
+				continue;
+			}
+			
+			$application = array('id' => $node->getAttribute('id'));
+			if ($node->hasAttribute('name'))
+				$application['name'] = $node->getAttribute('name');
+			
+			$app_buf = $_SESSION['service']->application_info($application['id']);
+			
+			if (is_object($app_buf))
+				$application['obj'] = $app_buf;
+			
+			$published_applications[$application['id']]= $application;
+		}
+		
+		foreach ($dom->getElementsByTagName('instance') as $node) {
+			if (! ($node->hasAttribute('id') &&
+				$node->hasAttribute('application') &&
+				$node->hasAttribute('server') &&
+				$node->hasAttribute('start') &&
+				$node->hasAttribute('stop')
+				)) {
+				// Not enough information to continue ...
+				continue;
+			}
+			
+			$instance = array('id' => $node->getAttribute('id'));
+			$instance['application'] = $node->getAttribute('application');
+			$instance['server'] = $node->getAttribute('server');
+			$instance['start'] = $node->getAttribute('start');
+			$instance['stop'] = $node->getAttribute('stop');
+			
+			if (! array_key_exists($instance['application'], $published_applications))
+				continue;
+			
+			$applications_instances[]= $instance;
+		}
+	}
+	
+	
+	$ret = '';
+	$ret.= '<ul>';
+	$ret.= '<li><strong>User:</strong> ';
+	if (is_object($user))
+		$ret.= ''.$user->getAttribute('displayname').' (login: '.$user->getAttribute('login').')';
+	else
+		$ret.= $session->getUser().' <span><em>'._('does not exist').'</em></span>';
+	$ret.= '</li>';
+	
+	$ret.= '<li><strong>Mode:</strong> '.$mode.'</li>';
+	
+	$ret.= '<li><strong>Started:</strong> ';
+	$ret.= $session->getStartTime();
+	$ret.= '</li>';
+	$ret.= '<li><strong>Stopped:</strong> ';
+	$ret.= $session->getStopTime();
+	if (! is_null($session->getStopWhy()) && strlen($session->getStopWhy())>0)
+		$ret.= ' <em>('.$session->getStopWhy().')</em>';
+	$ret.= '</li>';
+	$ret.= '</ul>';
+	
+	$ret.= '<div>';
+	$ret.= '<h2>Servers</h2>';
+	if (count($servers) == 0)
+		$ret.= 'No information available';
+	else {
+		$ret.= '<ul>';
+		foreach ($servers as $server) {
+			$ret.= '<li>';
+			if (array_key_exists('obj', $server))
+				$ret.= $server['obj']->getDisplayName().' (id: '.$server['obj']->id.')';
+			else {
+				$ret.= $server['name'];
+				$ret.= ' <span><em>'._('does not exist').'</em></span>';
+			}
+			
+			$infos = array();
+			$infos[]= 'role: '.$server['role'];
+			
+			if ($mode == Session::MODE_DESKTOP && $server['desktop_server'])
+				$infos[]= 'desktop server';
+			
+			if (array_key_exists('type', $server))
+				$infos[]= '(OS: '.$server['type'].')';
+			
+			$ret.= ' '.implode(', ', $infos);
+			if (count($server['dump']) > 0) {
+				$ret.= '<div style="margin-left: 20px;">';
+				$ret.= '<ul>';
+				foreach ($server['dump'] as $name => $dump) {
+					$ret.= '<li>'.$name.'&nbsp;';
+					$ret.= '<pre style="margin-left: 20px; font-size: small;">'.$dump.'</pre>';
+					$ret.= '</li>';
+				}
+				$ret.= '</ul>';
+				$ret.= '</div>';
+			}
+			
+			$ret.= '</li>';
+		}
+		$ret.= '</ul>';
+	}
+	$ret.= '</div>';
+	
+	$ret.= '<div>';
+	$ret.= '<h2>Published applications</h2>';
+	if (count($published_applications) == 0)
+		$ret.= _('No information available');
+	else {
+		$ret.= '<ul>';
+		foreach ($published_applications as $app_id => $application) {
+			$ret.= '<li>';
+			if (isset($application['obj'])) {
+// 				$ret.= '<img class="icon32" src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
+				$ret.= $application['obj']->getAttribute('name').' (id: '.$application['obj']->getAttribute('id').')';
+			}
+			else {
+				if (array_key_exists('name', $application))
+					$ret.= '<span>'.$application['name'].'</span>';
+				else
+					$ret.= '<span>'.sprintf('Unknown application (id: %s)', $application['id']).'</span>';
+				
+				$ret.= '&nbsp;<span><em>'._('does not exist').'</em></span>';
+			}
+			$ret.= '</li>';
+		}
+		$ret.= '</ul>';
+	}
+	$ret.= '</div>';
+	
+	$ret.= '<div>';
+	$ret.= '<h2>Used applications</h2>';
+	if (count($applications_instances) == 0)
+		$ret.= 'No information available';
+	else {
+		$ret.= '<ul>';
+		foreach ($applications_instances as $instance) {
+			$application = $published_applications[$instance['application']];
+			
+			$ret.= '<li>';
+			
+			if (array_key_exists('obj', $application)) {
+// 				$ret.= '<img class="icon32" src="media/image/cache.php?id='.$application['obj']->getAttribute('id').'" alt="" title="" /> ';
+				$ret.= '<a href="applications.php?action=manage&id='.$application['obj']->getAttribute('id').'">'.$application['obj']->getAttribute('name').'</a>';
+			}
+			else {
+				if (array_key_exists('name', $application))
+					$ret.= '<span>'.$application['name'].'</span>';
+				else
+					$ret.= '<span>'.sprintf(_('Unknown application (id: %s)'), $application['id']).'</span>';
+				
+				$ret.= '&nbsp;<span><em>'._('does not exist').'</em></span>';
+			}
+			
+			$ret.= ' - ';
+			$duration = sprintf('%0.2f', (($instance['stop']-$instance['start'])/60));
+			$ret.= str_replace(array('%SERVER%', '%DURATION%', '%STARTED_TIME%', '%STOPPED_TIME%'), 
+				  array($instance['server'], $duration, strftime('%T', $instance['start']), strftime('%T', $instance['stop'])),
+				  _('executed on server %SERVER% during %DURATION%m (started at %STARTED_TIME%, stopped at %STOPPED_TIME%)'));
+			
+			$ret.= '</li>';
+		}
+		
+		$ret.= '</ul>';
+	}
+	
+	$ret.= '</div>';
+	
+	$ret.= '<div>';
+	$ret.= '<h2>'._('Storage').'</h2>';
+	if (count($storages) == 0)
+		$ret.= _('No information available');
+	else {
+		$ret.= '<ul>';
+		foreach ($storages as $storage_id => $storage) {
+			if ($storage['type'] != 'profile') {
+				continue;
+			}
+				
+			$ret.= '<li>User profile on server: '.$storage['server_name'].' ('.$storage['server_id'].')'.'</li>';
+		}
+			
+		foreach ($storages as $storage_id => $storage) {
+			if ($storage['type'] == 'profile') {
+				continue;
+			}
+			
+			$ret.= '<li>Shared foler - '.$storage['name'].' <em>('.$storage['mode'].')</em> on server: '.$storage['server_name'].' ('.$storage['server_id'].')</li>';
+		}
+		
+		$ret.= '</ul>';
+	}
+	
+	$ret.= '</div>';
+	return $ret;
 }

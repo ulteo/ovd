@@ -48,6 +48,11 @@ uovd.Session.prototype.parseSession = function(xml) {
 			var old_status = this.status;
 			this.status = xml.attr("status");
 
+			var time_restriction = xml.attr("time_restriction");
+			if (time_restriction != undefined) {
+				this.session_management.fireEvent("ovd.session.timeRestriction", this, {"when":time_restriction});
+			}
+			
 			if(old_status != this.status) {
 				this.session_management.fireEvent("ovd.session.statusChanged", this, {"from":old_status,"to":this.status});
 			}
@@ -68,9 +73,12 @@ uovd.Session.prototype.parseSession = function(xml) {
 				self.servers.push(new uovd.server.Rdp(self, jQuery(this)));
 			});
 
-			xml.find("webapp-server").each( function() {
-				self.servers.push(new uovd.server.WebApps(self, jQuery(this)));
-			});
+			/* Do not handle webapps servers on desktop mode */
+			if(this.mode == uovd.SESSION_MODE_APPLICATIONS) {
+				xml.find("webapp-server").each( function() {
+					self.servers.push(new uovd.server.WebApps(self, jQuery(this)));
+				});
+			}
 		}
 	} catch(error) {
 		this.session_management.fireEvent("ovd.session.error", this, {"code":"bad_xml", "from":"start"});
@@ -121,6 +129,7 @@ uovd.Session.prototype.started = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_STARTED ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYING ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYED ) { return ; }
+	this.starting();
 	this.phase = uovd.SESSION_PHASE_STARTED;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
@@ -128,12 +137,14 @@ uovd.Session.prototype.started = function(from) {
 uovd.Session.prototype.destroying = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_DESTROYING ||
 	   this.phase == uovd.SESSION_PHASE_DESTROYED ) { return ; }
+	this.started();
 	this.phase = uovd.SESSION_PHASE_DESTROYING;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }
 
 uovd.Session.prototype.destroyed = function(from) {
 	if(this.phase == uovd.SESSION_PHASE_DESTROYED) { return ; }
+	this.destroying();
 	this.phase = uovd.SESSION_PHASE_DESTROYED;
 	this.session_management.fireEvent("ovd.session."+this.phase, this, {"from":from});
 }

@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2014
 # Author David LECHEVALIER <david@ulteo.com> 2011-2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -29,6 +30,7 @@ from Platform.Session import Session
 from Platform.TS import TS
 
 from multiprocessing import Process
+import multiprocessing
 import Queue
 import signal
 
@@ -46,9 +48,30 @@ class SessionManagement(Process):
 		self.synchronizer = SingletonSynchronizer()
 		self.synchronizer.backup()
 		self.looping = True
+		
+		self.current_session_id = multiprocessing.Array("c", 30)
 	
 	
 	def run(self):
+		try:
+			self.main()
+		except Exception, err:
+			from ovd.Config import Config
+			import os
+			import time
+			import traceback
+			try:
+				f = open("%s-crash-%d.txt"%(Config.log_file, os.getpid()), "a")
+				f.write("%s - Unhandled exception: \n"%(time.asctime()))
+				f.write(traceback.format_exc())
+				f.close()
+			except IOError, err:
+				pass
+			
+			raise err # Should we raise or continue at this point ??
+	
+	
+	def main(self):
 		self.synchronizer.restore()
 		Logger._instance.setQueue(self.logging_queue, False)
 		
@@ -60,6 +83,7 @@ class SessionManagement(Process):
 		
 		Logger.debug("Starting SessionManager process")
 		while True:
+			self.current_session_id.value = ""
 			try:
 				(request, obj) = self.queue2.get_nowait()
 			except Queue.Empty:
@@ -75,24 +99,34 @@ class SessionManagement(Process):
 			
 			if request == "create":
 				session = obj
+				self.current_session_id.value = session.id
 				
 				Logger.registerHook(session.log)
 				self.create_session(session)
 				Logger.unregisterHook(session.log)
 				session.locked = False
+				Logger.info("Before put session %s in spool"%(session.id))
 				self.queue_sync.put(session)
+				Logger.info("After put session %s in spool"%(session.id))
 			elif request == "destroy":
 				session = obj
+				self.current_session_id.value = session.id
 				Logger.registerHook(session.log)
 				self.destroy_session(session)
 				session.locked = False
 				Logger.unregisterHook(session.log)
+				self.queue_sync.put(session)
+			elif request == "disconnect":
+				session = obj
+				self.disconnect_session(session)
+				session.locked = False
 				self.queue_sync.put(session)
 			elif request == "logoff":
 				session = obj
 				self.destroy_user(session.user)
 			elif request == "manage_new":
 				session = obj
+				self.current_session_id.value = session.id
 				Logger.registerHook(session.log)
 				self.manage_new_session(session)
 				session.locked = False
@@ -136,8 +170,8 @@ class SessionManagement(Process):
 			
 			try:
 				rr = session.install_client()
-			except Exception,err:
-				Logger.debug("Unable to initialize session %s: %s"%(session.id, str(err)))
+			except Exception:
+				Logger.exception("Unable to initialize session %s"%session.id)
 				rr = False
 			
 			if rr is False:
@@ -166,9 +200,8 @@ class SessionManagement(Process):
 			
 			try:
 				sessid = TS.getSessionID(session.user.name)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return
 			
 			if sessid is not None:
@@ -185,6 +218,36 @@ class SessionManagement(Process):
 		session.switch_status(Session.SESSION_STATUS_DESTROYED)
 	
 	
+	def disconnect_session(self, session):
+		Logger.info("SessionManagement::disconnect %s"%(session.id))
+		
+		if session.user.created or not session.domain.manage_user():
+			# Doesn't have to disconnect the session if the user was never created
+			
+			try:
+				sessid = TS.getSessionID(session.user.name)
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
+				return False
+			
+			try:
+				status = TS.getState(sessid)
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
+				return
+			
+			if status in [TS.STATUS_LOGGED]:
+				Logger.info("must disconnect ts session %s user %s"%(sessid, session.user.name))
+				
+				try:
+					TS.disconnect(sessid)
+				except Exception:
+					Logger.exception("RDP server dialog failed ... ")
+					return
+		
+		session.switch_status(Session.SESSION_STATUS_INACTIVE)
+	
+	
 	def logoff_user(self, user):
 		Logger.info("SessionManagement::logoff_user %s"%(user.name))
 		
@@ -193,9 +256,8 @@ class SessionManagement(Process):
 			
 			try:
 				status = TS.getState(sessid)
-			except Exception,err:
-				Logger.error("RDP server dialog failed ... ")
-				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+			except Exception:
+				Logger.exception("RDP server dialog failed ... ")
 				return
 			
 			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
@@ -203,9 +265,8 @@ class SessionManagement(Process):
 				
 				try:
 					TS.logoff(sessid)
-				except Exception,err:
-					Logger.error("RDP server dialog failed ... ")
-					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+				except Exception:
+					Logger.exception("RDP server dialog failed ... ")
 					return
 				
 				del(user.infos["tsid"])

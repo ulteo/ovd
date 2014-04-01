@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -156,6 +156,11 @@ class SQL {
 		return true;
 	}
 
+	public function TableExists($table_) {
+		$this->DoQuery('SHOW TABLES LIKE %1', $this->prefix.$table_);
+		return $this->NumRows() == 1;
+	}
+
 	public function FetchResult() {
 		$this->CheckLink();
 
@@ -174,6 +179,20 @@ class SQL {
 		$res = array();
 
 		while ($r = @mysqli_fetch_assoc($this->result))
+			$res[] = $r;
+
+		return $res;
+	}
+
+	public function FetchArrayAll() {
+		$this->CheckLink();
+
+		if (! $this->result)
+			return false;
+
+		$res = array();
+
+		while ($r = @mysql_fetch_array($this->result))
 			$res[] = $r;
 
 		return $res;
@@ -204,7 +223,7 @@ class SQL {
 		return $this->total_queries;
 	}
 	
-	public function buildTable($name_, $table_structure_, $primary_keys_, $indexes_ = array()) {
+	public function buildTable($name_, $table_structure_, $primary_keys_, $indexes_ = array(), $engine_=null) {
 		$this->CheckLink();
 		
 		// the table exists ?
@@ -242,7 +261,12 @@ class SQL {
 				
 				$query .= ' , '.$name.' (`'.implode('`, `', $index).'`)';
 			}
-			$query .= ') DEFAULT CHARSET=utf8;';
+			$query .= ')';
+			if (! is_null($engine_)) {
+				$query .= ' ENGINE='.$engine_;
+			}
+			
+			$query .= ' DEFAULT CHARSET=utf8;';
 			$ret = $this->DoQuery($query, $name_);
 			return $ret;
 			
@@ -355,5 +379,15 @@ class SQL {
 
 	public function Quote($string_) {
 		return '"'.$this->CleanValue($string_).'"';
+	}
+
+	public function QuoteField($field_) {
+		if (! is_string($field_)) {
+			return $field_;
+		}
+		
+		$this->CheckLink();
+		
+		return '`'.mysqli_real_escape_string($this->link, $field_).'`';
 	}
 }

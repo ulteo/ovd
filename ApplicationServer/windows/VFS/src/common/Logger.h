@@ -5,6 +5,7 @@
 #define _Logger_H
 
 #include <string>
+#include <common/fs/File.h>
 #include <common/UException.h>
 
 #define MAX_DBG_MSG_LEN (4096)
@@ -29,6 +30,7 @@ public:
 
 	// NOTE: not working
 	void debug(const wchar_t * format,...);
+	void idebug(const wchar_t * msg);
 	
 	// output log to log file
 	void log(Level lvl, wchar_t *fmt,...);

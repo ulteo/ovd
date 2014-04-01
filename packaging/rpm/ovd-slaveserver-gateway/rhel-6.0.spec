@@ -46,9 +46,9 @@ Ulteo Open Virtual Desktop gateway role for daemon server
 Summary: Ulteo Open Virtual Desktop - gateway role for slave server
 Group: Applications/System
 %if %{defined rhel}
-Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL
+Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL, m2crypto
 %else
-Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl
+Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-m2crypto
 %endif
 
 
@@ -97,7 +97,7 @@ fi
 
 %files -n ulteo-ovd-slaveserver-role-gateway
 %defattr(-,root,root)
-%{python_sitelib}/ovd/Role/Gateway/*.py*
+%{python_sitelib}/ovd/Role/Gateway/*
 %{python_sitelib}/ovd_slaveserver_gateway-*.egg-info
 
 

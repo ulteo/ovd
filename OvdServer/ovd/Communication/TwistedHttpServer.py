@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -59,9 +60,8 @@ class TwistedHttpServer(AbstractCommunication):
 	def run(self):
 		try:
 			reactor.listenTCP(self.tcp_port, self.site)
-		except BindError, exc:
-			Logger.error("Unable to bind port %d, system is going to stop"%(self.tcp_port))
-			Logger.debug("Unable to bind port %d: "%(self.tcp_port)+str(exc))
+		except BindError:
+			Logger.exception("Unable to bind port %d, system is going to stop"%self.tcp_port)
 			self.status = AbstractCommunication.STATUS_ERROR
 			return
 		

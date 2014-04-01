@@ -184,7 +184,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	Regexp* reg;
 	Union* u;
 	int i = 0;
-	int a = 0;
 	int r = 0;
 
 	transformPathIn(path, trpath);
@@ -192,7 +191,6 @@ static bool transformPath(const char* path, char* to, bool isSymlink) {
 	// Firstly, check if it already exist somewhere
 	for(i = 0 ; i < config->unions->size ; i++) {
 		u = (Union*)list_get(config->unions, i);
-		List* reject;
 
 		if (!u) {
 			continue;
@@ -272,6 +270,9 @@ static int rufs_getattr(const char *path, struct stat *stbuf)
 	if (res == -1)
 		return -errno;
 
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
+
 	return 0;
 }
 
@@ -285,6 +286,9 @@ static int rufs_fgetattr(const char *path, struct stat *stbuf,
 	res = fstat(fi->fh, stbuf);
 	if (res == -1)
 		return -errno;
+
+	if (config->permission_mask)
+		stbuf->st_mode &= config->permission_mask;
 
 	return 0;
 }
@@ -328,7 +332,6 @@ static int rufs_readlink(const char *path, char *buf, size_t size)
 
 static int rufs_opendir(const char *path, struct fuse_file_info *fi)
 {
-	int res;
 	char trpath[PATH_MAX];
 
 	if (! authorized(path))
@@ -379,6 +382,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 				memset(&st, 0, sizeof(st));
 				st.st_ino = de->d_ino;
 				st.st_mode = de->d_type << 12;
+
+				if (config->permission_mask)
+					st.st_mode &= config->permission_mask;
+
 				transformPathOut(de->d_name, trpath);
 
 				if (list_containString(rootContents, trpath))
@@ -401,6 +408,10 @@ static int rufs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		memset(&st, 0, sizeof(st));
 		st.st_ino = de->d_ino;
 		st.st_mode = de->d_type << 12;
+
+		if (config->permission_mask)
+			st.st_mode &= config->permission_mask;
+
 		if (filler(buf, de->d_name, &st, telldir(dp)))
 			break;
 	}
@@ -454,6 +465,9 @@ static int rufs_mkdir(const char *path, mode_t mode)
 	{
 		return -ENOENT;
 	}
+
+	if (config->umask)
+		mode = 0777 & ~config->umask;
 
 	res = mkdir(trpath, mode);
 	if (res == -1)
@@ -599,6 +613,15 @@ static int rufs_chmod(const char *path, mode_t mode)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+	{
+		// if the umask is forced, we do not want to override it
+		if (fs_isdir(trpath))
+			mode |= (0777 & ~config->umask);
+		else
+			mode |= (0666 & ~config->umask);
+	}
+
 	res = chmod(trpath, mode);
 	if (res == -1)
 		return -errno;
@@ -722,6 +745,8 @@ static int rufs_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 		return -ENOENT;
 	}
 
+	if (config->umask)
+		mode = 0666 & ~config->umask;
 
 	fd = open(trpath, fi->flags, mode);
 	if (fd == -1)
@@ -756,7 +781,6 @@ static int rufs_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
 {
 	int res;
-	char trpath[PATH_MAX];
 
 	if (! authorized(path))
 		return -EPERM;
@@ -818,7 +842,7 @@ static int rufs_statfs(const char *path, struct statvfs *stbuf)
 
 	res = statvfs(trpath, stbuf);
 
-	if (quota != -1) {
+	if (quota > 0) {
 		long block = quota/stbuf->f_frsize;
 		long blockUsed = spaceUsed/stbuf->f_frsize;
 		long blockAvailable = block - blockUsed;
@@ -986,16 +1010,6 @@ static int rufs_removexattr(const char *path, const char *name)
 }
 #endif /* HAVE_SETXATTR */
 
-static int rufs_lock(const char *path, struct fuse_file_info *fi, int cmd,
-		    struct flock *lock)
-{
-	if (! authorized(path))
-		return -EPERM;
-
-	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
-			   sizeof(fi->lock_owner));
-}
-
 
 static struct fuse_operations rufs_oper = {
 	.getattr	= rufs_getattr,
@@ -1032,7 +1046,6 @@ static struct fuse_operations rufs_oper = {
 	.listxattr	= rufs_listxattr,
 	.removexattr	= rufs_removexattr,
 #endif
-	.lock		= rufs_lock,
 };
 
 
@@ -1125,7 +1138,6 @@ bool processRsync(Configuration* conf, bool start) {
 
 bool processDeleteOnEnd(Configuration* conf) {
 	int i = 0;
-	RSync* rsync;
 
 	if (conf == NULL) {
 		logWarn("Configuration is NULL");
@@ -1198,6 +1210,9 @@ int fuse_start(int argc, char** argv) {
 		logError("Failed to parse configuration file");
 		sys_exit(CONF_ERROR);
 	}
+
+	if (config->umask)
+		umask(config->umask);
 
 	if (config == NULL) {
 		logError("There is no valid configuration, exiting");

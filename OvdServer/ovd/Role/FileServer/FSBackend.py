@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -47,8 +48,8 @@ class FSBackend:
 					return False
 				
 				self.pid = int(pidStr)
-			except Exception, e:
-				Logger.error("Failed to get FSBackend pid: %s"%(str(e)))
+			except Exception:
+				Logger.exception("Failed to get FSBackend pid")
 				return False
 		
 		try:
@@ -94,8 +95,8 @@ class FSBackend:
 			return True
 			
 			
-		except Exception, e:
-			Logger.error("Failed to add entry for the share '%s': %s"%(share, str(e)))
+		except Exception:
+			Logger.exception("Failed to add entry for the share '%s'"%share)
 			return False
 		
 	
@@ -113,14 +114,13 @@ class FSBackend:
 				os.makedirs(path)
 			except OSError, err:
 				if err[0] is not errno.EEXIST:
-					Logger.error("Failed to create spool directory: %s %s"%(path, str(err)))
+					Logger.exception("Failed to create spool directory: %s"%path)
 					return False
 			
 			try:
 				os.lchown(path, Config.uid, Config.gid)
-			except OSError, err:
-				Logger.warn("Unable to change file owner for '%s'"%(path))
-                                Logger.debug("lchown returned %s"%(err))
+			except OSError:
+				Logger.exception("Unable to change file owner for '%s'"%path)
 				return False
 
 			if not os.path.exists(path):
@@ -144,23 +144,62 @@ class FSBackend:
 		
 		cmd = "umount \"%s\""%(self.path["spool"])
 		Logger.debug("FSBackend release command '%s'"%(cmd))
-		for _ in xrange(30):
-			if not os.path.ismount(self.path["spool"]):
-				return True
+		if not os.path.ismount(self.path["spool"]):
+			return True
 			
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.debug("FSBackend is busy, waiting")
-				time.sleep(2)
-			else:
-				return True
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.debug("FSBackend is busy")
+			return False
 		
-		Logger.error("Failed to release FSBackend (status: %d) %s"%(p.returncode, p.stdout.read()))
-		cmd = "umount -l \"%s\""%(self.path["spool"])
-		Logger.debug("FSBackend failedback release command '%s'"%(cmd))
+		return True
+	
+	
+	def get_lsof(self, path):
+		cmd = "lsof -t \"%s\""%(path)
+		
+		p = System.execute(cmd)
+		if p.returncode != 0:
+			Logger.warn("Failed to get the list of processus blocked on a share")
+			return None
+		
+		res = p.stdout.read().decode("UTF-8")
+		return res.split()
+		
+		
+	def force_stop(self):
+		if (len(self.path) == 0) or not os.path.ismount(self.path["spool"]):
+			Logger.warn("FSBackend is already stopped")
+			return True
+		
+		cmd = "umount \"%s\""%(self.path["spool"])
+		if not os.path.ismount(self.path["spool"]):
+			return True
+			
 		p = System.execute(cmd)
 		if p.returncode == 0:
 			return True
 		
-		Logger.error("Unable to stop FSBackend")
+		pids = self.get_lsof(self.path["spool"])
+		
+		for pid in pids:
+			try:
+				pid = int(pid)
+				os.kill(pid, signal.SIGTERM)
+				time.sleep(0.5)
+				os.kill(pid, signal.SIGKILL)
+			except Exception, e:
+				if e.errno != errno.ESRCH:
+					Logger.exception("Failed to kill processus %s"%pid)
+		
+		if not os.path.ismount(self.path["spool"]):
+			return True
+		
+		Logger.error("FSBackend force the unmount of %s"%(self.path["spool"]))
+		cmd = "umount -l \"%s\""%(self.path["spool"])
+		p = System.execute(cmd)
+		if p.returncode == 0:
+			return True
+		
+		Logger.error("Unable to stop FSBackend %s"%(p.stdout.read().decode("UTF-8")))
 		return False

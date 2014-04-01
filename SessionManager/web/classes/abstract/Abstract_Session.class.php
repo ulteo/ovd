@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,6 +39,8 @@ class Abstract_Session {
 
 		$sessions_table_structure = array(
 			'id'				=>	'varchar(255)',
+			'client_id'			=>	'varchar(255)',
+			'need_creation'			=>	'int(1)',
 			'server'			=>	'varchar(255)',
 			'mode'				=>	'varchar(32)',
 			'type'				=>	'varchar(32)',
@@ -118,7 +120,7 @@ class Abstract_Session {
 		$data['running_applications'] = array_map("Application::toArray", $session_->getRunningApplications());
 		$data['closed_applications'] = array_map("Application::toArray", $session_->getClosedApplications());
 
-		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', self::table, 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', json_serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', json_serialize($session_->servers), 'applications', json_serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE #1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', self::table, 'server', $session_->server, 'client_id', $session_->client_id, 'need_creation', $session_->need_creation, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', json_serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', json_serialize($session_->servers), 'applications', json_serialize($data), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -171,6 +173,8 @@ class Abstract_Session {
 			$$k = $v;
 
 		$buf = new Session((string)$id);
+		$buf->client_id = (string)$client_id;
+		$buf->need_creation = (bool)$need_creation;
 		$buf->server = (string)$server;
 		$buf->mode = (string)$mode;
 		$buf->type = (string)$type;

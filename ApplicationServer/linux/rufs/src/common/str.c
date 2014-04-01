@@ -1,7 +1,7 @@
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #define _GNU_SOURCE
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <errno.h>
 #include "memory.h"
@@ -51,6 +52,9 @@ char* str_cpy(char* dst, const char* src) {
 }
 
 char* str_ncpy(char* dst, const char* src, size_t len) {
+	if (src == NULL || dst == NULL)
+		return 0;
+
 	return strncpy(dst, src, len);
 }
 
@@ -213,14 +217,23 @@ bool str_toBool(const char* str) {
 	return res;
 }
 
-bool str_toInt(const char* str) {
+int str_toInt(const char* str) {
 	return atoi(str);
+}
+
+
+int str_toOct(const char* str) {
+	char* end;
+	if (str == 0)
+		return 0;
+	return strtol(str, &end, 8);
 }
 
 
 long long str_toSize(const char* str) {
 	char* temp = str_dup(str);
 	int coef = 0;
+	long long res = 0;
 
 	str_trim(temp);
 
@@ -254,6 +267,7 @@ long long str_toSize(const char* str) {
 	default:
 		if (!isdigit(lastChar)) {
 			logWarn("Invalid value '%s'", temp);
+			memory_free(temp);
 			return -1;
 		}
 		break;
@@ -263,7 +277,10 @@ long long str_toSize(const char* str) {
 		temp[strlen(temp) - 1] = '\0';
 	}
 
-	return (long long)(atol(temp) * exp10(coef));
+	res = (long long)(atol(temp) * exp10(coef));
+	memory_free(temp);
+
+	return res;
 }
 
 

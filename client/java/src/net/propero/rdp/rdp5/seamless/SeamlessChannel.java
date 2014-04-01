@@ -100,6 +100,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 
 	private List<StateOrder> stateOrders = null;
 	private final List<PositionOrder> positionsOrders = new ArrayList<PositionOrder>();
+	private Object focus_lock = new Object();
+	private Long focus_request = null;
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -684,6 +686,20 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		if (! wnd.isFocusableWindow()) {
 			wnd.setFocusableWindowState(true);
 		}
+
+		if (wnd.isActive() || wnd.isFocused()) {
+			return true;
+		}
+
+		synchronized(this.focus_lock) {
+			if (this.focus_request == null) {
+				/* New focus request */
+				this.focus_request = id;
+			} else {
+				/* Got a focus request while processing another one. Skipping */
+				return true;
+			}
+		}
 		
 		SwingTools.invokeLater(GUIActions.requestFocus(wnd));
 		
@@ -1130,7 +1146,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	
 	public void focusGained(FocusEvent fe) {
 		SeamlessWindow wnd = (SeamlessWindow) fe.getComponent();
-		logger.debug(String.format("focusGained on window 0x%08x", wnd.sw_getId()));
+		String hexIdStr = String.format("0x%08x", wnd.sw_getId());
+
+		logger.debug("focusGained on window "+hexIdStr);
 
 		if (SeamlessChannel.getSeamlessState(wnd.sw_getExtendedState()) == SeamlessChannel.WINDOW_MINIMIZED)
 			return;
@@ -1141,12 +1159,29 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			return;
 		}
 
-		String hexIdStr = String.format("0x%08x", wnd.sw_getId());
-		try {
-			logger.debug("Sending focus request message for window "+hexIdStr);
-			this.send_focus(wnd.sw_getId(), FOCUS_REQUEST);
-		} catch (Exception ex) {
-			logger.error("Send focus request message for window "+hexIdStr+" failed: "+ex.getMessage());
+		synchronized(this.focus_lock) {
+			boolean send_request = false;
+
+			if(this.focus_request != null) {
+				/* Got a focus WITH a seamless request :  request from the server */
+				if(this.focus_request == wnd.sw_getId()) {
+					this.focus_request = null;
+				}
+			} else {
+				/* Got a focus WITHOUT a seamless request : request from client */
+				this.focus_request = null;
+				send_request = true;
+			}
+
+			/* Don't send FOCUS_REQUEST back to the server */
+			if(send_request) {
+				try {
+					logger.debug("Sending focus request message for window "+hexIdStr);
+					this.send_focus(wnd.sw_getId(), FOCUS_REQUEST);
+				} catch (Exception ex) {
+					logger.error("Send focus request message for window "+hexIdStr+" failed: "+ex.getMessage());
+				}
+			}
 		}
 	}
 

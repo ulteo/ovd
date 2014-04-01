@@ -89,7 +89,7 @@ public class BugReporter implements ActionListener {
 			case JFileChooser.APPROVE_OPTION:
 				break;
 			case JFileChooser.ERROR_OPTION:
-				SwingTools.invokeLater(GUIActions.createDialog(I18n._("An error occured. Please try again."), I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
+				SwingTools.invokeLater(GUIActions.createDialog(I18n._("An error occurred. Please try again."), I18n._("Error"), JOptionPane.ERROR_MESSAGE, JOptionPane.CLOSED_OPTION));
 				Logger.error("[reportBug] Failed to get file");
 			case JFileChooser.CANCEL_OPTION:
 			default:
@@ -120,7 +120,7 @@ public class BugReporter implements ActionListener {
 			public void run() {
 				BugReport bug = getBug();
 				if (bug == null) {
-					SwingTools.invokeLater(GUIActions.createDialog(I18n._("Please fill description field."), I18n._("Empty field"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
+					SwingTools.invokeLater(GUIActions.createDialog(I18n._("Please fill in the description field."), I18n._("Empty field"), JOptionPane.WARNING_MESSAGE, JOptionPane.CLOSED_OPTION));
 					return;
 				}
 				

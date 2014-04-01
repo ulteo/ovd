@@ -1,7 +1,8 @@
-# Copyright (C) 2011-2013 Ulteo SAS
+# Copyright (C) 2010-2013 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,11 +27,16 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Julien LANGLOIS <julien@ulteo.com>
-Distribution: RHEL 6.0
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
-Buildrequires: ulteo-ovd-cert, java-1.6.0-openjdk-devel, ant, ant-nodeps, mingw32-gcc
+Buildrequires: ulteo-ovd-cert, ant, ant-nodeps
+%if %{defined sles}
+Buildrequires: java-1_6_0-ibm-devel
+%else
+Buildrequires: java-1.6.0-openjdk-devel
+%endif
+Buildroot: %{buildroot}
 
 %description
 This applet is used in the Open Virtual Desktop to display the user session in
@@ -42,29 +48,31 @@ OVD_CERT_DIR=/usr/share/ulteo/ovd-cert
 [ -z "$JKS_PASSWD" ] && JKS_PASSWD=$OVD_CERT_DIR/password
 [ -z "$JKS_ALIAS" ] && JKS_ALIAS=ulteo
 
-ant applet.install ovdExternalAppsClient.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dmingw32.prefix=i686-pc-mingw32- \
+ant applet.install ovdExternalAppsClient.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=%{buildroot} -Dmingw32.prefix=i686-pc-mingw32- \
 	-Dkeystore.path=$JKS_PATH -Dkeystore.password="$(cat $JKS_PASSWD)" -Dkeystore.alias=$JKS_ALIAS
 
-cd libXClientArea ; make clean ; make JAVAHOME=/usr/lib/jvm/java ; make install DESTDIR=$RPM_BUILD_ROOT
+if [ -d %{_libdir}/jvm/java ]; then
+export JAVA_HOME=%{_libdir}/jvm/java
+else
+export JAVA_HOME=/usr/lib/jvm/java
+fi
+
+pushd libXClientArea ; make clean ; make JAVAHOME=$JAVA_HOME ; make install DESTDIR=%{buildroot} ; popd
+pushd librdp ; cmake . ; make install/strip DESTDIR=%{buildroot} ; popd
 
 if [ "%{_libdir}" != "/usr/lib" ]; then
-	[ ! -d $RPM_BUILD_ROOT/%{_libdir} ] && mkdir -p $RPM_BUILD_ROOT/%{_libdir}
-	mv $RPM_BUILD_ROOT/usr/lib/libXClientArea.so $RPM_BUILD_ROOT/%{_libdir}/libXClientArea.so
-	rmdir $RPM_BUILD_ROOT/usr/lib
+	[ ! -d %{buildroot}/%{_libdir} ] && mkdir -p %{buildroot}/%{_libdir}
+	mv %{buildroot}/usr/lib/libXClientArea.so %{buildroot}/%{_libdir}/libXClientArea.so
+	mv %{buildroot}/usr/lib/librdp.so %{buildroot}/%{_libdir}/librdp.so
+	rmdir %{buildroot}/usr/lib
 fi
 
 %prep
 %setup -q
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-%changelog
-* Tue Mar 19 2013 Julien LANGLOIS <julien@ulteo.com> 99.99.svn8677
-- Add externalapps client and libxclientarea
-
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release
 
 ###########################################
 %package -n ulteo-ovd-applets
@@ -90,7 +98,7 @@ Summary: Ulteo Open Virtual Desktop - desktop applet
 Group: Applications/System
 BuildArch: noarch
 Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils, ulteo-ovd-integrated-launcher
-# Java can also be provided by packages: java-1.7.0-openjdk  jre-7-linux jre-6-linux
+# Java can also be provided by packages: java-1.7.0-openjdk  jre-7-linux jre-6-linux java-1_6_0-sun
 
 %description -n ulteo-ovd-externalapps-client
 This application is used in the Open Virtual Desktop to display the user session and launch applications via an all integrated client.
@@ -114,3 +122,18 @@ Detect docks / taskbars and calculate the available size for X window applicatio
 %files -n libovd-xclient-area
 %defattr(-,root,root)
 %{_libdir}/libXClientArea.so
+
+
+###########################################
+%package -n libovd-accelerator
+###########################################
+
+Summary: Ovd Client optimization library
+Group: Applications/System
+
+%description -n libovd-accelerator
+Ovd Client optimization library Compression algorithm in jni library
+
+%files -n libovd-accelerator
+%defattr(-,root,root)
+%{_libdir}/librdp.so

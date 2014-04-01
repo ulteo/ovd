@@ -51,7 +51,7 @@ def launch_client(user, password, host, withxterm=False):
 
 
 def getUserList(host):
-        url = "https://%s/ovd/client/userlist.php"%(host)
+        url = "https://%s/ovd/client/userlist"%(host)
         cookiejar = cookielib.CookieJar()
         urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
 

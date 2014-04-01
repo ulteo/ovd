@@ -54,12 +54,12 @@ abstract class ConfigElement{
 		$this->path = $path_;
 	}
 
-	public function setFormSeparator($sep_) {
-		$this->formSeparator = $sep_;
-	}
-
 	public function setContentAvailable($content_available_) {
 		$this->content_available = $content_available_;
+	}
+	
+	public function contentEqualsTo($content_) {
+		return ($this->content == $content_);
 	}
 }
 

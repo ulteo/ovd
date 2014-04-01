@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,6 +187,7 @@ class Preferences {
 		$c->setContentAvailable(array(
 			'auto',
 			'ar_AE',
+			'ca_ES',
 			'de_DE',
 			'en_GB',
 			'es_ES',
@@ -262,7 +264,11 @@ class Preferences {
 			'manageReporting',
 			'viewSummary',
 			'viewNews',
-			'manageNews'
+			'manageNews',
+			'manageScripts',
+			'viewScripts',
+			'manageScriptsGroups',
+			'viewScriptsGroups'
 		));
 
 		$this->add($c,'general', 'policy');
@@ -386,11 +392,13 @@ class Preferences {
 		$c->setContentAvailable(array(
 			'ar_AE',
 			'bg_BG',
+			'ca_ES',
 			'da-dk',
 			'de_DE',
 			'en_GB',
 			'el_GR',
 			'es_ES',
+			'eu_ES',
 			'fa_IR',
 			'fi_FI',
 			'fr_FR',
@@ -407,6 +415,7 @@ class Preferences {
 			'ro_RO',
 			'ru_RU',
 			'sk_SK',
+			'sv_SE',
 			'zh_CN',
 		));
 		$this->add($c,'general','session_settings_defaults');
@@ -428,6 +437,10 @@ class Preferences {
 			2764800,
 			-1));
 		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_week_time_select('time_restriction', str_repeat("FF", 3 * 7));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_input('max_sessions_number', 0);
 		$this->add($c, 'general');
 		$c = new ConfigElement_select('launch_without_apps', 0);
@@ -440,7 +453,11 @@ class Preferences {
 		$c = new ConfigElement_select('use_known_drives', 0);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-
+		
+		$c = new ConfigElement_select('bypass_servers_restrictions', 1);
+		$c->setContentAvailable(array(0, 1));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_select('multimedia', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
@@ -450,9 +467,11 @@ class Preferences {
 		$c = new ConfigElement_select('redirect_client_printers', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('redirect_smartcards_readers', 0);
-		$c->setContentAvailable(array(0, 1));
-		$this->add($c, 'general', 'session_settings_defaults');
+		if (class_exists("PremiumManager") && PremiumManager::is_premium()) {
+			$c = new ConfigElement_select('redirect_smartcards_readers', 0);
+			$c->setContentAvailable(array(0, 1));
+			$this->add($c, 'general', 'session_settings_defaults');
+		}
 		$c = new ConfigElement_select('rdp_bpp', 16);
 		$c->setContentAvailable(array(16, 24, 32));
 		$this->add($c,'general','session_settings_defaults');
@@ -463,6 +482,10 @@ class Preferences {
 		$c = new ConfigElement_select('persistent', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_select('followme', 1);
+		$c->setContentAvailable(array(0, 1));
+		$this->add($c,'general','session_settings_defaults');
 
 		$c_user_profile = new ConfigElement_select('enable_profiles', 1);
 		$c_user_profile->setContentAvailable(array(0, 1));
@@ -470,6 +493,10 @@ class Preferences {
 		
 		$c = new ConfigElement_input('quota', 0);
 		$c_user_profile->addReference('1', $c);
+		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_select('profile_mode', 'advanced');
+		$c->setContentAvailable(array('standard', 'advanced'));
 		$this->add($c,'general','session_settings_defaults');
 		
 		$c = new ConfigElement_select('auto_create_profile', 1);
@@ -670,50 +697,5 @@ class Preferences {
 			
 		$mods_enable = $prefs->get('general', 'module_enable');
 		return in_array($name_, $mods_enable);
-	}
-	
-	public function getLiaisonsOwner() {
-		$types = array();
-		
-		$modules_enable = $this->get('general', 'module_enable');
-		foreach ($modules_enable as $module_name) {
-			if (method_exists($module_name, 'getInstance')) {
-				try {
-					$module_instance = call_user_func(array($module_name, 'getInstance'));
-				}
-				catch (Exception $err) {
-					continue;
-				}
-				if (is_object($module_instance)) {
-					if (method_exists($module_instance, 'liaisonType')) {
-						$liaisons = $module_instance->liaisonType();
-						if (is_array($liaisons)) {
-							foreach ($liaisons as $liaison) {
-								if (is_array($liaison) && array_key_exists('type', $liaison) && array_key_exists('owner', $liaison)) {
-									$types[$liaison['type']] = $liaison['owner'];
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		$overwrited_liaisons = $this->get('general', 'liaison');
-		foreach ($overwrited_liaisons as $type => $owner) {
-			$types[$type] = $owner;
-		}
-		
-		return $types;
-	}
-	
-	public static function liaisonsOwner() {
-		$types = array();
-		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed', __FILE__, __LINE__);
-		
-		return $prefs->getLiaisonsOwner();
 	}
 }

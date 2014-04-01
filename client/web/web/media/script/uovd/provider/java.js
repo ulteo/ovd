@@ -5,7 +5,7 @@ uovd.provider.Java = function(node) {
 	uovd.provider.http.Base.prototype.initialize.apply(this);
 	uovd.provider.rdp.Base.prototype.initialize.apply(this);
 
-	/* Ajax provider initializer */
+	/* Http provider initializer */
 	this.request_cache = {};
 	this.request_cache_index = 0;
 
@@ -117,7 +117,7 @@ uovd.provider.Java.prototype.set_applet_codebase = function(applet_codebase_) {
 	return this;
 }
 
-/* --------------- Ajax provider part --------------- */
+/* --------------- Http provider part --------------- */
 
 uovd.provider.Java.prototype.applet_ajaxResponse = function(req_id, http_code, contentType, data) {
 	if(! this.request_cache[req_id]) { return; }
@@ -145,7 +145,7 @@ uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/start.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/start";
 	var data = this.build_sessionStart(parameters, "txt");
 
 	var self = this; /* closure */
@@ -168,7 +168,7 @@ uovd.provider.Java.prototype.sessionStart_implementation = function(callback) {
 uovd.provider.Java.prototype.sessionStatus_implementation = function(callback) {
 	var sessionmanager = this.session_management.parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/session_status.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/session_status";
 	var data = "";
 
 	var self = this; /* closure */
@@ -192,7 +192,7 @@ uovd.provider.Java.prototype.sessionEnd_implementation = function(callback) {
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout";
 	var data = this.build_sessionEnd(parameters, "txt");
 
 	var self = this; /* closure */
@@ -216,7 +216,7 @@ uovd.provider.Java.prototype.sessionSuspend_implementation = function(callback) 
 	var parameters = this.session_management.parameters;
 	var sessionmanager = parameters["sessionmanager"];
 
-	var service_url = "https://"+sessionmanager+"/ovd/client/logout.php";
+	var service_url = "https://"+sessionmanager+"/ovd/client/logout";
 	var data = this.build_sessionSuspend(parameters, "txt");
 
 	var self = this; /* closure */
@@ -301,8 +301,10 @@ uovd.provider.Java.prototype.connectDesktop = function() {
 		/* Applet startSession handler */
 		self.applet_sessionReady = function() {
 			var success = true;
-			if(self.session_management.session.mode_gateway == true) {
-				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.token, server.login, server.password);
+			if(server.token) {
+				var fqdn = window.location.hostname;
+				var port = window.location.port !=  '' ? window.location.port : 443;
+				success = self.main_applet[0].serverConnect(0, fqdn, port, server.token, server.login, server.password);
 			} else {
 				success = self.main_applet[0].serverConnect(0, server.fqdn, server.port, server.login, server.password);
 			}
@@ -478,8 +480,10 @@ uovd.provider.Java.prototype.connectApplications = function() {
 				self.main_applet[0].serverPrepare(i, serialized);
 
 				var success = true;
-				if(self.session_management.session.mode_gateway == true) {
-					success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.token, server.login, server.password);
+				if(server.token) {
+					var fqdn = window.location.hostname;
+					var port = window.location.port !=  '' ? window.location.port : 443;
+					success = self.main_applet[0].serverConnect(i, fqdn, port, server.token, server.login, server.password);
 				} else {
 				  success = self.main_applet[0].serverConnect(i, server.fqdn, server.port, server.login, server.password);
 				}

@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template_static.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core-minimal.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template_static.php');
 
 function adminAuthenticate($login_, $password_) {
 	if (array_key_exists('no_ssl', $_SESSION)) {

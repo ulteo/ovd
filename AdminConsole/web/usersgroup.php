@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewUsersGroups'))
 	redirect('index.php');
@@ -69,14 +69,14 @@ function show_default() {
   page_header();
 
   echo '<div id="usersgroup_div" >';
-  echo '<h1>'._('User groups').'</h1>';
+  echo '<h1>'._('User Groups').'</h1>';
 
   echo $searchDiv;
   
   echo '<div id="usersgroup_list">';
 
   if (! $has_group)
-    echo _('No available user group').'<br />';
+    echo _('No available User Groups').'<br />';
   else {
      $all_static = true;
      foreach($groups as $group){
@@ -280,7 +280,7 @@ function show_manage($id) {
 	$group = $_SESSION['service']->users_group_info($id);
   
   if (! is_object($group)) {
-    die_error(_('Failed to load usergroup'));
+    die_error(_('Failed to load User Group'));
   }
   
   $usergroupdb_rw = usergroupdb_is_writable();
@@ -314,14 +314,31 @@ function show_manage($id) {
 		$users = $group->getAttribute('users');
 	}
 	
+	$users_partial_list = $group->getAttribute('users_partial_list');
+	$usersList = new UsersList($_REQUEST);
+	if ($users_partial_list) {
+		if ($usersList->is_empty_filter()) {
+			$usersList->set_external_result($users, true);
+		}
+		else {
+			$users2 = $usersList->search($id);
+			if (is_null($users2)) {
+				die_error(_('Error while requesting users'),__FILE__,__LINE__);
+			}
+			
+			$users = array();
+			foreach($users2 as $user) {
+				$users[$user->getAttribute('login')] = $user->getAttribute('displayname');
+			}
+		}
+	}
+	
 	asort($users);
 
     $has_users = (count($users) > 0);
 
   if ($usergroupdb_rw) {
-    $usersList = new UsersList($_REQUEST);
     $users_all = $usersList->search();
-    $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
     if (is_null($users_all))
       $users_all = array();
       $users_available = array();
@@ -335,6 +352,8 @@ function show_manage($id) {
       $users_all = $users;
       uasort($users_all, "user_cmp");
     }
+
+	$search_form = $usersList->getForm();
   }
   else {
     $users = array();
@@ -358,6 +377,25 @@ function show_manage($id) {
     if (! array_key_exists($group_apps->id, $groups_apps))
       $groups_apps_available[]= $group_apps;
   }
+
+  // Scripts
+  $groups_scripts_all = $_SESSION['service']->scripts_groups_list($id);
+  $all_scripts = $_SESSION['service']->scripts_list();
+
+  $scripts_available = array();
+  foreach($all_scripts as $script) {
+    if (! array_key_exists($script->id, $groups_scripts_all))
+      $scripts_available[]= $script;
+  }
+  
+	// Servers publications
+	$servers_groups_list = $_SESSION['service']->servers_groups_list();
+	$servers_groups_published = array();
+	if ($group->hasAttribute('serversgroups')) {
+		$servers_groups_published = $group->getAttribute('serversgroups');
+	}
+  
+  $can_manage_scripts = isAuthorized('manageScripts');
 
   $can_manage_usersgroups = isAuthorized('manageUsersGroups');
   $can_manage_publications = isAuthorized('managePublications');
@@ -400,7 +438,7 @@ function show_manage($id) {
 
   page_header();
   echo '<div id="users_div">';
-  echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('User Group Management').'</a> - '.$group->name.'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
@@ -584,10 +622,15 @@ echo '<br />';
 	echo '<br />';
   }
 
-  // Users list
-if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
+  // User list
+if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filter() || count($users) > 0)) {
     echo '<div>';
     echo '<h2>'._('List of users in this group').'</h2>';
+
+	if (! is_null($search_form)) {
+		echo $search_form;
+	}
+
     if ($group->isDefault()) {
       echo _('All available users are in this group.');
     }
@@ -627,11 +670,6 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
     }
 
     echo '</table>';
-
-    if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
-      echo '<br/>';
-      echo $search_form;
-    }
     echo '</div>';
     echo '<br/>';
   }
@@ -678,6 +716,96 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
     echo '</div>';
   }
 
+  // Scripts part
+  if (count($groups_scripts_all) > 0) {
+    echo '<div>';
+    echo '<h2>'._('List of scripts for this group').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+
+
+    if (count($groups_scripts_all) > 0) {
+      foreach($groups_scripts_all as $script) {
+
+	echo '<tr>';
+	echo '<td><a href="script.php?action=manage&amp;id='.$script["id"].'">'.$script["name"].'</a></td>';
+		if ($can_manage_scripts) {
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
+			echo '<input type="hidden" name="name" value="Script_UserGroup" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="group" value="'.$id.'" />';
+			echo '<input type="hidden" name="element" value="'.$script["id"].'" />';
+			echo '<input type="submit" value="'._('Delete from this group').'" />';
+			echo '</form></td>';
+		}
+	echo '</tr>';
+      }
+    }
+
+    if ((count($scripts_available) > 0) and $can_manage_scripts) {
+      echo '<tr><form action="actions.php" method="post"><td>';
+      echo '<input type="hidden" name="action" value="add" />';
+      echo '<input type="hidden" name="name" value="Script_UserGroup" />';
+      echo '<input type="hidden" name="group" value="'.$id.'" />';
+      echo '<select name="element">';
+      foreach($scripts_available as $script)
+        echo '<option value="'.$script->id.'" >'.$script->name.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add this script').'" /></td>';
+      echo '</form></tr>';
+    }
+    echo '</table>';
+    echo '</div>';
+  }
+
+
+	// Servers publications part
+	if (count($servers_groups_list)>0) {
+		echo '<div>';
+		echo '<h2>'._('List of published Server Groups for this group').'</h1>';
+		echo '<table border="0" cellspacing="1" cellpadding="3">';
+
+		if (count($servers_groups_published)>0) {
+			foreach($servers_groups_published as $servers_group_id => $servers_group_name) {
+				echo '<tr>';
+				echo '<td><a href="serversgroup.php?action=manage&id='.$servers_group_id.'">'.$servers_group_name.'</td>';
+				if ($can_manage_publications) {
+					echo '<td>';
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+					echo '<input type="hidden" name="users_group" value="'.$id.'" />';
+					echo '<input type="hidden" name="servers_group" value="'.$servers_group_id.'" />';
+					echo '<input type="submit" value="'._('Delete this publication').'" />';
+					echo '</form>';
+					echo '</td>';
+				}
+				
+				echo '</tr>';
+			}
+		}
+		
+		if (count($servers_groups_list) > count($servers_groups_published) and $can_manage_publications) {
+			echo '<tr><form action="actions.php" method="post"><td>';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="name" value="UsersGroupServersGroup" />';
+			echo '<input type="hidden" name="users_group" value="'.$id.'" />';
+			echo '<select name="servers_group">';
+			foreach($servers_groups_list as $servers_group) {
+				if (array_key_exists($servers_group->id, $servers_groups_published)) {
+					continue;
+				}
+				
+				echo '<option value="'.$servers_group->id.'" >'.$servers_group->name.'</option>';
+			}
+			
+			echo '</select>';
+			echo '</td><td><input type="submit" value="'._('Add this publication').'" /></td>';
+			echo '</form></tr>';
+		}
+		
+		echo '</table>';
+		echo '</div>';
+	}
 
 	// Policy of this group
 	echo '<div>';
@@ -751,7 +879,7 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
 
 			echo '<br />';
 			echo '<div>';
-			echo '<h2>'._('Shared folders').'</h1>';
+			echo '<h2>'._('Shared Folders').'</h1>';
 
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			foreach ($used_sharedfolders as $sharedfolder_id => $sharedfolder_name) {
@@ -787,9 +915,9 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
 		
 		echo '<br />';
 	}
-	echo '<div>'; // Session settings configuration
+	echo '<div>'; // Session Settings configuration
 	echo '<h2>';
-	echo _('Session settings configuration');
+	echo _('Session Settings configuration');
 	echo '</h2>';
 	
 	if ($prefs_of_a_group != array()) {
@@ -829,7 +957,7 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
 					echo '</td>';
 					
 					echo '<td>';
-					echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="usergroup_settings_remove(\''.$group->id.'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
+					echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="usergroup_settings_remove(\''.$group->id.'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
 					echo '</td>';
 					
 					echo '</tr>';
@@ -872,7 +1000,7 @@ if ((count($users_all) > 0 || count($users) > 0) || ($group->isDefault())) {
 		}
 	}
 	
-	echo '</div>'; // Session settings configuration
+	echo '</div>'; // Session Settings configuration
 	echo "\n\n\n";
 
   echo '</div>';

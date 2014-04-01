@@ -50,4 +50,41 @@ if (Preferences::moduleIsEnabled('UserGroupDBDynamicCached')) {
 }
 //END UserGroupDBDynamic_cached update
 
+//BEGIN Sessions time restriction
+$sessions = Abstract_Session::load_all();
+foreach ($sessions as $session) {
+	if (! Abstract_Session::exists($session->id)) {// avoid operation on an already deleted Session (parallel processing)
+		continue;
+	}
+	
+	if (! in_array($session->status, array(
+			Session::SESSION_STATUS_CREATING,
+			Session::SESSION_STATUS_CREATED,
+			Session::SESSION_STATUS_INIT,
+			Session::SESSION_STATUS_READY,
+			Session::SESSION_STATUS_ACTIVE))) {
+		continue;
+	}
+	
+	$userDB = UserDB::getInstance();
+	$user = $userDB->import($session->user_login);
+	if (! is_object($user)) {
+		// ???
+		continue;
+	}
+	
+	if ($user->can_use_session()) {
+		continue;
+	}
+	
+	Logger::info('main', '(hourly cron) User '.$user->getAttribute('login').' order session disconnect because of time restriction policy');
+	if ($session->settings['persistent'] == 1) {
+		$session->orderDisonnect();
+	}
+	else {
+		$session->orderDeletion(true, Session::SESSION_END_STATUS_TIMEOUT);
+	}
+}
+//END Sessions time restriction
+
 exit(0);

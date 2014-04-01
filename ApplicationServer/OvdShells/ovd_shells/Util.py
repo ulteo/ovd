@@ -25,6 +25,7 @@ import base64
 import glob
 import os
 import sys
+import subprocess
 
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.Novell import Novell
@@ -101,6 +102,60 @@ def manageAutoStartApplication(config, im):
 		else:
 			im.start_app_empty(None, application["id"])
 
+def manageAutoStartScripts(config, d):
+	scripts = []
+	
+	for script in config.scripts_to_start:
+		scripts.append(script["name"])
+	
+	scripts.sort()
+	
+	for s in scripts:
+		print "Start registered scripts", s
+		f = os.path.join(d, "scripts", s)
+		if not os.access(f, os.R_OK):
+			print f, "scripts is not readable"
+			continue
+		
+		if f.endswith('.sh'):
+			cmd = '/bin/sh "%s"' %f
+		elif f.endswith(".py"):
+			cmd = 'python "%s"' %f
+		elif f.endswith(".bat"):
+			cmd = f
+		elif f.endswith(".vbs"):
+			cmd = 'wscript "%s"' %f
+		elif f.endswith(".ps1"):
+			cmd = 'powershell -executionpolicy bypass -file "%s" < CON' %f
+			
+		p = execute(cmd)
+        	if p.returncode != 0:
+			print "Command result (%d) :" %(p.returncode)
+			print p.stdout.read()
+			print "==================="
+
+
 def startModules():
 	novell = Novell()
 	novell.perform()
+
+def execute(args, wait = True):
+	if type(args) is type([]):
+		shell = False
+	elif type(args) in [type(""), type(u"")]:
+		shell = True
+		
+	subprocess_args = {}
+	subprocess_args["stdin"] = subprocess.PIPE
+	subprocess_args["stdout"] = subprocess.PIPE
+	subprocess_args["stderr"] = subprocess.STDOUT
+	subprocess_args["shell"] = shell
+	if "linux" in sys.platform:
+		subprocess_args["preexec_fn"] =  os.setpgrp
+	
+	p = subprocess.Popen(args, **subprocess_args)
+	
+	if wait:
+		p.wait()
+		
+	return p

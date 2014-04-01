@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2012, 2013
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -37,7 +38,9 @@ from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 from ovd.Platform.System import System
 
 class Profile(AbstractProfile):
+	TEMPORARY_PROFILE_PATH = "/var/spool/ulteo/ovd/profiles/"
 	MOUNT_POINT = "/mnt/ulteo/ovd"
+	DEFAULT_PERMISSION = "file_mode=0700,dir_mode=0600"
 	
 	def init(self):
 		self.profileMounted = False
@@ -56,11 +59,11 @@ class Profile(AbstractProfile):
 	def mount_cifs(self, share, uri, dest):
 		mount_env = {}
 		if share.has_key("login") and share.has_key("password"):
-			cmd = "mount -t cifs -o 'uid=%s,gid=0,umask=077' //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 			mount_env["USER"] = share["login"]
 			mount_env["PASSWD"] = share["password"]
 		else:
-			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,umask=077' //%s%s %s"%(self.session.user.name, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 		
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, share mount command: '%s'"%(cmd))
@@ -97,7 +100,7 @@ class Profile(AbstractProfile):
 			f.write("%s %s %s\n"%(mount_uri, share["login"], share["password"]))
 			f.close()
 		
-		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,dir_mode=700,file_mode=600' '%s' %s"%(davfs_conf, self.session.user.name, mount_uri, dest)
+		cmd = "mount -t davfs -o 'conf=%s,uid=%s,gid=0,%s' '%s' %s"%(davfs_conf, self.session.user.name, self.DEFAULT_PERMISSION, mount_uri, dest)
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
 		p = System.execute(cmd)
@@ -135,37 +138,58 @@ class Profile(AbstractProfile):
 		if self.profile is not None and self.profileMounted:
 			for d in [self.DesktopDir, self.DocumentsDir]:
 				src = os.path.join(self.profile_mount_point, "Data", d)
+				src = self.transformToLocaleEncoding(src)
+				dst = os.path.join(self.homeDir, d)
 				
+				trial = 5
 				while not System.mount_point_exist(src):
 					try:
 						os.makedirs(src)
 					except OSError, err:
 						if self.isNetworkError(err[0]):
-							Logger.warn("Unable to access profile: %s"%(str(err)))
+							Logger.exception("Unable to access profile")
 							return False
 						
+						trial -= 1
+						if trial == 0:
+							Logger.exception("Failed to create directory %s"%(src))
+							return False
+						
+						time.sleep(random.randint(1,10)/100.0)
 						Logger.debug2("Profile mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
 						continue
 				
-			if not System.mount_point_exist(self.homeDir):
-				os.makedirs(self.homeDir)
-			
-			cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.profile_mount_point, self.homeDir, self.session.user.name)
-			cmd = self.transformToLocaleEncoding(cmd)
-			Logger.debug("Profile bind dir command '%s'"%(cmd))
-			p = System.execute(cmd)
-			if p.returncode != 0:
-				Logger.error("Profile bind dir failed")
-				Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-				return False
-			else:
-				self.folderRedirection.append(self.homeDir)
+				if self.profile['profile_mode'] == 'standard':
+					if not System.mount_point_exist(dst):
+						os.makedirs(dst)
+					
+					cmd = "mount -o bind \"%s\" \"%s\""%(src, dst)
+					Logger.debug("Profile bind dir command '%s'"%(cmd))
+					p = System.execute(cmd)
+					if p.returncode != 0:
+						Logger.error("Profile bind dir failed")
+						Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+						return False
+					else:
+						self.folderRedirection.append(dst)
+				
+			if self.profile['profile_mode'] == 'advanced':
+				cmd = "RegularUnionFS \"%s\" \"%s\" -o user=%s"%(self.transformToLocaleEncoding(self.profile_mount_point), self.homeDir, self.transformToLocaleEncoding(self.session.user.name))
+				Logger.debug("Profile bind dir command '%s'"%(cmd))
+				p = System.execute(cmd)
+				if p.returncode != 0:
+					Logger.error("Profile bind dir failed")
+					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
+					return False
+				else:
+					self.folderRedirection.append(self.homeDir)
 			
 			
 			self.copySessionStart()
 		
 		for sharedFolder in self.sharedFolders:
 			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["uri"]).hexdigest())
+			dest = self.transformToLocaleEncoding(dest)
 			i = 0
 			while System.mount_point_exist(dest):
 				dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest()  + str(random.random()))
@@ -191,27 +215,20 @@ class Profile(AbstractProfile):
 				sharedFolder["mountdest"] = dest
 				home = self.homeDir
 				
-				dst = os.path.join(home, sharedFolder["name"])
+				dst = os.path.join(home, self.transformToLocaleEncoding(sharedFolder["name"]))
 				i = 0
 				while System.mount_point_exist(dst) and self.ismount(dst):
 					dst = os.path.join(home, sharedFolder["name"]+"_%d"%(i))
 					i += 1
 				
-				if not System.mount_point_exist(dst):
-					os.makedirs(dst)
+				try:
+					os.symlink(dest, dst)
+				except:
+					Logger.exception("Failed to map shared folder into the home directory ")
+					continue
 				
-				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
-				cmd = self.transformToLocaleEncoding(cmd)
-				Logger.debug("Profile bind dir command '%s'"%(cmd))
-				p = System.execute(cmd)
-				if p.returncode != 0:
-					Logger.error("Profile bind dir failed")
-					Logger.error("Profile bind dir failed (status: %d) %s"%(p.returncode, p.stdout.read()))
-					return False
-				else:
-					sharedFolder["local_path"] = dst
-					self.folderRedirection.append(dst)
-					self.addGTKBookmark(dst)
+				sharedFolder["local_path"] = dst
+				self.addGTKBookmark(dst)
 		
 		return True
 	
@@ -220,17 +237,20 @@ class Profile(AbstractProfile):
 		if self.profile is not None and self.profileMounted:
 			self.copySessionStop()
 		
+		for sharedFolder in self.sharedFolders:
+			if sharedFolder.has_key("local_path"):
+				self.delGTKBookmark(sharedFolder["local_path"])
+		
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
 			
 			try:
 				if not self.ismount(d):
 					continue
-			except IOError, err:
-				Logger.error("Unable to check mount point %s :%s"%(d, str(err)))
+			except IOError:
+				Logger.exception("Unable to check mount point %s"%d)
 			
 			cmd = "umount \"%s\""%(d)
-			cmd = self.transformToLocaleEncoding(cmd)
 			Logger.debug("Profile bind dir command: '%s'"%(cmd))
 			p = System.execute(cmd)
 			if p.returncode != 0:
@@ -240,7 +260,6 @@ class Profile(AbstractProfile):
 		for sharedFolder in self.sharedFolders:
 			if sharedFolder.has_key("mountdest"):
 				cmd = """umount "%s" """%(sharedFolder["mountdest"])
-				cmd = self.transformToLocaleEncoding(cmd)
 				Logger.debug("Profile sharedFolder umount dir command: '%s'"%(cmd))
 				p = System.execute(cmd)
 				if p.returncode != 0:
@@ -250,8 +269,8 @@ class Profile(AbstractProfile):
 				
 				try:
 					os.rmdir(sharedFolder["mountdest"])
-				except OSError, e:
-					Logger.error("Unable to delete mount point (%s): %s"%(sharedFolder["mountdest"], str(e)))
+				except OSError:
+					Logger.exception("Unable to delete mount point (%s)"%sharedFolder["mountdest"])
 		
 		for fname in ("davfs.conf", "davfs.secret"):
 			path = os.path.join(self.cifs_dst, fname)
@@ -259,8 +278,8 @@ class Profile(AbstractProfile):
 				continue
 			try:
 				os.remove(path)
-			except OSError, e:
-				Logger.error("Unable to delete file (%s): %s"%(path, str(e)))
+			except OSError:
+				Logger.exception("Unable to delete file (%s)"%path)
 		
 		if self.profile is not None and self.profileMounted:
 			cmd = "umount %s"%(self.profile_mount_point)
@@ -287,16 +306,20 @@ class Profile(AbstractProfile):
 			
 			try:
 				os.rmdir(self.profile_mount_point)
-			except OSError, e:
-				Logger.error("Unable to delete mount point (%s): %s"%(self.profile_mount_point, str(e)))
+			except OSError:
+				Logger.exception("Unable to delete mount point (%s)"%self.profile_mount_point)
 		
 		try:		
 			os.rmdir(self.cifs_dst)
-		except OSError, e:
-			Logger.error("Unable to delete profile (%s): %s"%(self.cifs_dst, str(e)))
+		except OSError:
+			Logger.exception("Unable to delete profile (%s)"%self.cifs_dst)
 	
 	
 	def copySessionStart(self):
+		profile_tmp_dir = os.path.join(Profile.TEMPORARY_PROFILE_PATH, self.session.user.name)
+		if os.path.exists(profile_tmp_dir):
+			System.rchown(profile_tmp_dir, self.session.user.name)
+		
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		
@@ -304,41 +327,55 @@ class Profile(AbstractProfile):
 		if not System.mount_point_exist(d):
 			return
 		
+		if self.profile['profile_mode'] == 'advanced':
+			return
+
+		# Copy conf files
+		d = self.transformToLocaleEncoding(d)
+		cmd = self.getRsyncMethod(d, self.homeDir, Config.profile_filters_filename, True)
+		Logger.debug("rsync cmd '%s'"%(cmd))
+		
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("Unable to copy conf from profile")
+			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
+		
 	
 	def copySessionStop(self):
 		if self.homeDir is None or not os.path.isdir(self.homeDir):
 			return
 		
 		d = os.path.join(self.profile_mount_point, "conf.Linux")
+		trial = 5
 		while not System.mount_point_exist(d):
 			try:
 				os.makedirs(d)
 			except OSError, err:
 				if self.isNetworkError(err[0]):
-					Logger.warn("Unable to access profile: %s"%(str(err)))
+					Logger.exception("Unable to access profile")
 					return
 				
-				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS) => %s"%(str(err)))
+				trial -= 1
+				if trial == 0:
+					Logger.exception("Failed to create directory %s"%d)
+					return
+
+				time.sleep(random.randint(1,10)/100.0)
+				Logger.debug2("conf.Linux mkdir failed (concurrent access because of more than one ApS)")
 				continue
 		
-	
-	@staticmethod
-	def getRsyncMethod(src, dst, owner=False):
-		args = ["-rltD", "--safe-links"]
-		if owner:
-			args.append("-o")
+		if self.profile['profile_mode'] == 'advanced':
+			return
 		
-		if os.path.exists(Config.linux_profile_filters_filename):
-			args.append("--include-from=%s"%Config.linux_profile_filters_filename)
-		else:
-			Logger.warn("Rsync filters file '%s' is missing, Using hardcoded rules"%Config.linux_profile_filters_filename)
-			for p in Profile.rsyncBlacklist():
-				args.append('--exclude="%s"'%p)
-			
-			args.append('--include="/.**"')
-			args.append('--exclude="/**"')
+		# Copy conf files
+		d = self.transformToLocaleEncoding(d)
+		cmd = self.getRsyncMethod(self.homeDir, d, Config.profile_filters_filename)
+		Logger.debug("rsync cmd '%s'"%(cmd))
 		
-		return 'rsync %s "%s/" "%s/"'%(" ".join(args), src, dst)
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("Unable to copy conf to profile")
+			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, p.returncode, p.stdout.read()))
 	
 	
 	@staticmethod
@@ -385,9 +422,26 @@ class Profile(AbstractProfile):
 				]
 		return err in networkError
 	
+	def delGTKBookmark(self, url):
+		url = urllib.pathname2url(url)
+		buffer = ''
+		
+		path = os.path.join(self.homeDir, ".gtk-bookmarks")
+		if not os.path.exists(path):
+			return
+		
+		f = file(path, "r")
+		for line in f.readlines():
+			if line != "file://%s\n"%(url):
+				buffer += line
+		f.close()
+		
+		f = file(path, "w+")
+		f.write(buffer)
+		f.close()
+	
 	
 	def addGTKBookmark(self, url):
-		url = self.transformToLocaleEncoding(url)
 		url = urllib.pathname2url(url)
 		
 		path = os.path.join(self.homeDir, ".gtk-bookmarks")
@@ -409,5 +463,5 @@ class Profile(AbstractProfile):
 			
 			path = os.path.join(dest_dir, sharedFolder["rid"])
 			f = file(path, "w")
-			f.write(self.transformToLocaleEncoding(sharedFolder["local_path"]))
+			f.write(sharedFolder["local_path"])
 			f.close()

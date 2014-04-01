@@ -56,6 +56,10 @@ cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_C_FLAGS
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %post -n ulteo-ovd-regular-union-fs
+grep -q -E "^ *[^#] *user_allow_other *" /etc/fuse.conf 2>/dev/null
+if [ $? -ne 0 ]; then
+        echo "user_allow_other" >> /etc/fuse.conf
+fi
 
 %preun -n ulteo-ovd-regular-union-fs
 

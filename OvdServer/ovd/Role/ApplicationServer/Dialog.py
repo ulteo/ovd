@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012
 # Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -63,7 +64,8 @@ class Dialog(AbstractDialog):
 			
 			elif  path == "/applications/static/sync":
 				return self.req_sync_static_applications(request)
-			
+			elif  path == "/scripts/sync":
+				return self.req_sync_scripts(request)
 			elif path.startswith("/session/status/"):
 				buf = path[len("/session/status/"):]
 				return self.req_session_status(buf)
@@ -71,6 +73,10 @@ class Dialog(AbstractDialog):
 			elif path.startswith("/session/destroy/"):
 				buf = path[len("/session/destroy/"):]
 				return self.req_session_destroy(buf)
+			
+			elif path.startswith("/session/disconnect/"):
+				buf = path[len("/session/disconnect/"):]
+				return self.req_session_disconnect(buf)
 			
 			elif path.startswith("/debian/") and self.role_instance.canManageApplications():
 				buf = path[len("/debian/"):]
@@ -162,8 +168,8 @@ class Dialog(AbstractDialog):
 			for node in applicationNodes:
 				matching.append((node.getAttribute("id"), node.getAttribute("local_id")))
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -218,6 +224,9 @@ class Dialog(AbstractDialog):
 	
 	
 	def req_session_create(self, request):
+		if self.role_instance.stopping():
+			return self.req_stopping(request)
+		
 		environment = DomainUlteo()
 		try:
 			document = minidom.parseString(request["data"])
@@ -305,7 +314,7 @@ class Dialog(AbstractDialog):
 			nodes = sessionNode.getElementsByTagName("profile")
 			if len(nodes)>0:
 				profileNode = nodes[0]
-				for attribute in ("rid", "uri"):
+				for attribute in ("rid", "uri", "profile_mode"):
 					if len(profileNode.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 			else:
@@ -317,8 +326,8 @@ class Dialog(AbstractDialog):
 					if len(node.getAttribute(attribute)) == 0:
 						raise Exception("Empty attribute "+attribute)
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -388,6 +397,16 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
+	def req_session_disconnect(self, session_id):
+		if self.role_instance.sessions.has_key(session_id):
+			session = self.role_instance.sessions[session_id]
+			if session.status == Session.SESSION_STATUS_ACTIVE:
+				self.role_instance.spool_action("disconnect", session.id)
+		else:
+			session = Session(session_id, None, None, None, None)
+			session.status = Session.SESSION_STATUS_UNKNOWN
+		
+		return self.req_answer(self.session2xmlstatus(session))
 	
 	def req_user_loggedin(self, request):
 		try:
@@ -412,9 +431,8 @@ class Dialog(AbstractDialog):
 		
 		try:
 			ret = TS.getSessionID(login)
-		except Exception,err:
-			Logger.error("RDP server dialog failed ... ")
-			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
+		except Exception:
+			Logger.exception("RDP server dialog failed ... ")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "internalerror")
@@ -482,8 +500,8 @@ class Dialog(AbstractDialog):
 			for packageNode in packageNodes:
 				packages.append(packageNode.getAttribute("name"))
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -499,6 +517,14 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(self.debian_request2xml(req_id, req))
 	
+	
+	def req_stopping(self, req):
+		doc = Document()
+		rootNode = doc.createElement('error')
+		rootNode.setAttribute("id", "server is stopping")
+		doc.appendChild(rootNode)
+		return self.req_answer(doc)
+
 	
 	def req_debian_id(self, req):
 		try:
@@ -522,8 +548,8 @@ class Dialog(AbstractDialog):
 			else:
 				raise Exception("usage")
 			
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -540,6 +566,13 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(doc)
 	
+	def req_sync_scripts(self, request):
+		self.role_instance.setScriptsMustBeSync(True)
+		doc = Document()
+		rootNode = doc.createElement('scripts')
+		doc.appendChild(rootNode)
+		
+		return self.req_answer(doc)
 	
 	@staticmethod
 	def debian_request2xml(rid, request):

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
@@ -41,18 +42,19 @@ import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public abstract class OvdClient implements Runnable, RdpListener {
+public abstract class OvdClient implements RdpListener {
 	
 	public enum DisconnectionMode {SUSPEND, LOGOFF};
 	public static final DisconnectionMode DEFAULT_DISCONNECTION_MODE = DisconnectionMode.SUSPEND;
 	
 	public static final String productName = "OVD Client";
 	
-	private static final long REQUEST_TIME_FREQUENTLY = 2000;
-	private static final long REQUEST_TIME_OCCASIONALLY = 60000;
+	public static final long REQUEST_TIME_FREQUENTLY = 2000;
+	public static final long REQUEST_TIME_OCCASIONALLY = 60000;
 
 	private static final long DISCONNECTION_MAX_DELAY = 3500;
 	
@@ -68,7 +70,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		return map;
 	}
 
-	private ArrayList<RdpConnectionOvd> availableConnections = null;
+	protected ArrayList<RdpConnectionOvd> availableConnections = null;
 	protected SessionManagerCommunication smComm = null;
 	protected Thread getStatus = null;
 	protected ArrayList<RdpConnectionOvd> connections = null;
@@ -109,7 +111,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		this.persistent = persistent;
 	}
 	
-	private boolean isWaitRecoveryModeEnabled = false;
+	public boolean isWaitRecoveryModeEnabled = false;
 	public void enableWaitRecoveryMode(boolean waitRecoveryMode_) {
 		this.isWaitRecoveryModeEnabled = waitRecoveryMode_;
 	}
@@ -120,7 +122,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		}
 	}
 	
-	private boolean getWaitSession() {
+	protected boolean getWaitSession() {
 		synchronized(this.waitSessionLock) {
 			return this.waitSession;
 		}
@@ -130,7 +132,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		return this.availableConnections;
 	}
 	
-	private void suspendSession() {
+	protected void suspendSession() {
 		Logger.info("Session is suspended");
 		this.setWaitSession(true);
 		
@@ -138,7 +140,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 			each.stop();
 	}
 	
-	private void resumeSession() {
+	protected void resumeSession() {
 		Logger.info("Session is resumed");
 		this.setWaitSession(false);
 		
@@ -148,146 +150,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 		}
 	}
 
-	@Override
-	public void run() {
-		// session status monitoring
-		this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
-		boolean isActive = false;
-		
-		while (this.continueSessionStatusMonitoringThread) {
-			String oldSessionStatus = this.sessionStatus;
-			this.sessionStatus = this.smComm.askForSessionStatus();
-
-			if (! this.sessionStatus.equals(oldSessionStatus)) {
-				Logger.info("session status switch from " + oldSessionStatus + " to " + this.sessionStatus);
-				
-				if (this.isWaitRecoveryModeEnabled) {
-					if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INITED) || 
-						this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
-						// Session is resumed
-						this.resumeSession();
-
-						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-						continue;
-					}
-					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_INACTIVE)) {
-						// Session is suspended
-						this.suspendSession();
-
-						this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
-						continue;
-					}
-				}
-				
-				if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || 
-						this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE) ||
-						(this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INACTIVE) && this.persistent)) {
-					if (! isActive) {
-						isActive = true;
-						this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
-						this.connect();
-						Logger.info("Session is ready");
-						((OvdClientPerformer)this).runSessionReady();
-					}
-				}
-				else {
-					if (isActive) {
-						isActive = false;
-						this.sessionTerminated();
-					}
-					else if (this.sessionStatus.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
-						this.sessionTerminated();
-					}
-				}
-			}
-			
-			if (this instanceof Newser) {
-				try {
-					List<News> newsList = this.smComm.askForNews();
-					((Newser)this).updateNews(newsList);
-				} catch (SessionManagerException e) {
-					Logger.warn("news cannot be received: " + e.getMessage());
-				}
-			}
-			try {
-					Thread.sleep(this.sessionStatusSleepingTime);
-			}
-			catch (InterruptedException ex) {
-			}
-		}
-	}	
-	
-	/**
-	 * not called by applet mode
-	 * @return
-	 */
-	public void perform() {
-		if (!(this instanceof OvdClientPerformer))
-			throw new ClassCastException("OvdClient must inherit from an OvdClientPerformer to use 'perform' action");
-		
-		if (this.smComm == null)
-			throw new NullPointerException("Client cannot be performed with a non existent SM communication");
-
-		((OvdClientPerformer)this).createRDPConnections();
-		
-		for (RdpConnectionOvd rc : this.connections) {
-			this.customizeConnection(rc);
-			rc.addRdpListener(this);
-		}
-
-		this.sessionStatusMonitoringThread = new Thread(this);
-		this.continueSessionStatusMonitoringThread = true;
-		this.sessionStatusMonitoringThread.start();
-		
-		do {
-			// Waiting for the session is resumed
-			while (this.getWaitSession()) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ex) {}
-			}
-			
-			// Waiting for all the RDP connections are performed
-			while (this.performedConnections.size() < this.connections.size()) {
-				if (! this.connectionIsActive)
-					break;
-				
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ex) {}
-			}
-
-			if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-				this.disconnection();
-				break;
-			}
-
-			while (! this.availableConnections.isEmpty()) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ex) {}
-
-				if (! ((OvdClientPerformer)this).checkRDPConnections()) {
-					this.disconnection();
-					break;
-				}
-			}
-			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ex) {}
-			
-		} while (this.connectionIsActive);
-		
-		try {
-			boolean suspendSession = (this.persistent && this.getDisconnectionMode() == DisconnectionMode.SUSPEND);
-			
-			this.smComm.askForLogout(suspendSession);
-		} catch (SessionManagerException e) {
-			Logger.error("Failed to inform the session manager about the RDP session ending.");
-		}
-	}
-	
 	protected DisconnectionMode getDisconnectionMode() {
 		return DEFAULT_DISCONNECTION_MODE;
 	}
@@ -303,8 +165,6 @@ public abstract class OvdClient implements Runnable, RdpListener {
 
 		Logger.info("Session is terminated");
 		
-		this.runSessionTerminated();
-
 		this.connectionIsActive = false;
 
 		if (! this.getWaitSession() && this.sessionStatusMonitoringThread != null) {
@@ -336,8 +196,12 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	protected abstract void runSessionTerminated();
 
 	protected abstract void customizeConnection(RdpConnectionOvd co);
+	
+	protected abstract void customizeConnection(WebAppsServerAccess wasa);
+	
 
 	protected abstract void hide(RdpConnectionOvd co);
+	protected void show(RdpConnectionOvd co) {};
 	
 	public abstract RdpConnectionOvd createRDPConnection(ServerAccess server);
 
@@ -347,6 +211,7 @@ public abstract class OvdClient implements Runnable, RdpListener {
 	public void connected(RdpConnection co) {
 		Logger.info("Connected to "+co);
 
+		this.show((RdpConnectionOvd)co);
 		this.performedConnections.add((RdpConnectionOvd) co);
 		this.availableConnections.add((RdpConnectionOvd) co);
 	}

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Start a Session</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+  <section>
+    <title> Headings 1 </title>
+    <para>
+      Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+    </para>
+    <section>
+      <title> Headings 1.1 </title>
+      <para>      
+	Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+	This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    <screenshot>
+	  <screeninfo>Web Portal - Advanced login window</screeninfo>
+	  <graphic fileref="img/wc_advanced_login_window.png"></graphic>
+    </screenshot>
+      <para>      
+	Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+	This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+
+    </section> 
+    <section>
+      <title> Headings 1.2 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    </section>
+    <section>
+      <title> Headings 1.3 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+      <section>
+	<title> Headings 1.3.1 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+      </section> 
+      <section>
+	<title> Headings 1.3.2 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+	<section>
+	  <title> Headings 1.3.2.1 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+
+	</section> 
+	<section>
+	  <title> Headings 1.3.2.2 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+	</section> 
+
+      </section> 
+
+    </section> 
+    
+  </section>
+
+  <section>
+    <title> Headings 2 </title>
+    <para>
+      Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+    </para>
+    <section>
+      <title> Headings 2.1 </title>
+      <para>      
+	Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+	This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    </section> 
+    <section>
+      <title> Headings 2.2 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    </section>
+    <section>
+      <title> Headings 2.3 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+      <section>
+	<title> Headings 2.3.1 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+      </section> 
+      <section>
+	<title> Headings 2.3.2 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+	<section>
+	  <title> Headings 2.3.2.1 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+
+	</section> 
+	<section>
+	  <title> Headings 1.3.2.2 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+	</section> 
+
+      </section> 
+
+    </section> 
+    
+  </section>
+
+  <section>
+    <title> Headings 3 </title>
+    <para>
+      Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+    </para>
+    <section>
+      <title> Headings 3.1 </title>
+      <para>      
+	Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.
+	This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    </section> 
+    <section>
+      <title> Headings 3.2 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+    </section>
+    <section>
+      <title> Headings 3.3 </title>
+      <para>      
+	Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      </para>
+      <section>
+	<title> Headings 3.3.1 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+      </section> 
+      <section>
+	<title> Headings 3.3.2 </title>
+	<para>      
+	  Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	  Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	</para>
+	<section>
+	  <title> Headings 3.3.2.1 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+
+	</section> 
+	<section>
+	  <title> Headings 3.3.2.2 </title>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+	  <para>      
+	    Et eodem impetu Domitianum praecipitem per scalas itidem funibus constrinxerunt, eosque coniunctos per ampla spatia civitatis acri raptavere discursu. iamque artuum et membrorum divulsa conpage superscandentes corpora mortuorum ad ultimam truncata deformitatem velut exsaturati mox abiecerunt in flumen.
+
+	    Tempore quo primis auspiciis in mundanum fulgorem surgeret victura dum erunt homines Roma, ut augeretur sublimibus incrementis, foedere pacis aeternae Virtus convenit atque Fortuna plerumque dissidentes, quarum si altera defuisset, ad perfectam non venerat summitatem.This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  </para>
+	  <para> List item
+	  <itemizedlist>
+	    <listitem> <para>
+	      bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	    </para>
+	    </listitem>
+	    <listitem> <para>
+	      bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	    </para>
+	    </listitem>
+	    <listitem> <para>
+	      bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	    </para>
+	    </listitem>
+	    <listitem> <para>
+	      bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	    </para>
+	    <itemizedlist>
+	      <listitem> <para>
+		bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	      </para>
+	      </listitem>
+	      <listitem> <para>
+		bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	      </para>
+	      </listitem>
+	      <listitem> <para>
+		bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	      </para>
+	      </listitem>
+	      <listitem> <para>
+		bla bla 	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla	bla bla
+	      </para>
+	      </listitem>
+	    </itemizedlist>
+
+	    </listitem>
+	  </itemizedlist>
+	  </para>
+	</section> 
+
+      </section> 
+
+    </section> 
+    
+  </section>
+
+  <xi:include href="colophon.xml" />
+</article>

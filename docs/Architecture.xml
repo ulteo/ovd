@@ -14,123 +14,141 @@
   </articleinfo>
 
   <para>
-    The purpose of this documentation is to describe the architecture
-    of an <emphasis>Ulteo Open Virtual Desktop</emphasis> server farm.
+    The purpose of this documentation is to provide a high-level description of the architecture
+    typically used in an <emphasis>Ulteo Open Virtual Desktop</emphasis> server farm.
   </para>
 
   <section>
-    <title>Servers types and softwares</title>
+    <title>Servers Roles</title>
 
     <para>
-      Ulteo OVD uses several servers with different roles. Part of them
-      are required and the others are optional.
+      A typical Ulteo OVD installation uses several servers with different roles. Some of 
+      the server roles are required and others are optional.
     </para>
 
     <section>
       <title>Session Manager</title>
       <para>
-        This server is the central piece of an Ulteo OVD
-        architecture. It manages the session launching and hosts the
-        administration console. It is the first software to install.
+        This server is the central piece of an Ulteo OVD server farm and always required.
+        It manages the session establishment from a client and hosts the
+        administration console. The Session Manager should be installed prior to any other  
+        server.
       </para>
       <para>
-        The Session Manager can only be installed on Linux using a
-        package at the moment, but it is also possible to run it on
-        Windows by installing it from sources.
+        Ulteo provides various Linux packages for installing the Session Manager on a Linux 
+        server. It should also be possible to install and run the Session Manager on
+        Windows, but this must be done directly from the available source code. Ulteo does
+        not provide a Windows installer.
       </para>
     </section>
 
     <section>
       <title>Application Server</title>
       <para>
-        Ulteo OVD is an application and desktop delivery solution
-        so there are some servers which hosts the applications and can
-        be accessed using a remote display solution.
+        Ulteo OVD is an application and desktop delivery solution. The Application Server
+        in the OVD solution is the server that hosts the applications and is 
+        accessed from the client using a remote display protocol.
       </para>
       <para>
-        This server can be running on a Linux system or on a Windows system
+        The Application Server can be either a Linux system or a Windows system
         depending on the type of applications or desktop you want
         to deliver. Of course, you can mix Linux and Windows machines
-        in an Ulteo OVD farm to deliver applications from
-        different systems.
+        in an Ulteo OVD farm to deliver applications from different systems.
       </para>
     </section>
 
     <section>
-      <title>Web Client</title>
+      <title>Web Portal</title>
       <para>
-        This software is used for start an Ulteo OVD session without
-        installing anything on the client machine, only a web
-        browser is required. This is not the only way to start a session, you
-        can also use the Ulteo OVD Native Client. So this software
-        is not required in an Ulteo OVD farm.
+        This Web Portal server is responsible for managing browser-based client sessions. 
+        In OVD 4, there are 2 types of browser-based sessions. The first type of browser session 
+        uses a Java applet within the browser to communicate with the Web Portal. In this case, 
+        the Web Portal supplies the Java applet if it is not already available in the 
+        browser. The second type of browser session requires an HTML5 compliant browser on the 
+        client machine, no software will be installed on the client machine. In both cases, 
+        the OVD session is tunneled over an SSL session. In addition, the OVD Web Portal
+        provides capabilities for other web sites to integrate with OVD.
       </para>
+      <para>
+        Users may decide to use one of the Ulteo OVD Native Clients to create an OVD
+        session instead of using a web browser. In that case, the Web Portal would not
+        be required.
+      </para>
+    </section>
+    
+    <section>
+      <title>Web Applications</title>
+      <para>
+        An OVD server may be configured to support Web Application Integration.
+        This could be installed as a standalone server or could be configured on an existing server with different roles.
+        The Web Application Integration provides seamless integration of Web Applications into the OVD environment and a Single Sign On capability
+      </para>    
     </section>
 
     <section>
       <title>File Server</title>
       <para>
-        Ulteo OVD is an application and desktop delivery solution
-        but it can be useful to have a centralized file system
-        management to ensure user access to the same files when
-        using applications from different servers. This software
-        manages a network file system that the Application Server
+        Within the Ulteo OVD application and desktop delivery solution, the 
+        File Server provides a centralized file management system that enables users  
+        to access the same files independently of which application server is used 
+        to provide the application. This software
+        manages a network file system that the Application Servers
         access when users are running sessions. It hosts both user profiles
-        and shared folders.
+        and data files and folders.
       </para>
       <para>
-        The File Server can only be installed on Linux for now. It is
-        possible to install it on the same machine as an Application
-        Server.
+        The File Server is currently provided for Linux based servers only. In a small 
+        OVD server farm, the File Server may reside on the same physical machine as the 
+        Application Server. In larger installations, the File Server would typically 
+        run on dedicated hardware. 
       </para>
     </section>
 
     <section>
       <title>Gateway</title>
       <para>
-        Ulteo OVD uses several ports during the session, mainly
-        HTTPS (443) and RDP (3389). But in some places, when the user is mobile,
-        some firewalls are blocking access to those ports. Another possible
-        issue is to have several public IP address for each server.
+        Ulteo OVD uses several ports during the client session, mainly
+        HTTPS (443) and RDP (3389). But in some cases, for example when the user 
+        is remote, a firewall would typically be configured to block access 
+        to the RDP port. The Gateway also can be used to unify access to multiple
+        Application Servers by providing a single point of access to the clients.
       </para>
       <para>
-        The Gateway tunnelize all the OVD connections into an HTTPS
-        link. So from anywhere you can have access to HTTPS (443),
-        it will be possible to start Ulteo OVD sessions.
+        The Gateway tunnels all the OVD connections over an HTTPS session. 
+        So from anywhere, users that have access to HTTPS (443), will also be able 
+        to start an Ulteo OVD session.
       </para>
     </section>
   </section>
 
+  
   <section>
     <title>Subsystem</title>
 
     <para>
       The Subsystem is an archive built and delivered by Ulteo
-      containing an Application Server, a File Server and an Ulteo
-      typical desktop pre-installed. It is the easiest way to setup a
-      demo architecture. It can be installed on any supported Linux
-      distribution.
+      containing an Application Server, a File Server and a typical Ulteo
+      desktop pre-installed. It is the easiest way to setup a
+      demo architecture. It can be installed on any Linux distribution supported
+      by Ulteo.
     </para>
 
     <para>
-      This subsystem archive can be downloaded when the Session Manager
-      is installed in order to simplify the deployement of Linux OVD
+      The subsystem archive can be downloaded when the Session Manager
+      has been installed in order to simplify the deployement of Linux OVD
       Application Servers.
     </para>
   </section>
-
+  
   <section>
-    <title>High Availability / Failover</title>
-
-    <para>
-      As the Session Manager is the main piece of the Ulteo OVD farm,
-      it requires to have a failover solution to avoid having a broken farm
-      when the Session Manager has a problem.
-    </para>
-    <para>
-      This High Availability solution uses Heartbeat, a solution used by the Linux HA
-      project.
-    </para>
-  </section>
+	<title>Overview ports and protocols</title>
+	<para> 
+		The following diagram presents an overview of ports and protocols used in <emphasis>Ulteo Open Virtual Desktop</emphasis>.
+	</para>
+     <screenshot>
+      <screeninfo>Ports and protocols</screeninfo>
+      <graphic fileref="img/ports_protocols.png"></graphic>
+    </screenshot>
+ </section>
   <xi:include href="colophon.xml" />
 </article>

@@ -21,6 +21,7 @@
 #include "list.h"
 #include "memory.h"
 #include "log.h"
+#include "str.h"
 
 
 List* list_new(bool deleteOnClose) {
@@ -86,7 +87,6 @@ void list_clear(List* list) {
 
 void list_add(List* list, Any item) {
 	Any* p;
-	int i;
 
 	if (list->size >= list->allocSize) {
 		p = (Any*)memory_realloc2(list->values, (list->allocSize + DEFAULT_LIST_SIZE) * sizeof(Any), list->allocSize * sizeof(Any), true);
@@ -146,9 +146,7 @@ char* list_dumpStr(List* list, char* separator) {
 
 
 bool list_containString(List* list, const char* path) {
-	char* buffer;
 	char* str;
-	int size = 1;
 	int i;
 
 	if (path == NULL)

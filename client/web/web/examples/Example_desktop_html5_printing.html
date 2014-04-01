@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title>Test</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<script type="text/javascript" src="jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="uovd.js" charset="utf-8"></script>
+	</head>
+	<body>
+		<h1>Test OVD JS framework</h1>
+		
+		<form id="form">
+			Login: <input id="login" value="dpaul" />
+			Password: <input id="password" type="password" value="dpaul" />
+			Session Manager: <input id="sm" value="sm.ulteo.demo" />
+			<input type="submit" value="Start!" />
+		</form>
+		<textarea id="log" rows="10" cols="98">== Logs ==
+		</textarea>
+		<ul id="ovd_print"></ul>
+		<div id="ovd_container"></div>
+	</body>
+
+	<script type="text/javascript">
+		/* Globals */
+		var session_management = new uovd.SessionManagement();
+		var ajax_provider = new uovd.provider.http.Proxy("proxy.php");
+		var rdp_provider = new uovd.provider.rdp.Html5();
+
+		/* Minimal framework events callbacks */
+
+		/* Logs (not mandatory) */
+		session_management.addCallback("ovd.*", function(type, source, params) {
+			var message = "Event : "+type + "\n";
+			for(k in params) {
+				message = message + "\t" + k + " = " + params[k] + "\n";
+			}
+			jQuery("#log").val(jQuery("#log").val()+"\n"+message);
+			console.log(message);
+		});
+
+		/* Printing */
+		session_management.addCallback("ovd.rdpProvider.printing.job", function(type, source, params) {
+			var print_job_path = params["path"];
+			var print_job_id = params["id"];
+			var li = jQuery("<li><a href=\""+print_job_path+"\" target=\"_blank\">Print job "+print_job_id+"</a></li>");
+
+			jQuery("#ovd_print").append(li);
+		});
+
+		/* Session screen insertion */
+		session_management.addCallback("ovd.rdpProvider.desktopPanel", function(type, source, params) {
+			jQuery('#ovd_container').show().append(params.node);
+		});
+
+		/* Session end cleaning */
+		session_management.addCallback("ovd.session.destroyed", function() {
+			jQuery('#ovd_container').hide().empty();
+		});
+
+		/* Submit form */
+		jQuery("#form").submit(function(e) {
+			e.preventDefault();
+
+			var options = {
+				login: jQuery("#login").val(),
+				password: jQuery("#password").val(),
+				mode: uovd.SESSION_MODE_DESKTOP,
+				sessionmanager: jQuery("#sm").val(),
+				width: 800,
+				height: 600,
+			};
+
+			session_management.setParameters(options);
+			session_management.setAjaxProvider(ajax_provider);
+			session_management.setRdpProvider(rdp_provider);
+			session_management.start();
+        return false; 
+		});
+	</script>
+</html>

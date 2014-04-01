@@ -1,0 +1,31 @@
+div#notification {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	font-size: 1.2em;
+}
+
+div#error {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #ffcccc;
+}
+
+div#ok {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #ccffcc;
+}
+
+div#info {
+	position: relative;
+	width: 100%;
+	z-index: 100;
+	padding: 10px;
+	background: #f1f2a1;
+}

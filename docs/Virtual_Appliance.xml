@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Virtual Appliance</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+  <section id="introduction">
+   <title>Introduction</title>
+   <para>
+    The purpose of this documentation is to describe how to use the virtual appliance which embeds
+    <emphasis>Ulteo Open Virtual Desktop</emphasis> components such as Session Manager, Web Portal, FileServer and Linux Application Server. Note that the Virtual Appliance delivers the Community Edition of Ulteo. To upgrade to the OVD Premium Edition, refer to the information <ulink url="Premium_Edition.html">here</ulink>
+  </para>
+  </section>
+  <section id="installation">
+	 <title>Installation</title>
+	 <para>
+		OVD Virtual appliance works with both <ulink url="http://www.vmware.com/">VMware</ulink> or <ulink url="https://www.virtualbox.org/">VirtualBox</ulink>. For easy setup, use a DHCP network with a bridged interface on your host machine configuration.
+	 </para>
+	 <section id="vmware">
+	 <title>VMWare Installation</title>
+	 <para>
+		 You can use for demo VMWare Player.
+	</para>
+	 <screenshot>
+        <screeninfo>VmWare1</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-1.png"></graphic>
+	 </screenshot>
+	 <para>
+		 Once launched, import your ova file into VMWare Player
+	 </para>
+	 <screenshot>
+        <screeninfo>VmWare2</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-3.png"></graphic>
+	 </screenshot>
+	 
+	 <para>
+		 Import in progress ...
+	 </para>
+	 <screenshot>
+        <screeninfo>VmWare3</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-4.png"></graphic>
+	 </screenshot>
+	
+	<para>
+		The OVD Virtual appliance is now running !
+	</para>
+	<screenshot>
+        <screeninfo>VmWare4</screeninfo>
+		<graphic fileref="img/virtualappliance/vmware-5.png"></graphic>
+	</screenshot>	
+	
+	</section>
+	<section id="vbox">
+	 <title>VirtualBox Installation</title>
+	 <para>
+		The Virtual Appliance may also be installed using VirtualBox.
+	 </para>
+	 <para>
+		Start VirtualBox and import the Ulteo ova file 
+	 </para>
+	  <screenshot>
+        <screeninfo>vbox1</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox1.png"></graphic>
+	 </screenshot>
+	 <para> 
+		Click on "Reinitialize the MAC address..."
+	 </para>
+	 <screenshot>
+        <screeninfo>vbox2</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox2.png"></graphic>
+	 </screenshot>
+	 <para> 
+		Accept the Software License Agreement
+	 </para>
+	 
+	 <screenshot>
+        <screeninfo>vbox3</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox3.png"></graphic>
+	 </screenshot>
+	 
+	 <para> 
+		 
+		By default, VirtualBox fails to assign a network interface. You need to update it in the Virtual Machine settings
+	 </para>
+	 <screenshot>
+        <screeninfo>vbox4</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox4.png"></graphic>
+	 </screenshot>	
+	
+	<para>
+		Open the settings box and confirm the information by clicking on OK
+	</para>
+	
+	<screenshot>
+        <screeninfo>vbox5</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox5.png"></graphic>
+	</screenshot>	
+	
+	
+	<para>
+		The OVD Virtual Appliance is now running !
+	</para>
+	
+	<screenshot>
+        <screeninfo>vbox6</screeninfo>
+		<graphic fileref="img/virtualappliance/import_ova_vbox6.png"></graphic>
+	</screenshot>	
+	</section>
+	
+	
+  </section>
+  <section id="run it">
+    <title>Running the Virtual Appliance</title>
+    <para>
+		The OVD Virtual appliance is easy to use and allows you to quickly 
+		get an idea of what OVD is and how this works.
+		Check the shell console to get the IP addess.	
+	</para>
+	<para>
+		Documentation on the Web Portal settings and how to use it is available <ulink url="WebClient.html">here</ulink>	
+	</para>
+	<screenshot>
+        <screeninfo>Virtual appliance shell</screeninfo>
+		<graphic fileref="img/virtualappliance/shell.png"></graphic>
+	</screenshot>
+	<para>
+		Once running, you have access to an OVD farm for demo or testing purposes.
+	</para>	
+	<screenshot>
+        <screeninfo>Welcome to OVD !</screeninfo>
+		<graphic fileref="img/virtualappliance/welcome.png"></graphic>
+	</screenshot>
+	
+  </section>
+  <xi:include href="colophon.xml" />
+</article>

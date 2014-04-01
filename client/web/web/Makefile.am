@@ -8,6 +8,7 @@ scripts_DATA = ajaxplorer.php \
                index.php \
                news.php \
                proxy.php \
+               webapps_proxy.php \
                start_app.php \
                synchronize.php \
                translate.php

@@ -60,7 +60,8 @@ function initialize_framework() {
 	};
 
 	framework.webapps_providers = {
-		jsonp: new uovd.provider.webapps.Jsonp()
+		jsonp: new uovd.provider.webapps.Jsonp(),
+		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php")
 	};
 
 	/* Setup Handlers */
@@ -92,6 +93,14 @@ function initialize_framework() {
 			configureUI(mode);
 			pullMainContainer();
 		}
+
+		if(to == uovd.SESSION_STATUS_LOGGED) {
+			hideSplash();
+		}
+	});
+
+	framework.session_management.addCallback("ovd.session.serversConnected", function(type, source, params) {
+		hideSplash();
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
@@ -144,10 +153,14 @@ function initialize_framework() {
 	framework.listeners.progress_bar = new ProgressBar(framework.session_management, '#progressBarContent');
 	/* handle client insertion */
 	framework.listeners.desktop_container = new DesktopContainer(framework.session_management, "#desktopContainer");
+	/* handle menu insertion */
+	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
+	/* applications taskbar */
+	framework.listeners.seamless_taskbar = new SeamlessTaskbar(framework.session_management, "#appsContainer");
 	/* window manager */
-	framework.listeners.seamless_window_manager = new SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+	framework.listeners.seamless_window_manager = new uovd.provider.rdp.html5.SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 	/* Session-based start_app support */
 	framework.listeners.start_app = new StartApp(framework.session_management);
 	/* application counter */
@@ -230,11 +243,10 @@ function initialize_settings() {
 	settings.width                 = jQuery(window).innerWidth();
 	settings.height                = jQuery(window).innerHeight();
 	settings.fullscreen            = false;
-	settings.debug                 = true;
 	settings.use_local_credentials = defaults.force_use_local_credentials;
 	settings.rdp_provider          = defaults.rdp_provider;
 	settings.http_provider         = "proxy";
-	settings.webapps_provider      = "jsonp";
+	settings.webapps_provider      = "proxy";
 	settings.wc_url                = getWebClientBaseURL();
 
 	/* Settings needed by the framework */
@@ -375,7 +387,7 @@ function checkExternalSession(active_callback, inactive_callback) {
 	framework.session_management.setParameters(settings);
 
 	/* Set providers */
-	framework.session_management.setAjaxProvider(framework.http_providers[settings.http_provider]);
+	framework.session_management.setHttpProvider(framework.http_providers[settings.http_provider]);
 	framework.session_management.setRdpProvider(framework.rdp_providers[settings.rdp_provider]);
 	framework.session_management.setWebAppsProvider(framework.webapps_providers[settings.webapps_provider]);
 

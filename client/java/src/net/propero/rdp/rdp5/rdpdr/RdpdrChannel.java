@@ -632,8 +632,14 @@ public class RdpdrChannel extends VChannel {
 		String ret = "";
 
 		s.copyToByteArray(temp, 0, s.getPosition(), len);
+
+		if (len>2 && temp[len-1] == 0x00 && temp[len-2] == 0x00) {
+			// Remove null characters at the ends of the buffer
+			len-= 2;
+		}
+		
 		try {
-			ret = new String(temp, Charset.forName("UTF-16LE"));
+			ret = new String(temp, 0, len, Charset.forName("UTF-16LE"));
 			return ret;
 		}
 		catch (UnsupportedCharsetException e) {

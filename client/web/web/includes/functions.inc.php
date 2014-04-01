@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,10 +39,12 @@ function get_available_languages() {
 // 		array('id' => 'af', 'english_name' => 'Afrikaans'),
 // 		array('id' => 'sq', 'english_name' => 'Albanian'),
 		array('id' => 'ar-ae', 'english_name' => 'Arabic', 'local_name' => 'العربية'),
+		array('id' => 'eu-es', 'english_name' => 'Basque', 'local_name' => 'Euskara'),
  		array('id' => 'bg', 'english_name' => 'Bulgarian', 'local_name' => 'Български'),
 // 		array('id' => 'be', 'english_name' => 'Belarusian'),
 		array('id' => 'zh-cn', 'english_name' => 'Chinese', 'local_name' => '中文'),
 // 		array('id' => 'hr', 'english_name' => 'Croatian'),
+		array('id' => 'ca-es', 'english_name' => 'Catalan', 'local_name' => 'Català'),
 // 		array('id' => 'cs', 'english_name' => 'Czech', 'local_name' => 'Česky'),
 		array('id' => 'da-dk', 'english_name' => 'Danish', 'local_name' => 'Dansk'),
 		array('id' => 'nl', 'english_name' => 'Dutch', 'local_name' => 'Nederlands'),
@@ -81,7 +83,7 @@ function get_available_languages() {
 // 		array('id' => 'sl', 'english_name' => 'Slovenian'),
 // 		array('id' => 'sb', 'english_name' => 'Sorbian'),
 		array('id' => 'es', 'english_name' => 'Spanish (Spain)', 'local_name' => 'Español (España)'),
-// 		array('id' => 'sv', 'english_name' => 'Swedish', 'local_name' => 'Svenska'),
+		array('id' => 'sv-se', 'english_name' => 'Swedish', 'local_name' => 'Svenska'),
 // 		array('id' => 'th', 'english_name' => 'Thai'),
 // 		array('id' => 'tn', 'english_name' => 'Tswana'),
 // 		array('id' => 'tr', 'english_name' => 'Turkish', 'local_name' => 'Türkçe'),
@@ -127,6 +129,39 @@ function language_is_supported($languages_list, $lang) {
 	return false;
 }
 
+// parse list of comma separated language tags and sort it by the quality value
+function detectBrowserLanguage($languages_list) {
+	$languages = array();
+	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$languagesQ = array();
+		$languageList = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		$languageRanges = explode(',', trim($languageList));
+		foreach ($languageRanges as $languageRange) {
+			if (preg_match('/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/', trim($languageRange), $match)) {
+				if (language_is_supported($languages_list, strtolower($match[1]))) {
+					if (!isset($match[2])) {
+						$match[2] = '1.0';
+					} else {
+						$match[2] = (string) floatval($match[2]);
+					}
+					if (!isset($languagesQ[$match[2]])) {
+						$languagesQ[$match[2]] = array();
+					}
+					$languagesQ[$match[2]][] = strtolower($match[1]);
+				}
+			}
+		}
+		krsort($languagesQ);
+		foreach ($languagesQ as $langQ) {
+			foreach ($langQ as $lang) {
+				$languages[] = $lang;
+			}
+		}
+	}
+	
+	return $languages;
+}
+
 function locale2unix($locale_) {
 	if (preg_match('/[a-z]+_[A-Z]+\.[a-zA-Z-0-9]+/', $locale_))
 		return $locale_;
@@ -167,6 +202,7 @@ function get_available_translations($lang) {
 
 		'session_manager'				=>	_('Session Manager'),
 		'login'							=>	_('Login'),
+		'login_detected'		=>	_('Login (detected)'),
 		'password'						=>	_('Password'),
 		'use_local_credentials'			=>	_('Use local credentials'),
 		'use_local_credentials_yes'		=>	_('Yes'),
@@ -192,12 +228,12 @@ function get_available_translations($lang) {
 		'connect'						=>	_('Connect'),
 
 		'system_compatibility_check_1'	=>	_('Checking for system compatibility'),
-		'system_compatibility_check_2'	=>	_('If this is your first time here, a Java security window will show up and you have to accept it to use the service.'),
+		'system_compatibility_check_2'	=>	_('If this is your first time here, a Java security window will show up and you will have to accept it to use the service.'),
 		'system_compatibility_check_3'	=>	_('You are advised to check the "<em>Always trust content from this publisher</em>" checkbox.'),
 
 		'system_compatibility_error_1'	=>	_('System compatibility error'),
-		'system_compatibility_error_2'	=>	_('Java is not available either on your system or in your web browser.'),
-		'system_compatibility_error_3'	=>	_('Please install Java extension for your web browser or contact your administrator.'),
+		'system_compatibility_error_2'	=>	_('Java is either not available on your system or in your web browser.'),
+		'system_compatibility_error_3'	=>	_('Please install the Java extension for your web browser or contact your administrator.'),
 		'system_compatibility_error_4'	=>	_('You have not accepted the Java security window.'),
 		'system_compatibility_error_5'	=>	_('You <strong>cannot</strong> have access to this service.'),
 
@@ -207,7 +243,7 @@ function get_available_translations($lang) {
 		'suspend'						=>	_('Suspend'),
 		'logout'						=>	_('Logout'),
 
-		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separated window'),
+		'desktop_fullscreen_text1'		=>	_('The Ulteo OVD session runs in a separate window'),
 		'desktop_fullscreen_text2'		=>	str_replace(
 									array('[A]', '[/A]'),
 									array('<a href="javascript:;">', '</a>'),
@@ -228,16 +264,17 @@ function get_available_translations($lang) {
 		'unable_to_reach_sm'			=>	_('Unable to reach the Session Manager'),
 
 		'auth_failed'					=>	_('Authentication failed: please double-check your password and try again'),
-		'in_maintenance'				=>	_('The system is on maintenance mode, please contact your administrator for more information'),
-		'internal_error'				=>	_('An internal error occured, please contact your administrator'),
+		'in_maintenance'				=>	_('The system is in maintenance mode, please contact your administrator for more information'),
+		'internal_error'				=>	_('An internal error occurred, please contact your administrator'),
 		'invalid_user'					=>	_('You specified an invalid login, please double-check and try again'),
 		'service_not_available'			=>	_('The service is not available, please contact your administrator for more information'),
-		'unauthorized_session_mode'		=>	_('You are not authorized to launch a session in this mode'),
+		'unauthorized'					=>	_('You are not authorized to launch a session. Please contact your administrator for more information'),
 		'user_with_active_session'		=>	_('You already have an active session'),
 
 		'window_onbeforeunload'			=>	_('You will be disconnected from your OVD session.'),
 
 		'session_expire_in_3_minutes'	=>	_('Your session is going to end in 3 minutes, please save all your data now!'),
+		'session_time_restriction_expire'=>	_('Your session is going to be disconnected in %MINUTES% minutes because of the logon time restriction policy'),
 
 		'session_close_unexpected'		=>	_('Server: session closed unexpectedly'),
 		'session_end_ok'				=>	_('Your session has ended, you can now close the window'),
@@ -285,4 +322,69 @@ function get_ie_version() {
 		$ie_version = PHP_INT_MAX;
 	}
 	return $ie_version;
+}
+
+function get_users_list() {
+	if (! defined('SESSIONMANAGER_HOST'))
+		return false;
+
+	global $sessionmanager_url;
+
+	$sm = new SessionManager($sessionmanager_url);
+	$ret = $sm->query('userlist');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$buf = @$dom->loadXML($ret);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$users_node = $dom->getElementsByTagname('users')->item(0);
+	if (is_null($users_node))
+		return false;
+
+	$users = array();
+	foreach ($users_node->childNodes as $user_node) {
+		if ($user_node->hasAttribute('login'))
+			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
+	}
+	natcasesort($users);
+
+	if (count($users) == 0)
+		return false;
+
+	return $users;
+}
+
+function short_list_field($id, $disabled, $selected, $items) {
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<input class=\"input_radio\" type=\"radio\" value=\"${key}\" name=\"${id}\" id=\"${id}_${key}\"".
+			($selected == $key ? " checked=\"checked\"" : "").
+			($disabled ? " disabled=\"disabled\"" : "").
+			"><label for=\"${id}_${key}\" id=\"${gettext}\">${label}</label>";
+	}
+}
+
+function long_list_field($id, $disabled, $selected, $items) {
+	echo "<select id=\"${id}\" ".($disabled ? ' disabled="disabled"' : "").">";
+	foreach ($items as $key => $val) {
+		if (substr($val, -8) === "_gettext") {
+			$gettext = $val;
+			$label = "";
+		} else {
+			$gettext = "";
+			$label = $val;
+		}
+		echo "<option id=\"${gettext}\" value=\"${key}\" ".($selected == $key ? "selected=\"selected\"" : "").">${val}</option>";
+	}
+	echo "</select>";
 }

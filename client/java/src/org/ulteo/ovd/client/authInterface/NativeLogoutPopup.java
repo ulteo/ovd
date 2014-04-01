@@ -257,15 +257,18 @@ public class NativeLogoutPopup extends JDialog implements ActionListener {
 		Object src = ae.getSource();
 		
 		boolean cancelled = false;
-		
+		boolean disconnected = true;
 		if (src == this.cancelButton) {
 			cancelled = true;
 		}
 		else if (src == this.okButton) {
-			if (this.actions.isPersistentSessionEnabled() && this.disconnectRadio.isSelected())
+			if (this.actions.isPersistentSessionEnabled() && this.disconnectRadio.isSelected()) {
 				this.frame.setDisconnectionMode(OvdClient.DisconnectionMode.SUSPEND);
-			else if (this.logoffRadio.isSelected())
+				disconnected = true;
+			} else if (this.logoffRadio.isSelected()) {
 				this.frame.setDisconnectionMode(OvdClient.DisconnectionMode.LOGOFF);
+				disconnected = false;
+			}
 		}
 		else {
 			return;
@@ -279,6 +282,6 @@ public class NativeLogoutPopup extends JDialog implements ActionListener {
 		
 		this.frame.haveToQuit(this.exitCheckBox.isSelected());
 		
-		this.actions.disconnect();
+		this.actions.disconnect(disconnected);
 	}
 }

@@ -21,4 +21,4 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ConfigElement_inputlist extends ConfigElement {}
+class ConfigElement_inputlist extends ConfigElement_dictionary {}

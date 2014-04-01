@@ -45,7 +45,7 @@ public class WebApplication extends Application {
 	private URI getOpenURI(final String url, final int appId, final String login, final String password) {
 		final String uri;
 		try {
-			uri = url + "/open?id=" + appId + "&user=" + URLEncoder.encode(login, "UTF-8") + "&pass=" + URLEncoder.encode(password, "UTF-8");
+			uri = url + "/webapps/open?id=" + appId + "&user=" + URLEncoder.encode(login, "UTF-8") + "&pass=" + URLEncoder.encode(password, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}

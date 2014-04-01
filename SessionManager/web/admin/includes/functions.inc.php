@@ -5,7 +5,9 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
+ * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,10 +56,15 @@ function init_db($prefs_) {
 
 	// Init of Abstract
 	Abstract_Server::init($prefs_);
+	Abstract_ServersGroup::init($prefs_);
 	Abstract_Session::init($prefs_);
 	Abstract_Token::init($prefs_);
 	Abstract_News::init($prefs_);
+	Abstract_Script::init($prefs_);
 	Abstract_Liaison::init($prefs_);
+	if (class_exists("PremiumManager")) {
+		PremiumManager::initdb($prefs_);
+	}
 	Abstract_Task::init($prefs_);
 	Abstract_ReportServer::init($prefs_);
 	Abstract_ReportSession::init($prefs_);
@@ -66,6 +73,7 @@ function init_db($prefs_) {
 	Abstract_UserGroup_Rule::init($prefs_);
 	Abstract_VDI::init($prefs_);
 	Abstract_Network_Folder::init($prefs_);
+	Abstract_AdminAction::init($prefs_);
 	
 	return true;
 }

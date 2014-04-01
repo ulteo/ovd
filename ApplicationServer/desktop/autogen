@@ -25,7 +25,10 @@ else
     version=$(cat VERSION | head -n 1)~dev
 fi
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
+sed -e "s/@VERSION@/${version}/g" < configure.ac.in2 > configure.ac
+
+
+pushd icons && ./autogen.py && popd
 
 xdt-autogen $@
 

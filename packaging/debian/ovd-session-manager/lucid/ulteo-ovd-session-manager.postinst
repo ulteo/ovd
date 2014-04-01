@@ -6,6 +6,7 @@ CONFDIR=/etc/ulteo/sessionmanager
 CACHEDIR=/var/cache/ulteo/sessionmanager
 SPOOLDIR=/var/spool/ulteo/sessionmanager
 LOGDIR=/var/log/ulteo/sessionmanager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
 
 CONFFILE=$CONFDIR/config.inc.php
 
@@ -107,6 +108,22 @@ then
         db_input high ulteo-ovd-session-manager/tarball_url || true
         db_go
     done
+fi
+
+# Update database
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database."
+   su $A2USER -c "php $INSTALLDIR/tools/update_database.php" 2>/dev/null
+   [ $? -ne 0 ] && exit 1
+fi
+
+# Update wsdl
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files."
+   su $A2USER -c "php $INSTALLDIR/tools/update_wsdl_cache.php" 2>/dev/null
+   [ $? -ne 0 ] && exit 1
 fi
 
 db_stop

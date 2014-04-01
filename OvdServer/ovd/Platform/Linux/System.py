@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -77,8 +78,8 @@ class System(AbstractSystem):
 			buf = buf.replace("\n", "")
 			buf = buf.encode('utf-8')
 		
-		except Exception, err:
-			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
+		except Exception:
+			Logger.exception("System::getVersion")
 			buf = platform.version()
 		
 		return buf
@@ -90,8 +91,8 @@ class System(AbstractSystem):
 			fd = file("/proc/stat", "r")
 			line = fd.readline()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::getCPULoad %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::getCPULoad")
 			return (0.0, 0.0)
 		
 		
@@ -121,8 +122,8 @@ class System(AbstractSystem):
 			fd = file(filename_, "r")
 			lines = fd.readlines()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::_getMeminfo %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::_getMeminfo")
 			return {}
 		
 		infos = {}
@@ -145,8 +146,8 @@ class System(AbstractSystem):
 			name = infos["model name"]
 			nb = int(infos["processor"]) + 1
 			
-		except Exception, e:
-			Logger.error("getCPUInfos %s"%(str(e)))
+		except Exception:
+			Logger.exception("getCPUInfos")
 			return (1, "Unknown")
 		
 		return (nb, name)
@@ -158,8 +159,8 @@ class System(AbstractSystem):
 			fd = file("/proc/meminfo", "r")
 			lines = fd.readlines()
 			fd.close()
-		except Exception, e:
-			Logger.error("System::_getMeminfo %s"%(str(e)))
+		except Exception:
+			Logger.exception("System::_getMeminfo")
 			return {}
 		
 		infos = {}
@@ -188,8 +189,8 @@ class System(AbstractSystem):
 			free = int(infos["MemFree"])
 			cached = int(infos["Cached"])
 			buffers = int(infos["Buffers"])
-		except Exception, e:
-			Logger.warn("getRAMUsed: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMUsed")
 			return 0.0
 		
 		return total - (free + cached + buffers)
@@ -202,8 +203,8 @@ class System(AbstractSystem):
 		try:
 			total = int(infos["MemTotal"])
 		
-		except Exception, e:
-			Logger.warn("getRAMTotal: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMTotal")
 			return 0.0
 		
 		return total
@@ -237,6 +238,17 @@ class System(AbstractSystem):
 	
 	
 	@staticmethod
+	def groupDelete(name_):
+		cmd = "groupdel  %s"%(name_)
+		p = System.execute(cmd)
+		if p.returncode is not 0:
+			Logger.error("groupDelete return '%d' (%s)"%(p.returncode, p.stdout.read().decode("UTF-8")))
+			return False
+		
+		return True
+	
+	
+	@staticmethod
 	def groupExist(name_):
 		try:
 			grp.getgrnam(name_)
@@ -250,8 +262,8 @@ class System(AbstractSystem):
 	def groupMember(name_):
 		try:
 			group = grp.getgrnam(name_)
-		except KeyError, err:
-			Logger.error("groupMember: '%s'"%(str(err)))
+		except KeyError:
+			Logger.exception("groupMember")
 			return None
 		
 		return group[3]
@@ -262,7 +274,7 @@ class System(AbstractSystem):
 		cmd = "userdel --force  --remove %s"%(name_)
 		
 		p = System.execute(cmd)
-		if p.returncode == 3072:
+		if p.returncode == 12:
 			Logger.debug("mail dir error: '%s' return %d => %s"%(cmd, p.returncode, p.stdout.read()))
 		elif p.returncode != 0:
 			Logger.error("userRemove return %d (%s)"%(p.returncode, p.stdout.read()))
@@ -318,3 +330,30 @@ class System(AbstractSystem):
 	@staticmethod
 	def prepareForSessionActions():
 		pass
+	
+	
+	@staticmethod
+	def _rchown(path, uid, gid):
+		os.chown(path, uid, gid)
+		for item in os.listdir(path):
+			itempath = os.path.join(path, item)
+			os.chown(itempath, uid, gid)
+			
+			if os.path.isdir(itempath):
+				System._rchown(itempath, uid, gid)
+	
+	
+	@staticmethod
+	def rchown(path, user):
+		p = None
+		try:
+			p = pwd.getpwnam(System.local_encode(user))
+		except:
+			return False
+		
+		try:
+			System._rchown(path, p.pw_uid, p.pw_gid)
+		except:
+			return False
+		
+		return True

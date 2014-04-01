@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011
-# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013, 2014
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -120,8 +121,8 @@ class Session(AbstractSession):
 		
 		try:
 			shutil.rmtree(self.user_session_dir)
-		except Exception, e:
-			Logger.warn("Failed to remove spool directory '%s' : %s"%(self.user_session_dir, str(e)))
+		except Exception:
+			Logger.exception("Failed to remove spool directory '%s'"%self.user_session_dir)
 		
 		self.domain.onSessionEnd()
 		return True
@@ -229,11 +230,7 @@ class Session(AbstractSession):
 			
 			# Transform the drive letter into a bit value according to
 			# http://technet.microsoft.com/en-us/library/cc959437.aspx
-			d = drive.lower()[0].encode("hex")
-			d = int(d) - 61 # a in ascii
-			d = pow(2, d)
-			
-			value+= d
+			value += 1 << (ord(drive.lower()[0]) - 97)
 		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)
 		try:
@@ -361,9 +358,8 @@ class Session(AbstractSession):
 			if "PROGRAMW6432" in os.environ.keys():
 				Reg.UpdateActiveSetup(self.user.name, hiveName, r"Software\Wow6432Node\Microsoft\Active Setup")
 			
-		except Exception, err:
-			Logger.warn("Unable to reset ActiveSetup")
-			Logger.debug("Unable to reset ActiveSetup: "+str(err))
+		except Exception:
+			Logger.exception("Unable to reset ActiveSetup")
 		
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName, self.user.name)
@@ -378,6 +374,19 @@ class Session(AbstractSession):
 			if ret is False:
 				Logger.warn("Unable to set TimeZone (%s, %s)"%(self.parameters["timezone"], tz_name))
 		
+		
+		# Hack for Windows 2012R2 relative to StartScreen integration.
+		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\StartPage"%(hiveName)
+		try:
+			Reg.CreateKeyR(win32con.HKEY_USERS, path)
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		except:
+			key = None
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			win32api.RegSetValueEx(key, "MakeAllAppsDefault", 0, win32con.REG_DWORD, 1)
+			win32api.RegCloseKey(key)
 		
 		# Unload the hive
 		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)

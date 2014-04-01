@@ -86,10 +86,22 @@ sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*
 A2USER=%{apache_user}
 sed -i "s/@APACHE_USER@/${A2USER}/" %{buildroot}/etc/ulteo/sessionmanager/sessionmanager.cron
 
+%pre -n ulteo-ovd-session-manager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+# Check if update is possible
+if [ -f $INSTALLDIR/tools/can_update.php ]
+then
+   su %{apache_user} -c "php $INSTALLDIR/tools/can_update.php" 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/sessionmanager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
 
 %if ! %{defined rhel}
 a2enmod php5 > /dev/null
@@ -134,6 +146,28 @@ then
         -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
     chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
     chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# Update database
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database."
+   su %{apache_user} -c "php $INSTALLDIR/tools/update_database.php" 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
+# Update WDSL
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files."
+   su %{apache_user} -c "php $INSTALLDIR/tools/update_wsdl_cache.php" 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
 fi
 
 # restart apache server

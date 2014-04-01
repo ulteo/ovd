@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewUsers'))
 	redirect();
@@ -62,7 +62,7 @@ function show_default() {
   echo '<div id="users_list_div">';
 
   if ($users_list_empty)
-    echo _('No available user').'<br />';
+    echo _('No available users').'<br />';
   else {
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<thead>';
@@ -107,7 +107,7 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
+      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete the selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
       echo '<input type="hidden" name="name" value="User" />';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="submit" value="'._('Delete').'"/><br />';
@@ -207,15 +207,33 @@ function show_manage($login) {
 
   // Users Group
   $groups_mine = $u->getAttribute('groups');
+	$groups_partial_list = $u->getAttribute('groups_partial_list');
+	$usersgroupsList = new UsersGroupsList($_REQUEST);
+	if ($groups_partial_list) {
+		if ($usersgroupsList->is_empty_filter()) {
+			$usersgroupsList->set_external_result($groups_mine, true);
+		}
+		else {
+			$groups_mine2 = $usersgroupsList->search($login);
+			if (is_null($groups_mine)) {
+				die_error(_('Error while requesting User Group data'),__FILE__,__LINE__);
+			}
+			
+			$groups_mine = array();
+			foreach($groups_mine2 as $group) {
+				$groups_mine[$group->id] = $group->name;
+			}
+		}
+	}
+	
   uasort($groups_mine, 'usergroup_cmp');
 
   $groups_available = array();
 	$default_group_id = null;
 	if ($usergroupdb_rw) {
-		$groups_all = $_SESSION['service']->users_groups_list();
-		if (is_null($groups_all)) {
-			$groups_all = array();
-		}
+		// do not request other groups if we do not display the 'add to' panel ...
+		$groups_all = $usersgroupsList->search();
+		usort($groups_all, "usergroup_cmp");
 		
 		foreach($groups_all as $group) {
 			if (! array_key_exists($group->id, $groups_mine))
@@ -227,6 +245,9 @@ function show_manage($login) {
 		}
 	}
 	uasort($groups_available, 'usergroup_cmp');
+	
+	// need to be after all search call!
+	$searchDiv = $usersgroupsList->getForm();
 
 	$can_manage_users = isAuthorized('manageUsers');
 	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
@@ -340,9 +361,11 @@ function show_manage($login) {
   }
 
   // User groups part
-  if (count($groups_mine)>0 or count($groups_all)>0) {
+  if (count($groups_mine)>0 or !$usersgroupsList->is_empty_filter() or ($usergroupdb_rw and count($groups_all)>0)) {
     echo '<div>';
-    echo '<h2>'._('User groups with this user').'</h2>';
+    echo '<h2>'._('User Groups with this user').'</h2>';
+
+    echo $searchDiv;
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     foreach ($groups_mine as $group_id => $group_name) {
@@ -385,7 +408,7 @@ function show_manage($login) {
   $apps_s = array();
   if (count($applications) > 0) {
     echo '<br />';
-    echo '<h2>'._('Published applications').'</h2>';
+    echo '<h2>'._('Published Applications').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach ($applications as $application_id => $application_name) {
       echo '<tr>';
@@ -398,7 +421,7 @@ function show_manage($login) {
 
 
   echo '<h2>';
-  echo _('Session settings configuration');
+  echo _('Session Settings configuration');
   echo '</h2>';
   
   if ($prefs_of_a_user != array()) {
@@ -438,7 +461,7 @@ function show_manage($login) {
           echo '</td>';
           
           echo '<td>';
-          echo '<input type="button" value="'._('Remove this overriden setting').'" onclick="user_settings_remove(\''.$u->getAttribute('login').'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
+          echo '<input type="button" value="'._('Remove this overridden setting').'" onclick="user_settings_remove(\''.$u->getAttribute('login').'\',\''.$container.'\',\''.$config_element->id.'\'); return false;"/>';
           echo '</td>';
           
           echo '</tr>';
@@ -535,7 +558,7 @@ function show_manage($login) {
 		
 		if (! $u->hasAttribute('profiles')) {
 			echo '<p>';
-			echo _('This user doesn\'t have user profiles yet');
+			echo _('This user doesn\'t have a user profile');
 			echo '</p>';
 			if ($can_manage_profiles) {
 				echo '<div>';

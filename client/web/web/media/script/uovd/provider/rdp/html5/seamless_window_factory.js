@@ -26,8 +26,18 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		this.node.css("position", "absolute");
 		this.node.prop("id", "w_"+this.id);
 
-		/* Focus on click */
-		this.node.click(function() {
+		/* Mouse */
+		this.mouse = new Guacamole.TabletMouse(this.node[0]);
+
+		function sendMouseState(mouseState) {
+			self.connection.guac_client.sendMouseState(mouseState);
+		}
+
+		this.mouse.onmousemove = function(mouseState) {
+			sendMouseState(mouseState);
+		};
+
+		this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {
 			if(! self.focused) {
 				/* Simulate a focus change event to send the canvas on the top */
 				params["rdp_provider"] = self.rdp_provider;
@@ -39,11 +49,56 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 				params["value"] = true;
 				self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", self, params);
 			}
-		});
 
-		/* Move window */
-		this.node.mousedown(function(e) {
-			var begin_drag_n_drop = function() {
+			sendMouseState(mouseState);
+		}
+
+		/* Pinch gesture */
+		this.mouse.onmousepinch = function(amount, center_x, center_y, first) {
+			/* Send event */
+			var params = {};
+			params["center_x"] = center_x;
+			params["center_y"] = center_y;
+			params["amount"] = amount;
+			params["first"] = first;
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.pinching", self.node[0], params);
+		};
+
+		/* Pan gesture */
+		this.mouse.onmousepan = function(x, y) {
+			/* Send event */
+			var params = {};
+			params["x"] = x;
+			params["y"] = y;
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.panning", self.node[0], params);
+		};
+
+		this.mouse.ontwofingers = function() {
+			/* Send event */
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.twofingers", self.node[0], {});
+		};
+
+		this.mouse.onthreefingers = function() {
+			/* Send event */
+			self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.gesture.threefingers", self.node[0], {});
+		};
+
+		/* Client-side events (move, resize) */
+		this.node.on("mousedown.window_client_events", function(e) {
+
+			function showOverlay(x, y, w, h) {
+				var overlay = jQuery(document.createElement("div"));
+				overlay.addClass("uovd_seamless_overlay_window");
+				overlay.css("left", x-3);
+				overlay.css("top", y-3);
+				overlay.width(w);
+				overlay.height(h);
+
+				jQuery("#w_"+self.id).parent().append(overlay);
+				return overlay;
+			}
+
+			function move() {
 				var lastX = e.pageX;
 				var lastY = e.pageY;
 
@@ -52,19 +107,7 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 				var w = self.w;
 				var h = self.h;
 
-				var overlay = jQuery(document.createElement("canvas"));
-				overlay.css("position", "absolute");
-				overlay.prop("width", w);
-				overlay.prop("height", h);
-				overlay.css("left", x);
-				overlay.css("top", y);
-				var context = overlay[0].getContext("2d");
-				context.lineWidth="4";
-				context.strokeStyle="black";
-				context.rect(0,0,w,h);
-				context.stroke();
-
-				jQuery("#w_"+self.id).parent().append(overlay);
+				var overlay = null;
 
 				var drag = function(e) {
 					var dx = parseInt(e.pageX) - parseInt(lastX);
@@ -74,15 +117,30 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 					lastX = e.pageX;
 					lastY = e.pageY;
 
+					/* Show the wireframe window */
+					if(! overlay) {
+						overlay = showOverlay(x, y, w, h);
+
+						/* Set cursor */
+						jQuery("body").addClass("uovd_cursor_move");
+					}
+
 					overlay.css("left", x);
 					overlay.css("top", y);
 				};
 
 				var drop = function(e) {
-					overlay.off("mousemove");
-					overlay.off("onmouseup");
-					overlay.off("mouseout");
-					overlay.remove();
+					jQuery(document).off("mousemove.wireframe_overlay");
+					jQuery(document).off("mouseup.wireframe_overlay");
+					self.node.off("mouseup.long_click_check");
+
+					/* hide the wireframe window */
+					if(overlay) {
+						overlay.remove();
+					}
+
+					/* Reset cursor */
+					jQuery("body").removeClass("uovd_cursor_move");
 
 					if(x != self.x || y != self.y) {
 						/* Send seamless move notification */
@@ -95,41 +153,209 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 					}
 				};
 
-				overlay.mousemove(drag);
-				overlay.mouseup(drop);
-				overlay.mouseout(drop);
+				jQuery(document).on("mousemove.wireframe_overlay", drag);
+				jQuery(document).on("mouseup.wireframe_overlay", drop);
+				self.node.on("mouseup.long_click_check", drop);
+			}
+
+			function resize(action) {
+				var lastX = e.pageX;
+				var lastY = e.pageY;
+
+				var x = self.x;
+				var y = self.y;
+				var w = self.w;
+				var h = self.h;
+
+				var overlay = null;
+
+				var drag = function(e) {
+					var dx = parseInt(e.pageX) - parseInt(lastX);
+					var dy = parseInt(e.pageY) - parseInt(lastY);
+					lastX = e.pageX;
+					lastY = e.pageY;
+
+					/* Show the wireframe window */
+					if(! overlay) {
+						overlay = showOverlay(x, y, w, h);
+
+						/* Set cursor */
+						jQuery("body").addClass("uovd_cursor_resize_"+action);
+					}
+
+					var offset = overlay.offset();
+					var overlay_x = offset.left;
+					var overlay_y = offset.top;
+					var overlay_w = overlay.width();
+					var overlay_h = overlay.height();
+
+					if(overlay_x >= x+w) { overlay_x = x+w; }
+					if(overlay_y >= y+h) { overlay_y = y+h;	}
+
+					switch(action) {
+						case "top":
+							overlay.css("top", overlay_y + dy);
+							overlay.height(overlay_h - dy);
+							break;
+
+						case "bottom":
+							overlay.height(overlay_h + dy);
+							break;
+
+						case "left":
+							overlay.css("left", overlay_x + dx);
+							overlay.width(overlay_w - dx);
+							break;
+
+						case "right":
+							overlay.width(overlay_w + dx);
+							break;
+
+						case "topleft":
+							overlay.css("top", overlay_y + dy);
+							overlay.height(overlay_h - dy);
+							overlay.css("left", overlay_x + dx);
+							overlay.width(overlay_w - dx);
+							break;
+
+						case "topright":
+							overlay.css("top", overlay_y + dy);
+							overlay.height(overlay_h - dy);
+							overlay.width(overlay_w + dx);
+							break;
+
+						case "bottomleft":
+							overlay.height(overlay_h + dy);
+							overlay.css("left", overlay_x + dx);
+							overlay.width(overlay_w - dx);
+							break;
+
+						case "bottomright":
+							overlay.height(overlay_h + dy);
+							overlay.width(overlay_w + dx);
+							break;
+					}
+				};
+
+				var drop = function(e) {
+					var offset = overlay.offset();
+					var overlay_x = offset.left;
+					var overlay_y = offset.top;
+					var overlay_w = overlay.width();
+					var overlay_h = overlay.height();
+
+					jQuery(document).off("mousemove.wireframe_overlay");
+					jQuery(document).off("mouseup.wireframe_overlay");
+					self.node.off("mouseup.long_click_check");
+
+					/* hide the wireframe window */
+					if(overlay) {
+						overlay.remove();
+					}
+
+					/* Reset cursor */
+					jQuery("body").removeClass("uovd_cursor_resize_"+action);
+
+					if(overlay_x != self.x || overlay_y != self.y || overlay_w != self.w || overlay_h != self.h) {
+						/* Send seamless size notification */
+						var parameters = {};
+						parameters["id"] = self.id;
+						parameters["server_id"] = self.server_id;
+						parameters["property"] = "position";
+						parameters["value"] = new Array(overlay_x, overlay_y, overlay_w, overlay_h);
+						self.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.out.windowPropertyChanged", self, parameters);
+					}
+				};
+
+				jQuery(document).on("mousemove.wireframe_overlay", drag);
+				jQuery(document).on("mouseup.wireframe_overlay", drop);
+				self.node.on("mouseup.long_click_check", drop);
+			}
+
+			/* Action : move or resize */
+			var action = null;
+
+			/* check button (left click only) */
+			if(e.which != 1) {
+				return;
 			}
 
 			/* check coords */
+			var localX = e.pageX - self.x;
 			var localY = e.pageY - self.y;
-			if(localY < 5 || localY > 25 ) { return; }
+
+			/* TitleBar longclick */
+			if(localY > 5 && localY < 25 ) {
+				action = move;
+			}
+
+			/* Resize - top */
+			if(localY >= 0 && localY <= 5 ) {
+				action = jQuery.proxy(resize, self, "top");
+			}
+
+			/* Resize - bottom */
+			if(localY >= (parseInt(self.h) - 5) && localY <= parseInt(self.h)) {
+				action = jQuery.proxy(resize, self, "bottom");
+			}
+
+			/* Resize - left */
+			if(localX >= 0 && localX <= 5) {
+				action = jQuery.proxy(resize, self, "left");
+			}
+
+			/* Resize - right */
+			if(localX >= (parseInt(self.w) - 5) && localX <= parseInt(self.w)) {
+				action = jQuery.proxy(resize, self, "right");
+			}
+
+			/* Resize - topleft */
+			if(localY >= 0 && localY <= 5 && localX >= 0 && localX <= 5) {
+				action = jQuery.proxy(resize, self, "topleft");
+			}
+
+			/* Resize - topright */
+			if(localY >= 0 && localY <= 5 && localX >= (parseInt(self.w) - 5) && localX <= parseInt(self.w)) {
+				action = jQuery.proxy(resize, self, "topright");
+			}
+
+			/* Resize - bottomleft */
+			if(localY >= (parseInt(self.h) - 5) && localY <= parseInt(self.h) && localX >= 0 && localX <= 5) {
+				action = jQuery.proxy(resize, self, "bottomleft");
+			}
+
+			/* Resize - bottomright */
+			if(localY >= (parseInt(self.h) - 5) && localY <= parseInt(self.h) && localX >= (parseInt(self.w) - 5) && localX <= parseInt(self.w)) {
+				action = jQuery.proxy(resize, self, "bottomright");
+			}
+
+			/* No pattern : return */
+			if(action == null) {
+				return
+			}
 
 			/* check long click */
 			var longclick = true;
 			var release_longclick = function() {
-				self.node.off("onmouseup");
+				self.node.off("mouseup.long_click_check");
 				longclick = false;
 			};
 
 			var check_longclick = function() {
 				if(longclick == true) {
-					self.node.off("onmouseup");
-					begin_drag_n_drop();
+					self.node.off("mouseup.long_click_check");
+					action();
 				}
 			};
 
-			setTimeout( check_longclick, 300);
-			self.node.mouseup(release_longclick);
+			setTimeout(check_longclick, 100);
+			self.node.on("mouseup.long_click_check", release_longclick);
 
 		});
 
-		this.mouse = new Guacamole.Mouse(this.node[0]);
-		this.mouse.onmousemove = this.mouse.onmousedown = this.mouse.onmouseup = function(mouseState) {
-			var x = parseInt(mouseState.x)+parseInt(self.x);
-			var y = parseInt(mouseState.y)+parseInt(self.y);
-			var newState = new Guacamole.Mouse.State(x, y, mouseState.left, mouseState.middle, mouseState.right, mouseState.up, mouseState.down);
-			self.connection.guac_client.sendMouseState(newState);
-		}
+		this.node.on("mousedown.keyboard_focus", function(e) {
+			self.main_canvas.click();
+		});
 
 		/* /!\ The keyboard is not handled per window but per connection /!\ */
 	}
@@ -216,17 +442,17 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 		this.focused = true;
 
 		/* Bind keyboard events */
-		var self = this; /* closure */
-		this.connection.guac_keyboard.onkeydown = function (keysym) { self.connection.guac_client.sendKeyEvent(1, keysym); };
-		this.connection.guac_keyboard.onkeyup =   function (keysym) { self.connection.guac_client.sendKeyEvent(0, keysym); };
+		this.connection.keyboard.attach(this.connection);
+
+		/* Focus keyboard */
+		this.connection.keyboard.focus();
 	}
 
 	this.SeamlessWindow.prototype.blur = function() {
 		this.focused = false;
 
-		/* UnBind keyboard events */
-		this.connection.guac_keyboard.onkeydown = function (keysym) {};
-		this.connection.guac_keyboard.onkeyup =   function (keysym) {};
+		/* Blur keyboard */
+		this.connection.keyboard.blur();
 	}
 
 	this.SeamlessWindow.prototype.isFocused = function() {
@@ -273,7 +499,8 @@ uovd.provider.rdp.html5.SeamlessWindowFactory = function() {
 	this.SeamlessWindow.prototype.destroy = function() {
 		/* Remove node */
 		this.hide();
-		this.node.off("click");
+		this.node.off("mousedown.window_client_events");
+		this.node.off("mousedown.keyboard_focus");
 		this.node.remove();
 
 		/* Unregister handlers */

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,7 +33,7 @@ import threading
 from Config import Config
 from ControlProcess import ControlChildProcess
 from ConnectionPoolProcess import ConnectionPoolProcess
-from TCPHandler import GatewayTCPHandler
+from TCPHandler import GatewayTCPHandler, GatewayTCPServer
 from ovd.Logger import Logger
 from ovd.Role.Role import Role as AbstractRole
 
@@ -68,6 +70,8 @@ class Role(AbstractRole):
 			self.ssl_ctx.use_privatekey_file(fpem)
 			self.ssl_ctx.use_certificate_file(fpem)
 			self.ssl_ctx.load_verify_locations(fpem)
+			if Config.disable_sslv2:
+				self.ssl_ctx.set_options(SSL.OP_NO_SSLv2)
 		else:
 			Logger.error("Gateway role need a certificate (%s)" % fpem)
 			return False
@@ -75,20 +79,26 @@ class Role(AbstractRole):
 		addr = (Config.address, Config.port)
 		try:
 			GatewayTCPHandler.role = self
-			self.server = TCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
+			self.server = GatewayTCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
 			self.server.allow_reuse_address = Config.general.server_allow_reuse_address
 			
 			self.server.server_bind()
 			self.server.server_activate()
-		except socket.error, e:
-			Logger.error("Gateway:: socket init: %s" % e)
+		except socket.error:
+			Logger.exception("Gateway:: socket init")
 			return False
 		
 		Logger.info('Gateway:: running on (%s, %d)' % addr)
 		return True
 	
 	
-	def stop(self):
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		self.force_stop()
+	
+	
+	def force_stop(self):
+		AbstractRole.force_stop(self)
 		self.server.shutdown()
 		for pid in list(self.processes):
 			self.kill_process(pid)

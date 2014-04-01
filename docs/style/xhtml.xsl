@@ -23,6 +23,7 @@
   <xsl:param name="admon.graphics" select="1"/>
   <xsl:param name="admon.graphics.path">img/</xsl:param>
   <xsl:param name="html.stylesheet" select="'default.css'"/>
+  <xsl:param name="html.stylesheet" select="'fonts.css'"/>
   <xsl:param name="html.cleanup">1</xsl:param>
   <xsl:param name="make.valid.html">1</xsl:param>
 

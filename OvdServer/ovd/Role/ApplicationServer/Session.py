@@ -1,10 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
 # Author David LECHEVALIER <david@ulteo.com> 2010, 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -34,6 +35,7 @@ from ovd.Platform.System import System
 
 from Platform.ApplicationsDetection import ApplicationsDetection
 
+from Scripts import Scripts
 from SessionLogger import SessionLogger
 
 class Session:
@@ -110,14 +112,31 @@ class Session:
 		if self.shellNode is not None:
 			# Push the OvdShell configuration
 			self.shellNode.setAttribute("sm", Config.session_manager)
+
+			scriptsNodes = self.shellNode.getElementsByTagName("script")
+			script2start_dir = os.path.join(self.user_session_dir, 'scripts')
+			scripts_aps = os.path.join(Config.spool_dir, "scripts")
+			os.mkdir(script2start_dir)
+
+
+			for node in scriptsNodes:
+				scriptID = node.getAttribute("id")
+				scriptName = node.getAttribute("name")
+				scriptType = node.getAttribute("type")
+				scriptExt = Scripts.type2ext(scriptType)
+				node.setAttribute("name", scriptName+"."+scriptExt)
+				apsname = os.path.join(scripts_aps, scriptID+"."+scriptExt)
+				sessionname = os.path.join(script2start_dir, scriptName+"."+scriptExt)
+				if os.path.isfile(apsname):
+					shutil.copy(apsname, sessionname)
+			
 			f = open(os.path.join(self.user_session_dir, "shell.conf"), "w")
 			f.write(self.shellNode.toprettyxml())
 			f.close()
 	
+	
 	def post_install(self):
-		if self.user_session_dir is not None:
-			f = file(os.path.join(self.user_session_dir, "nolock"), "w")
-			f.close()
+		pass
 	
 	
 	def install_desktop_shortcuts(self):
@@ -204,8 +223,8 @@ class Session:
 		
 		try:
 			contents = os.listdir(path)
-		except Exception, err:
-			Logger.warn("Unable to list content of the directory %s (%s)"%(path, str(err)))
+		except Exception:
+			Logger.exception("Unable to list content of the directory %s"%path)
 			return
 		
 		for content in contents:
@@ -219,8 +238,8 @@ class Session:
 			
 			try:
 				target = ApplicationsDetection.getExec(l)
-			except Exception, e:
-				Logger.debug("Unable to get the desktop target of %s %s"%(l, str(e)))
+			except Exception:
+				Logger.exception("Unable to get the desktop target of %s"%l)
 				target = None
 			
 			if target is None:
@@ -231,8 +250,8 @@ class Session:
 					Logger.debug("removing shortcut %s"%(target))
 					try:
 						os.remove(l)
-					except Exception, e:
-						Logger.debug("Unable to delete the desktop target %s %s"%(l, str(e)))
+					except Exception:
+						Logger.exception("Unable to delete the desktop target %s"%l)
 	
 	
 	def archive_shell_dump(self):

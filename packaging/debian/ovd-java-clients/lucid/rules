@@ -23,3 +23,10 @@ build/libovd-xclient-area::
 
 install/libovd-xclient-area::
 	cd libXClientArea ; make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
+
+build/libovd-accelerator::
+	cd librdp ; cmake . ; cmake --build . --config Release 
+
+install/libovd-accelerator::
+	cd librdp ; make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
+	

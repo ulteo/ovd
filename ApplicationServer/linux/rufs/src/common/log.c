@@ -22,6 +22,9 @@
 #include "time.h"
 #include "memory.h"
 #include "log.h"
+#include "str.h"
+#include <stdio.h>
+#include <stdarg.h>
 
 
 const char* logStr[] = {"[DEBUG ]", "[INFO  ]", "[WARN  ]", "[ERROR ]"};

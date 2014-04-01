@@ -19,7 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
 
 if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
@@ -54,10 +54,15 @@ if (isset($_POST['submit'])) {
 	if ($ret > 0){
 		// configuration saved
 		popup_info(_('Configuration successfully saved'));
-		redirect('index.php');
+		if (defined('EXPERT_MODE') && EXPERT_MODE === true && ! isset($_SESSION['admin_ovd_user'])) {
+			redirect();
+		}
+		else {
+			redirect('index.php');
+		}
 	}
 	else {
-		require_once(dirname(__FILE__).'/includes/page_template_static.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template_static.php');
 		header_static(_('Configuration'));
 		echo 'problem : configuration not saved<br>';  // TODO (class msg...) + gettext
 		footer_static();
@@ -73,7 +78,7 @@ else {
 		catch (Exception $e) {
 		}
 		
-		require_once(dirname(__FILE__).'/includes/page_template.php');
+		require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 		page_header();
 		
 		// printing of preferences
@@ -97,7 +102,7 @@ else {
 		catch (Exception $e) {
 		}
 		if (is_object($prefs)) {
-			require_once(dirname(__FILE__).'/includes/page_template.php');
+			require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 			page_header();
 
 			print_prefs($prefs, $can_manage_configuration);

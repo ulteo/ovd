@@ -56,6 +56,11 @@ This daemon manages the Open Virtual Desktop servers.
 %{__ln_s} /usr/share/ulteo/ovd/slaveserver/ulteo-ovd-slaveserver.py %{buildroot}%{_sbindir}/ulteo-ovd-slaveserver
 %{__install} -T -D examples/ulteo-ovd-slaveserver.rhel.init %{buildroot}/%{_sysconfdir}/init.d/ulteo-ovd-slaveserver
 
+%if %{defined suse_version}
+# Change some default configuration related to OpenSUSE distribution
+sed -e "s/# linux_skel_directory = /linux_skel_directory = \/etc\/skel/" -i  %{buildroot}/%{_sysconfdir}/ulteo/ovd/slaveserver.conf
+sed -e "s/# linux_fuse_group = /linux_fuse_group = trusted/" -i %{buildroot}/%{_sysconfdir}/ulteo/ovd/slaveserver.conf
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -131,10 +136,11 @@ fi
 
 Summary: Ulteo Open Virtual Desktop - application server role for slave server
 Group: Applications/System
+Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, uxda-server-python, uxda-server-seamrdp, uxda-server-rdpdr, uxda-server-printer, uxda-server-sound, uxda-server-clipboard, ImageMagick, cifs-utils, rsync
 %if %{defined rhel}
-Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard, ImageMagick, passwd, rsync, cifs-utils, pyxdg
+Requires: passwd, pyxdg
 %else
-Requires: python, ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client, xrdp-python, xrdp-seamrdp, xrdp-rdpdr, xrdp-printer, xrdp-sound, xrdp-clipboard, ImageMagick, pwdutils, rsync, cifs-utils, python-xdg
+Requires: pwdutils, python-xdg
 %endif
 
 
@@ -148,12 +154,22 @@ if [ "$1" = "1" ]; then
     service ulteo-ovd-slaveserver restart
 fi
 
+[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
+for i in icons pixmaps mime themes; do
+	[ -d /usr/share/$i -a ! -e /usr/share/ovd/$i ] && ln -s /usr/share/$i /usr/share/ovd/
+done
+
 
 %postun -n ulteo-ovd-slaveserver-role-aps
 if [ "$1" = "0" ]; then
     %{_sbindir}/ovd-slaveserver-role del ApplicationServer
     service ulteo-ovd-slaveserver restart
 fi
+
+for i in icons pixmaps mime themes; do
+	[ -L /usr/share/ovd/$i ] && rm /usr/share/ovd/$i
+done
+rmdir /usr/share/ovd || echo "Do not delete /usr/share/ovd"
 
 
 %files -n ulteo-ovd-slaveserver-role-aps
@@ -208,9 +224,9 @@ fi
 Summary: Ulteo Open Virtual Desktop - web gateway role for slave server
 Group: Applications/System
 %if %{defined rhel}
-Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL, python-ntlm, python-mechanize
+Requires: python, ulteo-ovd-slaveserver, openssl, pyOpenSSL, python-ntlm, python-mechanize, python-pycurl
 %else
-Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-ntlm, python-mechanize
+Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-ntlm, python-mechanize, python-curl
 %endif
 
 

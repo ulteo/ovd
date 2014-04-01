@@ -86,7 +86,7 @@ download_chroot ()
         curl $CURLOPTS -f -s -I "$URI" > /dev/null && break
         echo "Cannot have access to the chroot tarball"
         if [ "$DEBIAN" = "false" ]; then
-          CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+          CHROOTURL='@CHROOT_URL@'
         else
           exit 1
         fi

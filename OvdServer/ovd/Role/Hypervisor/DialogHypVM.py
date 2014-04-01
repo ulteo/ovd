@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Gaëtan COLLET <gaetan@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -120,11 +121,11 @@ class DialogHypVM(AbstractDialog):
 					
 		try:
 			stream = urllib2.urlopen(req)
-		except IOError, e:
-			Logger.debug("Guest::send_packet path: "+path+" error: "+str(e))
+		except IOError:
+			Logger.exception("Guest::send_packet path: "+path)
 			return False
-		except httplib.BadStatusLine, err:
-			Logger.debug("Guest::send_packet path: "+path+" not receive HTTP response"+str(err))
+		except httplib.BadStatusLine:
+			Logger.exception("Guest::send_packet path: "+path+" not receive HTTP response")
 			return False
 		
 		return stream

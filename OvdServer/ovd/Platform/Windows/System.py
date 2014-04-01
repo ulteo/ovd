@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2013
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
-# Author David LECHEVALIER <david@ulteo.com> 2012, 2013
+# Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -86,8 +87,8 @@ class System(AbstractSystem):
 			if buf is unicode:
 				buf = buf.encode('utf-8')
 		
-		except Exception, err:
-			Logger.warn("System::getVersion: version except '%s'"%(str(err)))
+		except Exception:
+			Logger.exception("System::getVersion")
 			buf = platform.version()
 		
 		return buf
@@ -102,8 +103,8 @@ class System(AbstractSystem):
 		
 		try:
 			name = cpus[0].Name
-		except Exception, e:
-			Logger.error("getCPUInfos %s"%(str(e)))
+		except Exception:
+			Logger.exception("getCPUInfos")
 			return (1, "Unknown")
 		
 		nb_core = 0
@@ -130,8 +131,8 @@ class System(AbstractSystem):
 				load+= int(cpu.PercentProcessorTime)
 			load = load / float(len(cpus)*100)
 		
-		except Exception, err:
-			Logger.warn("getCPULoad: %s"%(str(err)))
+		except Exception:
+			Logger.exception("getCPULoad")
 			return 0.0
 		
 		return load
@@ -145,8 +146,8 @@ class System(AbstractSystem):
 			total = infos["TotalPhys"]/1024
 			free = infos["AvailPhys"]/1024
 		
-		except Exception, e:
-			Logger.warn("getRAMUsed: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMUsed")
 			return 0
 		
 		return total - free
@@ -159,8 +160,8 @@ class System(AbstractSystem):
 		try:
 			total = infos["TotalPhys"]/1024
 		
-		except Exception, e:
-			Logger.warn("getRAMTotal: %s"%(str(e)))
+		except Exception:
+			Logger.exception("getRAMTotal")
 			return 0.0
 		
 		return total
@@ -170,8 +171,8 @@ class System(AbstractSystem):
 	def getADDomain():
 		try:
 			domain = win32api.GetComputerNameEx(win32con.ComputerNameDnsDomain)
-		except Exception, e:
-			Logger.warn("System::getADDomain: exception '%s'"%(str(e)))
+		except Exception:
+			Logger.exception("System::getADDomain")
 			return False
 			
 		return domain
@@ -210,8 +211,19 @@ class System(AbstractSystem):
 			data['comment'] = ''
 		
 			win32net.NetLocalGroupAdd(None, 1, data)
-		except win32net.error, e:
-			Logger.error("SessionManagement createGroupOVD: '%s'"%(str(e)))
+		except win32net.error:
+			Logger.exception("SessionManagement createGroupOVD")
+			return False
+		
+		return True
+	
+	
+	@staticmethod
+	def groupDelete(name_):
+		try:
+			win32net.NetLocalGroupDel(None, name_)
+		except win32net.error:
+			Logger.exception("SessionManagement createDeleteOVD")
 			return False
 		
 		return True
@@ -232,8 +244,8 @@ class System(AbstractSystem):
 		try:
 			(users, _, _) = win32net.NetLocalGroupGetMembers(None, name_, 1)
 		
-		except win32net.error, e:
-			Logger.error("groupMember: '%s'"%(str(e)))
+		except win32net.error:
+			Logger.exception("groupMember")
 			return None
 		
 		members = []
@@ -248,8 +260,8 @@ class System(AbstractSystem):
 		try:
 			win32net.NetUserDel(None, user_)
 		
-		except win32net.error, e:
-			Logger.error("userRemove: '%s'"%(str(e)))
+		except win32net.error:
+			Logger.exception("userRemove")
 			return False
 		
 		return True
@@ -274,7 +286,7 @@ class System(AbstractSystem):
 		try:
 			win32net.NetUserAdd(None, 3, userData)
 		except Exception, e:
-			Logger.error("unable to create user: "+str(e))
+			Logger.exception("unable to create user")
 			raise e
 		
 		data = [ {'domainandname' : login_} ]
@@ -317,8 +329,8 @@ class System(AbstractSystem):
 				(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
 				]
 			)
-		except Exception, e:
-			Logger.error("Failed to obtain more provilege"%(str(e)))
+		except Exception:
+			Logger.exception("Failed to obtain more provilege")
 	
 	
 	@classmethod
@@ -332,3 +344,44 @@ class System(AbstractSystem):
 		
 		v = platform.version()[:3]
 		return names.get(v, v)
+	
+	
+	@staticmethod
+	def setdacl(path, sid, dacl):
+		dsi = win32security.GetFileSecurity(path, win32security.DACL_SECURITY_INFORMATION)
+		dsi.SetSecurityDescriptorDacl(1, dacl, 0)
+		win32security.SetFileSecurity(path, win32security.DACL_SECURITY_INFORMATION, dsi)
+	
+	
+	@staticmethod
+	def _rchown(path, sid, dacl):
+		System.setdacl(path, sid, dacl)
+		
+		for item in os.listdir(path):
+			itempath = os.path.join(path, item)
+			System.setdacl(itempath, sid, dacl)
+			
+			if os.path.isdir(itempath):
+				System._rchown(itempath, sid, dacl)
+	
+	
+	@staticmethod
+	def rchown(path, user):
+		sid = None
+		admins = None
+		try:
+			sid, d, type = win32security.LookupAccountName ("", user)
+			admins = win32security.ConvertStringSidToSid("S-1-5-32-544")
+		except:
+			return False
+		
+		dacl = win32security.ACL()
+		dacl.AddAccessAllowedAce(win32security.ACL_REVISION, ntsecuritycon.FILE_ALL_ACCESS, sid)
+		dacl.AddAccessAllowedAce(win32security.ACL_REVISION, ntsecuritycon.FILE_ALL_ACCESS, admins)
+		
+		try:
+			System._rchown(path, sid, dacl)
+		except Exception, e:
+			return False
+		
+		return True

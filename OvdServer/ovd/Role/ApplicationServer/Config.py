@@ -21,15 +21,18 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
+import os
 
 class Config:
 	general = None
-	thread_count = 1
+	thread_count = None
 	checkShell = False
 	clean_dump_archive = True
 	linux_icon_theme = "CrystalGnome"
 	linux_skel_directory = "/dev/null"
-	linux_profile_filters_filename = "/etc/ulteo/ovd/profiles_filter.conf"
+	linux_fuse_group = "fuse"
+	profile_filters_filename = os.path.join(System.get_default_config_dir(), "profiles_filter.conf")
 	
 	OVERRIDE_PASSWORD_METHOD_UNIX = 0x01
 	OVERRIDE_PASSWORD_METHOD_CUSTOM = 0x02
@@ -64,6 +67,9 @@ class Config:
 		
 		if infos.has_key("linux_skel_directory"):
 			cls.linux_skel_directory = infos["linux_skel_directory"]
+		
+		if infos.has_key("linux_fuse_group"):
+			cls.linux_fuse_group = infos["linux_fuse_group"]
 		
 		if infos.has_key("linux_profile_filters_filename"):
 			cls.linux_profile_filters_filename = infos["linux_profile_filters_filename"]

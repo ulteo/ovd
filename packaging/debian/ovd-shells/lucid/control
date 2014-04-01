@@ -9,7 +9,7 @@ XS-Python-Version: >= 2.5
 
 Package: ulteo-ovd-shells
 Architecture: all
-Depends: ${python:Depends}, xrdp-python
+Depends: ${python:Depends}, uxda-server-python
 XB-Python-Version: ${python:Versions}
 Description:  Ulteo Open Virtual Desktop - shell
  These scripts handle the Open Virtual Desktop user sessions.

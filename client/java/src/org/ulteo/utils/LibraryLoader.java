@@ -5,6 +5,7 @@
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +39,8 @@ public class LibraryLoader {
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 	public static final String LIB_PCSC_UNIX = "libPCSC.so";
 	public static final String LIB_PCSC_WINDOWS = "libPCSC.dll";
+	public static final String LIB_RDP_UNIX = "librdp.so";
+	public static final String LIB_RDP_WINDOWS = "librdp.dll";
 
 	/**
 	 * Ajoute un nouveau répertoire dans le java.library.path.
@@ -110,12 +113,13 @@ public class LibraryLoader {
 		String jvmArch = System.getProperty("sun.arch.data.model");
 
 		String standaloneLibPath = jarDirectory+File.separator+"lib"+File.separator+jvmArch;
-		
+		String externalAppsLibPath = jarDirectory+File.separator+"libjni"+File.separator+jvmArch;
 		String fileSeparator= System.getProperty("file.separator");
 		String libraryPaths = System.getProperty("java.library.path");
 
 		List<String> paths = new ArrayList<String>();
 		paths.add(standaloneLibPath);
+		paths.add(externalAppsLibPath);
 		paths.add(System.getProperty("user.dir"));
 		for (String each : libraryPaths.split(System.getProperty("path.separator")))
 			paths.add(each);

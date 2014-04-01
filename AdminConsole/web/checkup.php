@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (isset($_POST['cleanup']) && $_POST['cleanup'] == 1 && array_key_exists('type', $_POST)) {
 	switch ($_POST['type']) {
@@ -119,7 +119,7 @@ $everything_ok = $checkup['conf']['default_users_group']['status']; // reset
 
 echo '<br /><h2>'._('Configuration').'</h2>';
 
-echo '<h3>'._('Default usergroup').'</h3>';
+echo '<h3>'._('Default User Group').'</h3>';
 
 if (! $everything_ok) {
 	echo '<span class="msg_error">'.$checkup['conf']['default_users_group']['text'].'</span>';

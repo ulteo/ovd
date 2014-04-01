@@ -6,6 +6,8 @@ SUBDIRS = admin \
           includes \
           modules \
           PEAR \
+          $(MAYBE_PREMIUM) \
+          tools \
           webservices
 
 scriptsdir = $(datadir)/ulteo/sessionmanager

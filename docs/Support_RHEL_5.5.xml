@@ -41,7 +41,7 @@
         The first step is to configure yum to enable the Ulteo rpm repository.
         Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
        <screen>
-<![CDATA[[ovd-@VERSION@]
+<![CDATA[[ovd-@VERSIONNOTILD@]
 name=Ulteo OVD @VERSION@
 baseurl=@BASE_URI@/rhel/@distrib_version@/
 enabled=1
@@ -65,7 +65,7 @@ gpgkey=@BASE_URI@/rhel/@distrib_version@/keyring]]>
             with:
           </para>
           <screen>
-<![CDATA[[ovd-@VERSION@]
+<![CDATA[[ovd-@VERSIONNOTILD@]
 name=Ulteo OVD @VERSION@ offline
 baseurl=file:///root/ovd-@VERSION@-rhel-@distrib_version@/
 enabled=1

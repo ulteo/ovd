@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewStatus'))
 	redirect('index.php');
@@ -62,10 +63,10 @@ if (isset($_GET['info'])) {
 		foreach ($servers as $server_id => $data) {
 			echo '<li>';
 			echo '<a href="servers.php?action=manage&id='.$server_id.'">'.$servers_cache[$server_id]->getDisplayName().'</a>';
-			if ($role == Server::SERVER_ROLE_APS) {
+			if ($role == Server::SERVER_ROLE_APS || $role == Server::SERVER_ROLE_WEBAPPS) {
 				echo ' (<span class="msg_'.Session::colorStatus($data['status']).'">'.Session::textStatus($data['status']).'</span>)';
 				if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->hasAttribute('desktop_server')) {
-					if ($server_id == $session->getAttribute('desktop_server')) {
+					if ($server_id == $session->getAttribute('desktop_server') && $role == Server::SERVER_ROLE_APS) {
 						echo ' ('._('Desktop server').')';
 					}
 				}
@@ -85,7 +86,7 @@ if (isset($_GET['info'])) {
 						continue;
 					}
 					
-					echo '<li>'._('Shared foler').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
+					echo '<li>'._('Shared folder').' - '.$info['name'].' <em>('.$info['mode'].')</em></li>';
 				}
 			}
 			
@@ -117,7 +118,7 @@ if (isset($_GET['info'])) {
 		echo '<h2>'._('Running applications').'</h2>';
 
 		if (! $session->hasAttribute('instances') || count($session->getAttribute('instances')) == 0) {
-			echo _('No running application');
+			echo _('No running applications');
 		} else {
 			echo '<ul>';
 			echo '<table>';
@@ -131,10 +132,10 @@ if (isset($_GET['info'])) {
 		}
 		
 		echo '<div>';
-		echo '<h2>'._('Published applications').'</h2>';
+		echo '<h2>'._('Published Applications').'</h2>';
 		
 		if (! $session->hasAttribute('applications') || count($session->getAttribute('applications')) == 0) {
-			echo _('No published application');
+			echo _('No published applications');
 		}
 		else {
 			echo '<ul>';
@@ -158,6 +159,14 @@ if (isset($_GET['info'])) {
 		echo '	<input type="hidden" name="action" value="del" />';
 		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
 		echo '	<input type="submit" value="'._('Kill this session').'" />';
+		echo '</form>';
+		
+		echo '<h2>'._('Disconnect this session').'</h2>';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+		echo '  <input type="hidden" name="name" value="Session" />';
+		echo '	<input type="hidden" name="action" value="disc" />';
+		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+		echo '	<input type="submit" value="'._('Disconnect this session').'" />';
 		echo '</form>';
 	}
 
@@ -213,6 +222,8 @@ else {
 		echo '	</tr>';
 		echo '</thead>';
 		echo '<tbody>';
+		
+		$server_cache = array();
 
 		$i = 0;
 		foreach ($sessions as $session) {
@@ -233,9 +244,14 @@ else {
 					foreach ($servers as $server_id => $data) {
 						$server_name = $server_id;
 						
-						$server =  $_SESSION['service']->server_info($server_id); // Avoid to load a whole server just to display the name ...
-						if (! is_null($server)) {
-							$server_name = $server->getDisplayName();
+						if (array_key_exists($server_id, $server_cache)) {
+							$server_name = $server_cache[$server_id];
+						} else {
+							$server =  $_SESSION['service']->server_info($server_id); // Avoid to load a whole server just to display the name ...
+							if (! is_null($server)) {
+								$server_name = $server->getDisplayName();
+							}
+							$server_cache[$server_id] = $server_name;
 						}
 						
 						echo '<li><a href="servers.php?action=manage&id='.$server_id.'">'.$server_name.'</a></li>';
@@ -255,6 +271,15 @@ else {
 				echo '<input type="submit" value="'._('Kill').'" />';
 				echo '</form>';
 				echo '</td>';
+				
+				echo '<td style="vertical-align: middle;">';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+				echo '<input type="hidden" name="name" value="Session" />';
+				echo '<input type="hidden" name="action" value="disc" />';
+				echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+				echo '<input type="submit" value="'._('Disconnect').'" />';
+				echo '</form>';
+				echo '</td>';
 			}
 			echo '	</tr>';
 		}
@@ -265,11 +290,21 @@ else {
 			echo '	<tr class="'.$css_class.'">';
 			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
 			echo '  <input type="hidden" name="name" value="Session" />';
 			echo '  <input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
+			echo '</form>';
 			echo '</td>';
+			
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '  <input type="hidden" name="name" value="Session" />';
+			echo '  <input type="hidden" name="action" value="disc" />';
+			echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
+			echo '</form>';
+			echo '</td>';
+
 			echo '	</tr>';
 			echo '</tfoot>';
 		}
@@ -300,7 +335,7 @@ else {
 			echo $pagechanger;
 		echo '</div>';
 	} else {
-		echo _('No active session');
+		echo _('No active sessions');
 		echo '<br /><br />';
 	}
 

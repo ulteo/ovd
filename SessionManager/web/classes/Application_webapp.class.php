@@ -3,6 +3,7 @@
  * Copyright (C) 2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,6 +57,12 @@ class Application_webapp extends Application{
 			return false;
 
 		return true;
+	}
+	
+	public function isOrphan() {
+		Logger::debug('main', 'Application_webapp::isOrphan');
+		// A webapp is not associated to a server so it can't be orphan.
+		return false;
 	}
 	
 	public function toXML($ApS=NULL) {

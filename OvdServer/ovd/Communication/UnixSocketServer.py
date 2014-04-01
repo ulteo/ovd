@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -50,16 +51,16 @@ class UnixSocketServer(AbstractCommunication):
 		if os.path.exists(self.socket_filename):
 			try:
 				os.remove(self.socket_filename)
-			except Exception, e:
-				Logger.error("Unable to initialize Communication: %s"%(str(e)))
+			except Exception:
+				Logger.exception("Unable to initialize Communication")
 				return False
 				
 		
 		self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 		try:
 			self.server.bind(self.socket_filename)
-		except Exception, e:
-			Logger.error("Unable to initialize Communication: %s"%(str(e)))
+		except Exception:
+			Logger.exception("Unable to initialize Communication")
 			return False
 		
 		os.chmod(self.socket_filename, 0777)
@@ -216,7 +217,7 @@ class RequestHandler(Thread):
 			sock.send(struct.pack('>I', len(data)))
 			sock.send(data)
 		
-		except socket.error, err:
-			Logger.warn("process_req: error while comm: %s"%(str(err)))
+		except socket.error:
+			Logger.exception("process_req: error while comm")
 		finally:
 			sock.close()

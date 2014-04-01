@@ -56,6 +56,32 @@ BOOL WindowUtil_isVisible(HWND hwnd) {
 	return IsWindowVisible(hwnd);
 }
 
+BOOL WindowUtil_isGood(HWND hwnd) {
+	char className[256];
+	char *excludedClasses[] = {
+		"MSO_BORDEREFFECT_WINDOW_CLASS", /* MS Office 2013 window shadows */
+		"TabThumbnailWindow",            /* IE11 tab preview */
+		"Internet Explorer_Hidden",      /* IE11 (???) */
+		"Alternate Owner",               /* IE11 (???) */
+		NULL /* _MUST_ Be the last element */
+	};
+
+	/* Test if window is from an excluded class */
+	if (GetClassName(hwnd, className, 256) != 0) {
+		int i = 0;
+
+		for (i=0 ; excludedClasses[i] != NULL ; ++i) {
+			char *excluded = excludedClasses[i];
+
+			if (strcmp(className, excluded) == 0) {
+				return FALSE;
+			}
+		}
+	}
+
+	return TRUE;
+}
+
 int WindowUtil_getFlags(HWND hwnd) {
 	int flags = 0;
 	LONG style;

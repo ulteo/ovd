@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2012 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2011
 # Author David LECHEVALIER <david@ulteo.com> 2012
+# Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -23,8 +25,6 @@
 
 import re
 
-from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
-	HttpClientCommunicator, SSLCommunicator
 from Config import Config
 from ovd.Logger import Logger
 
@@ -36,6 +36,9 @@ import time
 class ProtocolException(Exception):
 	pass
 
+# Load Communicator after ProtocolException definition (Avoid cyclic dependancies)
+from Communicator import RdpClientCommunicator, RdpServerCommunicator, \
+	HttpClientCommunicator, SSLCommunicator
 
 class ProtocolDetectDispatcher(SSLCommunicator):
 	
@@ -98,9 +101,7 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 			# HTTP case
 			elif http:
 				client = HttpClientCommunicator(self.socket, self.f_ctrl, self.ssl_ctx)
-				client._buffer = self._buffer
-				if client.make_http_message() is not None:
-					client._buffer = client.process()
+				client.handle_read(self._buffer)
 			
 			# protocol error
 			else:
@@ -109,6 +110,6 @@ class ProtocolDetectDispatcher(SSLCommunicator):
 					raise ProtocolException('bad first request line: ' + request)
 				return
 		
-		except ProtocolException, err:
-			Logger.error("ProtocolDetectDispatcher::handle_read: %s" % repr(err))
+		except ProtocolException:
+			Logger.exception("ProtocolDetectDispatcher::handle_read")
 			self.handle_close()

@@ -44,16 +44,6 @@ def main():
 			print "Exit because no OVD environment"
 			sys.exit(1)
 		
-		
-		path = os.path.join(user_sdir, "nolock")
-		if not os.path.isfile(path):
-			print "Switch to LOCK system until OvdServer unlock it"
-			success = Platform.lock(60)
-			if not success or not os.path.isdir(user_sdir):
-				print "Exit because no OVD environment"
-				sys.exit(1)
-			print "Unlocked, continue"
-		
 		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	Util.loadUserEnv(user_sdir)
@@ -61,7 +51,7 @@ def main():
 	config.load(user_sdir)
 	
 	# Load profile share
-	folders = Folders()
+	folders = Folders(config.profile_mode)
 	folders.registerShares()
 	
 	drives = Drives()
@@ -76,6 +66,9 @@ def main():
 	im = InstancesManager()
 	im.setDrivesDB(drives)
 	im.setSharedFolderDB(folders)
+	
+	# Script to auto starts
+	Util.manageAutoStartScripts(config, user_sdir)
 	
 	# Applications to auto starts
 	Util.manageAutoStartApplication(config, im)

@@ -13,7 +13,7 @@ don't download the chroot, assume it is already installed
 \fB\-\-chroot\-uri\fR uri
 get the chroot from 'uri'
 recognised protocoles are http://, ftp:// and file://
-(default: http://www.ulteo.com/main/downloads/ulteo-ovd.php)
+(default: @CHROOT_URL@)
 .TP
 \fB\-\-chroot\-url\fR url
 same as --chroot-uri, for backward compatibility

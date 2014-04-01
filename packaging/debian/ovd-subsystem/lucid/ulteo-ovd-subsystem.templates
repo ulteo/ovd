@@ -25,7 +25,7 @@ _Description: Remove the system chroot?
 Template: ulteo-ovd-subsystem/download_error
 Type: error
 _Description: Subsystem download error!
- An error occured while downloading and installing the chroot from this address
+ An error occurred while downloading and installing the chroot from this address
  ${URI} to this location (${CHROOTDIR}), the session manager may not ready to be
  used.
 

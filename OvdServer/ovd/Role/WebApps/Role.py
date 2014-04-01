@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012-2013 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Miguel Angel Garcia <mgarcia@pressenter.com.ar> 2012
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
+# Author David LECHEVALIER <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -29,7 +31,7 @@ import threading
 from Config import Config, setup_apps
 from ControlProcess import ControlChildProcess
 from ConnectionPoolProcess import ConnectionPoolProcess
-from TCPHandler import WebAppsTCPHandler
+from TCPHandler import WebAppsTCPHandler, WebAppsTCPServer
 from ovd.Logger import Logger
 from ovd.Role.Role import Role as AbstractRole
 from SessionsRepository import SessionsRepository
@@ -77,21 +79,27 @@ class Role(AbstractRole):
 		addr = (Config.address, Config.port)
 		try:
 			WebAppsTCPHandler.role = self
-			self.server = TCPServer(addr, WebAppsTCPHandler, bind_and_activate=False)
+			self.server = WebAppsTCPServer(addr, WebAppsTCPHandler, bind_and_activate=False)
 			self.server.allow_reuse_address = Config.general.server_allow_reuse_address
 			
 			self.server.server_bind()
 			self.server.server_activate()
-		except socket.error, e:
-			Logger.error("[WebApps] socket init: %s" % e)
+		except socket.error:
+			Logger.exception("[WebApps] socket init")
 			return False
 		
 		Logger.info('[WebApps] running on (%s, %d)' % addr)
 		return True
 	
 	
-	def stop(self):
-		self.server.shutdown()
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		self.force_stop()
+	
+	
+	def force_stop(self):
+		if self.server is not None:
+			self.server.shutdown()
 		self.sessions_repo.stop()
 		self.apps_repo.stop()
 		for pid in list(self.processes):

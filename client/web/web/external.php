@@ -45,14 +45,6 @@ if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png
 	$big_image_map = true;
 }
 
-if (!$big_image_map) {
-	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-	if ($logo_size === false)
-		$logo_size = "";
-	else
-		$logo_size = $logo_size[3];
-}
-
 if (OPTION_FORCE_LANGUAGE !== true && array_key_exists('language', $_REQUEST)) {
 	$available_languages = get_available_languages();
 
@@ -114,16 +106,33 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
-<?php } else {
-					if ($big_image_map) { ?>
+<?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
-<?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/dialogs.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/login.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/notifications.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/desktop.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/menu.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/framework.css" />
+<?php } ?>
+<?php if (!$big_image_map) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
+<?php } ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/custom/custom.css")) {
+	$custom_css = true;
+?>
+		<link rel="stylesheet" type="text/css" href="media/custom/custom.css" />
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
@@ -148,20 +157,26 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/uovd/provider/applications/html5.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/clipboard_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/print_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_manager.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/base64.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/exttunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tmouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/nkeyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/proxy.js" charset="utf-8"></script>
 <?php } ?>
 
 <?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
@@ -172,8 +187,9 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/menu_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_taskbar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
@@ -191,7 +207,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			window.ovd.defaults.gateway                     = <?php echo $gateway_first === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap_autodetect           = <?php echo defined('OPTION_KEYMAP_AUTO_DETECT') && OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']) ? 'true' : 'false'; ?>;
 			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
-			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap                      = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
 			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_unicode !== null ? '\''.$rdp_input_unicode.'\'' : 'undefined'; ?>;
 			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
@@ -277,20 +292,12 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 							</div>
 						</td>
 						<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-<?php if (!$big_image_map) { ?>
-							<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-<?php } else { ?>
 							<div class="image_error_png"></div>
-<?php } ?>
 						</td>
 					</tr>
 				</table>
 				<div style="text-align:center;">
-<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
-<?php } else { ?>
 					<div class="image_ulteo-small_png" style="margin-left: auto; margin-right: auto;"></div>
-<?php } ?>
 				</div>
 			</div>
 		</noscript>
@@ -300,156 +307,87 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			<div id="ok" style="display: none;"></div>
 			<div id="info" style="display: none;"></div>
 		</div>
-		<div id="overlay" style="display: none;">
-			<div id="lock" style="display: none;"></div>
 
-			<div id="systemTest" class="rounded" style="display: none;">
-				<div id="systemTestContainer" class="rounded">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
-						<tr>
-							<td style="text-align: left; vertical-align: top;">
-								<strong><span id="system_compatibility_check_1_gettext">&nbsp;</span></strong>
-								<div style="margin-top: 15px;">
-									<p id="system_compatibility_check_2_gettext">&nbsp;</p>
-									<p id="system_compatibility_check_3_gettext">&nbsp;</p>
-								</div>
-							</td>
-							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-								<?php } else { ?>
-								<div class="image_rotate_gif"></div>
-								<?php } ?>
-							</td>
-						</tr>
-					</table>
-				</div>
+		<div id="systemTest" class="shadowBox" style="display: none;">
+			<div class="boxLogo">
+				<div class="image_rotate_gif"></div>
 			</div>
+			<h1><span id="system_compatibility_check_1_gettext">&nbsp;</span></h1>
+			<p id="system_compatibility_check_2_gettext">&nbsp;</p>
+			<p id="system_compatibility_check_3_gettext">&nbsp;</p>
+		</div>
 
-			<div id="systemTestError" class="rounded" style="display: none;">
-				<div id="systemTestErrorContainer" class="rounded">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
-						<tr>
-							<td style="text-align: left; vertical-align: middle;">
-								<strong><span id="system_compatibility_error_1_gettext">&nbsp;</span></strong>
-								<div id="systemTestErrorMessage" style="margin-top: 15px;"></div>
-								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
-							</td>
-							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-								<?php } else { ?>
-								<div class="image_error_png"></div>
-								<?php } ?>
-							</td>
-						</tr>
-					</table>
+		<div id="systemTestError" class="shadowBox" style="display: none;">
+			<div class="boxLogo">
+				<div class="image_error_png"></div>
+			</div>
+			<h1><span id="system_compatibility_error_1_gettext">&nbsp;</span></h1>
+			<p id="system_compatibility_error_5_gettext">&nbsp;</p>
+		</div>
+
+		<div id="splashContainer" class="boxMessage" style="display: none;">
+			<div id="splashContainerContent" class="shadowBox">
+				<div class="boxLogo">
+					<div class="image_ulteo_png"></div>
 				</div>
+				<h1 class="loadling_text" style="display: none;" id="loading_ovd_gettext">&nbsp;</h1>
+				<h1 class="loadling_text" style="display: none;" id="unloading_ovd_gettext">&nbsp;</h1>
+				<div class="boxLogo">
+					<div class="image_rotate_gif"></div>
+				</div>
+				<div id="progressBar"><div id="progressBarContent"></div></div>
 			</div>
 		</div>
 
-		<div id="splashContainer" class="rounded" style="display: none;">
-			<div id="splashContainerContent" class="rounded">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;" colspan="3">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-							<span style="font-size: 1.35em; font-weight: bold; color: #686868;"><?php echo _('Do not close this Ulteo OVD window!'); ?></span>
-						</td>
-						<td style="width: 20px"></td>
-						<td style="text-align: left; vertical-align: middle;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-							<?php } else { ?>
-							<div class="image_rotate_gif"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; vertical-align: middle;" colspan="3">
-							<div id="progressBar">
-								<div id="progressBarContent"></div>
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-
-		<div id="endContainer" class="rounded" style="display: none;">
-			<div id="endContainerContent" class="rounded">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
-						</td>
-					</tr>
-				</table>
+		<div id="endContainer" class="boxMessage" style="display: none;">
+			<div id="endContainerContent" class="shadowBox">
+				<div class="boxLogo">
+					<div class="image_ulteo_png"></div>
+				</div>
+				<div id="endContent"></div>
 			</div>
 		</div>
 
 		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeader">
-				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="width: 17%; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
-							<?php } else { ?>
-							<div class="image_ulteo-small_png"></div>
-							<?php } ?>
-						</td>
-						<td style="text-align: left; border-bottom: 1px solid #ccc; padding-left: 20px; padding-right: 20px;" class="title centered">
-							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
-						</td>
-						<td style="width: 100%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
-							<div id="newsList" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
-						</td>
-						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
-							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
-								<tr>
-									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a id="suspend_link" href="javascript:;">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
-										<?php } else { ?>
-										<div class="image_suspend_png" style="display:inline-block"></div>
-										<?php } ?>
-										<br /><span id="suspend_gettext">&nbsp;</span></a>
-									</td>
-									<td style="text-align: center; vertical-align: middle;"><a id="logout_link" href="javascript:;">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
-										<?php } else { ?>
-										<div class="image_logout_png" style="display:inline-block"></div>
-										<?php } ?>
-										<br /><span id="logout_gettext">&nbsp;</span></a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
+				<div id="headerLogo">
+					<div class="image_ulteo-small_png"></div>
+				</div>
+				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
+				<div id="newsList"></div>
+				<a id="logout_link" href="javascript:;">
+					<div class="image_logout_png" style="display:inline-block"></div>
+					<br /><span id="logout_gettext">&nbsp;</span>
+				</a>
+				<a id="suspend_link" href="javascript:;">
+					<div class="image_suspend_png" style="display:inline-block"></div>
+					<br /><span id="suspend_gettext">&nbsp;</span>
+				</a>
+				<div class="collapse"></div>
+			</div>
+
+			<div id="appsContainer"></div>
+			<div id="fileManagerContainer" style="display:none">
+				<h2><span id="my_files_gettext">&nbsp;</span></h2>
+			</div>
+
+			<div id="fullScreenMessage" class="boxMessage" style="display: none;">
+				<div id="fullScreenMessageContainer" class="shadowBox">
+					<div class="boxLogo">
+						<div class="image_ulteo_png"></div>
+					</div>
+					<p>
+						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
+						<br /><br />
+						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
+					</p>
+				</div>
 			</div>
 
 			<div id="applicationsContainer"></div>
 			<div id="desktopContainer"></div>
 			<div id="windowsContainer"></div>
+			<div id="menuContainer"></div>
 		</div>
 	</body>
 </html>

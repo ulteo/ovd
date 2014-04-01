@@ -1,6 +1,9 @@
-# Copyright (C) 2013 Ulteo SAS
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -46,8 +49,8 @@ class HTGroup:
 				self.entries[group] = users
 			
 			f.close()
-		except Exception, e:
-			Logger.warn("FS: Failed to load %s : %s"%(self.groupFile, str(e)))
+		except Exception:
+			Logger.exception("FS: Failed to load %s"%self.groupFile)
 			return False
 		
 		return True
@@ -66,8 +69,8 @@ class HTGroup:
 				f.write("\n")
 			
 			f.close()
-		except Exception, e:
-			Logger.warn("FS: Failed to save group in %s : %s"%(self.groupFile, str(e)))
+		except Exception:
+			Logger.exception("FS: Failed to save group in %s"%self.groupFile)
 			return False
 		
 		return True

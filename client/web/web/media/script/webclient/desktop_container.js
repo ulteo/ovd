@@ -32,9 +32,7 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 			logout_header.show();
 
 			var fullscreen_message = jQuery(document.createElement('div'));
-			fullscreen_message.width("100%").height("100%")
-			fullscreen_message.css("position", "absolute");
-			fullscreen_message.css("top", "30%");
+			fullscreen_message.addClass("fullScreenMessageContainer");
 
 			var fullscreen_message_container = jQuery("#fullScreenMessage").clone();
 			fullscreen_message_container.show();
@@ -45,10 +43,7 @@ DesktopContainer.prototype.handleEvents = function(type, source, params) {
 			fullscreen_message.append(fullscreen_message_container);
 
 			var background = jQuery(document.createElement('div'));
-			background.css("background", "#DDD");
-			background.css("color", "#333");
-			background.width("100%");
-			background.height("100%");
+			background.addClass("fullScreenBackground");
 
 			background.append(logout_header);
 			background.append(fullscreen_message);

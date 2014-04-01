@@ -1,0 +1,185 @@
+.msg_ok {
+	color: #05a305;
+	font-weight: bold;
+}
+.msg_error {
+	color: #a30505;
+	font-weight: bold;
+}
+
+.loginElement {
+	margin-bottom: 1em;
+	clear: right;
+}
+
+.loginLabel {
+	display: inline-block;
+	margin-top: 0.4em;
+}
+
+.loginLabel img, .loginLabel div {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.loginField {
+	float: right;
+}
+
+#loginBox {
+	background-color: #fff;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.25), 0 0 50px rgba(0,0,0,0.1) inset;
+	padding-bottom: 10px;
+}
+
+#loginBox:before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	box-shadow: 0px 0px 50px rgba(0,0,0,0.45);
+}
+
+#loginForm {
+	background: none;
+	border-left: 1px solid #EEEEEE;
+}
+
+input[type=text], input[type=password], select {
+	background-color: #FFF;
+	border: 1px solid #BBB;
+	color: 808080;
+	border: 1px solid #CCCCCC;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+	transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+	border-radius: 4px 4px 4px 4px;
+	display: inline-block;
+	font-size: 1.3em;
+	margin-bottom: 10px;
+	padding: 4px 6px;
+	vertical-align: middle;	
+}
+
+input[type=text]:focus, input[type=password]:focus {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+	outline: 0 none;
+	transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+::-moz-focus-inner {border:0;}
+
+input[type=button] {
+	background-color: transparent;
+	border: none;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	font-size: 14px;
+	padding: 6px 13px;
+	cursor: pointer;
+	color: #808080;
+}
+
+input[type=submit] {
+	cursor: pointer;
+	font-weight: bold;
+	white-space: nowrap;
+	padding: 6px 13px;
+	background-color: #F5F5F5;
+	background-image: linear-gradient(to bottom, #FFFFFF, #E6E6E6);
+	background-repeat: repeat-x;
+	border-radius: 4px;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #B3B3B3;
+	border-width: 1px;
+	border-style: solid;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+	color: #808080;
+	display: inline-block;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+
+input[type=submit]:active {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+	outline: 0 none;
+}
+
+
+input[type=submit]:focus, input[type=submit]:hover {
+	background-position: 0 -15px;
+	background-image: none;
+	color: #808080;
+	transition: background-position 0.1s linear 0s;
+}
+
+input[type=radio] {
+	display:none;
+	margin:10px;
+}
+ 
+input[type=radio] + label {
+	display:inline-block;
+	padding: 4px 12px;
+	background: transparent;
+	cursor: pointer;
+	margin-right: 5px;
+}
+
+input[type=radio]:checked + label {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+	font-weight: bold;
+	border-radius: 2px;
+	background: #fff;
+	border: 1px solid #B3B3B3;
+}
+
+#advanced_settings {
+	clear: right;
+	overflow: hidden;
+}
+
+#advanced_settings_status {
+	display: inline-block;
+	position: relative;
+	left: 18px;
+}
+
+#advanced_settings_gettext {
+	padding-left: 18px;
+}
+
+#submitLoader .image_rotate_gif, #submitLoader img {
+	margin: 0px 30px;
+}
+
+#user_login_local {
+	background-color: #EEEEEE;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+	color: #808080;
+	display: inline-block;
+	font-size: 1.3em;
+	font-style: normal;
+	margin-bottom: 10px;
+	padding: 4px 6px;
+	text-decoration: none;
+	vertical-align: middle;
+	width: 230px;
+}
+
+
+#session_language {
+	padding-left: 30px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+#session_language option {
+	padding-left: 30px;
+	background-repeat: no-repeat;
+	background-position: 7px center;
+}

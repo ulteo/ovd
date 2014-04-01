@@ -7,6 +7,6 @@ scripts_DATA = builder.js \
 			   scriptaculous.js \
 			   sound.js
 
-scriptsdir = $(datadir)/ulteo/administration_console/media/script/lib/scriptaculous
+scriptsdir = $(datadir)/ulteo/administration_console/web/media/script/lib/scriptaculous
 
 EXTRA_DIST = $(scripts_DATA)

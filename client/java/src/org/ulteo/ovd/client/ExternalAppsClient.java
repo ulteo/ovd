@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010-2011 Ulteo SAS
  * http://www.ulteo.com
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2011
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
@@ -41,9 +42,11 @@ import org.ulteo.utils.jni.WorkArea;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.SessionExpiration;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
+import net.propero.rdp.Bitmap;
 
 public class ExternalAppsClient {
 	public static String name = "OvdExternalAppsClient";
@@ -60,6 +63,7 @@ public class ExternalAppsClient {
 	public static void main(String[] args) {
 
 		ClientInfos.showClientInfos();
+		SessionExpiration.getInstance().disable();
 
 		LongOpt[] options = new LongOpt[4];
 		StringBuffer optionsBuffer = new StringBuffer();
@@ -128,6 +132,13 @@ public class ExternalAppsClient {
 				org.ulteo.Logger.error(ex.getMessage());
 				System.exit(2);
 			}
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_WINDOWS);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
+			}
 		}
 		else if (OSTools.isLinux()) {
 			try {
@@ -135,6 +146,13 @@ public class ExternalAppsClient {
 			} catch (FileNotFoundException ex) {
 				WorkArea.disableLibraryLoading();
 				org.ulteo.Logger.error(ex.getMessage());
+			}	
+			try {
+				LibraryLoader.LoadLibrary(LibraryLoader.LIB_RDP_UNIX);
+				Bitmap.libraryLoaded();
+			} catch (FileNotFoundException ex) {
+				System.out.println("Unable to load libRDP, compression improvements are not available !!");
+				Bitmap.disableLibraryLoading();
 			}
 		}
 
@@ -183,6 +201,6 @@ public class ExternalAppsClient {
 		
 		//  By default, activate unicode in external mode.
 		cli.setInputMethod("unicode");
-		cli.perform();
+		((OvdClientPerformer) cli).perform();
 	}
 }

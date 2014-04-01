@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2013 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -46,6 +47,7 @@ class Logger:
 	def __init__(self, name, loglevel, filename = None, stdout = False):
 		self.logging = None
 		self.loglevel = loglevel
+		self.running = False
 		
 		self.fileHandler = None
 		self.consoleHandler = None
@@ -97,9 +99,11 @@ class Logger:
 				self.thread.start()
 		else:
 			if self.isThreaded():
+				self.running = False
+				self.thread.join()
+				
 				self.lock.acquire()
 				self.queue.close()
-				self.thread.join()
 				self.queue = None
 				self.lock.release()
 	
@@ -109,7 +113,8 @@ class Logger:
 	
 	
 	def run(self):
-		while not self.queue._closed:
+		self.running = True
+		while not self.queue._closed and self.running:
 			# Python 2.6: raise Empty even when queue is closed.
 			
 			try:
@@ -257,10 +262,24 @@ class Logger:
 			return
 		
 		if cls._instance.loglevel&cls.ERROR != cls.ERROR:
+			if cls._instance.loglevel&cls.WARN == cls.WARN:
+				cls._instance.process('log_warn', message)
+			
 			return
+			
+		if cls._instance.loglevel&cls.DEBUG == cls.DEBUG:
+			exc = traceback.format_exc()
+			if not isinstance(exc, unicode):
+				exc = unicode(exc, "utf-8", "replace")
+			
+			message += '\n' + exc.encode('ascii', 'replace')
+		else:
+			try:
+				message += ' %s: %s'%(sys.exc_info()[0].__name__, str(sys.exc_info()[1]))
+			except:
+				pass
 		
-		exc = traceback.format_exc()
-		cls._instance.process('log_error', message + '\n' + exc)
+		cls._instance.process('log_error', message)
 	
 	
 	@classmethod

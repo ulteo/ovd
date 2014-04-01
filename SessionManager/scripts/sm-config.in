@@ -40,7 +40,7 @@ usage ()
     echo "  --no-download        don't get the chroot, assume it is already installed"
     echo "  --chroot-uri url     get the chroot from 'uri'"
     echo "                       recognised protocoles are http://, ftp:// and file://"
-    echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0)"
+    echo "                       (default: @CHROOT_URL@)"
     echo "  --chroot-url url     same as --chroot-uri, for backward compatibility"
     echo "  --copy               if the chroot is a file, copy it in the Session Manager dir"
     echo "                       (a symlink is created by default)"
@@ -130,7 +130,7 @@ while [ -z "$PASS" ]; do
 done
 
 if [ -z "$NODOWNLOAD" ]; then
-    PROPOSED_URL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+    PROPOSED_URL='@CHROOT_URL@'
     PROPOSED_TARGET=$BASEDIR/base.tar.gz
     if [ -z "$URI" ]; then
         echo -n "Chroot download url [$PROPOSED_URL]: "
@@ -192,7 +192,7 @@ if [ -z "$NODOWNLOAD" ]; then
     case $URI in
     http://*|ftp://*)
         mkdir -p $(dirname $TARGET)
-        curl --retry 3 --connect-timeout 60 -L -f "$URI" > $TARGET || die An error occured while downloading the chroot. Aborting.
+        curl --retry 3 --connect-timeout 60 -L -f "$URI" > $TARGET || die An error occurred while downloading the chroot. Aborting.
         # Create a symlink to $BASEDIR/base.tar.gz if this file doesn't exist
         [ ! -e "$BASEDIR/base.tar.gz" ] && ln -sf "$TARGET" "$BASEDIR/base.tar.gz"
         ;;

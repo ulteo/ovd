@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2011, 2012, 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewApplicationsGroups'))
 	redirect('index.php');
@@ -194,10 +194,10 @@ function show_manage($id) {
 	$groups_users_all = $usersgroupsList->search();
 	if (! is_array($groups_users_all)) {
 		$groups_users_all = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Group data"));
 	}
 	uasort($groups_users_all, "usergroup_cmp");
-	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $id));
+	$searchDiv = $usersgroupsList->getForm();
 
   $groups_users_available = array();
   foreach($groups_users_all as $group_users) {
@@ -211,7 +211,7 @@ function show_manage($id) {
   page_header();
 
   echo '<div>';
-  echo '<h1><a href="?">'._('Application groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('Application Group management').'</a> - '.$group->name.'</h1>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
   echo '<th>'._('Description').'</th>';

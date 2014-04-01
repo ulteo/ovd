@@ -1,0 +1,54 @@
+Source: ovd-desktop
+Section: x11
+Priority: extra
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
+ libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
+ xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev,
+ librsvg2-bin
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-desktop
+Architecture: all
+Depends: ulteo-ovd-desktop-gtk-theme, dmz-cursor-theme, ulteo-xfce4-restricted-menu-plugin,
+ xfce4-session, xfwm4, xfdesktop4, xfce4-panel, ulteo-ovd-logout-dialog
+Recommends: ulteo-ovd-desktop-apparmor, xfce4-utils, thunar
+Conflicts: xfce (< 4.6)
+Description: Ulteo Open Virtual Desktop - Startup scripts and default settings
+ This package provides:
+ * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
+ * script that can be used to start an X session on an Open Virtual
+ Desktop application server.
+
+Package: ulteo-plymouth-theme
+Architecture: any
+Depends: ${misc:Depends}, plymouth, plymouth-label
+Provides: plymouth-theme
+Description: Ulteo plymouth theme: graphical boot animation theme
+ Plymouth is an application that runs very early in the boot process
+ (even before the root filesystem is mounted!) that provides a graphical
+ boot animation while the boot process happens in the background.
+ .
+ This package contains the default ulteo logo theme.
+
+Package: ulteo-xfce4-restricted-menu-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Restricted menu for the xfce4 panel
+ This plugin for the Xfce panel allows the administrateur to restrict the
+ access to the available applications.
+
+Package: ulteo-ovd-desktop-gtk-theme
+Architecture: all
+Depends: libgtk2.0-bin, gtk2-engines-xfce
+Description: Ulteo Open Virtual Desktop
+
+Package: ulteo-ovd-desktop-apparmor
+Architecture: all
+Depends: apparmor
+Description: Ulteo Open Virtual Desktop
+
+Package: ulteo-ovd-logout-dialog
+Architecture: all
+Depends: python-gtk2
+Description: Ulteo Open Virtual Desktop - Logout dialog

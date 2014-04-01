@@ -25,7 +25,7 @@
 #define TIME_STR_ARRAY_SIZE 80
 
 
-bool formatTime(char* dst, const char* format);
+bool time_format(char* dst, const char* format);
 
 #endif
 

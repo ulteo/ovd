@@ -1,0 +1,847 @@
+# Copyright (C) 2014 Ulteo SAS.
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-25 10:12+0200\n"
+"PO-Revision-Date: 2014-03-30 22:39+0200\n"
+"Last-Translator: Unai <unai.gangoiti@ehu.es>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.6\n"
+
+#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+msgid ""
+"JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
+"seems JavaScript is either disabled or not supported by your browser. To use "
+"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
+"try again[/A]."
+msgstr ""
+"Javascript aktibatuta egon behar da Ulteo OVD erabili ahal izateko. Hala "
+"ere, Javascript aktibatu barik edo zure nabigatzaileak ez daramala dirudi. "
+"OVD Web bezeroa erabiltzeko, aktiba ezazu nabigalzilearen aukeretan eta "
+"[A]saiatu berriro[/A]."
+
+#: ../../client/web/web/includes/functions.inc.php:199
+msgid "Close"
+msgstr "Itxi"
+
+#: ../../client/web/web/includes/functions.inc.php:201
+msgid "Session Manager"
+msgstr "Saio kudeatzailea"
+
+#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
+msgid "Login"
+msgstr "Erabiltzaile izena"
+
+#: ../../client/web/web/includes/functions.inc.php:203
+msgid "Login (detected)"
+msgstr "Erabiltzaile izena (antzamena)"
+
+#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
+msgid "Password"
+msgstr "Gakoa"
+
+#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
+msgid "Use local credentials"
+msgstr "Bertako egiaztagiriak erabili"
+
+#: ../../client/web/web/includes/functions.inc.php:206
+#: ../../client/web/web/includes/functions.inc.php:212
+#: ../../client/web/web/includes/functions.inc.php:217
+msgid "Yes"
+msgstr "Bai"
+
+#: ../../client/web/web/includes/functions.inc.php:207
+#: ../../client/web/web/includes/functions.inc.php:213
+#: ../../client/web/web/includes/functions.inc.php:218
+msgid "No"
+msgstr "Ez"
+
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
+msgid "Mode"
+msgstr "Era"
+
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
+msgid "Desktop"
+msgstr "Idazmahaia"
+
+#: ../../client/web/web/includes/functions.inc.php:210
+msgid "Portal"
+msgstr "Ataria"
+
+#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
+msgid "Fullscreen"
+msgstr "Pantaila osoa"
+
+#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
+msgid "Language"
+msgstr "Hizkuntza"
+
+#: ../../client/web/web/includes/functions.inc.php:215
+msgid "Keyboard layout"
+msgstr "Teklatuaren jarrera"
+
+#: ../../client/web/web/includes/functions.inc.php:216
+msgid "Debug"
+msgstr "Arazketa"
+
+#: ../../client/web/web/includes/functions.inc.php:220
+msgid "Keyboard method"
+msgstr "Teklatuaren modua"
+
+#: ../../client/web/web/includes/functions.inc.php:221
+msgid "Scancode"
+msgstr "Teklaren kodea"
+
+#: ../../client/web/web/includes/functions.inc.php:222
+msgid "Unicode"
+msgstr "Unicode"
+
+#: ../../client/web/web/includes/functions.inc.php:223
+msgid "Unicode use local IME"
+msgstr "Unicode bertako IME erabiliz"
+
+#: ../../client/web/web/includes/functions.inc.php:225
+msgid "Advanced settings"
+msgstr "Ondutako konfigurazioa"
+
+#: ../../client/web/web/includes/functions.inc.php:226
+msgid "Connect"
+msgstr "Konektatu"
+
+#: ../../client/web/web/includes/functions.inc.php:228
+msgid "Checking for system compatibility"
+msgstr "Egiaztatzen sistemaren bateragarritasuna"
+
+#: ../../client/web/web/includes/functions.inc.php:229
+msgid ""
+"If this is your first time here, a Java security window will show up and you "
+"will have to accept it to use the service."
+msgstr ""
+"Zure lehenengo aldia bada hemen, Java segurtasun horri bat agertuko zaizu "
+"eta onartu beharko duzu zerbitzua erabiltzeko"
+
+#: ../../client/web/web/includes/functions.inc.php:230
+msgid ""
+"You are advised to check the \"<em>Always trust content from this publisher</"
+"em>\" checkbox."
+msgstr ""
+"\"<em>Argitaratzaile honen edukiagaz beti fidadu</em>\" aukera adieraztea "
+"gomendatzen da"
+
+#: ../../client/web/web/includes/functions.inc.php:232
+msgid "System compatibility error"
+msgstr "Sistema bateragarritasunaren akatsa"
+
+#: ../../client/web/web/includes/functions.inc.php:233
+msgid "Java is either not available on your system or in your web browser."
+msgstr "Java ez dago zure sisteman edo nabigaltzailean erabilgarria"
+
+#: ../../client/web/web/includes/functions.inc.php:234
+msgid ""
+"Please install the Java extension for your web browser or contact your "
+"administrator."
+msgstr ""
+"Instala ezazu Java luzapena zure nabigatzailean edo kudeatzailearekin "
+"kontaktuan jar zaitez"
+
+#: ../../client/web/web/includes/functions.inc.php:235
+msgid "You have not accepted the Java security window."
+msgstr "Ez duzu java segurtasun mezua onartu"
+
+#: ../../client/web/web/includes/functions.inc.php:236
+msgid "You <strong>cannot</strong> have access to this service."
+msgstr "<strong>Ezin duzu</strong> zerbitzu honetarako sarrerarik lortu"
+
+#: ../../client/web/web/includes/functions.inc.php:238
+msgid "Loading Open Virtual Desktop"
+msgstr "Idazmahi Birtual Irekia kargatzen"
+
+#: ../../client/web/web/includes/functions.inc.php:239
+msgid "Disconnecting Open Virtual Desktop"
+msgstr "Idazmahi Birtual Irekia deskonektatzen"
+
+#: ../../client/web/web/includes/functions.inc.php:240
+msgid "Welcome!"
+msgstr "Ongi etorri!"
+
+#: ../../client/web/web/includes/functions.inc.php:241
+msgid "Suspend"
+msgstr "Suspenditu"
+
+#: ../../client/web/web/includes/functions.inc.php:242
+msgid "Logout"
+msgstr "Irten"
+
+#: ../../client/web/web/includes/functions.inc.php:244
+msgid "The Ulteo OVD session runs in a separate window"
+msgstr "Ulteo OVD saioa lehio desberdin batean ari da"
+
+#: ../../client/web/web/includes/functions.inc.php:248
+msgid "Click [A]here[/A] to switch back to your session"
+msgstr "Egin ezazu klick [A]hemen[/A] zure saiora itzultzeko"
+
+#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
+msgid "My applications"
+msgstr "Nire aplikazioak"
+
+#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
+msgid "Running applications"
+msgstr "Exekutatzen ari diren aplikazioak"
+
+#: ../../client/web/web/includes/functions.inc.php:253
+msgid "My files"
+msgstr "Nire fitxategiak"
+
+#: ../../client/web/web/includes/functions.inc.php:257
+msgid "Example: %EXAMPLE%"
+msgstr "Adibidea: %EXAMPLE%"
+
+#: ../../client/web/web/includes/functions.inc.php:259
+msgid "Usage: missing \"sessionmanager_host\" parameter"
+msgstr "Erabilera: \"sessionmanager_host\" parametroa falta da"
+
+#: ../../client/web/web/includes/functions.inc.php:260
+msgid "Usage: missing \"login\" parameter"
+msgstr "Erabilera: \"login\" parametroa falta da"
+
+#: ../../client/web/web/includes/functions.inc.php:261
+msgid "Usage: missing \"password\" parameter"
+msgstr "Erabilera: \"gakoa\" parametroa falta da"
+
+#: ../../client/web/web/includes/functions.inc.php:262
+msgid "Unable to reach the Session Manager"
+msgstr "Saio kudeatzailearekin konektatzea ezinezkoa izan da"
+
+#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
+msgid "Authentication failed: please double-check your password and try again"
+msgstr "Sarrera-datu okerrak: mesedez, egiaztatu gakoa eta saiatu berriro"
+
+#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
+msgid ""
+"The system is in maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Sistema mantentze moduan dago, mesedez, kudeatzailearekin kontaktuan jar "
+"zaitez argibide gehiago behar izatekotan"
+
+#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
+msgid "An internal error occurred, please contact your administrator"
+msgstr ""
+"Barneko errore bat gertatu da, mesedez, kudeatzailearekin kontaktuan jar "
+"zaitez"
+
+#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
+msgid "You specified an invalid login, please double-check and try again"
+msgstr ""
+"Erabiltzaile-izen okerra eman duzu, mesedez, egiaztatu izena eta saiatu "
+"berriro"
+
+#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
+msgid ""
+"The service is not available, please contact your administrator for more "
+"information"
+msgstr ""
+"Zerbitzua ez dago erabilgarria, mesedez, kudeatzailearekin kontaktuan jar "
+"zaitez argibide gehiago behar izatekotan"
+
+#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
+msgid ""
+"You are not authorized to launch a session. Please contact your "
+"administrator for more information"
+msgstr ""
+"Ez daukazu saio berri bati hasiera emateko baimenarik. Mesedez, "
+"kudeatzailearekin kontaktuan jar zaitez argibide gehiago behar izatekotan"
+
+#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
+msgid "You already have an active session"
+msgstr "Jadanik baduzu saio eraginkor bat"
+
+#: ../../client/web/web/includes/functions.inc.php:272
+msgid "You will be disconnected from your OVD session."
+msgstr "Zure OVD saiotik deskonektatua izango zara"
+
+#: ../../client/web/web/includes/functions.inc.php:274
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid ""
+"Your session is going to end in 3 minutes, please save all your data now!"
+msgstr ""
+"Zure saioa 3 minutu barru amaituko da, mesedez gorde itzazu datuak oraintxe "
+"bertan!"
+
+#: ../../client/web/web/includes/functions.inc.php:275
+msgid ""
+"Your session is going to be disconnected in %MINUTES% minutes because of the "
+"logon time restriction policy"
+msgstr ""
+"Zure saioa %MINUTES% minutu barru deskonektatuko da, saioaren denbora "
+"murrizte politika dela eta"
+
+#: ../../client/web/web/includes/functions.inc.php:277
+msgid "Server: session closed unexpectedly"
+msgstr "Zerbitzari: saioa ezustean itxi da"
+
+#: ../../client/web/web/includes/functions.inc.php:278
+msgid "Your session has ended, you can now close the window"
+msgstr "Zure saioa amaita da, orain leihoa itxi dezakezu"
+
+#: ../../client/web/web/includes/functions.inc.php:279
+msgid "Your session has ended unexpectedly"
+msgstr "Zure saioa ezustean amaitu da"
+
+#: ../../client/web/web/includes/functions.inc.php:280
+msgid "error details"
+msgstr "akatsaren xehetasunak"
+
+#: ../../client/web/web/includes/functions.inc.php:281
+msgid "Close this window"
+msgstr "Itxi lehio hau"
+
+#: ../../client/web/web/includes/functions.inc.php:285
+msgid "Click [A]here[/A] to start a new session"
+msgstr "Egin ezazu [A]klik[/A] hemen saio berri bat hasteko"
+
+#: ../../client/web/web/includes/functions.inc.php:288
+msgid "suspend"
+msgstr "suspenditu"
+
+#: ../../client/web/web/includes/functions.inc.php:289
+msgid "resume"
+msgstr "berriz hasi"
+
+#: ../../client/web/web/includes/functions.inc.php:290
+msgid "Are you sure you want to logout (# apps running) ?"
+msgstr "Ziur zaude irten nahi duzula (# aplikazio martxan)"
+
+#: ../../client/web/web/classes/Ajaxplorer.class.php:61
+msgid "Profile"
+msgstr "Profila"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
+msgid "Text file (*.txt)"
+msgstr "Testu fitxategia (*.txt)"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+msgid "An error occurred. Please try again."
+msgstr "Errore bat gertatu da. Mesedez saiatu berriro"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
+msgid "Error"
+msgstr "Errorea"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:105
+msgid "Bug report saved to %s"
+msgstr "Erregistro txostena hemen gorde da %s"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:108
+msgid "Bug report saved"
+msgstr "Erregistro txostena gorde da"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Please fill in the description field."
+msgstr "Mesedez, deskribapenaren hutsunea bete ezazu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
+msgid "Empty field"
+msgstr "Hutsunea hutsik dago"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:64
+msgid "Ulteo OVD Bug Report"
+msgstr "Ulteo OVD erregistroen txostena"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:108
+msgid "Validate"
+msgstr "Onartu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:119
+msgid "Date"
+msgstr "Data"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:121
+msgid "Version"
+msgstr "Bertsioa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:123
+msgid "System"
+msgstr "Sistema"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:125
+msgid "JVM"
+msgstr "JVM"
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportPopup.java:159
+msgid "Description and steps to reproduce:"
+msgstr "Deskribapena eta berriz gertatzeko pausoak: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/bugreport/gui/BugReportButton.java:44
+msgid "Report a bug"
+msgstr "Akats baten berri eman"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1034
+msgid "Maximized"
+msgstr "Handituta"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:867
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1031
+msgid "Fewer options"
+msgstr "Aukera gutxiago"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:948
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1029
+msgid "More options..."
+msgstr "Aukera gehiago..."
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1013
+msgid "Start!"
+msgstr "Hasi!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1016
+msgid "Server"
+msgstr "Zerbitzari"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1018
+msgid "Resolution"
+msgstr "Bereizmena"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1020
+msgid "Keyboard"
+msgstr "Teklatu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1022
+msgid "Auto"
+msgstr "Berez"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1023
+msgid "Application"
+msgstr "Aplikazioa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1025
+msgid "Remember me"
+msgstr "Gogora nazazu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
+msgid "Auto-publish shortcuts"
+msgstr "Berez argitaratu sarbideak"
+
+#. Initialize UI components
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:83
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:81
+msgid "Logoff"
+msgstr "Irten"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:84
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:70
+msgid "Disconnect"
+msgstr "Deskonektatu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:94
+msgid "Close the application"
+msgstr "Itxi aplikazioa"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:96
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:65
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:135
+msgid "Cancel"
+msgstr "Ezeztatu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:99
+msgid "Ok"
+msgstr "Konforme"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:52
+msgid "Start loading session"
+msgstr "Hasi saioa betetzen"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
+msgid "Connecting to the Session Manager"
+msgstr "Saioaren kudeatzailearekin konektatzen"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
+msgid "Get session information from Session Manager"
+msgstr "Hartu saioaren informazioa saio kudetzailearengandik"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
+msgid "Get application data from Session Manager"
+msgstr "Hartu aplikazioaren informazioa saio kudetzailearengandik"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:60
+msgid "Installing application data on client"
+msgstr "Aplikazioaren data bezeroan jartzen"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
+msgid "Waiting on server for session"
+msgstr "Saio bat lortu arte zerbitzariaren zain"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
+msgid "Invalid status"
+msgstr "Egoera okerra"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/DisconnectionDialog.java:43
+msgid "Disconnecting!"
+msgstr "Deskonektatzen!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:58
+#: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingFrame.java:136
+msgid "Now loading"
+msgstr "Orain kargatzen"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
+msgid "An error occurred, please contact your administrator"
+msgstr "Errore bat gertatu da, mesedez kudeatzailearekin kontaktuan jar zaitez"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:651
+msgid "Unable to reach the Session Manager!"
+msgstr "Ezin heldu saio kudeatzailearengana!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:658
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:663
+msgid "Warning!"
+msgstr "Erne!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:718
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:722
+msgid "Invalid host field!"
+msgstr "Zerbitzariaren helbide okerra!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:752
+msgid "You must specify the host field!"
+msgstr "Zerbitzariaren hutsunea bete behar duzu!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:757
+msgid "You must specify a username!"
+msgstr "Erabiltzailearen hutsunea bete behar duzu!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:760
+msgid "You must specify a password!"
+msgstr "Gakoaren hutsunea bete behar duzu!"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
+msgid "Unable to find a valid certificate"
+msgstr "Ezin da ziurtagiri zuzen bat aurkitu"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+msgid "Session is going to end"
+msgstr "Saioa amaitu egingo da"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+msgid "Internal error: unsupported session mode"
+msgstr "Barneko errorea: erabilezin saio modua"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "You have been disconnected"
+msgstr "Deskonektatu egin zara"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+msgid "Your session has ended"
+msgstr "Zure saioa amaitu da"
+
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+msgid "Protocol xml error: "
+msgstr "XML protokoloaren errorea: "
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:52
+msgid "OVD News"
+msgstr "OVD-ri buruzko berriak"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Enable desktop integration"
+msgstr "Baliotu idazmahaiaren bertakotzea"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
+msgid "Disable desktop integration"
+msgstr "Baliogabetu idazmahaiaren bertakotzea"
+
+#: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:69
+msgid "Welcome {user}"
+msgstr "Ongi etorri {user}"
+
+msgid "Main gestures"
+msgstr "Keinu nagusiak"
+
+msgid "Right click"
+msgstr "Eskuineko klik"
+
+msgid "View gestures"
+msgstr "Keinuak ikusi"
+
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Sistema mantentze-moduan dago, kudeatzailearekin kontaktuan jar zaitez "
+"argibide gehiago behar izatekotan"
+
+msgid "You are not authorized to launch a session in this mode"
+msgstr "Ez daukazu modu honetan saio bat hasteko baimenik"
+
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
+msgstr ""
+"Sare arazo batek bezero eta zerbitzariaren arteko lotura eragozten du. "
+"Berriro konektatu arte itzaron dezakezu edo alde egin"
+
+msgid "Gestures"
+msgstr "Kinuak"
+
+msgid "An error occured, please contact your administrator"
+msgstr "Errore bat gertatu da, mezedez kudeatzailearekin kontaktuan jar zaitez"
+
+msgid "Toolbar"
+msgstr "Tresna-barra"
+
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr ""
+"Onartua izateko, erabiltzailea, gakoa eta erabili nahi duzun zerbitzaria "
+"sartzea beharrezkoa da"
+
+msgid "Show toolbar"
+msgstr "Tresna-barra erakutsi"
+
+msgid "Zoom"
+msgstr "Handiagotu"
+
+msgid "Network is down"
+msgstr "Ez dago sarerik"
+
+msgid "Connection"
+msgstr "Konexioa"
+
+msgid "Move view"
+msgstr "Ikuspegia mugitu"
+
+msgid "Show keyboard"
+msgstr "Teklatua erakutsi"
+
+msgid "Help"
+msgstr "Laguntza"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr "Barneko errore bat gertatu da, kudeatzailearekin kontaktuan jar zaitez"
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr ""
+"Galdera-ikurrak laguntza orri hau erakusten du. Gurutzeak saioa izten du."
+
+msgid "Click"
+msgstr "Klik"
+
+msgid "Session resolution"
+msgstr "Saioaren bereizmena"
+
+msgid "The password will be saved"
+msgstr "Gakoa gordeko da"
+
+msgid "Modem (56 Kbits/s)"
+msgstr "Modem (56 Kbits/s)"
+
+msgid "RDP Compression"
+msgstr "RDP konpresioa"
+
+msgid "Toggle keyboard"
+msgstr "Teklatua ordeztu"
+
+msgid "Android controls remains visible on screen"
+msgstr "Android aginteak ikusgai jarraitzen dute pantailan"
+
+msgid "Do you want to disconnect the current session ?"
+msgstr "Oraingo saioa deskonektatu nahi duzu?"
+
+msgid "Manual resolution"
+msgstr "Eskuzko bereizmena"
+
+msgid "Advanced options"
+msgstr "Ondutako aukerak"
+
+msgid "LAN (100 Mbits/s)"
+msgstr "LAN (100 Mbits/s)"
+
+msgid "Enhanced keyboard"
+msgstr "Ondutako teklatua"
+
+msgid "Force wide screen"
+msgstr "pantailaren zabalera derrigortu"
+
+msgid "Ulteo website"
+msgstr "Ulteo webgunea"
+
+msgid "Screen resolution not changed"
+msgstr "Pantailaren bereizmena ez da aldatu"
+
+msgid "Dim the system bar with clock while showing the desktop"
+msgstr "Erlojudun sitemaren barra moteldu idazmahia erakusten ari den bitartean"
+
+msgid "WAN (10 Mbits/s)"
+msgstr "WAN (10 Mbits/s)"
+
+msgid "Always show the system bar with clock"
+msgstr "Beti erakutzu erlojudun sistemaren barra"
+
+msgid "The login screen shows the Session Manager data"
+msgstr "Sartzeko pantaila saio kudeatzailearerako sarrera erakutsiko du"
+
+msgid ""
+"No Internet connection has been detected on this\n"
+"\t\tdevice. Please enable Wifi/3G before using this application"
+msgstr ""
+"Ez da Interneterako konexiorik antzeman gailu\n"
+"\t \t honetan. Mesedez, aktiba ezazu Wifi/3G aplikazio hau erabili aurretik"
+
+msgid "Hide the Session Manager in login screen"
+msgstr "Sartzeko pantailan saio kudeatzailea eskutatu"
+
+msgid "Satellite (2 Mbits/s)"
+msgstr "Satelite (2 Mbits/s)"
+
+msgid "Dim system bar"
+msgstr "Moteldu sistemaren barra"
+
+msgid ""
+"The networks connection appears to be down, You can wait for reconnection or "
+"logout"
+msgstr ""
+"Sare konexioa ebaki dela dirudi, berriro konektatu arte itzaron dezakezu edo "
+"alde egin"
+
+msgid "Not specified"
+msgstr "Zehaztu gabe"
+
+msgid "Active desktop session"
+msgstr "Idazmahai sesio aktiboa"
+
+msgid "Hide session manager in login screen"
+msgstr "Saio kudeatzailea sarrera lehioan ezkutatu"
+
+msgid "Manual selection of screen resolution"
+msgstr "Pantailaren bereizmena eskuz zehaztu"
+
+msgid "Set the session manager url"
+msgstr "Saio kudeatzailearen URL zehaztu"
+
+msgid "Use enhanced keyboard"
+msgstr "Ondutako teklatua erabili"
+
+msgid "Create shortcut"
+msgstr "Sarbidea sortu"
+
+msgid "Waiting server for session"
+msgstr "Saio bat lortu arte zerbitzariai zain"
+
+msgid "Do not use enhanced keyboard"
+msgstr "Ez erabili ondutako erabili"
+
+msgid "Session manager Url"
+msgstr "Saio kudeatzailearen URL"
+
+msgid "Wide screen resolution will be forced"
+msgstr "Pantaila zabaleraren bereizmena derrigortuko da"
+
+msgid "Disable RDP compression"
+msgstr "RDP konpresioa baliogabetu"
+
+msgid "Automatic detection of screen resolution"
+msgstr "Pantaila bereizmenaren antzemate automatikoa"
+
+msgid "The desktop will take all screen space"
+msgstr "Idazmahaiak pataila osoa beteko du"
+
+msgid "The password will not be saved"
+msgstr "Gakoa ez da gordeko"
+
+msgid "Session"
+msgstr "Saioa"
+
+msgid "Set the screen dimensions of the session"
+msgstr "Saioaren pantaila neurriak jarri"
+
+msgid "Broadband Low (256 Kbits/s)"
+msgstr "Banda zabal motela (256 Kbits/s)"
+
+msgid "Broadband High (10 Mbits/s)"
+msgstr "Banda zabal azkarra (10 Mbits/s)"
+
+msgid "Connection type"
+msgstr "Konexio mota"
+
+msgid "Connection error"
+msgstr "Conexio akatsa"
+
+msgid "Enable RDP compression"
+msgstr "RDP konpresioa eragin"
+
+msgid "Save the password"
+msgstr "Gakoa gorde"
+
+#~ msgid ""
+#~ "Please install Java extension for your web browser or contact your "
+#~ "administrator."
+#~ msgstr ""
+#~ "Mesedez, jar ezazu java zure nabigatzailean edo kudeatzailearekin "
+#~ "harremanetan jar zaitez"
+
+#~ msgid "The Ulteo OVD session runs in a separated window"
+#~ msgstr "Ulteo OVD saioa lehio desberdin batean ari da"
+
+#~ msgid ""
+#~ "Your session is going to be disconnected in %MINUTES% minutes because of "
+#~ "logon time restriction policy"
+#~ msgstr ""
+#~ "Zure saioa %MINUTES% minutu barru deskonektatuko da, saioaren denbora "
+#~ "murrizte politika dela eta"
+
+#~ msgid "Connecting to the session manager"
+#~ msgstr "Saioaren kudeatzailearekin konektatu"
+
+#~ msgid "Get session information from session manager"
+#~ msgstr "Hartu saioaren informazioa saio kudetzailearengandik"
+
+#~ msgid "Get application data from session manager"
+#~ msgstr "Hartu aplikazioaren informazioa saio kudetzailearengandik"
+
+#~ msgid "Please fill description field."
+#~ msgstr "Mesedez, deskribapenaren hutsunea bete ezazu"
+
+#~ msgid "The login screen shows the session manager input"
+#~ msgstr "Sartzeko pantaila saio kudeatzailearerako sarrera erakusten du"
+
+#~ msgid "Hide the session manager in login screen"
+#~ msgstr "Sartzeko pantailan saio kudeatzailea eskutatu"
+
+#~ msgid "Broadband low (256 Kbits/s)"
+#~ msgstr "Banda zabal motela (256 Kbits/s)"
+
+#~ msgid "Connexion type"
+#~ msgstr "Konexio mota"

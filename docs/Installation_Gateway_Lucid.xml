@@ -4,40 +4,41 @@
           [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <transform_var name="gold_product_name" value="Gateway"/>
-
+  <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="lucid"/>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Gateway on Ubuntu 10.04 (Lucid Lynx) installation</subtitle>
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@ </subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
-    <copyright>
+    <copyright>	  		 
       <year>@YEAR@</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 
   <para>
-    The purpose of this document is to install a Ulteo OVD Gateway
-    on a Ubuntu 10.04 (Lucid Lynx).
+    The purpose of this document is to describe how to install an Ulteo OVD Gateway
+    on a @distrib_pretty_name@.
   </para>
   
   <xi:include href="common.xml" xpointer="gold" />
   
-  <section>
-    <title>Prerequisites</title>
+  <section id="prerequisites_gw">
+    <title id="prerequisites_gw_title">Prerequisites</title>
 
-    <itemizedlist>
+    <itemizedlist id="prerequisites_gw_list">
       <listitem>
         <para>
-          A installed <emphasis role="strong">Ubuntu 10.04 (Lucid
-          Lynx)</emphasis> system (x86 or amd64).
+          An installed <emphasis role="strong">@distrib_pretty_name@</emphasis> system (x86 or amd64).
         </para>
       </listitem>
       
       <listitem>
         <para>
-          An internet connexion that allow HTTP or the Ulteo OVD DVD
-          to install debian packages.
+          An Internet connection that provides HTTP access or the Ulteo OVD DVD
+          to install Debian packages.
         </para>
       </listitem>
       
@@ -48,12 +49,12 @@
       </listitem>
     </itemizedlist>
 
-    <important>
+    <important id="prerequisites_gw_important">
       <para>
-	The Gateway Server system have to be a dedicated system
-	for Ulteo OVD usage. It can also hosts another Ulteo OVD
-	roles. But we don't garantees the system will works if you are
-	using another services on this system.
+	The Gateway Server has to be a system dedicated 
+	for Ulteo OVD usage only. It may also host another Ulteo OVD
+	server role. However, if multiple roles are installed on the same system, Ulteo 
+	does not guarantee that the system will work correctly.
       </para>
     </important>
 
@@ -74,8 +75,8 @@
   </section>
 
 
-  <section>
-    <title>Ubuntu packages configuration</title>
+  <section id="configuration_gw">
+    <title>Package Configuration</title>
       
      <section id="repository_online">
        <xi:include href="&base;" xpointer="repository_online_title" />
@@ -84,14 +85,9 @@
       <itemizedlist>
         <listitem id="repository_step1">
           <xi:include href="&base;" xpointer="repository_online_step1_para" />
-          <important>
-            <para>
-              You have to replace LOGIN and PASSWORD by your own.
-            </para>
-          </important>
           <screen>
-<![CDATA[deb @BASE_URI@/ubuntu lucid main
-deb @BASE_URI_GOLD@/ubuntu lucid main]]>
+<![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main
+deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -104,16 +100,16 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
        
        <listitem id="repository_offline_step2">
          <para id="repository_offline_step2_para">
-           The OVD offline repository is made of two archives. The
+           The OVD offline repository is made up of two archives. The
            first one can be found <ulink
-           url="@BASE_URI@/offline/ovd-@VERSION@-lucid.tar.gz">here</ulink>
+           url="@BASE_URI@/offline/ovd-@VERSION@-@distrib_version@.tar.gz">here</ulink>
            or from the Ulteo OVD DVD. The second one is only available
            <ulink
-           url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-lucid.tar.gz">online</ulink>,
-           using your @GOLD_NAME@ account credentials.
+           url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_version@.tar.gz">online</ulink>,
+           using your @GOLD_NAME@ Edition account credentials.
          </para>
          <para>
-           You have to download or copy the two archives to the
+           Download or copy the two archives to the
            <emphasis>/root/</emphasis> path of your workstation.
          </para>
        </listitem>
@@ -123,7 +119,7 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
             Uncompress the archive:
           </para>
           <screen>
-<![CDATA[# for f in ovd-@VERSION@-*-lucid.tar.gz; do tar xzf $f; done]]>
+<![CDATA[# for f in ovd-@VERSION@-*-@distrib_version@.tar.gz; do tar xzf $f; done]]>
           </screen>
         </listitem>
 
@@ -134,8 +130,8 @@ deb @BASE_URI_GOLD@/ubuntu lucid main]]>
             file and add these lines:
           </para>
           <screen>
-<![CDATA[deb file:///root/ovd-@VERSION@-lucid lucid main
-deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
+<![CDATA[deb file:///root/ovd-@VERSION@-@distrib_name@ @distrib_version@ main
+deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main]]>
           </screen>
         </listitem>
      </itemizedlist>
@@ -144,8 +140,8 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
     <xi:include href="&base;" xpointer="repository_common" />
 </section>
 
-  <section>
-    <title>Packages installation</title>
+  <section id="installation_gw">
+    <title>Package Installation</title>
 
     <itemizedlist>
       <listitem>
@@ -159,10 +155,10 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
 
       <listitem>
         <para>
-          The only question is about the host/IP address where the
-          session manager can be accessed. (we use
-          <ulink url="sm.test.demo" /> here for the example, but of
-          course, you have to set your own domain name).
+          The only installation data required is the host/IP address of the
+          Session Manager. (We use
+          <ulink url="sm.test.demo" /> here as an example, but of
+          course, you have to specify your own domain name).
         </para>
 
         <para>
@@ -180,33 +176,34 @@ deb file:///root/ovd-@VERSION@-@GOLD_NAME@-lucid lucid main]]>
 
   <para>
     The configuration is now done. The service should be started at
-    the end of the installation, you should see the server appear in
+    the end of the installation and you should see the server appear in
     the <emphasis>unregistered server</emphasis> page of your Session
     Manager.
   </para>
   </section>
-  <section>
-	<title>WebClient configuration</title>
-	<para>Due to security reasons, the Gateway doesn't deliver communications with the web client by default. If you want access to the web client through the Gateway, you have to change the default configuration.</para>	 
-        <para>
-          Edit the slaveserver.conf file in <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
-        </para>
-        <screen>
+  <section id="webclient_gw">
+	<title>Web Portal Configuration</title>
+	<para>For security reasons, the Gateway doesn't allow communication 
+	to the Web Portal by default. If you want to provide access 
+	to the Web Portal via the Gateway, you have to change the default configuration.
+	</para>	 
+    <para>Edit the slaveserver.conf file in 
+    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
+    </para>
+    <screen>
 		<![CDATA[# web_client = http[s]://ip[:port]/]]>
-        </screen>
-        <para>
-          You have to set it with the Url of your Web Client. 
-          For instance:
-          <screen>
-			<![CDATA[web_client = http://webclient.test.demo/]]>
-		  </screen>
-        </para> 
-        <para>
-			Now, you have to restart the slaverserver service.
-			  <screen>
+    </screen>
+    <para>You have to uncomment the variable and set the value to the 
+    URL of your Web Portal. For example:
+        <screen>
+			<![CDATA[web_client = http://webportal.test.demo/]]>
+		</screen>
+    </para> 
+    <para>Now, restart the slaverserver service.
+		<screen>
 			<![CDATA[# /etc/init.d/ulteo-ovd-slaveserver restart]]>
-		  </screen>
-        </para>     
+		</screen>
+     </para>     
   </section>
   <xi:include href="colophon.xml" />  
 </article>

@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2008-2012 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +21,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewServers'))
 	redirect('index.php');
@@ -122,9 +123,13 @@ function show_default() {
       echo '<td>';
       echo '<ul>';
       $roles = $s->getAttribute('roles');
-      asort($roles);
+      ksort($roles);
+      $server_roles_disabled = array();
+      if ($s->hasAttribute('roles_disabled')) {
+          $server_roles_disabled = $s->getAttribute('roles_disabled');
+      }
       foreach ($roles as $a_role => $role_enabled) {
-          echo "<li>$a_role</li>";
+          echo "<li class=\"" . (array_key_exists($a_role, $server_roles_disabled)?"role_disabled":"role_enabled") . "\">$a_role</li>";
       }
       echo '</ul>';
       echo '</td>';
@@ -207,7 +212,7 @@ function show_unregistered() {
   page_header();
 
   echo '<div id="servers_div">';
-  echo '<h1>'._('Unregistered servers').'</h1>';
+  echo '<h1>'._('Unregistered Servers').'</h1>';
 
   if (count($u_servs) > 0){
     echo '<div id="servers_list_div">';
@@ -301,7 +306,7 @@ function show_unregistered() {
     echo '</div>';
     echo '<br />';
   } else {
-    echo _('No unregistered server');
+    echo _('No unregistered servers');
   }
 
   echo '</div>';
@@ -333,6 +338,23 @@ function show_manage($id_) {
       $switch_button = _('Switch to maintenance');
       $switch_value = 1;
     }
+
+	$servers_groups_list = $_SESSION['service']->servers_groups_list();
+	$servers_groups_published_id = array();
+	if ($server->hasAttribute('servers_groups')) {
+		$servers_groups_published_id = $server->getAttribute('servers_groups');
+	}
+	
+	$servers_groups_published = array();
+	$servers_groups_available = array();
+	foreach($servers_groups_list as $servers_group_id => $servers_group) {
+		if (array_key_exists($servers_group_id, $servers_groups_published_id)) {
+			$servers_groups_published[$servers_group_id] = $servers_group;
+		}
+		else {
+			$servers_groups_available[$servers_group_id] = $servers_group;
+		}
+	}
 
 	$server_roles_disabled = array();
 	if ($server->hasAttribute('roles_disabled')) {
@@ -395,7 +417,7 @@ function show_manage($id_) {
         foreach ($server->roles as $role => $enabled) {
           switch ($role) {
             case Server::SERVER_ROLE_APS:
-              echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
+              echo _('Session usage').': '.$server->getSessionUsage().'%<br />';
               echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
               break;
             case Server::SERVER_ROLE_FS:
@@ -447,7 +469,7 @@ function show_manage($id_) {
 	echo _('Internal name (fqdn)').': ';
 	echo '</td><td>';
 	if ($can_do_action) {
-		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to change the internal name of this server? The server will switch to broken state if the name is not valid!').'\');">';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to change the internal name of this server? The server will switch to a broken state if the name is not valid!').'\');">';
 		echo '<input type="hidden" name="name" value="Server" />';
 		echo '<input type="hidden" name="server" value="'.$server->id.'" />';
 		echo '<input type="hidden" name="action" value="fqdn" />';
@@ -582,6 +604,57 @@ function show_manage($id_) {
 	}
   echo '</table>';
   echo '</div>';
+
+	echo '<div>';
+	echo '<h2>'._('List of Server Groups including this server').'</h2>';
+	echo '<table border="0" cellspacing="1" cellpadding="3">';
+	if (count($servers_groups_published) == 0) {
+		echo '<tr><td colspan="2">'._('No group has this group').'</td></tr>';
+	}
+	else {
+		foreach($servers_groups_published as $group_id => $group) {
+			echo '<tr><td>';
+			echo '<a href="serversgroup.php?action=manage&amp;id='.$group->id.'">'.$group->name.'</a>';
+			echo '</td>';
+			if ($can_do_action) {
+				echo '<td>';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group from this server?').'\');">';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="name" value="Server_ServersGroup" />';
+				echo '<input type="hidden" name="group" value="'.$group->id.'" />';
+				echo '<input type="hidden" name="server" value="'.$server->id.'" />';
+				echo '<input type="submit" value="'._('Delete from this group').'" />';
+				echo '</form>';
+				echo '</td>';
+			}
+			
+			echo '</tr>';
+		}
+	}
+	
+	if ($can_do_action) {
+		if (count($servers_groups_available) == 0) {
+			echo '<tr><td colspan="2">'._('Not any available group to add').'</td></tr>';
+		}
+		else {
+			echo '<tr><form action="actions.php" method="post"><td>';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="name" value="Server_ServersGroup" />';
+			echo '<input type="hidden" name="server" value="'.$server->id.'" />';
+			echo '<select name="group">';
+			foreach($servers_groups_available as $group_id => $group) {
+				echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
+			}
+			
+			echo '</select>';
+			echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
+			echo '</form></tr>';
+		}
+	}
+	
+	echo '</table>';
+	echo '</div>';
+	echo '<br/><br/>';
   
 	foreach ($server->roles as $role => $bool) {
 		if (array_key_exists($role, $var)) {

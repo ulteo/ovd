@@ -47,7 +47,7 @@ get_chroot () {
         die Unable to reach the chroot tarball. Aborting.
 
     curl $CURLOPTS "$SM_URL/base.tar.gz" | tar zx --numeric-owner --preserve -C "$CHROOT_PATH" -f - || \
-        die An error occured while downloading the chroot. Aborting.
+        die An error occurred while downloading the chroot. Aborting.
 }
 
 

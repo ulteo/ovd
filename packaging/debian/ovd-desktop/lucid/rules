@@ -1,3 +1,1 @@
-#!/usr/bin/make -f
-
-include /usr/share/cdbs/1/rules/debhelper.mk
+../precise/rules

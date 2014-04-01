@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2010 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -72,8 +73,8 @@ def getTarget(filename):
 		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 		try:
 			shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(filename)
-		except pythoncom.com_error, err:
-			Logger.warn("LnkFile::getTarget: Unable to load file '%s': %s"%(filename, str(err)))
+		except pythoncom.com_error:
+			Logger.exception("LnkFile::getTarget: Unable to load file '%s'"%filename)
 			return None
 		
 		command = shortcut.GetPath(0)[0]

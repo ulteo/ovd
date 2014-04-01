@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
@@ -92,7 +92,12 @@ if (isset($_POST['config'])) {
       $preview = do_preview($prefs, $name);
     }
     else {
-      $prefs->set('general', 'domain_integration', substr($name, strlen('Configuration_mode_')));
+		$d = substr($name, strlen('Configuration_mode_'));
+		if ($d == 'ad') {
+			$d = 'microsoft';
+		}
+		
+		$prefs->set('general', 'domain_integration', $d);
       if (do_save($prefs, $name) === True) {
 	$_SESSION['config_profile_saved'] = true;
 	unset($_SESSION['config_profile']);

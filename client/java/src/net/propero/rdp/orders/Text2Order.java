@@ -31,11 +31,13 @@ public class Text2Order implements Order {
     private int boxright = 0;
     private int boxbottom = 0;
     private int opcode = 0;
+    private Brush brush = null;
    
     private int length = 0;
     byte[] text = new byte[256];
 
     public Text2Order() {
+    	this.brush = new Brush();
     }
     
     public int getFont() {
@@ -44,6 +46,10 @@ public class Text2Order implements Order {
 
     public int getClipLeft(){
 	return this.clipleft;
+    }
+    
+    public Brush getBrush(){
+   	return this.brush;
     }
 
     public int getClipRight() {
@@ -202,6 +208,7 @@ public class Text2Order implements Order {
 	length = 0;
     opcode = 0;
 	text = new byte[256];
+	brush.reset();
     }
 
     public int getOpcode(){

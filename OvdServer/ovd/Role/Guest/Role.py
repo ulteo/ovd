@@ -91,8 +91,9 @@ class Role(AbstractRole):
 		self.send_couple_ip_nom()
 		
 		
-	def stop(self):
-		Logger.info("Guest role::stop")
+	def order_stop(self):
+		AbstractRole.order_stop(self)
+		
 		self.session_manager.looping = False
 		self.loop = False
 		

@@ -12,7 +12,11 @@ Alias /ovd/client @DATADIR@/ulteo/sessionmanager/client
     RewriteEngine On
     RewriteBase /ovd/client/
 
-    # Add .php at the end of the request if not exists
+    # Deny requests containing .php
+    RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+    RewriteRule \.php$ - [F]
+
+    # Add .php at the end of the request
     RewriteCond %{REQUEST_URI}  !^.+\.php$
     RewriteRule (.*) $1.php [L]
 

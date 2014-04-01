@@ -1,0 +1,6 @@
+/etc/xdg
+/etc/restricted-menu.cfg
+/var/spool/menus-common/quit-legacy.desktop
+/var/spool/menus-common/disconnect.desktop
+/usr/share/pixmaps
+/usr/share/wallpapers

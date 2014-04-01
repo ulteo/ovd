@@ -55,6 +55,11 @@
 // define('OPTION_FORCE_USE_LOCAL_CREDENTIALS', false);
 // default: do not force any behavior
 
+// Option force SSO: do not let the user enter a login and password. The login is set to REMOTE_USER if possible
+// define('OPTION_FORCE_SSO', true);
+// define('OPTION_FORCE_SSO', false);
+// default is false
+
 // Enable/disable debug mode
 //  define('DEBUG_MODE', true);
 //  define('DEBUG_MODE', false);

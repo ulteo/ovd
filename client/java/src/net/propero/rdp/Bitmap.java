@@ -23,7 +23,9 @@ import org.apache.log4j.Logger;
 
 public class Bitmap {
 
-    public int usage;
+	private static boolean loadLibrary = false;
+
+	public int usage;
 
     private BufferedImage image = null;
 
@@ -2014,4 +2016,18 @@ public class Bitmap {
 		}
 		return out;
 	}
+	public static void disableLibraryLoading() {
+		loadLibrary = false;
+	}
+
+	public static void libraryLoaded() {
+		loadLibrary = true;
+	}
+
+	public static boolean jniAvailable() {
+		return loadLibrary;
+	}
+	public native int[] nRLEDecompress(int width, int height, int size, byte[] compressed_pixel, int Bpp) throws RdesktopException;
+
+	public native static int[] nJpegDecompress(byte[] pixel, int bufsize, int width, int height);
 }

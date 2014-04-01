@@ -23,8 +23,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
  
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewApplications'))
 	redirect('index.php');
@@ -60,7 +60,7 @@ function show_default() {
   echo '<div id="apps_list_div">';
 
   if ($is_empty)
-    echo _('No available application').'<br />';
+    echo _('No available applications').'<br />';
   else {
     echo '<div id="apps_list">';
     echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';
@@ -279,7 +279,7 @@ function show_manage($id) {
   echo '<input type="hidden" name="name" value="Application" />';
   echo '<input type="hidden" name="action" value="clone" />';
   echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-  echo '<input type="submit" value="'._('Clone to static application').'"/>';
+  echo '<input type="submit" value="'._('Clone to Static Application').'"/>';
   echo '</form>';
   echo '</td></tr>';
   echo '</table>';

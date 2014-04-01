@@ -1,12 +1,13 @@
 scripts_DATA = ajaxplorer.js \
                application_counter.js  \
                desktop_container.js  \
+               menu_container.js  \
                external.js  \
                logger.js  \
                news.js  \
                progress_bar.js \
                seamless_launcher.js  \
-               seamless_window_manager.js  \
+               seamless_taskbar.js  \
                start_app.js  \
                timezones.js  \
                ui.js  \

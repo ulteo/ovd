@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET  <laurent@ulteo.com> 2009-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +22,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
@@ -46,7 +47,7 @@ if (! $prefs) {
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><?php echo _('Last save'); ?></h2>
+  <h2><?php echo _('Last saved'); ?></h2>
 <?php
   if (array_key_exists('settings_last_backup', $_SESSION['configuration']))
     echo date('m/d/Y H:i:s', $_SESSION['configuration']['settings_last_backup']);
@@ -123,7 +124,7 @@ else
   </div>
   </td>
 
-  <td style="padding: 20px; vertical-align: top;" colspan="2">
+  <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
 <?php
@@ -138,6 +139,30 @@ echo $buf;
   </div>
   </div>
   </td>
+<?php if (is_premium()): ?>
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2><a href="certificate.php"><?php echo _("Subscription Keys"); ?></a></h2>
+<?php
+    $expirity = $_SESSION['service']->has_valid_certificate();
+    if ($expirity !== false) {
+      $expirity = floor(($expirity - gmmktime()) / (60 * 60 * 24));
+      if ($expirity > 0 && $expirity < 20) {
+        echo sprintf(_("Your Premium Edition Subscription Key will expire in %d days"), $expirity);
+      } elseif ($expirity <= 0) {
+        echo _("Your Premium Edition Subscription Key has expired.");
+      } else {
+        echo sprintf(_("Your Premium Edition Subscription Key is valid for %d days."), $expirity);
+      }
+    } else {
+      echo _("You don't have any valid Premium Edition Subscription Keys.");
+    }
+?>
+  </div>
+  </div>
+  </td>
+<?php endif ?>
 
   </tr>
 </table>

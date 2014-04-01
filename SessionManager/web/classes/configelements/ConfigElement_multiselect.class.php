@@ -22,4 +22,23 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_multiselect extends ConfigElement { // list of text (r) (fixed length) (more than one can be selected)
+	public function contentEqualsTo($content_) {
+		if (count($this->content) != count($content_)) {
+			return false;
+		}
+		
+		foreach($this->content as $k) {
+			if (! in_array($k, $content_)) {
+				return false;
+			}
+		}
+		
+		foreach($content_ as $k) {
+			if (! in_array($k, $this->content)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }

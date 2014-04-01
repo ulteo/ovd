@@ -35,6 +35,7 @@ class Config:
 	infos = {}
 	
 	roles = []
+	stop_timeout = 600  # in second (10m)
 	ROLES_ALIASES = {"aps":"ApplicationServer", "fs":"FileServer"}
 	
 	LOGS_FLAGS_ALIASES = {
@@ -76,6 +77,15 @@ class Config:
 			a = cls.raw_data["main"]["session_manager"]
 			if len(a)>0:
 				cls.session_manager = a.strip()
+		
+		if cls.raw_data["main"].has_key("stop_timeout"):
+			a = cls.raw_data["main"]["stop_timeout"]
+			try:
+				a = int(a)
+				if a > 0:
+					cls.stop_timeout = a
+			except ValueError:
+				report_error("Invalid value for configuration key 'stop_timeout', need a time in seconde")
 		
 		if cls.raw_data["main"].has_key("server_allow_reuse_address"):
 			a = cls.raw_data["main"]["server_allow_reuse_address"].lower().strip()

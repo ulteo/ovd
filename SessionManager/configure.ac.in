@@ -1,10 +1,12 @@
-# Copyright (C) 2008-2012 Ulteo SAS
+# Copyright (C) 2008-2013 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@linutop.com> 2008-2009
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2009-2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,6 +27,9 @@ AC_INIT([@MODULE@], [@VERSION@], [http://bugs.ulteo.com])
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax])
 AC_PROG_INSTALL
+
+chrooturl=@CHROOT_URL@
+AC_SUBST([chrooturl])
 
 # change libdir for HA OCF resource
 libdir='${prefix}/lib'
@@ -81,6 +86,12 @@ else
     AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 fi
 
+#################################################
+###              premium edition              ###
+AC_ARG_ENABLE([premium],
+    AS_HELP_STRING([--enable-premium], [Enable premium session manager]))
+
+
 AC_CONFIG_FILES([
 Makefile
 config/Makefile
@@ -88,6 +99,7 @@ scripts/Makefile
 web/Makefile
 web/client/Makefile
 web/crons/Makefile
+web/tools/Makefile
 web/webservices/Makefile
 web/modules/Makefile
 web/modules/SessionManagement/Makefile
@@ -111,7 +123,6 @@ web/includes/Makefile
 web/includes/functions.inc.d/Makefile
 web/classes/Makefile
 web/classes/abstract/Makefile
-web/classes/abstract/liaison/Makefile
 web/classes/configelements/Makefile
 web/classes/events/Makefile
 web/classes/tasks/Makefile
@@ -132,4 +143,13 @@ web/events/callbacks/ServerStatusChanged/Makefile
 web/events/callbacks/SqlFailure/Makefile
 examples/Makefile
 ])
+
+AS_IF([test "x$enable_premium" = "xyes"], [
+    AC_CONFIG_FILES([@PREMIUM_MK@])
+    MAYBE_PREMIUM=premium
+], [
+    MAYBE_PREMIUM=
+])
+AC_SUBST([MAYBE_PREMIUM])
+
 AC_OUTPUT

@@ -13,7 +13,7 @@
 	</articleinfo>
 
 	<para>
-		The purpose of this documentation is to test the scalability of an Ulteo OVD infrastructure.
+		The purpose of this documentation is to test the scalability of an Ulteo OVD infrastructure installation.
 	</para>
 
 	<section>
@@ -79,7 +79,7 @@
 
 			<listitem>
 				<para>
-					Then you have to configure the Session Manager to use this module, go in "Configuration", then "Authentication settings" and check the "Auto authentication" checkbox.
+					Then you have to configure the Session Manager to use this module, go to "Configuration", then "Authentication settings" and check the "Auto authentication" checkbox.
 				</para>
 
 				<note>
@@ -131,7 +131,7 @@
 
 			<listitem>
 				<para>
-					We are now done configuring the Session Manager for scalability tests, you can try to launch a single session using the Web Client or Native Client to be sure that the system works.
+					We are now done configuring the Session Manager for scalability tests, you can try to launch a single session using the Web Portal or Native Client to be sure that the system works.
 				</para>
 			</listitem>
 		</itemizedlist>

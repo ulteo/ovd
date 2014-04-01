@@ -123,7 +123,7 @@ public class Logger {
 			}
 		} catch (IOException ex) {
 			content += this.lineSeparator;
-			content += "An error occured while reading the log file('"+this.filename+"'): "+ex.getMessage() + this.lineSeparator;
+			content += "An error occurred while reading the log file('"+this.filename+"'): "+ex.getMessage() + this.lineSeparator;
 		} finally {
 			try {
 				reader.close();

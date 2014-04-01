@@ -48,21 +48,17 @@ def main():
 		
 		os.environ["OVD_SESSION_DIR"] = user_sdir
 	
-	# Load profile share
-	folders = Folders()
-	folders.registerShares()
-	
-	# Synchronize Shortcuts
-	profile = None
-	if folders.shares.has_key("profile"):
-		profile = folders.shares["profile"]
-	
-	shortcuts = Shortcuts(profile)
-	shortcuts.synchronize(os.path.join(user_sdir, "Shortcuts"))
-	
 	Util.loadUserEnv(user_sdir)
 	config = Config()
 	config.load(user_sdir)
+	
+	# Load profile share
+	folders = Folders(config.profile_mode)
+	folders.registerShares()
+	
+	# Synchronize Shortcuts
+	shortcuts = Shortcuts()
+	shortcuts.synchronize(os.path.join(user_sdir, "Shortcuts"))
 	
 	
 	# launch the integrated client
@@ -76,6 +72,9 @@ def main():
 	
 	im = InstancesManager()
 	im.setSharedFolderDB(folders)
+	
+	# Script to auto starts
+	Util.manageAutoStartScripts(config, user_sdir)
 	
 	# Applications to auto starts
 	Util.manageAutoStartApplication(config, im)

@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008, 2012 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,12 +40,15 @@ class Application {
 	}
 	
 	public static function toArray($application) {
-		return $application->attributes;
+		return get_object_vars($application);
 	}
 	
 	public static function fromArray($attributes) {
 		$application = new Application();
-		$application->attributes = $attributes;
+		foreach ($attributes as $key => $value) {
+			$application->$key = $value;
+		}
+		
 		return $application;
 	}
 

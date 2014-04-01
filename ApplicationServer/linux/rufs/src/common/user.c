@@ -22,10 +22,13 @@
 #include "pam.h"
 #include "log.h"
 #include <pwd.h>
+#include <grp.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 
 
-bool user_getINFO(const char* user, int* gid, int* uid, char* shell, char* dir) {
+bool user_getINFO(const char* user, gid_t* gid, uid_t* uid, char* shell, char* dir) {
 	struct passwd* pwd = getpwnam(user);
 
 	if (pwd == 0)
@@ -113,11 +116,11 @@ bool user_switch(const char* user, const char* pass) {
 
 	str_sprintf(uidString, "%d", uid);
 
-	setenv("SHELL", shell);
-	setenv("PATH", "/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin");
+	setenv("SHELL", shell, 1);
+	setenv("PATH", "/bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin", 1);
 	setenv("UID", uidString, 1);
-	setenv("USER", user);
-	setenv("HOME", homedir);
+	setenv("USER", user, 1);
+	setenv("HOME", homedir, 1);
 
 	return (user_setGID(gid) && user_setGroup(user, gid) && fs_setCurrentDir(homedir) && user_setUID(uid));
 }

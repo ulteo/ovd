@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>Test</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<script type="text/javascript" src="jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="uovd.js" charset="utf-8"></script>
+	</head>
+	<body>
+	</body>
+
+	<script type="text/javascript">
+		var session_management = new uovd.SessionManagement();
+		var rdp_provider = new uovd.provider.Java();
+		var ajax_provider = rdp_provider;
+		var options = {
+			login: 'dpaul',
+			password: 'dpaul',
+			mode:uovd.SESSION_MODE_DESKTOP,
+			sessionmanager: 'sm.ulteo.demo', /* <-------------- Change HERE !!! */
+			width:800,
+			height:600
+		};
+
+		session_management.addCallback("ovd.rdpProvider.desktopPanel",
+			function(type, source, params) {
+				jQuery('body').append(params.node);
+			}
+		);
+
+		session_management.setParameters(options);
+		session_management.setAjaxProvider(ajax_provider);
+		session_management.setRdpProvider(rdp_provider);
+		session_management.start();
+	</script>
+</html>

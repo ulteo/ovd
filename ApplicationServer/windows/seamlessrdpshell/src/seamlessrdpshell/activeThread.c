@@ -35,6 +35,9 @@ static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lparam) {
 	if (! IsWindowVisible(hwnd))
 		return TRUE;
 
+	if (! WindowUtil_isGood(hwnd))
+		return TRUE;
+
 	sw = getWindowFromHistory(hwnd);
 
 	// Return if the window is already registered

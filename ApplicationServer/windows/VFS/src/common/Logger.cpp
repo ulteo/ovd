@@ -91,7 +91,9 @@ void Logger::getLevelString(std::wstring& level) {
 
 void Logger::setLogFile(std::wstring szLogFile)
 {
-	m_szLogFile = szLogFile;
+	File f(szLogFile);
+	f.expand();
+	m_szLogFile = f.path();
 }
 
 
@@ -112,23 +114,26 @@ void Logger::setDevelOutput(bool value) {
 
 void Logger::debug(const wchar_t* format,...)
 {
-	if (! this->useDevelStdOut)
-		return;
-
-    wchar_t buf[MAX_DBG_MSG_LEN];
-	std::wostringstream out;
+	wchar_t buf[MAX_DBG_MSG_LEN];
 	
 	va_list args;
-    va_start(args, format);
+	va_start(args, format);
 	vswprintf_s(buf,MAX_DBG_MSG_LEN, format, args);
-    va_end(args);
+	va_end(args);
 
-	out<<this->module<<": "<<buf;
+	this->idebug(buf);
+}
+
+void Logger::idebug(const wchar_t* msg)
+{
+	std::wostringstream out;
+
+	out<<this->module<<": "<<msg;
 
 	if (out.str().find(L"Dbgview") != std::string::npos)
 		return;
 
-    OutputDebugString(out.str().c_str());
+	OutputDebugString(out.str().c_str());
 }
 
 void Logger::log(Level lvl, wchar_t *fmt,...) {
@@ -140,9 +145,10 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	va_list args;
 
 	wchar_t temp[5000];
-	std::wofstream out(m_szLogFile.c_str());
-	if (out.good())
-		out.seekp(0, std::ios::end);
+	std::wstringstream ss;
+	if (!m_szLogFile.empty())
+		ss<<m_szLogFile<<L"_"<<GetCurrentProcessId()<<L".log";
+	std::wofstream out(ss.str(), std::fstream::out | std::fstream::app);
 
 	time_t rawtime;
 	struct tm timeinfo;
@@ -165,7 +171,6 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 	if (this->useStdOut)
 		std::wcout<<temp;
 
-
 	if (out.good())
 		out<<this->module<<L" : ";
 
@@ -178,6 +183,9 @@ void Logger::log(Level lvl, wchar_t *fmt,...) {
 
 	if (out.good())
 		out<<temp;
+
+	if (this->useDevelStdOut)
+		this->idebug(temp);
 
 	if (this->useStdOut)
 		std::wcout<<temp;

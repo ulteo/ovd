@@ -6,6 +6,7 @@
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,6 +124,10 @@ public class RdpConnectionOvd extends RdpConnection {
 	 */
 	public int getFlags() {
 		return this.flags;
+	}
+
+	public Common getCommon() {
+		return this.common;
 	}
 
 	/**

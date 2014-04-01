@@ -1,220 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
-
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle><trademark class="registered">Microsoft Windows</trademark> server installation</subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
+
+    <subtitle><trademark class="registered">Microsoft Windows</trademark>
+    server installation</subtitle>
+
+    <graphic align="center" fileref="img/ovd.png"/>
 
     <copyright>
       <year>@YEAR@</year>
+
       <holder>Ulteo SAS</holder>
     </copyright>
   </articleinfo>
 
-  <para>
-    This documentation describes how to install an <emphasis>Ulteo
-    Open Virtual
-    Desktop</emphasis> <emphasis role="strong">Application
-    Server</emphasis> (ApS) on a <trademark class="registered">Microsoft
-    Windows</trademark> server system.
-  </para>
-  <para>
-    This documention <emphasis role="strong">does not
-    describe</emphasis> the Open Virtual Desktop installation or
-    configuration. For that, please read the <emphasis
-    role="strong">Installation documentation</emphasis>.
-  </para>
+  <para>This documentation describes how to install an <emphasis>Ulteo OVD
+  </emphasis> <emphasis role="strong">Application Server</emphasis> (ApS) on a
+  <trademark class="registered">Microsoft Windows</trademark> server
+  system.</para>
 
+  <para>This documention <emphasis role="strong">does not describe</emphasis>
+  the OVD installation or configuration. For that, please read the <emphasis
+  role="strong">Installation documentation</emphasis>.</para>
 
   <section>
     <title>Prerequisites</title>
 
     <simplesect id="system_requirements">
-      <title>System requirements</title>
+      <title>System Requirements</title>
+
       <itemizedlist>
-        <listitem><para>
-          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
-        </para></listitem>
-        <listitem><para>
-          Production envrionments: Ulteo recommends a minimum of 4GB RAM and 2 CPU cores
-        </para></listitem>
+        <listitem>
+          <para>Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB
+          RAM</para>
+        </listitem>
+
+        <listitem>
+          <para>Production envrionments: Ulteo recommends a minimum of 4GB RAM
+          and 2 CPU cores</para>
+        </listitem>
       </itemizedlist>
     </simplesect>
 
-    <para>
-      The supported operating systems are:
-      <itemizedlist>
+    <para>The supported operating systems are: <itemizedlist>
         <listitem>
-          <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 SP2 x86/x64
-          </para>
+          <para><trademark class="registered">Microsoft</trademark>
+          <trademark>Windows</trademark> Server 2012R2</para>
         </listitem>
-        <listitem>
-          <para>
-            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008R2 SP1
-          </para>
-        </listitem>
-      </itemizedlist>
-    </para>
 
-    <para>
-      You also have <trademark>Terminal services</trademark> (2003)
-      or <trademark>Remote Desktop services</trademark> (2008R2)
-      installed and configured.
-    </para>
+        <listitem>
+          <para><trademark class="registered">Microsoft</trademark>
+          <trademark>Windows</trademark> Server 2008R2 SP1</para>
+        </listitem>
+
+        <listitem>
+          <para><trademark class="registered">Microsoft</trademark>
+          <trademark>Windows</trademark> Server 2003 SP2 x86/x64</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <para>You also have <trademark>Terminal services</trademark> (2003) or
+    <trademark>Remote Desktop services</trademark> (2008R2 and 2012R2)
+    installed and configured.</para>
 
     <important>
-      <para>
-        The Windows server may run in workgroup or be member of
-        an AD domain <emphasis role="strong">but must not</emphasis> run as
-        a domain controller.
-      </para>
+      <para>The Windows server may run in workgroup or be member of an AD
+      domain <emphasis role="strong">but must not</emphasis> run as a domain
+      controller.</para>
     </important>
 
-    <para>
-      An Ulteo OVD Session Manager installed and running.
-    </para>
+    <para>An Ulteo OVD Session Manager installed and running.</para>
 
-    <para>
-      The <emphasis>Ulteo OVD
-      Application Server</emphasis> <emphasis role="strong">setup</emphasis>. It can
-      be download from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=@VERSION@">this place at
-      www.ulteo.com</ulink>.
-    </para>
-
+    <para>The <emphasis>Ulteo OVD Application Server</emphasis> <emphasis
+    role="strong">setup</emphasis>. It can be download from <ulink
+    url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=@VERSION@">this
+    place at www.ulteo.com</ulink>.</para>
   </section>
 
   <section>
-    <title>Installation of the Application Server</title>
+    <title>Installing the Application Server</title>
 
-    <para>
-      Copy the setup setup on the <trademark>Windows</trademark> machine.
-    </para>
+    <para>Copy the setup setup on the <trademark>Windows</trademark>
+    machine.</para>
 
     <screenshot>
       <screeninfo>put the installer on the desktop</screeninfo>
-      <graphic fileref="img/windows/copy_setup.png"></graphic>
+
+      <graphic fileref="img/windows/copy_setup.png"/>
     </screenshot>
 
-    <para>
-      Execute it.
-    </para>
+    <para>Execute it.</para>
 
     <screenshot>
       <screeninfo>Session Manager - server page</screeninfo>
-      <graphic fileref="img/aps_win_install_1.png"></graphic>
+
+      <graphic fileref="img/aps_win_install_1.png"/>
     </screenshot>
 
-    <para>
-      The only question is about the host/IP address where the session
-      manager can be accessed. (we use <ulink url="sm.test.demo" />
-      here for the example, but of course, you have to set your own
-      domain name).
-    </para>
+    <para>The only installation data required is the host/IP address of the
+    Session Manager. (We use <ulink url="sm.test.demo"/> here as an example,
+    but of course, you have to specify your own domain name).</para>
 
     <screenshot>
       <screeninfo>Session Manager - server page</screeninfo>
-      <graphic fileref="img/aps_win_install_config.png"></graphic>
+
+      <graphic fileref="img/aps_win_install_config.png"/>
     </screenshot>
 
-    <para>
-      Finish the installation. The <trademark>Windows</trademark> agent should be configured
-      and running.
-    </para>
+    <para>Finish the installation. The <trademark>Windows</trademark> agent
+    should be configured and running.</para>
 
     <simplesect>
-      <title>Session Manager side</title>
-      <para>
-	Your <trademark>Windows</trademark> server should appear among the
-	<emphasis>Unregistered servers</emphasis>.
-      </para>
+      <title>Session Manager Integration</title>
+
+      <para>Your <trademark>Windows</trademark> server should appear among the
+      <emphasis>Unregistered servers</emphasis>.</para>
 
       <screenshot>
-	<screeninfo>Session Manager - server page</screeninfo>
-	<graphic fileref="img/sm_admin_server_unregistered_win.png"></graphic>
+        <screeninfo>Session Manager - server page</screeninfo>
+
+        <graphic fileref="img/sm_admin_server_unregistered_win.png"/>
       </screenshot>
 
-      <para>
-	If your server does not show up in the list, you might have
-	a DNS configuration issue, or the <trademark>Windows</trademark> agent has a
-	bug. Please refer to <xref linkend="s_issue"/>.
-      </para>
+      <para>If your server does not show up in the list, you might have a DNS
+      configuration issue, or the <trademark>Windows</trademark> agent has a
+      bug. Please refer to <xref linkend="s_issue"/>.</para>
     </simplesect>
   </section>
 
   <section>
-    <title>Register the server and publish some applications</title>
-    <para>
-      First, register your <trademark>Windows</trademark> server and switch it from
-      "maintenance" to "production" mode.
-    </para>
+    <title>Registering the Server and Publishing Applications</title>
 
-    <para>
-      You should be able to list applications that are installed on
-      your <trademark>Windows</trademark> server.
-    </para>
+    <para>First, register your <trademark>Windows</trademark> server and
+    switch it from "maintenance" to "production" mode.</para>
+
+    <para>You should be able to list applications that are installed on your
+    <trademark>Windows</trademark> server.</para>
 
     <screenshot>
       <screeninfo>Session Manager - server page</screeninfo>
-      <graphic fileref="img/sm_admin_server_win.png"></graphic>
+
+      <graphic fileref="img/sm_admin_server_win.png"/>
     </screenshot>
 
-    <para>
-      The next step is to add some <trademark>Windows</trademark>
-      applications to an existing Application Group so that users get
-      authorized to run those your <trademark>Windows</trademark>
-      applications. If you don't have an existing application group
-      please refer to the Ulteo Open Virtual Desktop <emphasis
-      role="strong">Publication documentation</emphasis> first.
-    </para>
-  </section>
+    <para>Now, you can fulfill the <emphasis>Display name</emphasis> field and
+    also the <emphasis>Redirection name</emphasis> field.</para>
 
+    <para>The next step is to add some <trademark>Windows</trademark>
+    applications to an existing Application Group so that users get authorized
+    to run those your <trademark>Windows</trademark> applications. If you
+    don't have an existing Application Group please refer to the Ulteo Open
+    Virtual Desktop <emphasis role="strong">Publication
+    documentation</emphasis> first.</para>
+  </section>
 
   <section>
-    <title>Lauch a session</title>
-    <para>
-      If you launch a session, you should be able to access to your
-      <trademark>Windows</trademark> applications from the application
-      menu and from desktop icons if you enabled that option in the
-      administration console.
-    </para>
+    <title>Launching a Session</title>
+
+    <para>If you launch a session, you should be able to access to your
+    <trademark>Windows</trademark> applications from the application menu and
+    from desktop icons if you enabled that option in the administration
+    console.</para>
 
     <screenshot>
       <screeninfo>Session Manager - server page</screeninfo>
-      <graphic fileref="img/wc-session-desktop-windows.png"></graphic>
+
+      <graphic fileref="img/wc-session-desktop-windows.png"/>
     </screenshot>
-
   </section>
-
-
 
   <section id="s_issue">
     <title>Internal System</title>
 
     <simplesect>
-      <title>Have a look at the <trademark>Windows</trademark> agent log</title>
+      <title>Examining the <trademark>Windows</trademark> Agent Log</title>
 
-      <para>
-	In a default <trademark>Windows</trademark> installation, the log file can be found at
-	<emphasis>C:\Documents and Settings\All Users\Application
-	Data\Ulteo\ovd\main.log</emphasis>.
-      </para>
+      <para>In a default <trademark>Windows</trademark> installation, the log
+      file can be found at <emphasis>C:\Documents and Settings\All
+      Users\Application Data\Ulteo\ovd\main.log</emphasis>.</para>
 
-      <para>
-	It's also possible to read some debug messages in the <emphasis
-	role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (on the Appplication section).
-      </para>
+      <para>It's also possible to read some debug messages in the <emphasis
+      role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (on
+      the Appplication section).</para>
 
       <screenshot>
-	<screeninfo><trademark>Windows</trademark> - events</screeninfo>
-	<graphic fileref="img/aps_win_event.png"></graphic>
-      </screenshot>
+        <screeninfo><trademark>Windows</trademark> - events</screeninfo>
 
+        <graphic fileref="img/aps_win_event.png"/>
+      </screenshot>
     </simplesect>
   </section>
 
-  <xi:include href="colophon.xml" />
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>

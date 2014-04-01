@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 Ulteo SAS
+ * Copyright (C) 2013-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,14 @@
 #include "VFSRule.h"
 #include <common/Logger.h>
 #include <common/UException.h>
+#include <common/fs/File.h>
 
 
-VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination, bool translate): rule(rule), destination(destination), reg(NULL), translate(translate) { }
+VFSRule::VFSRule(const std::wstring& rule, const std::wstring& destination, bool translate): rule(rule), destination(destination), reg(NULL), translate(translate) {
+	File path(L"${USERPROFILE}");
+	path.expand();
+	this->loopback = (path.path() == destination);
+}
 
 VFSRule::~VFSRule() {
 	if (this->reg)
@@ -65,4 +70,9 @@ const std::wstring& VFSRule::getDestination() {
 
 bool VFSRule::needTranslate() {
 	return this->translate;
+}
+
+
+bool VFSRule::isLoopBack() {
+	return this->loopback;
 }

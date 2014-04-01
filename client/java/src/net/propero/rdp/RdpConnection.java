@@ -61,7 +61,7 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	public static enum State {DISCONNECTED, CONNECTING, CONNECTED, FAILED};
 
-	private final static String KEYMAP_PATH = "/resources/keymaps/";
+	public final static String KEYMAP_PATH = "/resources/keymaps/";
 
 	private VChannels channels = null;
 	protected RdpdrChannel rdpdrChannel = null;
@@ -571,7 +571,7 @@ public class RdpConnection implements SeamListener, Runnable{
 					exit = 1;
 				}
 			} catch (Exception e) {
-				System.err.println("["+this.getServer()+"] An error occured: "+e.getClass().getName()+" "+e.getMessage());
+				System.err.println("["+this.getServer()+"] An error occurred: "+e.getClass().getName()+" "+e.getMessage());
 				e.printStackTrace();
 
 				this.keep_running = false;

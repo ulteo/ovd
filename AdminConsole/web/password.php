@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('manageConfiguration')) {
 	popup_error(_('User not authorized to manage configuration'));
@@ -34,7 +34,7 @@ if (!isset($_REQUEST['action'])) {
 
 if ($_REQUEST['action'] == 'change') {
 	page_header();
-	echo '<h1>'._('Change Administrator password').'</h1>';
+	echo '<h1>'._('Change Administrator Password').'</h1>';
 	echo '<form action="actions.php" method="post">';
 	echo '<input type="hidden" name="name" value="password" />';
 	echo '<input type="hidden" name="action" value="change" />';

@@ -48,15 +48,6 @@ function hideNews() {
 	jQuery('#news').hide();
 }
 
-function showIFrame(url_) {
-	jQuery('#iframeContainer').prop('src', url_);
-	jQuery('#iframe').show();
-}
-
-function hideIFrame() {
-	jQuery('#iframe').hide();
-}
-
 function showMainContainer() {
 	jQuery('#sessionContainer').fadeIn();
 }
@@ -252,16 +243,12 @@ function configureUI(mode) {
 	if(mode == uovd.SESSION_MODE_APPLICATIONS) {
 		/* Configure page layout */
 		(function() {
-			/* Set page size */
-			var page_height = jQuery("body").innerHeight();
-			var header_height = jQuery('#applicationsHeader').height();
-			var content_height = parseInt(page_height)-parseInt(header_height)-30;
-			jQuery('#appsContainer').height(content_height);
-			jQuery('#fileManagerContainer').height(content_height);
-
 			/* Hide desktops */
 			/* do not use .hide() or applet wil not load */
 			jQuery('#desktopContainer').width(1).height(1).css("overflow", "hidden");
+
+			/* Set background*/
+			jQuery('#sessionContainer').css("background", "");
 
 			/* Show applications mode components */
 			jQuery("#applicationsHeader").show();
@@ -283,6 +270,9 @@ function configureUI(mode) {
 		(function() {
 			/* Show desktop */
 			jQuery('#desktopContainer').width("100%").height("100%");
+
+			/* Set background*/
+			jQuery('#sessionContainer').css("background", "#000");
 
 			/* Hide applications mode components */
 			jQuery("#applicationsHeader").hide();
@@ -348,11 +338,11 @@ function translateInterface(lang_) {
 					items[translations[i].getAttribute('id')] = translations[i].getAttribute('string');
 				}
 
-				applyTranslations(items);
-				
 				var js_translations = xml.getElementsByTagName('js_translation');
 				for (var i = 0; i < js_translations.length; i++)
 					i18n[js_translations[i].getAttribute('id')] = js_translations[i].getAttribute('string');
+
+				applyTranslations(items);
 			}
 		}
 	);
@@ -371,9 +361,8 @@ function applyTranslations(translations) {
 		else
 			obj.innerHTML = value;
 	}
-		
-	if (typeof window.updateSMHostField == 'function')
-		updateSMHostField();
+
+	jQuery('#sessionmanager_host').attr('placeholder', i18n['sessionmanager_host_example']);
 }
 
 /* ------- Other ------ */

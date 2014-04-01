@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008-2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -46,13 +47,8 @@ class SlaveServer:
 		self.time_last_send_monitoring = 0
 		
 		self.ulteo_system = False
-		if os.path.exists("/etc/debian_chroot"):
-			f = file("/etc/debian_chroot", 'r')
-			buf = f.read()
-			f.close()
-			
-			if "OVD" in buf:
-				self.ulteo_system = True
+		if os.path.isfile("/usr/bin/apt-get"):
+			self.ulteo_system = True
 		
 		
 		self.dialog = Dialog(self)
@@ -104,8 +100,8 @@ class SlaveServer:
 					raise Exception()
 			except InterruptedException:
 				return False
-			except Exception, e:
-				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
+			except Exception:
+				Logger.exception("SlaveServer: unable to initialize role '%s'"%role.getName())
 				return False
 			
 			role.thread.start()
@@ -139,8 +135,8 @@ class SlaveServer:
 	def push_production(self):
 		try:
 			self.smRequestManager.initialize()
-		except Exception, e:
-			Logger.debug("smRequestManager initialize returned: %s" % e)
+		except Exception:
+			Logger.exception("smRequestManager initialize returned")
 			return False
 		
 		if not self.smRequestManager.switch_status(self.smRequestManager.STATUS_READY):
@@ -175,12 +171,26 @@ class SlaveServer:
 	def stop(self, Signum=None, Frame=None):
 		Logger.info("SlaveServer stop")
 		self.stopped = True
-		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
+		
+		t0 = time.time()
+		stop_timeout = Config.stop_timeout
 		
 		for (role, dialog) in self.role_dialogs:
-			if role.getStatus() is role.STATUS_RUNNING:
-				Logger.debug("Stopping role %s" % role.getName())
-				role.stop()
+			role.order_stop()
+			
+		self.smRequestManager.switch_status(self.smRequestManager.STATUS_PENDING)
+			
+		for (role, dialog) in self.role_dialogs:
+			while not role.stopped():
+				t1 = time.time()
+				
+				if (stop_timeout > 0) and (t1-t0 > stop_timeout):
+					Logger.warn("SlaveServer::stop role %s error"%(role.getName()))
+					role.force_stop()
+					break
+				
+				Logger.debug("Waiting for role %s status stop"%(role.getName()))
+				time.sleep(2)
 		
 		for (role, dialog) in self.role_dialogs:
 			if role.thread.isAlive():

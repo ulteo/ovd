@@ -29,8 +29,10 @@ class Config:
 	external_apps_token = None
 	no_desktop_process = False
 	use_known_drives = False
+	profile_mode = None
 	
 	application_to_start = []
+	scripts_to_start = []
 	
 	
 	def load(self, d):
@@ -69,6 +71,9 @@ class Config:
 			
 			elif key == "use_known_drives" and node.getAttribute("value").lower() == "true":
 				self.use_known_drives = True
+			
+			elif key == "profile_mode":
+				self.profile_mode = node.getAttribute("value").lower()
 		
 		
 		nodes = shellNode.getElementsByTagName("start")
@@ -102,5 +107,25 @@ class Config:
 					application["file"]["path"] = fileNode.getAttribute("path")
 				
 				self.application_to_start.append(application)
+
+		nodes = shellNode.getElementsByTagName("scripts")
+		if len(nodes) > 0:
+			for node in nodes[0].getElementsByTagName("script"):
+				if not node.hasAttribute("id"):
+					print >>sys.stderr, "Unable to parse script to start: script_id parameter is missing"
+					continue
+				
+				script = {}
+				
+				try:
+					script["id"] = int(node.getAttribute("id"))
+				except ValueError, err:
+					print >>sys.stderr, "Invalid script id '%s'"%(node.getAttribute("id"))
+					continue
+				
+				if node.hasAttribute("name"):
+					script["name"] = node.getAttribute("name")
+				
+				self.scripts_to_start.append(script)
 		
 		return True

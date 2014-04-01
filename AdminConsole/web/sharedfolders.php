@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011-2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('viewSharedFolders'))
 	redirect('index.php');
@@ -44,7 +44,7 @@ function show_default() {
 	page_header();
 
 	echo '<div id="sharedfolders_div">';
-	echo '<h1>'._('Shared folders').'</h1>';
+	echo '<h1>'._('Shared Folders').'</h1>';
 
 	echo '<div id="sharedfolders_list_div">';
 	echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -100,10 +100,10 @@ function show_manage($sharedfolder_id_) {
 	$all_groups = $usersgroupsList->search();
 	if (! is_array($all_groups)) {
 		$all_groups = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Group data"));
 	}
 	uasort($all_groups, "usergroup_cmp");
-	$searchDiv = $usersgroupsList->getForm(array('action' => 'manage', 'id' => $sharedfolder_id_));
+	$searchDiv = $usersgroupsList->getForm();
 
 	$available_groups = array();
 	$used_groups = array();

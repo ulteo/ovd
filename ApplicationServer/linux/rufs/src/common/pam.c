@@ -20,8 +20,8 @@
 #include "log.h"
 #include "memory.h"
 #include "pam.h"
-#include "string.h"
-
+#include "str.h"
+#include <stdlib.h>
 
 
 static int verify_pam_conv(int num_msg, const struct pam_message** msg, struct pam_response** resp, void* appdata_ptr) {
@@ -37,11 +37,11 @@ static int verify_pam_conv(int num_msg, const struct pam_message** msg, struct p
 		switch (msg[i]->msg_style) {
 
 		case PAM_PROMPT_ECHO_ON:
-			*(reply[i].resp) = str_dup(cred->user);
+			reply[i].resp = str_dup(cred->user);
 			break;
 
 		case PAM_PROMPT_ECHO_OFF:
-			*(reply[i].resp) = str_dup(cred->pass);
+			reply[i].resp = str_dup(cred->pass);
 			break;
 
 		default:

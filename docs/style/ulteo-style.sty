@@ -98,14 +98,21 @@
 \def\title#1{\gdef\@title{#1}\gdef\THETITLE{#1}}
 
 %% Margin
-\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage[top=2.8cm, bottom=3cm, left=2.9cm, right=2.84cm]{geometry}
 
 %% Delete tab before each paragraph, add space between paragraph
 \setlength{\parindent}{0.0in}        
 \setlength{\parskip}{0.1in}          
 
 %% Change to sans serif font
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage{ubuntu}
+%~ \renewcommand{\sfdefault}{ubuntu}
+
+\definecolor{ulteogray}{RGB}{87,87,87}
+\color{ulteogray}
+
+\usepackage[default,osfigures]{opensans}
+\renewcommand{\rmdefault}{opensans}
 
 %% Listings
 \lstparamset
@@ -120,23 +127,69 @@
 \setlength{\footskip}{30pt}
 
 % Title on the top-left, logo on the top-right
-\lhead{\footnotesize{\@title}}
+\lhead{}
 \chead{}
-\rhead{\includegraphics[width=2cm]{img/logoUlteoText.png}}
+\rhead{\@title}
 
-% Size of the rulers
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0.5pt}
-
+% Size of the rulers	
+\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0.5pt}
+\usepackage{textpos}
 % Copyright on the bottom-left and page number on the bottom-right
-\lfoot{\footnotesize{\DBKcopyright}}
+\lfoot{
+\begin{textblock*}{137mm}(0mm,-5mm)%
+\includegraphics[width=1.37cm]{img/ulteo_gray.png}% a full-page picture?
+\end{textblock*}
+}
+%\includegraphics[width=1.37cm]{img/ulteo_gray.png}}
 \cfoot{}
-\rfoot{\footnotesize{Page \thepage}}
+\rfoot{\footnotesize{\footnotesize\MakeUppercase{\DBKcopyright} - \thepage }}
 
+%% %Sections
+\usepackage{titlesec,titletoc}
+
+\titleformat{\section}[block]
+{\fontUbuntuLight\fontsize{16pt}{18pt}\selectfont}
+{Section \thesection}
+{1em} % espace numero texte
+{} % Apparence du titre
+[{\titlerule[1pt]}]%[\vspace{-1cm}\rule{\pagewidth}{1pt}]
+%\dottedcontents{section}{}{}{}
+
+\titleformat{\subsection}
+{\fontUbuntuLight\fontsize{14pt}{16pt}\selectfont}
+{\thesubsection}
+{1em} % espace numero texte
+{} % Apparence du titre
+
+\titleformat{\subsubsection}
+{\fontUbuntuLight\fontsize{12pt}{14pt}\selectfont}
+{\thesubsubsection}
+{1em} % espace numero texte
+{} % Apparence du titre
+\titlespacing*{\subsubsection}
+              {5mm} % from left
+              {10mm} % before title
+              {10mm} % after title
+
+\titleformat{\paragraph}
+{\fontsize{10pt}{12pt}\selectfont}
+{\theparagraph}
+{1em} % espace numero texte
+{} % Apparence du titre
+\titlespacing*{\paragraph}
+              {15mm}
+              {10mm}
+              {10mm}
 %% Admonitions
 \usepackage{environ}  %% Better new environment command, easier and safer
 \usepackage{wrapfig}  %% Wrap text around a figure (here around the admonition icons)
 \usepackage{fancyvrb} %% Load the package here, needed to add program listing / screen inside admonition
+
+
+%% list item with bullet
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\bullet$}
 
 % Define a new envionment to color background
 % Useless here, but may be useful later
@@ -150,15 +203,16 @@
 
   % Colors defintions 
   \ifthenelse{\equal{Note}{#2}}{\definecolor{coloradmonition}{RGB}{228,233,245}}{}
-  \ifthenelse{\equal{Important}{#2}}{\definecolor{coloradmonition}{RGB}{225,220,175}}{}
+  \ifthenelse{\equal{Important}{#2}}{\fontsize{11pt}{18pt}\selectfont\definecolor{coloradmonition}{RGB}{245,180,180}}{}
 
   \begin{center}
     \noindent
-
+    
     \colorbox{coloradmonition}{     
       
       \begin{minipage}{\linewidth}
-        
+       
+       \vspace{10pt}  
         % wrapfig is sexier than the minipage used before by dblatex
         \begin{wrapfigure}[2]{l}{0.7cm}
           \vspace{-12pt}
@@ -166,6 +220,7 @@
         \end{wrapfigure}          
         
         \BODY
+        \vspace{10pt}
       \end{minipage}
     }
   \end{center}    

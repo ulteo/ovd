@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2011
 # Author Laurent CLOUET <laurent@ulteo.com> 2009,2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
+# Author David LECHEVALIER <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -23,6 +24,7 @@
 import httplib
 import time
 from xml.dom.minidom import Document
+import locale
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 from ovd.FileTailer import FileTailer
@@ -86,6 +88,7 @@ class Dialog(AbstractDialog):
 	
 	
 	def req_server_logs(self, request, since):
+		encoding = locale.getpreferredencoding()
 		response = {}
 		response["code"] = httplib.OK
 		response["Content-Type"] = "text/plain"
@@ -110,7 +113,8 @@ class Dialog(AbstractDialog):
 				if t<since:
 					break  
 				
-				lines.insert(0, line)
+				line = unicode(line, encoding, 'ignore')
+				lines.insert(0, line.encode("UTF-8"))
 		
 		response["data"] = "\n".join(lines)
 		return response

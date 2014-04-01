@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2012 Ulteo SAS
+ * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,7 +44,7 @@ function startSession() {
 	var defaults = window.ovd.defaults;
 
 	framework.session_management.setParameters(settings);
-	framework.session_management.setAjaxProvider(framework.http_providers[settings.http_provider]);
+	framework.session_management.setHttpProvider(framework.http_providers[settings.http_provider]);
 	framework.session_management.setRdpProvider(framework.rdp_providers[settings.rdp_provider]);
 	framework.session_management.setWebAppsProvider(framework.webapps_providers[settings.webapps_provider]);
 	framework.session_management.start();
@@ -71,12 +71,10 @@ function validate_settings() {
 
 	/* Update session mode */
 	if(settings.mode == uovd.SESSION_MODE_DESKTOP) {
-			jQuery('#advanced_settings_applications').hide();
-			jQuery('#advanced_settings_desktop').show();
+			jQuery('label[for="desktop_fullscreen"]').parent().show();
 	}
 	if(settings.mode == uovd.SESSION_MODE_APPLICATIONS) {
-			jQuery('#advanced_settings_applications').show();
-			jQuery('#advanced_settings_desktop').hide();
+			jQuery('label[for="desktop_fullscreen"]').parent().hide();
 	}
 
 	/* Update InputMethod */
@@ -90,6 +88,7 @@ function validate_settings() {
 	var nb_rdp_providers = 0;
 	for(var i in framework.tests) {
 		var result = framework.tests[i];
+		var option = jQuery("#rdp_mode option[value='"+i+"']");
 
 		if(result != false) { /* true or null */
 			/* Test succeded or in-progress */
@@ -99,20 +98,20 @@ function validate_settings() {
 		if(result != true) { /* false or null */
 			/* Test failed or in-progress */
 			/* Disable the option */
-			jQuery("#rdp_mode_"+i).prop("disabled", true).prop("selected", false);
+			option.prop("disabled", true).prop("selected", false);
 		}
 
 		if(result == true) {
 			/* Test succeded */
 
 			/* If the option is disabled */
-			if(jQuery("#rdp_mode_"+i).prop('disabled')) {
+			if(option.prop('disabled')) {
 				/* Enable the option */
-				jQuery("#rdp_mode_"+i).prop("disabled", false);
+				option.prop("disabled", false);
 
 				/* Select it if it is the default value */
 				if(i == defaults.rdp_provider) {
-					jQuery("#rdp_mode_"+i).prop("selected", "selected");
+					option.prop("selected", "selected");
 				}
 			}
 		}
@@ -135,44 +134,55 @@ function validate_settings() {
 		showSystemTestError("No RDP provider");
 	}
 
+	/* Hide Keymap selection in case of HTML5 */
+	if(settings.rdp_provider == 'html5') {
+		jQuery('label[for="session_keymap"]').parent().hide();
+	} else {
+		jQuery('label[for="session_keymap"]').parent().show();
+	}
+
 	/* Update HTTP providers */
 	if(defaults.gateway) {
-		if(defaults.use_proxy) { settings.http_provider = "proxy"; }
-		else { settings.http_provider = "direct"; }
+		if(defaults.use_proxy) {
+			settings.http_provider = "proxy";
+			settings.webapps_provider = "proxy";
+		}
+		else {
+			settings.http_provider = "direct";
+			settings.webapps_provider = "direct";
+		}
 	}
 
 	if(defaults.force_use_local_credentials || settings.use_local_credentials) {
 		if(! framework.rdp_providers.java || ! framework.tests.java) {
 			showLoginError("Use local credentials : Java support required");
 			settings.use_local_credentials = false;
-			jQuery("#use_local_credentials_true").removeAttr('checked');
-			jQuery("#use_local_credentials_false").prop("checked", "checked")
+			jQuery("#use_local_credentials_1").removeAttr('checked');
+			jQuery("#use_local_credentials_0").prop("checked", "checked")
 		} else {
 			settings.http_provider = "java";
 			settings.use_local_credentials = true;
-			jQuery("#use_local_credentials_false").removeAttr('checked');
-			jQuery("#use_local_credentials_true").prop("checked", "checked")
+			jQuery("#use_local_credentials_0").removeAttr('checked');
+			jQuery("#use_local_credentials_1").prop("checked", "checked")
 		}
 	}
 
 	/* Initialize the SM Host field */
-	if(settings.sessionmanager == 'localhost' || settings.sessionmanager == '127.0.0.1') {
+	if(["localhost", "127.0.0.1", ""].indexOf(settings.sessionmanager.trim()) != -1) {
 		settings.sessionmanager = location.host;
-	}
-	window.updateSMHostField = function() {
-		if (jQuery('#sessionmanager_host').css('color') == 'grey') { jQuery('#sessionmanager_host').prop('value', i18n['sessionmanager_host_example']) };
 	}
 
 	/* CheckLogin */
 	if(settings.use_local_credentials) {
-		jQuery('#user_login').hide();
-		jQuery('#user_login_local').show();
-		jQuery('#password_row').hide();
+		jQuery('label[for="user_login"]').parent().hide();
+		jQuery('label[for="user_password"]').parent().hide();
+		jQuery('label[for="user_login_detected"]').parent().show();
 
-		if(jQuery('#user_login_local').html() == "") {
+		if(jQuery('#user_login_detected').val() == "") {
 			var detection = function(detected) {
 				if(detected) {
-					jQuery('#user_login_local').html(detected);
+					jQuery('#user_login_detected').val(detected);
+					settings.login = detected;
 				} else {
 					/* !!! erreur */
 				}
@@ -182,20 +192,25 @@ function validate_settings() {
 			if(java) { setTimeout(jQuery.proxy(java.getUserLogin, java, detection), 1); }
 			else { detection(); }
 		}
+	} else if(settings.force_sso) {
+		jQuery('label[for="user_login"]').parent().hide();
+		jQuery('label[for="user_password"]').parent().hide();
+		jQuery('label[for="user_login_detected"]').parent().show();
+		settings.login = jQuery('#user_login_detected').val();
 	} else {
-		jQuery('#user_login').show();
-		jQuery('#user_login_local').hide();
-		jQuery('#password_row').show();
+		jQuery('label[for="user_login"]').parent().show();
+		jQuery('label[for="user_password"]').parent().show();
+		jQuery('label[for="user_login_detected"]').parent().hide();
+		settings.login = jQuery('#user_login').val();
 	}
 
 	/* Enable or disable "connect" button */
 	if(/* Session manager OK ? */
 	   settings.sessionmanager != '' &&
-	   settings.sessionmanager != i18n['sessionmanager_host_example'] &&
 		 /* RDP provider available ? */
 		 nb_rdp_providers > 0 &&
 	   /* User login or local_credentials valid ? */
-		 (settings.login || settings.use_local_credentials) ) {
+		 (settings.login || settings.use_local_credentials || settings.force_sso) ) {
 		jQuery('#connect_gettext').removeAttr('disabled');
 	} else {
 		jQuery('#connect_gettext').prop('disabled', true);
@@ -215,13 +230,13 @@ function initialize_defaults() {
 	defaults.timezone              = getTimezoneName();
 	defaults.width                 = jQuery(window).innerWidth();
 	defaults.height                = jQuery(window).innerHeight();
-	defaults.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
-	defaults.debug                 = jQuery("#debug_true").prop('checked');
-	defaults.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
+	defaults.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
+	defaults.debug                 = jQuery("#debug_1").prop('checked');
+	defaults.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	defaults.rdp_provider          = jQuery('#rdp_mode').val();
 	defaults.rdp_input_method      = jQuery('#session_input_method').val();
 	defaults.http_provider         = "proxy";
-	defaults.webapps_provider			 = "jsonp";
+	defaults.webapps_provider      = "proxy";
 	defaults.wc_url                = getWebClientBaseURL();
 }
 
@@ -244,23 +259,36 @@ function initialize_settings() {
 	settings.timezone              = getTimezoneName();
 	settings.width                 = jQuery(window).innerWidth();
 	settings.height                = jQuery(window).innerHeight();
-	settings.fullscreen            = jQuery("#desktop_fullscreen_true").prop('checked');
-	settings.debug                 = jQuery("#debug_true").prop('checked');
-	settings.use_local_credentials = jQuery("#use_local_credentials_true").prop('checked');
+	settings.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
+	settings.debug                 = jQuery("#debug_1").prop('checked');
+	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
 	settings.rdp_provider          = jQuery('#rdp_mode').val();
 	settings.http_provider         = "proxy";
-	settings.webapps_provider      = "jsonp";
+	settings.webapps_provider      = "proxy";
 	settings.wc_url                = defaults.wc_url;
 
 	/* Settings needed by the framework */
 	if(defaults.local_integration) { settings.local_integration = defaults.local_integration; }
 	if(defaults.rdp_input_method)  { settings.rdp_input_method = defaults.rdp_input_method; }
+	if(defaults.force_sso)         { settings.force_sso = defaults.force_sso; }
 
 	/* Keymap autodetect */
 	if(defaults.keymap_autodetect && ! defaults.force_keymap) {
 		var detection = function(detected) {
 			if(!detected) { detected = jQuery('#session_language').prop('value'); /* !!! user agent */ }
-			settings.keymap = detected;
+			if (detected.indexOf(",") >= 0) {
+				/* Multiple keymaps returned */
+				var keymaps = detected.split(",");
+				for (var i in keymaps) {
+					var keymap = jQuery('#session_keymap > option[value="'+keymaps[i]+'"]');
+					if (keymap[0]) {
+						settings.keymap = keymaps[i];
+						break;
+					}
+				}
+			} else {
+				settings.keymap = detected;
+			}
 			validate_settings();
 		};
 
@@ -291,12 +319,10 @@ function initialize_ui() {
 	jQuery('#advanced_settings_gettext').on('click', function () {
 		if(jQuery('#advanced_settings').filter(":visible")[0]) {
 			jQuery('#advanced_settings').slideUp(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_show_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/show.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_show_png');
 		} else {
 			jQuery('#advanced_settings').slideDown(400);
-			if (defaults.big_image_map) { jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
-			} else { jQuery('#advanced_settings_status').html('<img src="media/image/hide.png" width="12" height="12" alt="" title="" />'); }
+			jQuery('#advanced_settings_status').prop('class', 'image_hide_png');
 		}
 	});
 	jQuery('#startsession').on('submit', function() {
@@ -310,39 +336,38 @@ function initialize_ui() {
 	jQuery('#user_password').on('keyup change', function() { settings.password = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_mode').on('click change', function() { settings.mode = jQuery(this).val(); validate_settings(); });
 	jQuery('#rdp_mode').on('click change', function() { settings.rdp_provider = jQuery(this).val(); validate_settings(); });
-	jQuery('#debug_true, #debug_false').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
-	jQuery('#desktop_fullscreen_true, #desktop_fullscreen_false').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
-	jQuery('#use_local_credentials_true, #use_local_credentials_false').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#debug_1, #debug_0').on('click change', function() { settings.debug = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#desktop_fullscreen_1, #desktop_fullscreen_0').on('click change', function() { settings.fullscreen = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
+	jQuery('#use_local_credentials_1, #use_local_credentials_0').on('click change', function() { settings.use_local_credentials = (jQuery(this).val() == 1) ? true : false; validate_settings(); });
 	jQuery('#session_keymap').on('change keyup', function() { settings.keymap = jQuery(this).val(); validate_settings(); });
 	jQuery('#session_input_method').on('change keyup', function() { settings.rdp_input_method = jQuery(this).val(); validate_settings(); });
 	jQuery('#sessionmanager_host').on('keyup change', function() { settings.sessionmanager = jQuery(this).val(); validate_settings(); });
-	jQuery('#sessionmanager_host').on('focus blur', function(e) {
-		var example = i18n['sessionmanager_host_example'];
-		if(e.type == "focus") { if (jQuery(this).val() == example) jQuery('#sessionmanager_host').css('color', 'black').val('');
-		} else {                if (jQuery(this).val() == '') jQuery('#sessionmanager_host').css('color', 'grey').val(example); }
-		settings.sessionmanager = jQuery(this).val();
-	});
+	
 	jQuery('#session_language').on('change keyup', function() {
 		settings.language = jQuery(this).val();
-
+		
+		var url = jQuery('#session_language').find(":selected").css("background-image");
+		if (! url) {
+			url = "";
+		}
+		
 		/* Update flag */
-		if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-		else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
-
+		jQuery('#session_language').css({"background-image": url});
+		
 		/* Translate UI */
 		translateInterface(settings.language);
 		set_component_orientation(settings.language);
-
+		
 		validate_settings();
 	});
-
-	/* Initialize the SM Host field */
-	if (jQuery('#sessionmanager_host').val() == '') { jQuery('#sessionmanager_host').css('color', 'grey').val(i18n['sessionmanager_host_example']); }
-	window.updateSMHostField = function() {
-		if (jQuery('#sessionmanager_host').css('color') != 'grey')
-			return;
-		jQuery('#sessionmanager_host').prop('value', i18n['sessionmanager_host_example']);
+	
+	var url = jQuery('#session_language').find(":selected").css("background-image");
+	if (! url) {
+		url = "";
 	}
+	
+	/* Init flag flag */
+	jQuery('#session_language').css({"background-image": url});
 
 	/* Login/Password */
 	if(defaults.force_use_local_credentials) {
@@ -355,19 +380,13 @@ function initialize_ui() {
 	/* Translate text */
 	applyTranslations(i18n_tmp);
 	set_component_orientation(settings.language);
-
-	/* Initial flag */
-	if(defaults.big_image_map) { jQuery('#session_language_flag').prop('class', 'image_'+settings.language+'_png'); }
-	else { jQuery('#session_language_flag').attr('src', 'media/image/flags/'+settings.language+'.png'); }
-
-	/* Fade-in the login panel */
-	jQuery('#loginBox').fadeIn(1000);
 }
 
 function initialize_framework() {
 	/* Set "framework" namespace */
 	window.ovd.framework = {};
 	window.ovd.framework.listeners = {};
+	window.show_time_restriction_windows = false;
 
 	var framework = window.ovd.framework; /* shorten names */
 
@@ -387,7 +406,9 @@ function initialize_framework() {
 	};
 
 	framework.webapps_providers = {
-		jsonp: new uovd.provider.webapps.Jsonp()
+		jsonp: new uovd.provider.webapps.Jsonp(),
+		proxy: new uovd.provider.webapps.Proxy("webapps_proxy.php"),
+		direct: new uovd.provider.webapps.Direct()
 	};
 
 	/* Setup Handlers */
@@ -395,13 +416,12 @@ function initialize_framework() {
 	/* handle status modifications */
 	framework.session_management.addCallback("ovd.session.starting", function(type, source, params) {
 		synchronize();
-		pushLogin();
+		hideLogin();
 		showSplash();
 		pushMainContainer();
 
 		/* Wait for the animation end then show outside of the viewport */
 		setTimeout(function() {
-			hideLogin();
 			showMainContainer();
 			enableLogin();
 		}, 2000);
@@ -416,13 +436,38 @@ function initialize_framework() {
 			configureUI(mode);
 			pullMainContainer();
 		}
+		
+		if(to == uovd.SESSION_STATUS_LOGGED) {
+			hideSplash();
+		}
+	});
+
+	framework.session_management.addCallback("ovd.session.serversConnected", function(type, source, params) {
+		hideSplash();
+	});
+	
+	framework.session_management.addCallback("ovd.session.timeRestriction", function(type, source, params) {
+		if (params["when"] > 10) { // HARDCODED 10 value related to next session_status call. Must define by sessionmanagement constant/var
+			return;
+		}
+		
+		if (window.show_time_restriction_windows == true) {
+			return;
+		}
+		
+		window.show_time_restriction_windows = true;
+		setTimeout(function() {
+			alert(i18n.get('session_time_restriction_expire').replace('%MINUTES%', params["when"]));
+		}, 100);
 	});
 
 	framework.session_management.addCallback("ovd.session.destroying", function(type, source, params) {
 		hideMainContainer();
+		showSplash();
 	});
 
 	framework.session_management.addCallback("ovd.session.destroyed", function(type, source, params) {
+		hideMainContainer();
 		hideSplash();
 		generateEnd_internal();
 		showEnd();
@@ -459,16 +504,20 @@ function initialize_framework() {
 	framework.listeners.progress_bar = new ProgressBar(framework.session_management, '#progressBarContent');
 	/* handle client insertion */
 	framework.listeners.desktop_container = new DesktopContainer(framework.session_management, "#desktopContainer");
+	/* handle menu insertion */
+	framework.listeners.menu_container = new MenuContainer(framework.session_management, "#menuContainer");
 	/* applications launcher */
-	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer");
+	framework.listeners.seamless_launcher = new SeamlessLauncher(framework.session_management, "#appsContainer", "#headerLogo");
+	/* applications taskbar */
+	framework.listeners.seamless_taskbar = new SeamlessTaskbar(framework.session_management, "#appsContainer");
 	/* news display */
 	framework.listeners.news = new News(framework.session_management, "#newsList");
 	/* webapps launcher */
 	framework.listeners.web_apps_popup_launcher = new WebAppsPopupLauncher(framework.session_management);
 	/* window manager */
-	framework.listeners.seamless_window_manager = new SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
+	framework.listeners.seamless_window_manager = new uovd.provider.rdp.html5.SeamlessWindowManager(framework.session_management, "#windowsContainer", new uovd.provider.rdp.html5.SeamlessWindowFactory());
 	/* ajaxplorer file manager */
-	framework.listeners.ajaxplorer = new Ajaxplorer(framework.session_management, "#fileManagerContainer");
+	framework.listeners.ajaxplorer = new Ajaxplorer(framework.session_management, "#fileManagerContainer", "#appsContainer");
 	/* Session-based start_app support */
 	framework.listeners.start_app = new StartApp(framework.session_management);
 	/* application counter */
@@ -503,6 +552,7 @@ function initialize_tests() {
 		framework.tests[i] = true;
 		hideLock();
 		hideSystemTest();
+		jQuery('#loginBox').fadeIn();
 		validate_settings();
 	}
 

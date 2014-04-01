@@ -21,7 +21,10 @@
 package org.ulteo.ovd.integrated;
 
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.ovd.sm.WebAppsServerAccess;
 
 public interface DesktopIntegrationListener {
 	public void shortcutGenerationIsDone(RdpConnectionOvd co);
+	public void shortcutGenerationIsDone(WebAppsServerAccess co);
+	
 }

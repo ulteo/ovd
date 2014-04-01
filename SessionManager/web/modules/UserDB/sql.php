@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -49,6 +50,43 @@ class UserDB_sql extends UserDB  {
 		else
 			Logger::error('main', 'USERDB::MYSQL::import \''.$login_.'\' failed (sql query failed)');
 		return NULL;
+	}
+	
+	public function imports($logins_) {
+		if (count($logins_) == 0) {
+			return array();
+		}
+		
+		$sql2 = SQL::getInstance();
+		
+		$logins2 = array();
+		foreach($logins_ as $login) {
+			array_push($logins2, $sql2->Quote($login));
+		}
+		
+		$request = 'SELECT * FROM #1 WHERE @2 IN ('.implode(', ',$logins2).')';
+		$res = $sql2->DoQuery($request, self::table, 'login');
+		if ($res === false){
+			Logger::error('main', 'USERDB::MYSQL::getList_nocache failed (sql query failed)');
+			// not the right argument
+			return NULL;
+		}
+		
+		$result = array();
+		$rows = $sql2->FetchAllResults($res);
+		foreach ($rows as $row){
+			$u = $this->generateUserFromRow($row);
+			if ($this->isOK($u))
+				$result []= $u;
+			else {
+				if (isset($row['login']))
+					Logger::info('main', 'USERDB::MYSQL::imports user \''.$row['login'].'\' not ok');
+				else
+					Logger::info('main', 'USERDB::MYSQL::imports user does not have login');
+			}
+		}
+		
+		return $result;
 	}
 	
 	public function isWriteable(){
@@ -103,43 +141,72 @@ class UserDB_sql extends UserDB  {
 		return $result;
 	}
 	
-	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0, $group_=null) {
 		$sql2 = SQL::getInstance();
 		
-		$contains = str_replace('*', '%', $contains_);
-		$contains = "%$contains%";
-		$sep = " OR ";
-		$search = '';
-		foreach ($attributes_ as $attribute) {
-			$search .= " ".$attribute." LIKE ".$sql2->Quote($contains);
-			$search .= $sep;
+		$search = array();
+		if (strlen($contains_) > 0) {
+			$contains = str_replace('*', '%', $contains_);
+			$contains = preg_replace('/\%\%+/', '%', '%'.$contains.'%');
+			
+			$rules_contain = array();
+			foreach ($attributes_ as $attribute) {
+				if (! in_array($attribute, array('login', 'displayname'))) {
+					continue;
+				}
+				
+				array_push($rules_contain, $sql2->QuoteField($attribute)." LIKE ".$sql2->Quote($contains));
+			}
+			
+			if (count($rules_contain) > 0) {
+				array_push($search, '('.implode(' OR ', $rules_contain).') ');
+			}
 		}
-		if (count($attributes_) > 0) {
-			$search = substr($search, 0, -1*strlen($sep)); // remove the last sep
+		
+		if (! is_null($group_)) {
+			$userGroupDB = UserGroupDB::getInstance('static');
+			$group_filter_res = $userGroupDB->get_filter_groups_member($group_);
+			if (! array_key_exists('users', $group_filter_res) || !is_array($group_filter_res['users']) || count($group_filter_res['users']) == 0) {
+				return array(array(), false);
+			}
+			
+			$users_login_sql = array();
+			foreach($group_filter_res['users'] as $login) {
+				array_push($users_login_sql, $sql2->Quote($login));
+			}
+			
+			array_push($search, $sql2->QuoteField('login') .'IN ('.implode(',', $users_login_sql).')');
 		}
 		
 		$users = array();
 		$sizelimit_exceeded = false;
-		$count = 0;
-		$limit = '';
-		if ($limit_ != 0)
-			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
 		
-		$res = $sql2->DoQuery('SELECT * FROM #1 WHERE '.$search.' '.$limit, self::table);
+		$request = 'SELECT * FROM #1';
+		if (count($search) > 0) {
+			$request.= ' WHERE '.implode(' AND ', $search);
+		}
+		
+		$count = 0;
+		if ($limit_ != 0) {
+			$request.= ' LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
+		}
+		
+		$res = $sql2->DoQuery($request, self::table);
 		if ($res === false) {
 			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
 			return NULL;
 		}
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row){
+			if ($limit_ > 0 && $count >= $limit_) {
+					$sizelimit_exceeded = true;
+					break;
+			}
+			
 			$a_user = $this->generateUserFromRow($row);
 			if ($this->isOK($a_user)) {
 				$users []= $a_user;
 				$count++;
-				if ($limit_ > 0 && $count >= $limit_) {
-					$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
-					return array($users, $sizelimit_exceeded);
-				}
 			}
 			else {
 				if (isset($row['login']))
@@ -156,15 +223,15 @@ class UserDB_sql extends UserDB  {
 		if (!($user_->hasAttribute('login')))
 			return false;
 
-		$login = $user_->getAttribute('login');
-		$hash = crypt($password_, md5($login));
-		// TODO very very ugly
-		if ($user_->hasAttribute('password'))
-			return ($user_->getAttribute('password') == $hash);
-		else {
+		if (! ($user_->hasAttribute('password'))) {
 			Logger::error('main', 'USERDB::MYSQL::authenticate failed for \''.$user_->getAttribute('login').'\'');
 			return false;
 		}
+		
+		$login = $user_->getAttribute('login');
+		$hash = $user_->getAttribute('password');
+		
+		return (crypt($password_, $hash) == $hash);
 	}
 	
 	private function generateUserFromRow($row){
@@ -240,7 +307,7 @@ class UserDB_sql extends UserDB  {
 			$attributes = $user_->getAttributesList();
 			foreach ($attributes as $key){
 				if ($key == 'password')
-					$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+					$value = crypt($user_->getAttribute($key), '$1$'.md5($user_->getAttribute('login')));
 				else
 					$value = $user_->getAttribute($key);
 
@@ -287,6 +354,8 @@ class UserDB_sql extends UserDB  {
 	
 	public function update($user_){
 		if ($this->isOK($user_)){
+			$SQL = SQL::getInstance();
+			
 			$attributes = $user_->getAttributesList();
 			$query = 'UPDATE #1 SET ';
 			foreach ($attributes as $key){
@@ -297,7 +366,7 @@ class UserDB_sql extends UserDB  {
 						return false;
 					}
 					if ($user_ori->hasAttribute($key) and ($user_ori->getAttribute($key) != $user_->getAttribute($key))) {
-						$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
+						$value = crypt($user_->getAttribute($key), '$1$'.md5($user_->getAttribute('login')));
 					}
 					else {
 						$value = $user_->getAttribute($key);
@@ -306,11 +375,10 @@ class UserDB_sql extends UserDB  {
 				else
 					$value = $user_->getAttribute($key);
 
-				$query .=  '`'.$key.'` = \''.$value.'\' , ';
+				$query .=  '`'.$key.'` = '.$SQL->Quote($value).' , ';
 			}
 			$query = substr($query, 0, -2); // del the last ,
-			$query .= ' WHERE `login` = \''.$user_->getAttribute('login').'\'';
-			$SQL = SQL::getInstance();
+			$query .= ' WHERE `login` = '.$SQL->Quote($user_->getAttribute('login'));
 			return $SQL->DoQuery($query, self::table);
 		}
 		return false;

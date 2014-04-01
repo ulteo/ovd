@@ -77,13 +77,13 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
-	private static final String WEBSERVICE_ICON = "icon.php";
-	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon.php";
-	private static final String WEBSERVICE_START_SESSION = "start.php";
-	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps.php";
-	private static final String WEBSERVICE_SESSION_STATUS = "session_status.php";
-	private static final String WEBSERVICE_NEWS = "news.php";
-	private static final String WEBSERVICE_LOGOUT = "logout.php";
+	private static final String WEBSERVICE_ICON = "icon";
+	private static final String WEBSERVICE_MIMETYPE_ICON = "mimetype-icon";
+	private static final String WEBSERVICE_START_SESSION = "start";
+	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps";
+	private static final String WEBSERVICE_SESSION_STATUS = "session_status";
+	private static final String WEBSERVICE_NEWS = "news";
+	private static final String WEBSERVICE_LOGOUT = "logout";
 
 	public static final String FIELD_LOGIN = "login";
 	public static final String FIELD_PASSWORD = "password";
@@ -99,12 +99,12 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	public static final String VALUE_HIDDEN_PASSWORD = "****";
 
-	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+	public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
 	private static final String CONTENT_TYPE_PNG = "image/png";
 
-	private static final String REQUEST_METHOD_POST = "POST";
-	private static final String REQUEST_METHOD_GET = "GET";
+	public static final String REQUEST_METHOD_POST = "POST";
+	public static final String REQUEST_METHOD_GET = "GET";
 
 	public static final String SESSION_STATUS_UNKNOWN = "unknown";
 	public static final String SESSION_STATUS_ERROR = "error";
@@ -145,6 +145,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 		this.base_url = this.makeUrl("");
 
+		SessionExpiration.getInstance().reset();
 	}
 
 	public String getHost() {
@@ -314,6 +315,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	}
 
 	public boolean askForLogout(boolean persistent) throws SessionManagerException {
+		SessionExpiration.getInstance().reset();
 		Document doc = getNewDocument();
 		if (doc == null)
 			return false;
@@ -434,7 +436,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	 * @throws SessionManagerException
 	 * 		generic exception for all failure during the Session manager communication
 	 */
-	private Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
+	public Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
 		try {
 			URL url = new URL(this.base_url + webservice);
 			return askWebservice(url, content_type, method, data, showLog, MAX_REDIRECTION_TRY);
@@ -626,6 +628,18 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			throw new SessionManagerException("bad xml");
 		}
+		
+		int timeout = -1;
+		try {
+			// time restriction is in minute
+			String time_restriction = rootNode.getAttribute("time_restriction");
+			timeout = Integer.parseInt(time_restriction);
+		}
+		catch (Exception err) {
+			timeout = -1;
+		}
+		
+		SessionExpiration.getInstance().setExpiration(timeout);
 
 		return status;
 	}

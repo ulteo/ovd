@@ -38,15 +38,6 @@ else:
 
 version_strict = ".".join([p for p in (re.split("[^\d\.]", version)[0]+".0"*4).split(".")  if p.isdigit()][:4])
 
-# OS detection
-if sys.platform.startswith('linux'):
-	platform_dir = "Linux"
-elif sys.platform == "win32":
-	platform_dir = "Windows"
-else:
-	raise Exception("No supported platform")
-
-
 # generate setup.py
 f = file(os.path.join(path, "setup.py.in"), "r")
 content = f.read()
@@ -54,7 +45,7 @@ f.close()
 
 if "--gateway" in sys.argv:
 	name = "ovd-slaveserver-gateway"
-	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway']"
+	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway', 'ovd.Role.Gateway.premium']"
 
 content = content.replace("@NAME@", name)
 content = content.replace("@VERSION@", str(version))

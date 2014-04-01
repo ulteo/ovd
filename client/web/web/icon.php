@@ -36,7 +36,7 @@ else
 	$sm = $_SESSION['ovd-client']['sessionmanager'];
 
 header('Content-Type: image/png');
-$icon = $sm->query('icon.php?id='.$_GET['id']);
+$icon = $sm->query('icon?id='.$_GET['id']);
 $time = $sm->get_last_file_mtime();
 if ($time >= 0) {
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $time) . ' GMT');

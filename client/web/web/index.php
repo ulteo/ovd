@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author Omar AKHAM <oakham@ulteo.com> 2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,14 +29,6 @@ $big_image_map = false;
 if (get_ie_version() > 7 && file_exists(WEB_CLIENT_ROOT . "/media/image/uovd.png") &&
                             file_exists(WEB_CLIENT_ROOT . "/media/style/images.css")) {
 	$big_image_map = true;
-}
-
-if (!$big_image_map) {
-	$logo_size = getimagesize(dirname(__FILE__).'/media/image/ulteo.png');
-	if ($logo_size === false)
-		$logo_size = "";
-	else
-		$logo_size = $logo_size[3];
 }
 
 $languages = get_available_languages();
@@ -64,6 +56,16 @@ elseif (isset($_COOKIE['ovd-client']['use_local_credentials']))
 if (! defined('OPTION_SHOW_USE_LOCAL_CREDENTIALS'))
 	define('OPTION_SHOW_USE_LOCAL_CREDENTIALS', false);
 
+$force_sso = false;
+$wi_remote_user_login = '';
+if (defined('OPTION_FORCE_SSO') && OPTION_FORCE_SSO === true) {
+	if (array_key_exists('REMOTE_USER', $_SERVER)) {
+		$wi_remote_user_login = $_SERVER['REMOTE_USER'];
+		$force_sso = true;
+		$wi_use_local_credentials = 0;
+	}
+}
+
 $wi_session_mode = 'desktop';
 if (defined('OPTION_FORCE_SESSION_MODE'))
 	$wi_session_mode = OPTION_FORCE_SESSION_MODE;
@@ -90,8 +92,11 @@ if (defined('RDP_PROVIDER_HTML5_INSTALLED'))
 
 list($translations, $js_translations) = get_available_translations($user_language);
 
-if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap']))
-	$user_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
+if (OPTION_FORCE_KEYMAP !== true && isset($_COOKIE['ovd-client']['session_keymap'])) {
+	$cookie_keymap = (string)$_COOKIE['ovd-client']['session_keymap'];
+	if (language_is_supported($keymaps, $cookie_keymap))
+		$user_keymap = $cookie_keymap;
+}
 
 $wi_desktop_fullscreen = 0;
 if (defined('OPTION_FORCE_FULLSCREEN'))
@@ -104,10 +109,11 @@ if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
 $rdp_input_method = null;
-if (OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
+if (defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
 	$rdp_input_method = (string)$_COOKIE['ovd-client']['session_input_method'];
 else
-	$rdp_input_method = RDP_INPUT_METHOD;
+	if(defined('RDP_INPUT_METHOD'))
+		$rdp_input_method = RDP_INPUT_METHOD;
 
 $show_input_method = false;
 if (defined('OPTION_SHOW_INPUT_METHOD'))
@@ -126,48 +132,14 @@ $local_integration = (defined('PORTAL_LOCAL_INTEGRATION') && (PORTAL_LOCAL_INTEG
 
 $confirm_logout = OPTION_CONFIRM_LOGOUT;
 
-if ($debug_mode === false && array_key_exists('debug', $_REQUEST))
+if ($debug_mode === false && array_key_exists('debug', $_REQUEST)) {
 	$debug_mode = true;
+	$big_image_map = false;
+}
 
 $headers = apache_request_headers();
 $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers));
-if ($gateway_first) {
-	$html5_installed = false;
-}
 
-function get_users_list() {
-	if (! defined('SESSIONMANAGER_HOST'))
-		return false;
-
-	global $sessionmanager_url;
-
-	$sm = new SessionManager($sessionmanager_url);
-	$ret = $sm->query('userlist.php');
-
-	$dom = new DomDocument('1.0', 'utf-8');
-	$buf = @$dom->loadXML($ret);
-	if (! $buf)
-		return false;
-
-	if (! $dom->hasChildNodes())
-		return false;
-
-	$users_node = $dom->getElementsByTagname('users')->item(0);
-	if (is_null($users_node))
-		return false;
-
-	$users = array();
-	foreach ($users_node->childNodes as $user_node) {
-		if ($user_node->hasAttribute('login'))
-			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
-	}
-	natcasesort($users);
-
-	if (count($users) == 0)
-		return false;
-
-	return $users;
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -178,21 +150,38 @@ function get_users_list() {
 
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
 		<link rel="shortcut icon" href="media/image/favicon.ico" />
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.png" />
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/style/webclient.css") && $debug_mode != true) { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/webclient.css" />
-<?php } else {
-					if ($big_image_map) { ?>
+<?php } else { ?>
 		<link rel="stylesheet" type="text/css" href="media/style/images.css" />
-<?php     } ?>
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/dialogs.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/login.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/notifications.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/desktop.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/portal.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/rtl.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/responsive.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/menu.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/framework.css" />
+<?php } ?>
+<?php if (!$big_image_map) { ?>
+		<link rel="stylesheet" type="text/css" href="media/style/images_files.css" />
+<?php } ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/custom/custom.css")) {
+	$custom_css = true;
+?>
+		<link rel="stylesheet" type="text/css" href="media/custom/custom.css" />
 <?php } ?>
 
 		<script type="text/javascript" src="media/script/lib/jquery/jquery.js" charset="utf-8"></script>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/uovd.js") && $debug_mode != true) { ?>
 		<script type="text/javascript" src="media/script/uovd.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/uovd/base.js" charset="utf-8"></script>
@@ -212,23 +201,30 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/uovd/provider/applications/html5.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/applications/java.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/applications/webapps.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/http_tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_keyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/input_mouse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/clipboard_handler.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/print_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_handler.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_factory.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_window_manager.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/seamless_icon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/base64.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/exttunnel.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tmouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/keyboard.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/mouse.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/layer.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/tunnel.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/guacamole.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/encodings.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/oskeyboard.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/rdp/html5/guacamole/nkeyboard.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/base.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/uovd/provider/webapps/jsonp.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/proxy.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/uovd/provider/webapps/direct.js" charset="utf-8"></script>
 <?php } ?>
 
-<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js")) { ?>
+<?php if (file_exists(WEB_CLIENT_ROOT . "/media/script/webclient.js") && $debug_mode != true) { ?>
 		<script type="text/javascript" src="media/script/webclient.js" charset="utf-8"></script>
 <?php } else { ?>
 		<script type="text/javascript" src="media/script/webclient/timezones.js" charset="utf-8"></script>
@@ -236,8 +232,9 @@ function get_users_list() {
 		<script type="text/javascript" src="media/script/webclient/start_app.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/application_counter.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/desktop_container.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/menu_container.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/seamless_launcher.js" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/webclient/seamless_window_manager.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/webclient/seamless_taskbar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/progress_bar.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/webapps_popup_launcher.js" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/webclient/ui.js" charset="utf-8"></script>
@@ -255,7 +252,6 @@ function get_users_list() {
 			window.ovd.defaults.gateway                     = <?php echo $gateway_first === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.keymap_autodetect           = <?php echo defined('OPTION_KEYMAP_AUTO_DETECT') && OPTION_KEYMAP_AUTO_DETECT === true && !isset($_COOKIE['ovd-client']['session_keymap']) ? 'true' : 'false'; ?>;
 			window.ovd.defaults.use_proxy                   = <?php echo $use_proxy === true ? 'true' : 'false'; ?>;
-			window.ovd.defaults.big_image_map               = <?php echo $big_image_map ? 'true' : 'false'; ?>;
 			window.ovd.defaults.user_keymap                 = <?php echo isset($user_keymap) ? "'".$user_keymap."'" : 'undefined'; ?>;
 			window.ovd.defaults.rdp_input_method            = <?php echo $rdp_input_method !== null ? '\''.$rdp_input_method.'\'' : 'undefined'; ?>;
 			window.ovd.defaults.local_integration           = <?php echo $local_integration === true ? 'true' : 'false'; ?>;
@@ -272,6 +268,7 @@ function get_users_list() {
 			window.ovd.defaults.force_language              = <?php echo defined('OPTION_FORCE_LANGUAGE') && OPTION_FORCE_LANGUAGE === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_input_method          = <?php echo defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_keymap                = <?php echo defined('OPTION_FORCE_KEYMAP') && OPTION_FORCE_KEYMAP === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.force_sso                   = <?php echo $force_sso === true ? 'true' : 'false'; ?>;
 
 			var i18n = {};
 			<?php
@@ -290,537 +287,341 @@ function get_users_list() {
 
 	<body>
 		<noscript>
-			<div class="finalErrorBox">
-				<table style="width: 100%;" border="0" cellspacing="1" cellpadding="3">
-					<tr>
-						<td style="text-align: left; vertical-align: middle;">
-							<strong>JavaScript must be enabled</strong>
-							<div style="margin-top: 15px;">
-<?php echo str_replace(
-	array('[A]', '[/A]'),
-	array('<a href="">', '</a>'),
-	_('JavaScript must be enabled in order for you to use Ulteo OVD. However, it seems JavaScript is either disabled or not supported by your browser. To use OVD Web Client, enable JavaScript by changing your browser options, then [A]try again[/A].'));
-?>
-							</div>
-						</td>
-						<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-<?php if (!$big_image_map) { ?>
-							<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-<?php } else { ?>
-							<div class="image_error_png"></div>
-<?php } ?>
-						</td>
-					</tr>
-				</table>
-				<div style="text-align:center;">
-<?php if (!$big_image_map) { ?>
-					<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop"/>
-<?php } else { ?>
-					<div class="image_ulteo-small_png"></div>
-<?php } ?>
+			<div class="boxMessage">
+				<div class="shadowBox">
+					<div class="boxLogo">
+						<div class="image_ulteo-small_png"></div>
+					</div>
+					<p><strong>JavaScript must be enabled</strong></p>
+					<div class="boxLogo">
+						<div class="image_error_png"></div>
+					</div>
+					<p>
+						<?php echo str_replace(
+							array('[A]', '[/A]'),
+							array('<a href="">', '</a>'),
+							_('JavaScript must be enabled in order for you to use Ulteo OVD. However, it seems JavaScript is either disabled or not supported by your browser. To use OVD Web Client, enable JavaScript by changing your browser options, then [A]try again[/A].'));
+						?>
+					</p>
 				</div>
 			</div>
 		</noscript>
 
 		<div id="overlay" style="display: none;">
 			<div id="lock" style="display: none;"></div>
-			<div id="systemTest" class="rounded" style="display: none;">
-				<div id="systemTestContainer" class="rounded">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
-						<tr>
-							<td style="text-align: left; vertical-align: top;">
-								<strong><span id="system_compatibility_check_1_gettext">&nbsp;</span></strong>
-								<div style="margin-top: 15px;">
-									<p id="system_compatibility_check_2_gettext">&nbsp;</p>
-									<p id="system_compatibility_check_3_gettext">&nbsp;</p>
-								</div>
-							</td>
-							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-								<?php } else { ?>
-								<div class="image_rotate_gif"></div>
-								<?php } ?>
-							</td>
-						</tr>
-					</table>
+			<div id="systemTest" class="shadowBox" style="display: none;">
+				<div class="boxLogo">
+					<div class="image_rotate_gif"></div>
 				</div>
+				<h1><span id="system_compatibility_check_1_gettext">&nbsp;</span></h1>
+				<p id="system_compatibility_check_2_gettext">&nbsp;</p>
+				<p id="system_compatibility_check_3_gettext">&nbsp;</p>
 			</div>
 
-			<div id="systemTestError" class="rounded" style="display: none;">
-				<div id="systemTestErrorContainer" class="rounded">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
-						<tr>
-							<td style="text-align: left; vertical-align: middle;">
-								<strong><span id="system_compatibility_error_1_gettext">&nbsp;</span></strong>
-								<div id="systemTestErrorMessage" style="margin-top: 15px;"></div>
-								<p id="system_compatibility_error_5_gettext">&nbsp;</p>
-							</td>
-							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
-								<?php } else { ?>
-								<div class="image_error_png"></div>
-								<?php } ?>
-							</td>
-						</tr>
-					</table>
+			<div id="systemTestError" class="shadowBox" style="display: none;">
+				<div class="boxLogo">
+					<div class="image_error_png"></div>
 				</div>
+				<h1><span id="system_compatibility_error_1_gettext">&nbsp;</span></h1>
+				<p id="system_compatibility_error_5_gettext">&nbsp;</p>
 			</div>
 
-			<div id="iframe" class="rounded" style="display: none;">
-				<iframe id="iframeContainer"></iframe>
-				<a id="iframeLink" href="javascript:;"><div id="iframeCloseButton" class="rounded <?php echo ($big_image_map ? "image_close-wrap_png" : "msie6"); ?>"></div></a>
-			</div>
-
-			<div id="news" class="rounded" style="display: none;">
-				<div id="newsContainer" class="rounded">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
-						<tr>
-							<td style="width: 100%; text-align: left; vertical-align: top;">
-								<div id="newsTitle"></div>
-							</td>
-							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top; margin-bottom: 15px;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/news.png" width="32" height="32" alt="" title="" />
-								<?php } else { ?>
-								<div class="image_news_png"></div>
-								<?php } ?>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align: left; vertical-align: top; margin-bottom: 15px;" colspan="2">
-								<div id="newsContent"></div>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align: right; vertical-align: bottom; margin: 10px;" colspan="2">
-								<a id="newsHideLink" href="javascript:;"><span id="close_gettext">&nbsp;</span></a>
-							</td>
-						</tr>
-					</table>
+			<div id="news" class="shadowBox" style="display: none;">
+				<div class="boxLogo">
+					<div class="image_news_png"></div>
+					<br><a id="newsHideLink" href="javascript:;"><span id="close_gettext">&nbsp;</span></a>
 				</div>
+				<h1 id="newsTitle"></h1>
+				<p id="newsContent"></p>
 			</div>
 		</div>
 
-		<div id="splashContainer" class="rounded" style="display: none;">
-			<div id="splashContainerContent" class="rounded">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;" colspan="3">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
-							<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="loading_ovd_gettext">&nbsp;</span>
-							<span style="font-size: 1.35em; font-weight: bold; color: #686868; display: none;" id="unloading_ovd_gettext">&nbsp;</span>
-						</td>
-						<td style="width: 20px"></td>
-						<td style="text-align: left; vertical-align: middle;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
-							<?php } else { ?>
-							<div class="image_rotate_gif"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; vertical-align: middle;" colspan="3">
-							<div id="progressBar">
-								<div id="progressBarContent"></div>
-							</div>
-						</td>
-					</tr>
-				</table>
+		<div id="splashContainer" class="boxMessage" style="display: none;">
+			<div id="splashContainerContent" class="shadowBox">
+				<div class="boxLogo">
+					<div class="image_ulteo_png"></div>
+				</div>
+				<h1 class="loadling_text" style="display: none;" id="loading_ovd_gettext">&nbsp;</h1>
+				<h1 class="loadling_text" style="display: none;" id="unloading_ovd_gettext">&nbsp;</h1>
+				<div class="boxLogo">
+					<div class="image_rotate_gif"></div>
+				</div>
+				<div id="progressBar"><div id="progressBarContent"></div></div>
 			</div>
 		</div>
 
-		<div id="endContainer" class="rounded" style="display: none;">
-			<div id="endContainerContent" class="rounded">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
-						</td>
-					</tr>
-				</table>
+		<div id="endContainer" class="boxMessage" style="display: none;">
+			<div id="endContainerContent" class="shadowBox">
+				<div class="boxLogo">
+					<div class="image_ulteo_png"></div>
+				</div>
+				<div id="endContent"></div>
 			</div>
 		</div>
 
 		<div id="sessionContainer" style="display: none;">
 			<div id="applicationsHeader">
-				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="width: 17%; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo-small.png" width="141" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
-							<?php } else { ?>
-							<div class="image_ulteo-small_png"></div>
-							<?php } ?>
-						</td>
-						<td style="text-align: left; border-bottom: 1px solid #ccc; padding-left: 20px; padding-right: 20px;" class="title centered">
-							<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
-						</td>
-						<td style="width: 100%; border-bottom: 1px solid #ccc; text-align: left;" class="title centered">
-							<div id="newsList" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;"></div>
-						</td>
-						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
-							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
-								<tr>
-									<td id="suspend_button" style="display: none; text-align: center; vertical-align: middle;"><a id="suspend_link" href="javascript:;">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/suspend.png" width="32" height="32" alt="" title="" />
-										<?php } else { ?>
-										<div class="image_suspend_png" style="display:inline-block"></div>
-										<?php } ?>
-										<br /><span id="suspend_gettext">&nbsp;</span></a>
-									</td>
-									<td style="text-align: center; vertical-align: middle;"><a id="logout_link" href="javascript:;">
-										<?php if (!$big_image_map) { ?>
-										<img src="media/image/logout.png" width="32" height="32" alt="" title="" />
-										<?php } else { ?>
-										<div class="image_logout_png" style="display:inline-block"></div>
-										<?php } ?>
-										<br /><span id="logout_gettext">&nbsp;</span></a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
+				<div id="headerLogo">
+					<div class="image_ulteo-small_png"></div>
+				</div>
+				<div id="newsList"></div>
+				<a id="logout_link" href="javascript:;">
+					<div class="image_logout_png" style="display:inline-block"></div>
+					<br /><span id="logout_gettext">&nbsp;</span>
+				</a>
+				<a id="suspend_link" href="javascript:;">
+					<div class="image_suspend_png" style="display:inline-block"></div>
+					<br /><span id="suspend_gettext">&nbsp;</span>
+				</a>
+				<h1><span id="user_displayname">&nbsp;</span><span id="welcome_gettext" style="display: none;">&nbsp;</span></h1>
+				<div class="collapse"></div>
 			</div>
 
-			<table id="applicationsContainer" border="0" cellspacing="0" cellpadding="5">
-				<tr>
-					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
-						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-							<div>
-								<h2 style="display: none;"><span id="my_apps_gettext">&nbsp;</span></h2>
-								<div id="appsContainer" style="overflow: auto;"></div>
-							</div>
-						</div>
-					</td>
-					<td style="width: 5px;">
-					</td>
-					<td style="text-align: left; vertical-align: top; background: #eee;">
-						<div id="fileManager" class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
-							<div>
-								<h2 style="display: none;"><span id="my_files_gettext">&nbsp;</span></h2>
+			<div id="appsContainer"></div>
+			<div id="fileManagerContainer" style="display:none">
+				<h2><span id="my_files_gettext">&nbsp;</span></h2>
+			</div>
 
-								<div id="fileManagerContainer"></div>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-			<div id="fullScreenMessage" class="rounded" style="display: none;">
-				<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td style="text-align: center;">
-							<?php if (!$big_image_map) { ?>
-							<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-							<?php } else { ?>
-							<div class="image_ulteo_png"></div>
-							<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: center; vertical-align: middle; margin-top: 15px;">
-							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
-							<br /><br />
-							<span style="font-size: 1.1em; font-weight: bold; color: #686868;" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
-						</td>
-					</tr>
-				</table>
+			<div id="fullScreenMessage" class="boxMessage" style="display: none;">
+				<div id="fullScreenMessageContainer" class="shadowBox">
+					<div class="boxLogo">
+						<div class="image_ulteo_png"></div>
+					</div>
+					<p>
+						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text1_gettext">&nbsp;</span>
+						<br /><br />
+						<span class="desktop_fullscreen_text" id="desktop_fullscreen_text2_gettext">&nbsp;</span>
+					</p>
+				</div>
 			</div>
 			<div id="desktopContainer"></div>
 			<div id="windowsContainer"></div>
+			<div id="menuContainer"></div>
 		</div>
 
 		<div id="main">
 			<div id="header"></div>
 			<div id="page">
-				<div id="loginBox" class="rounded" style="display: none;">
-					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td style="width: 300px; text-align: left; vertical-align: top;">
-								<?php if (!$big_image_map) { ?>
-								<img src="media/image/ulteo.png" <?php echo $logo_size; ?> alt="" title="" />
-								<?php } else { ?>
-								<div class="image_ulteo_png"></div>
-								<?php } ?>
-							</td>
-							<td style="width: 10px;">
-							</td>
-							<td style="text-align: center; vertical-align: top;">
-								<div id="loginForm" class="rounded">
+				<div id="loginBox" style="display: none;">
+					<div id="loginBoxLogo" class="image_ulteo_png"></div>
+					<div id="loginBoxLogoSmall" class="image_ulteo-small_png"></div>
+					<div id="loginForm">
+						<form id="startsession" action="javascript:;" method="post">
+							
+							<div class="loginElement" style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
+								<label class="loginLabel" for="sessionmanager_host">
+									<div class="image_sessionmanager_png"></div>
+									<strong><span id="session_manager_gettext">&nbsp;</span></strong>
+								</label>
+								<div class="loginField">
+									<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>"/>
+								</div>
+							</div>
+							
+							<div class="loginElement">
+								<label class="loginLabel" for="user_login">
+									<div class="image_user_login_png"></div>
+									<strong><span id="login_gettext">&nbsp;</span></strong>
+								</label>
+								<div class="loginField">
+									<?php
+										if (! defined('SESSIONMANAGER_HOST') || $users === false || $force_sso === true) {
+									?>
+									<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>"/>
+									<?php
+										} else {
+									?>
+									<select id="user_login">
+									<?php
+										foreach ($users as $login => $displayname)
+											echo '<option value="'.$login.'"'.(($login == $wi_user_login)?' selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
+									?>
+									</select>
+									<?php
+										}
+									?>
+								</div>
+							</div>
+								
+							<div class="loginElement">
+								<label class="loginLabel" for="user_password">
+									<div class="image_user_password_png"></div>
+									<strong><span id="password_gettext">&nbsp;</span></strong>
+								</label>
+								<div class="loginField">
+									<input type="password" id="user_password" value=""/>
+								</div>
+							</div>
 
-									<form id="startsession" action="javascript:;" method="post">
-										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
-											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
-												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<?php if (!$big_image_map) { ?>
-													<img src="media/image/icons/sessionmanager.png" width="22" height="22" alt="" title="" />
-													<?php } else { ?>
-													<div class="image_sessionmanager_png"></div>
-													<?php } ?>
-												</td>
-												<td style="text-align: left; vertical-align: middle;">
-													<strong><span id="session_manager_gettext">&nbsp;</span></strong>
-												</td>
-												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>"/>
-												
-												</td>
-											</tr>
-											<tr>
-												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<?php if (!$big_image_map) { ?>
-													<img src="media/image/icons/user_login.png" width="22" height="22" alt="" title="" />
-													<?php } else { ?>
-													<div class="image_user_login_png"></div>
-													<?php } ?>
-												</td>
-												<td style="text-align: left; vertical-align: middle;">
-													<strong><span id="login_gettext">&nbsp;</span></strong>
-												</td>
-												<td style="text-align: right; vertical-align: middle;">
-													<?php
-														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
-													?>
-													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>"/>
-													<?php
-														} else {
-													?>
-													<select id="user_login">
-													<?php
-														foreach ($users as $login => $displayname)
-															echo '<option value="'.$login.'"'.(($login == $wi_user_login)?'selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
-													?>
-													</select>
-													<?php
+							<div class="loginElement">
+								<label class="loginLabel" for="user_login_detected">
+									<div class="image_user_login_png"></div>
+									<strong><span id="login_detected_gettext">&nbsp;</span></strong>
+								</label>
+								<div class="loginField">
+									<input type="text" id="user_login_detected" disabled="disabled" value="<?php echo $wi_remote_user_login; ?>"/>
+								</div>
+							</div>
+							
+							<div id="advanced_settings" style="display: none;">
+								
+								<div class="loginElement" <?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
+									<label class="loginLabel" for="use_local_credentials_true">
+										<div class="image_use_local_credentials_png"></div>
+										<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<?php short_list_field("use_local_credentials", defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS'), $wi_use_local_credentials, array(
+											"1"=>"use_local_credentials_yes_gettext", 
+											"0"=>"use_local_credentials_no_gettext")); 
+										?>
+									</div>
+								</div>
+								
+								<div class="loginElement">
+									<label class="loginLabel" for="session_mode">
+										<div class="image_session_mode_png"></div>
+										<strong><span id="mode_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<?php long_list_field("session_mode", defined('OPTION_FORCE_SESSION_MODE'), $wi_session_mode, array(
+											"desktop"=>"mode_desktop_gettext", 
+											"applications"=>"mode_portal_gettext")); 
+										?>
+									</div>
+								</div>
+								
+								<div class="loginElement">
+									<label class="loginLabel" for="rdp_mode">
+										<div class="image_session_mode_png"></div>
+										<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<?php
+											$rdp_mode_list = array();
+											if ($java_installed) {
+												$rdp_mode_list["java"] = "Java";
+											}
+											if ($html5_installed) {
+												$rdp_mode_list["html5"] = "HTML5";
+											}
+											long_list_field("rdp_mode", false, $wi_session_type, $rdp_mode_list); 
+										?>
+									</div>
+								</div>
+								
+								<div class="loginElement">
+									<label class="loginLabel" for="desktop_fullscreen">
+										<div class="image_settings_desktop_fullscreen_png"></div>
+										<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<?php short_list_field("desktop_fullscreen", defined("OPTION_FORCE_FULLSCREEN"), $wi_desktop_fullscreen, array("1"=>"fullscreen_yes_gettext", "0"=>"fullscreen_no_gettext")); ?>
+									</div>
+								</div>
+								
+								<div class="loginElement">
+									<label class="loginLabel" for="session_language">
+										<div class="image_session_language_png"></div>
+										<strong><span id="language_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<select id="session_language" <?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
+											<?php
+												$browser_languages = detectBrowserLanguage($languages);
+												if (count($browser_languages) > 0) {
+													foreach ($browser_languages as $browser_language) {
+														foreach ($languages as $language) {
+															if ($browser_language == $language['id']) {
+																echo '<option value="'.$language['id'].'" style="background-image: url(media/image/flags/'.$language['id'].'.png)"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?'  selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+																break;
+															}
 														}
-													?>
-													<span id="user_login_local" style="display: none; color: grey; font-style: italic;"></span>
-												</td>
-											</tr>
-											<tr id="password_row">
-												<td style="text-align: right; vertical-align: middle;">
-													<?php if (!$big_image_map) { ?>
-													<img src="media/image/icons/user_password.png" width="22" height="22" alt="" title="" />
-													<?php } else { ?>
-													<div class="image_user_password_png"></div>
-													<?php } ?>
-												</td>
-												<td style="text-align: left; vertical-align: middle;">
-													<strong><span id="password_gettext">&nbsp;</span></strong>
-												</td>
-												<td style="text-align: right; vertical-align: middle;">
-													<input type="password" id="user_password" value=""/>
-												</td>
-											</tr>
-										</table>
-										<div id="advanced_settings" style="display: none;">
-											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
-												<tr id='use_local_credentials'<?php if (OPTION_SHOW_USE_LOCAL_CREDENTIALS === false) echo ' style="display: none;"';?>>
-													<td style="text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/use_local_credentials.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_use_local_credentials_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="use_local_credentials_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?>/> <span id="use_local_credentials_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_USE_LOCAL_CREDENTIALS')) echo ' disabled="disabled"'; ?>/> <span id="use_local_credentials_no_gettext">&nbsp;</span>
-													</td>
-												</tr>
-												<tr>
-													<td style="width: 22px; text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_session_mode_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="mode_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_mode" <?php if (defined('OPTION_FORCE_SESSION_MODE')) echo ' disabled="disabled"';?>>
-															<option id="mode_desktop_gettext" value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>></option>
-															<option id="mode_portal_gettext" value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>></option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<td style="width: 22px; text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/session_mode.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_session_mode_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<select id="rdp_mode">
-															<?php if ($java_installed) { ?>
-															<option id="rdp_mode_java" value="java"<?php if ($wi_session_type == 'java') echo ' selected="selected"'; ?>>Java</option>
-															<?php } ?>
-															<?php if ($html5_installed) { ?>
-															<option id="rdp_mode_html5" value="html5"<?php if ($wi_session_type == 'html5') echo ' selected="selected"'; ?>>HTML5</option>
-															<?php } ?>
-														</select>
-													</td>
-												</tr>
-												<tr id="advanced_settings_desktop">
-													<td style="text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/settings_desktop_fullscreen.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_settings_desktop_fullscreen_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="fullscreen_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?>/> <span id="fullscreen_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?><?php if (defined('OPTION_FORCE_FULLSCREEN')) echo ' disabled="disabled"'; ?> /> <span id="fullscreen_no_gettext">&nbsp;</span>
-													</td>
-												</tr>
-												<tr>
-													<td style="text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/session_language.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_session_language_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="language_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<span style="margin-right: 5px;">
-															<?php if (!$big_image_map) { ?>
-															<img id="session_language_flag" width="16" height="11" />
-															<?php } else { ?>
-															<div id="session_language_flag" style="display:inline-block;" ></div>
-															<?php } ?>
-														</span>
-														<select id="session_language" <?php if (OPTION_FORCE_LANGUAGE === true) echo ' disabled="disabled"';?>>
-															<?php
-																foreach ($languages as $language)
-																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
-															?>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<td style="text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/keyboard_layout.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_keyboard_layout_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_keymap"<?php if (OPTION_FORCE_KEYMAP === true) echo ' disabled="disabled"';?>>
-															<?php
-																foreach ($keymaps as $keymap)
-																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id']==$user_keymap)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
-															?>
-														</select>
-													</td>
-												</tr>
-												<tr <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
-													<td style="text-align: right; vertical-align: middle;"></td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_input_method"<?php if (OPTION_FORCE_INPUT_METHOD === true) echo ' disabled="disabled"';?>>
-															<option id="keyboard_config_scancode_gettext" value="scancode"<?php if ($rdp_input_method == 'scancode') echo ' selected="selected"';?>></option>
-															<option id="keyboard_config_unicode_gettext" value="unicode"<?php if ($rdp_input_method == 'unicode') echo ' selected="selected"';?>></option>
-															<option id="keyboard_config_unicode_lime_gettext" value="unicode_local_ime"<?php if ($rdp_input_method == 'unicode_local_ime') echo ' selected="selected"';?>></option>
-														</select>
-													</td>
-												</tr>
+													}
+													echo '<option disabled="disabled"></option>';
+												}
+												foreach ($languages as $language) {
+													if (!in_array($language['id'], $browser_languages)) {
+														echo '<option value="'.$language['id'].'" style="background-image: url(media/image/flags/'.$language['id'].'.png)"'.(($language['id'] == $user_language || $language['id'] == substr($user_language, 0, 2))?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+													}
+												}
+											?>
+										</select>
+									</div>
+								</div>
+								
+								<div class="loginElement">
+									<label class="loginLabel" for="session_keymap">
+										<div class="image_keyboard_layout_png"></div>
+										<strong><span id="keyboard_layout_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+										<select id="session_keymap"<?php if (OPTION_FORCE_KEYMAP === true) echo " disabled=\"disabled\"";?>>
+											<?php
+												foreach ($keymaps as $keymap)
+													echo '<option value="'.$keymap['id'].'"'.(($keymap['id']==$user_keymap)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+											?>
+										</select>
+									</div>
+								</div>
+							
+								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
+									<label class="loginLabel" for="session_input_method">
+										<div class="image_keyboard_layout_png"></div>
+										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+											<?php long_list_field("session_input_method", $force_input_method === true, $rdp_input_method, array(
+												"scancode"=>"keyboard_config_scancode_gettext", 
+												"unicode"=>"keyboard_config_unicode_gettext",
+												"unicode_local_ime"=>"keyboard_config_unicode_lime_gettext")); 
+											?>
+									</div>
+								</div>
 <?php
 	if ($debug_mode) {
 ?>
-												<tr>
-													<td style="text-align: right; vertical-align: middle;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/icons/debug.png" width="22" height="22" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_debug_png"></div>
-														<?php } ?>
-													</td>
-													<td style="text-align: left; vertical-align: middle;">
-														<strong><span id="debug_gettext">&nbsp;</span></strong>
-													</td>
-													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1"<?php if ($wi_debug == 1) echo ' checked="checked"'; ?> /> <span id="debug_yes_gettext">&nbsp;</span>
-														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0"<?php if ($wi_debug == 0) echo ' checked="checked"'; ?> /> <span id="debug_no_gettext">&nbsp;</span>
-													</td>
-												</tr>
+									<div class="loginElement">
+										<label class="loginLabel" for="session_input_method">
+											<div class="image_debug_png"></div>
+											<strong><span id="debug_gettext">&nbsp;</span></strong>
+										</label>
+										<div class="loginField">
+											<?php short_list_field("debug", false, $wi_debug, array(
+												"1"=>"debug_yes_gettext", 
+												"0"=>"debug_no_gettext")); 
+											?>
+										</div>
+									</div>
 <?php
 	}
 ?>
-											</table>
-										</div>
-										<div id="loginError"></div>
-										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
-											<tr style="height: 40px;">
-												<td style="text-align: left; vertical-align: bottom;">
-													<?php if (!$big_image_map) { ?>
-													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value=""/>
-													<?php } else { ?>
-													<span id="advanced_settings_status" class="image_show_png" style="display: inline-block;position: relative; left: 18px;"></span><input style="padding-left: 18px;" type="button" id="advanced_settings_gettext" value=""/>
-													<?php } ?>
-												</td>
-												<td style="text-align: right; vertical-align: bottom;">
-													<span id="submitButton"><input type="submit" id="connect_gettext" value="" /></span>
-													<span id="submitLoader" style="display: none;">
-														<?php if (!$big_image_map) { ?>
-														<img src="media/image/loader.gif" width="24" height="24" alt="" title="" />
-														<?php } else { ?>
-														<div class="image_loader_gif"></div>
-														<?php } ?>
-													</span>
-												</td>
-											</tr>
-										</table>
-									</form>
+							</div>
+							
+							<div id="loginError"></div>
+							
+							<div class="loginElement">
+								<div class="loginLabel">
+									<span id="advanced_settings_status" class="image_show_png"></span><input type="button" id="advanced_settings_gettext" value=""/>
 								</div>
-							</td>
-						</tr>
-					</table>
+								<div class="loginField">
+									<span id="submitButton"><input type="submit" id="connect_gettext" value="" /></span>
+									<span id="submitLoader" style="display: none;">
+										<div class="image_rotate_gif"></div>
+									</span>
+								</div>
+							</div>
+							<div class="loginElement"></div>
+						</form>
+					</div>
 				</div>
 			</div>
 			<div id="footer"></div>
+<?php
+	if (isset($custom_css) && $custom_css === true) {
+		echo ("<p style=\"position:absolute;right:10px;bottom:0px;opacity:0.5;\">Powered by Ulteo</p>");
+	}
+?>
 		</div>
 	</body>
 </html>

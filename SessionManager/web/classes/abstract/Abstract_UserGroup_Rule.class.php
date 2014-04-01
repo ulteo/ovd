@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2009-2012 Ulteo SAS
+ * Copyright (C) 2009-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  * Author Jocelyn DELALANDE <j.delalande@ulteo.com> 2012
- * Author Julien LANGLOIS <julien@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -215,5 +215,43 @@ class Abstract_UserGroup_Rule {
 		}
 
 		return $usergroup_rules;
+	}
+	
+	public static function deleteByUserGroupIds($group_ids_) {
+		if (! is_array($group_ids_) || count($group_ids_) == 0) {
+			return false;
+		}
+		
+		$sql = SQL::getInstance();
+		
+		$groups2 = array();
+		foreach($groups2 as $id) {
+			array_push($groups2, '"'.$sql->CleanValue($id).'"');
+		}
+		
+		return $sql->DoQuery('DELETE FROM #1 WHERE @2 IN ('.implode(', ',$groups2).')', self::table, 'usergroup_id');
+	}
+
+	public static function delete_all() {
+		$sql = SQL::getInstance();
+		return $sql->DoQuery('DELETE FROM #1', self::table);
+	}
+	
+	
+	public static function get_usersgroups() {
+		$sql = SQL::getInstance();
+		$res = $sql->DoQuery('SELECT COUNT(*) FROM #1 GROUP BY @2', self::table, 'usergroup_id');
+		if ($res !== true) {
+			Logger::error('main', "Abstract_UserGroup_Preferences::get_usersgroups sql request failed");
+			return array();
+		}
+		
+		$usersgroups = array();
+		$rows = $sql->FetchArrayAll();
+		foreach ($rows as $row) {
+			array_push($usersgroups, $row['usergroup_id']);
+		}
+		
+		return $usersgroups;
 	}
 }

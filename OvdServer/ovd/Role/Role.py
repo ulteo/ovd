@@ -20,17 +20,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from threading import Thread
+from ovd.Logger import Logger
+
 
 class Role:
 	STATUS_INIT    = 0
 	STATUS_RUNNING = 1
 	STATUS_STOP    = 2
 	STATUS_ERROR   = 3
+	STATUS_STOPPING= 4
 	
 	def __init__(self, main_instance):
 		self.main_instance = main_instance
 		self.status = Role.STATUS_INIT
 		self.thread = Thread(name="role_%s" % (self.getName()), target=self.run)
+		self.loop = True
 	
 	def init(self):
 		raise NotImplementedError()
@@ -38,8 +42,22 @@ class Role:
 	def run(self):
 		raise NotImplementedError()
 	
-	def stop(self):
-		raise NotImplementedError()
+	def order_stop(self):
+		Logger.info("%s role::stop"%(self.getName()))
+		if self.status == Role.STATUS_INIT:
+			self.status = Role.STATUS_STOP
+			return
+		
+		self.status = Role.STATUS_STOPPING
+		
+	def force_stop(self):
+		self.loop = False
+	
+	def stopped(self):
+		return self.status == Role.STATUS_STOP
+	
+	def stopping(self):
+		return self.status == Role.STATUS_STOPPING
 	
 	def finalize(self):
 		raise NotImplementedError()

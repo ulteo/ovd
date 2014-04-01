@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,6 +21,8 @@
 
 import os
 import sys
+import win32api
+import win32con
 from win32com.shell import shell, shellcon
 from ovd.Logger import Logger
 import ConfigParser
@@ -149,8 +152,8 @@ class GPO:
 			f.write("%s=%s\r\n"%(GPO.GPT_KEY, GPO.GUID))
 			f.write("version=65537\r\n")
 			f.close()
-		except Exception, e:
-			Logger.error("Failed to create new gpt file: %s", str(e))
+		except Exception:
+			Logger.exception("Failed to create new gpt file")
 			return False
 		return True
 	
@@ -196,8 +199,16 @@ class GPO:
 				index += 1
 		
 		try:
-			os.makedirs(os.path.dirname(self.iniScriptFile))
-			f = open(self.iniScriptFile, 'wb+')
+			if not os.path.exists(self.iniScriptFile):
+				dir = os.path.dirname(self.iniScriptFile)
+				
+				if not os.path.exists(dir):
+					os.makedirs(dir)
+				
+				open(self.iniScriptFile, 'a').close()
+				win32api.SetFileAttributes(self.iniScriptFile, win32con.FILE_ATTRIBUTE_HIDDEN)
+
+			f = open(self.iniScriptFile, 'rb+')
 			f.truncate()
 			
 			if self.useUTF16:
@@ -207,8 +218,8 @@ class GPO:
 			
 			f.write(buffer)
 			f.close()
-		except Exception, e:
-			Logger.error("Failed to add a GPO: %s"%(str(e)))
+		except Exception:
+			Logger.exception("Failed to add a GPO")
 		
 		self.disableSysWow64(False)
 

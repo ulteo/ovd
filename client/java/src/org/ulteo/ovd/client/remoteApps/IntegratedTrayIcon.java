@@ -64,7 +64,7 @@ public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				portal.setDisconnectionMode(OvdClient.DisconnectionMode.SUSPEND);
-				rdpActions.disconnect();
+				rdpActions.disconnect(true);
 			}
 		});
 		popup.add(itemDisconnect);

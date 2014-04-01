@@ -1,8 +1,11 @@
+@import(fonts.css);
+
 html {
 	background-color: #fff;
-	color: #585858;
+	/*color: #585858;*/
+	color: #575757;
 
-	font-family: "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
+	font-family: "Open Sans", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
 
 	font-size: 1em;
 }
@@ -36,10 +39,17 @@ h2 {
 	border-bottom: none;
 }
 
-.section h2 {
+.a {
+
+	font-family: "Open Sans", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
+}
+
+.section h2, .section h3{
 	font-size: 1.5em;
 	text-align: left;
-	border-bottom: 1px solid #8cacbb;
+	font-weight: bold;
+	border-bottom: 1px solid #575757;
+	font-family: "Ubuntu Light", "Open Sans", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
 }
 
 h3 {
@@ -53,7 +63,7 @@ h3 {
 .section h3 {
 	font-size: 1.3em;
 	text-align: left;
-	border-bottom: 1px solid #8cacbb;
+	border-bottom: 1px solid #575757;
 }
 
 h4 {
@@ -76,7 +86,7 @@ img {
 
 pre {
 	background: #eee;
-	border: 1px solid #8cacbb;
+	border: 1px solid #575757;
 
 	font-family: courier, monospace;
 
@@ -92,6 +102,10 @@ pre {
 	padding: 0.5em;
 }
 
+.toc dl {
+	border:0px;
+}
+
 .section .section {
 	padding-left: 3%;
 }
@@ -104,10 +118,11 @@ hr {
 }
 
 div.important { 
-	background:  #ffdcaf;
-	border : 1px dashed #C52;
+	background:  #F5B4B4;
+	border : 1px solid #C00000;
 	margin: 10px;
 	padding: 10px;
+	color: #000000;
 }
 
 div.note { 

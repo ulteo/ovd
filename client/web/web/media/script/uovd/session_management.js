@@ -1,11 +1,15 @@
 
-uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_provider) {
+uovd.SessionManagement = function(params, rdp_provider, http_provider, webapps_provider) {
 	this.parameters = params;
 	this.status_check = null;
+	this.status_check_interval_long  = 10*60*1000; // 10min
+	this.status_check_interval_short = 3*1000;     // 3sec
+	this.status_check_interval_now   = 100;        // 100ms
+	this.status_check_interval = this.status_check_interval_short;
 
 	this.session = null;
 	this.rdp_provider = rdp_provider;
-	this.ajax_provider = ajax_provider;
+	this.http_provider = http_provider;
 	this.webapps_provider = webapps_provider;
 
 	/* set parent refs */
@@ -13,8 +17,8 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 		this.rdp_provider.session_management = this;
 	}
 
-	if(this.ajax_provider) {
-		this.ajax_provider.session_management = this;
+	if(this.http_provider) {
+		this.http_provider.session_management = this;
 	}
 
 	if(this.webapps_provider) {
@@ -25,21 +29,21 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 
 	var self = this; /* closure */
 	this.callbacks = {
-		"ovd.ajaxProvider.sessionStart" : new Array(function(type, source, params) {
+		"ovd.httpProvider.sessionStart" : new Array(function(type, source, params) {
 			var state = params["state"];
 
 			if(state == uovd.SUCCESS) {
 				self.session.starting(type);
 			}
 		}),
-		"ovd.ajaxProvider.sessionEnd" : new Array(function(type, source, params) {
+		"ovd.httpProvider.sessionEnd" : new Array(function(type, source, params) {
 			var state = params["state"];
 
 			if(state == uovd.SUCCESS) {
 				self.session.destroying(type);
 			}
 		}),
-		"ovd.ajaxProvider.sessionSuspend" : new Array(function(type, source, params) {
+		"ovd.httpProvider.sessionSuspend" : new Array(function(type, source, params) {
 			var state = params["state"];
 
 			if(state == uovd.SUCCESS) {
@@ -73,27 +77,40 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 
 			if(to == uovd.SERVER_STATUS_FAILED) {
 				/* Failed to connect */
-				self.ajax_provider.sessionEnd();
+				self.http_provider.sessionEnd();
+			}
+
+			if(to == uovd.SERVER_STATUS_CONNECTED) {
+				/* Check for other servers */
+				for(var i=0 ; i<self.session.servers.length ; ++i) {
+					if(self.session.servers[i].status != uovd.SERVER_STATUS_CONNECTED) { return; }
+				}
+
+				/* All connected or ready : notify */
+				self.fireEvent("ovd.session.serversConnected", self, {"servers":self.session.servers});
 			}
 
 			if(to == uovd.SERVER_STATUS_DISCONNECTED) {
 				self.session.destroying(type);
 			}
 		}),
-		"ovd.session.starting" : new Array(function(type, source, params) {
-			/* Set the polling interval to 3 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 3000);
+		"ovd.httpProvider.sessionStatus" : new Array(function(type, source, params) {
+			if(self.session.phase == uovd.SESSION_PHASE_DESTROYED ) { return; }
+			if(self.session.phase == uovd.SESSION_PHASE_STARTED )   { self.status_check_interval = self.status_check_interval_long }
+			else                                                    { self.status_check_interval = self.status_check_interval_short; }
+
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval);
 		}),
-		"ovd.session.started" : new Array(function(type, source, params) {
-			/* Lower the polling interval to 30 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 30000);
+		"ovd.session.starting" : new Array(function(type, source, params) {
+			/* Start status checking */
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval_short);
 		}),
 		"ovd.session.destroying" : new Array(function(type, source, params) {
-			/* Set the polling interval to 3 sec */
-			clearInterval(self.status_check);
-			self.status_check = setInterval(jQuery.proxy(self.ajax_provider.sessionStatus, self.ajax_provider), 3000);
+			/* Trigger status check now !*/
+			clearTimeout(self.status_check);
+			self.status_check = setTimeout(jQuery.proxy(self.http_provider.sessionStatus, self.http_provider), self.status_check_interval_now);
 
 			/* Disconnect the client */
 			self.rdp_provider.disconnect();
@@ -101,10 +118,10 @@ uovd.SessionManagement = function(params, rdp_provider, ajax_provider, webapps_p
 		}),
 		"ovd.session.destroyed" : new Array(function(type, source, params) {
 			/* Clear status_check interval */
-			clearInterval(self.status_check);
+			clearTimeout(self.status_check);
 		}),
 		"ovd.rdpProvider.crash" : new Array(function(type, source, params) {
-			self.ajax_provider.sessionEnd();
+			self.http_provider.sessionEnd();
 		})
 	};
 }
@@ -121,11 +138,11 @@ uovd.SessionManagement.prototype.setRdpProvider = function(rdp_provider) {
 	}
 }
 
-uovd.SessionManagement.prototype.setAjaxProvider = function(ajax_provider) {
-	this.ajax_provider = ajax_provider;
+uovd.SessionManagement.prototype.setHttpProvider = function(http_provider) {
+	this.http_provider = http_provider;
 
-	if(this.ajax_provider) {
-		this.ajax_provider.session_management = this;
+	if(this.http_provider) {
+		this.http_provider.session_management = this;
 	}
 }
 
@@ -139,15 +156,15 @@ uovd.SessionManagement.prototype.setWebAppsProvider = function(webapps_provider)
 
 uovd.SessionManagement.prototype.start = function() {
 	this.session = new uovd.Session(this);
-	this.ajax_provider.sessionStart();
+	this.http_provider.sessionStart();
 }
 
 uovd.SessionManagement.prototype.stop = function() {
-	this.ajax_provider.sessionEnd();
+	this.http_provider.sessionEnd();
 }
 
 uovd.SessionManagement.prototype.suspend = function() {
-	this.ajax_provider.sessionSuspend();
+	this.http_provider.sessionSuspend();
 }
 
 uovd.SessionManagement.prototype.addCallback = function(type, func) {

@@ -1,5 +1,6 @@
-SeamlessLauncher = function(session_management, node) {
+SeamlessLauncher = function(session_management, node, logo) {
 	this.node = jQuery(node);
+	this.logo = jQuery(logo);
 	this.session_management = session_management;
 	this.applications = {}; /* application id as index */
 	this.content = {}; /* application id as index */
@@ -7,6 +8,16 @@ SeamlessLauncher = function(session_management, node) {
 
 	/* Do NOT remove ovd.session.starting in destructor as it is used as a delayed initializer */
 	this.session_management.addCallback("ovd.session.starting", this.handler);
+}
+
+SeamlessLauncher.prototype.showLauncher = function() {
+	this.menuToggled = true;
+	this.node.parent().addClass("menuToggled");
+}
+
+SeamlessLauncher.prototype.hideLauncher = function() {
+	this.menuToggled = false;
+	this.node.parent().removeClass("menuToggled");
 }
 
 SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
@@ -18,6 +29,7 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			/* register events listeners */
 			this.session_management.addCallback("ovd.session.server.statusChanged",       this.handler);
 			this.session_management.addCallback("ovd.applicationsProvider.statusChanged", this.handler);
+			this.session_management.addCallback("ovd.rdpProvider.seamless.in.windowPropertyChanged", this.handler);
 			this.session_management.addCallback("ovd.session.destroying",                 this.handler);
 
 			var servers = session.servers;
@@ -35,40 +47,46 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			for(var id in this.applications) { applications_sorted.push(this.applications[id]); }
 			applications_sorted.sort(function(a, b) { var n1=a.name.toLowerCase(); var n2=b.name.toLowerCase(); return (n1>n2 ? 1 : (n1<n2 ? -1 : 0)); })
 
+			/* URL basename for icons */
+			var icon_webservice = (session.mode_gateway == true) ? "client/icon" : "icon.php";
+
 			/* Create launchers */
-			var table = jQuery(document.createElement("table"));
-			var tbody = jQuery(document.createElement("tbody"));
+			var ul = jQuery(document.createElement("ul"));
 
 			for(var i=0 ; i<applications_sorted.length ; ++i) {
 				var id = applications_sorted[i].id;
 
-				var tr = jQuery(document.createElement("tr"));
-				tr.prop("id", "application_"+id);
-				tr.prop("className", "applicationLauncherDisabled");
+				var li = jQuery(document.createElement("li"));
+				li.prop("id", "application_"+id);
+				li.prop("className", "applicationLauncherDisabled");
 
-				var td_img = jQuery(document.createElement("td"))
 				var img = jQuery(document.createElement("img"));
 				img.addClass("application_icon");
-				img.prop("src", "icon.php?id="+id);
-				td_img.append(img);
+				img.prop("src", icon_webservice+"?id="+id);
 
-				var td_name = jQuery(document.createElement("td"));
-				td_name.addClass("application_name");
-				td_name.html(this.applications[id].name+" ");
+				var p_name = jQuery(document.createElement("p"));
+				p_name.addClass("application_name");
+				p_name.html(this.applications[id].name);
 
-				var td_count = jQuery(document.createElement("td"));
 				var count = jQuery(document.createElement("span"));
 				count.addClass("application_instance_counter");
-				td_count.append(count);
 
-				tr.append(td_img, td_name, td_count);
+				li.append(img, count, p_name);
 
-				this.content[id] = {"node":tr, "event":null};
-				tbody.append(tr);
+				this.content[id] = {"node":li, "event":null};
+				ul.append(li);
 			}
 
-			table.append(tbody);
-			this.node.append(table);
+			this.node.append(ul);
+			
+			this.logo.on("click.menuToggle", function() {
+				if (this.menuToggled) {
+					this.hideLauncher();
+				} else {
+					this.showLauncher();
+				}
+			}.bind(this));
+
 		}
 	}
 
@@ -82,22 +100,25 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 			for(var i = 0 ; i<server.applications.length ; ++i) {
 				var id = server.applications[i].id;
 				var item =  this.content[id];
-
-				var node = new jQuery(document.createElement("a"));
-				node.prop("href", "javascript:;");
-				node.html(this.applications[id].name);
-				
-				item["node"].find(":eq(2)").empty();
-				item["node"].find(":eq(2)").append(node);
-				
 				var self = this; /* closure */
 				item["event"] = function () {
-					var appId = jQuery(this).parent().parent().prop("id").split("_")[1];
+					var appId = jQuery(this).prop("id").split("_")[1];
 					self.session_management.fireEvent("ovd.log", self, {"message":"Start application "+appId, "level":"debug"});
 					self.session_management.fireEvent("ovd.applicationsProvider.applicationStart", self, {"id":appId});
+					self.content[appId]["node"].addClass("launching");
 				}
-				node.click(item["event"]);
+				item["node"].click(item["event"]);
 				item["node"].prop("className", "applicationLauncherEnabled");
+			}
+		}
+	}
+	
+	if(type == "ovd.rdpProvider.seamless.in.windowPropertyChanged") {
+		if(params["property"] == "state") {
+			var state = params["value"];
+
+			if(state == "Normal" || state == "Maximized" || state == "Fullscreen") {
+				this.hideLauncher();
 			}
 		}
 	}
@@ -121,7 +142,10 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 				node.html("");
 			} else {
 				node.html(next);
+				node.parent().addClass("launched");
+				node.parent().removeClass("launching");
 			}
+			this.hideLauncher();
 		}
 
 		if(to == uovd.APPLICATION_STOPPED) {
@@ -136,6 +160,8 @@ SeamlessLauncher.prototype.handleEvents = function(type, source, params) {
 
 			if(next == 0) {
 				node.html("");
+				node.parent().removeClass("launched");
+				node.parent().removeClass("launching");
 			} else {
 				node.html(next);
 			}
@@ -153,9 +179,12 @@ SeamlessLauncher.prototype.end = function() {
 		/* Do NOT remove ovd.session.starting as it is used as a delayed initializer */
 		this.session_management.removeCallback("ovd.session.server.statusChanged",       this.handler);
 		this.session_management.removeCallback("ovd.applicationsProvider.statusChanged", this.handler);
+		this.session_management.removeCallback("ovd.rdpProvider.seamless.in.windowPropertyChanged", this.handler);
 		this.session_management.removeCallback("ovd.session.destroying",                 this.handler);
 
 		this.applications = {};
 		this.content = {};
+		this.hideLauncher();
+		this.logo.off("click.menuToggle");
 	}
 }

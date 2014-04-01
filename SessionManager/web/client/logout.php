@@ -31,7 +31,7 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-function parse_logout_XML($xml_) {
+function parse_logout_XML($xml_, &$mode_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
 
@@ -48,12 +48,11 @@ function parse_logout_XML($xml_) {
 	if (is_null($node))
 		return false;
 
-	if (! $node->hasAttribute('mode'))
-		return false;
+	if ($node->hasAttribute('mode')) {
+		$mode_ = $node->getAttribute('mode');
+	}
 
-	$logout_mode = $node->getAttribute('mode');
-
-	return $logout_mode;
+	return true;
 }
 
 if (! array_key_exists('session_id', $_SESSION)) {
@@ -61,13 +60,22 @@ if (! array_key_exists('session_id', $_SESSION)) {
 	die();
 }
 
-$ret = parse_logout_XML(@file_get_contents('php://input'));
+$ret = parse_logout_XML(@file_get_contents('php://input'), $mode);
 if (! $ret)
 	return_error(2, 'Client does not send a valid XML');
 
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (is_object($session)) {
-	if ($ret == 'suspend')
+	if (! in_array($mode, array('suspend', 'logout'))) {
+		if ($session->settings['persistent'] == 1) {
+			$mode = 'suspend';
+		}
+		else {
+			$mode = 'logout';
+		}
+	}
+
+	if ($mode == 'suspend')
 		$session->setStatus(Session::SESSION_STATUS_INACTIVE, Session::SESSION_END_STATUS_LOGOUT);
 	else
 		$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY, Session::SESSION_END_STATUS_LOGOUT);

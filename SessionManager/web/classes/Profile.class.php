@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2010-2013 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,16 +34,12 @@ class Profile extends NetworkFolder {
 		}
 		
 		$userDB = UserDB::getInstance();
-		
 		$users = array();
 		foreach ($liaisons as $liaison) {
-			$user = $userDB->import($liaison->element);
-			if (! is_object($user))
-				continue;
-			
-			$users[$user->getAttribute('login')] = $user;
+			array_push($users, $liaison->element);
 		}
-		return $users;
+		
+		return $userDB->imports($users);
 	}
 	
 	public function addUser($user_) {

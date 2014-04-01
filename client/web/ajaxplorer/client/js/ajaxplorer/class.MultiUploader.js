@@ -135,7 +135,6 @@ MultiUploader = Class.create({
 			element.multi_index = this.id;
 			element.id = element.name;
 			$(element).addClassName("dialogFocus");
-			if(Prototype.Browser.Gecko) $(element).setStyle({left:'-100px'});
 			// Add reference to this object
 			element.multi_selector = this;
 

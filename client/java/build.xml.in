@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- Copyright (C) 2008-2013 Ulteo SAS
+ Copyright (C) 2008-2014 Ulteo SAS
  http://www.ulteo.com
  Author Gauvain POCENTEK <gpocentek@linutop.com> 2008-2009
  Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
@@ -10,8 +10,9 @@
  Author David LECHEVALIER <david@ulteo.com> 2010, 2013
  Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  Author Yann HODIQUE <y.hodique@ulteo.com> 2012
- Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
-
+ Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
+ Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
+ 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; version 2
@@ -185,6 +186,10 @@
         <attribute name="Main-Class" value="org.ulteo.ovd.integrated.Launcher"/>
       </manifest>
     </jar>
+    <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
+             destdir="jars" >
+        <fileset dir="jars" includes="ovdIntegratedLauncher.jar" />
+    </signjar>
   </target>
 
 
@@ -228,8 +233,20 @@
 
   <!-- OVD native client part -->
 
-  <target name="ovdNativeClient">
+  <target name="ovdNativeClient_certificate">
     <antcall target="precompile_client" />
+    <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
+           target="1.5" source="1.5"
+           includes="org/ulteo/ovd/premium/Certificate.java"
+           debug="${javac.debug}" debuglevel="lines,vars,source">
+      <classpath>
+        <fileset dir="required_libraries" includes="*.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="ovdNativeClient">
+    <antcall target="ovdNativeClient_certificate" />
     <javac srcdir="src;src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/NativeClient.java"
@@ -360,6 +377,14 @@
           todir="build/resources/LinuxLibs/32" failonerror="false" />
     <copy file="required_libraries/libPCSC/32/libPCSC.dll"
           todir="build/resources/WindowsLibs/32" failonerror="false" />
+    <copy file="required_libraries/librdp/64/librdp.so"
+          todir="build/resources/LinuxLibs/64" failonerror="false" />
+    <copy file="required_libraries/librdp/64/librdp.dll"
+          todir="build/resources/WindowsLibs/64" failonerror="false" />
+    <copy file="required_libraries/librdp/32/librdp.so"
+          todir="build/resources/LinuxLibs/32" failonerror="false" />
+    <copy file="required_libraries/librdp/32/librdp.dll"
+          todir="build/resources/WindowsLibs/32" failonerror="false" />
     <copy file="required_libraries/jshortcut.dll"
           todir="build/resources/WindowsLibs/32" failonerror="false" />
     <copy file="required_libraries/ICE_JNIRegistry.dll"
@@ -369,7 +394,11 @@
     <jar destfile="jars/ulteo-applet.jar" basedir="build">
       <include name="**" />
         <manifest>
-          <attribute name="Trusted-Library" value="true" />
+          <attribute name="Permissions" value="all-permissions" />
+          <attribute name="Codebase" value="*" />
+          <attribute name="Caller-Allowable-Codebase" value="*" />
+          <attribute name="Application-Library-Allowable-Codebase" value="*" />
+          <attribute name="Application-Name" value="Ulteo OVD" />
         </manifest>
     </jar>
     <signjar keystore="${keystore.path}" storepass="${keystore.password}" alias="${keystore.alias}"
@@ -431,6 +460,7 @@
         <include name="windowsPathsJNI/*" />
         <include name="libXClientArea/**" />
         <include name="libPCSC/**" />
+        <include name="librdp/**" />
       </fileset>
     </copy>
     <tar destfile="${distdir}/${sdist.name}.tar" longfile="gnu"

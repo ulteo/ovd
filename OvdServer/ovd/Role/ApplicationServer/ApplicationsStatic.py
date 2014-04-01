@@ -196,7 +196,11 @@ class ApplicationsStatic:
 			application["command"] = node.getAttribute("command")
 			application["mimetypes"] = []
 			for mimeNode in node.getElementsByTagName("mime"):
-				application["mimetypes"].append(mimeNode.getAttribute("type"))
+				m = mimeNode.getAttribute("type")
+				if len(m) == 0:
+					continue
+				
+				application["mimetypes"].append(m)
 		
 		except:
 			return None

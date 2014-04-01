@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -87,8 +88,8 @@ class Dialog(AbstractDialog):
 			if len(share_id)==0 or "/" in share_id:
 				raise Exception("invalid root node")
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -128,8 +129,8 @@ class Dialog(AbstractDialog):
 			if len(share_id)==0 or "/" in share_id:
 				raise Exception("invalid root node")
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -192,8 +193,8 @@ class Dialog(AbstractDialog):
 				shares[shareID]["quota"] = shareQuota
 				shares[shareID]["mode"] = shareMode
 		
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")
@@ -280,8 +281,8 @@ class Dialog(AbstractDialog):
 			if len(user) == 0:
 				raise Exception("empty parameters")
 			
-		except Exception, err:
-			Logger.warn("Invalid xml input: "+str(err))
+		except Exception:
+			Logger.exception("Invalid xml input")
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "usage")

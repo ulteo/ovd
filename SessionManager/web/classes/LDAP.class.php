@@ -1,11 +1,12 @@
 <?php
 /**
- * Copyright (C) 2008-2011 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  * Author Antoine WALTER <anw@ulteo.com> 2008
- * Author Julien LANGLOIS <julien@ulteo.com> 2011
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,10 +35,10 @@ class LDAP {
 
 	private $hosts = array();
 	private $port;
+	private $use_ssl = false;
 	private $login;
 	private $password;
 	private $suffix;
-	private $userbranch;
 	private $options = array();
 	private $attribs = array();
 
@@ -47,14 +48,14 @@ class LDAP {
 			$this->hosts = $config_['hosts'];
 		if (isset($config_['port']))
 			$this->port = $config_['port'];
+		if (isset($config_['use_ssl']))
+			$this->use_ssl = ($config_['use_ssl'] === 1);
 		if (isset($config_['login']))
 			$this->login = $config_['login'];
 		if (isset($config_['password']))
 			$this->password = $config_['password'];
 		if (isset($config_['suffix']))
 			$this->suffix = $config_['suffix'];
-		if (isset($config_['userbranch']))
-			$this->userbranch = $config_['userbranch'];
 		if (isset($config_['options']))
 			$this->options = $config_['options'];
 
@@ -76,7 +77,7 @@ class LDAP {
 	private function connect_on_one_host($host, &$log=array()) {
 		Logger::debug('main', 'LDAP - connect_on_one_host(\''.$host.'\', \''.$this->port.'\')');
 		$buf = false;
-		$buf = @ldap_connect($host, $this->port);
+		$buf = @ldap_connect($this->get_ldap_uri($host));
 		if (!$buf) {
 			Logger::error('main', 'Link to LDAP server failed. Please try again later.');
 			$log['LDAP connect'] = false;
@@ -86,6 +87,10 @@ class LDAP {
 
 		$this->link = $buf;
 		foreach ($this->options as $an_option => $an_value) {
+			if (! defined($an_option)) {
+				continue;
+			}
+			
 			@ldap_set_option($this->link, constant($an_option), $an_value);
 		}
 
@@ -136,20 +141,15 @@ class LDAP {
 
 		if (!$buf) {
 			Logger::error('main', "LDAP::bind bind with user '$dn_' failed : (error:".$this->errno().')');
+			$auth = '';
 			
-			$searchbase_array = array();
-			if ($this->userbranch != '') {
-				$searchbase_array []= $this->userbranch;
-			}
-			if ($this->suffix != '') {
-				$searchbase_array []= $this->suffix;
-			}
-			$searchbase = implode(',', $searchbase_array);
-			
+			if (! empty($dn_))
+				$auth = '-W -D "'.$dn_.'"';
+
 			$protocol_version = '';
 			if (array_key_exists('LDAP_OPT_PROTOCOL_VERSION', $this->options))
 				$protocol_version = '-P '.$this->options['LDAP_OPT_PROTOCOL_VERSION'];
-			$ldapsearch = 'ldapsearch -x -h "'.$this->hosts[0].'" -p '.$this->port.' '.$protocol_version.' -W -D "'.$dn_.'" -LLL -b "'.$searchbase.'"';
+			$ldapsearch = 'ldapsearch -x -H "'.$this->get_ldap_uri($this->hosts[0]).'" '.$protocol_version.' '.$auth.' -LLL -b "'.$this->suffix.'"';
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
@@ -190,18 +190,18 @@ class LDAP {
 	
 	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
-		if ($this->userbranch == '' or is_null($this->userbranch)) {
-			$searchbase = $this->suffix;
+		if (! is_null($attribs_)) {
+			$attribs_ = array_unique($attribs_);
 		}
-		else {
-			$searchbase = $this->userbranch.','.$this->suffix;
+		Logger::debug('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\','.$limit_.')');
+		if (array_key_exists('debug', $this->options)) {
+			Logger::info('main', 'LDAP - search(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\','.$limit_.')');
 		}
-		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
 
-		$ret = @ldap_search($this->link, $searchbase, $filter_, $attribs_, 0, $limit_);
+		$ret = @ldap_search($this->link, $this->suffix, $filter_, $attribs_, 0, $limit_);
 
 		if (is_resource($ret))
 			return $ret;
@@ -211,19 +211,18 @@ class LDAP {
 
 	public function searchDN($filter_, $attribs_=NULL) {
 		$this->check_link();
-		if ($this->suffix != '')
-			$searchbase =$this->userbranch.','.$this->suffix;
-		else
-			$searchbase =$this->userbranch;
+		if (! is_null($attribs_)) {
+			$attribs_ = array_unique($attribs_);
+		}
 		
-		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
+		Logger::debug('main', 'LDAP - searchDN(\''.$filter_.'\','.self::log_attribs($attribs_).',\''.$this->suffix.'\')');
 
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
 
 		$buf = explode_with_escape(',', $filter_, 2);
 
-		$ret = @ldap_search($this->link, $buf[1], $buf[0], $attribs_);
+		$ret = @ldap_search($this->link, $buf[1], $buf[0], $attribs_, 0, 1);
 
 		if (is_resource($ret))
 			return $ret;
@@ -279,5 +278,61 @@ class LDAP {
 		if (is_resource($ret))
 			return true;
 		return false;
+	}
+	
+	public static function join_filters($filters, $rule) {
+		// rule can be & or |
+		$res = array();
+		foreach($filters as $filter) {
+			if (is_null($filter)) {
+				continue;
+			}
+			
+			$filter = trim($filter);
+			if (strlen($filter) == 0) {
+				continue;
+			}
+			
+			if (! (str_startswith($filter, '(') and str_endswith($filter, ')'))) {
+				$filter = '('.$filter.')';
+			}
+			
+			array_push($res, $filter);
+		}
+		
+		switch(count($res)) {
+			case 0:
+				return null;
+			case 1:
+				return $res[0];
+			default:
+				return '('.$rule.implode('', $res).')';
+		}
+	}
+	
+	protected static function log_attribs($attribs_) {
+		if (is_null($attribs_)) {
+			return 'null';
+		}
+		elseif (is_array($attribs_)) {
+			return '['.implode(', ', $attribs_).']';
+		}
+		
+		return $attribs_;
+	}
+	
+	private function get_ldap_uri($host_) {
+		$ldap_uri = '';
+		if ($this->use_ssl)
+			$ldap_uri.= 'ldaps://';
+		else
+			$ldap_uri.= 'ldap://';
+		
+		$ldap_uri.= $host_;
+		
+		if (($this->use_ssl === false && $this->port != 389 ) || ($this->use_ssl === true && $this->port != 636 ))
+			$ldap_uri.= ":".$this->port;
+		
+		return $ldap_uri;
 	}
 }

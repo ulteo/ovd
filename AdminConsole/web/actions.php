@@ -1,14 +1,15 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2012
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,9 +25,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
 
-require_once(dirname(__FILE__).'/includes/webapp.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/webapp.inc.php');
 
 if (! is_array($_SESSION) || ! array_key_exists('admin_login', $_SESSION))
 	redirect('index.php');
@@ -88,7 +89,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 					$msg = _('Application \'%APPLICATION%\' successfully added to server \'%SERVER%\'');
 					popup_info(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 				} else {
-					$msg = _('An error occured while adding application \'%APPLICATION%\' to server \'%SERVER%\'');
+					$msg = _('An error occurred while adding application \'%APPLICATION%\' to server \'%SERVER%\'');
 					popup_error(str_replace(array('%APPLICATION%', '%SERVER%'), array($id, $_REQUEST['server']), $msg));
 				}
 			} elseif ($_REQUEST['action'] == 'del') {
@@ -203,11 +204,11 @@ if ($_REQUEST['name'] == 'Application') {
 			if ($upload['error']) {
 				switch ($upload['error']) {
 					case 1: // UPLOAD_ERR_INI_SIZE
-						popup_error(_('Oversized file for server rules'));
+						popup_error(_('File too large to be used for server rules'));
 						redirect();
 						break;
 					case 3: // UPLOAD_ERR_PARTIAL
-						popup_error(_('The file was corrupted while upload'));
+						popup_error(_('The file was corrupted during the upload'));
 						redirect();
 						break;
 					case 4: // UPLOAD_ERR_NO_FILE
@@ -355,11 +356,11 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if($upload['error']) {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+							popup_error(_('File too large to be used for server rules'));
 							redirect();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
+							popup_error(_('The file was corrupted during the upload'));
 							redirect();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
@@ -400,7 +401,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				redirect();
 			}
 
-			if(! array_key_exists('yaml_file', $_FILES)) {
+			if(! array_key_exists('app_conf_file', $_FILES)) {
 				redirect();
 			}
 
@@ -409,21 +410,21 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			$url_prefix = $_REQUEST['url_prefix'];
 			
 			if (empty($name)) {
-				popup_error(_('Empty name'));
+				popup_error(_('The Web Application name was not specified'));
 				redirect();
 			}
 			
-			$upload = $_FILES['yaml_file'];
+			$upload = $_FILES['app_conf_file'];
 
 			$have_file = true;
 			if ($upload['error']) {
 				switch ($upload['error']) {
 					case 1: // UPLOAD_ERR_INI_SIZE
-						popup_error(_('Oversized file for server rules'));
+						popup_error(_('File too large to be used for server rules'));
 						redirect();
 						break;
 					case 3: // UPLOAD_ERR_PARTIAL
-						popup_error(_('The file was corrupted while upload'));
+						popup_error(_('The file was corrupted during the upload'));
 						redirect();
 						break;
 					case 4: // UPLOAD_ERR_NO_FILE
@@ -433,7 +434,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 			
 			if (! $have_file) {
-				popup_error(_('No YAML file'));
+				popup_error(_('No configuration file was specified'));
 				redirect();
 			}
 			
@@ -444,20 +445,19 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			}
 
 			$configuration = @file_get_contents($source_file);
-			$parsed_config = yaml_parse($configuration);
+			$parsed_config = json_decode($configuration, True);
 			if(!$parsed_config){
-				popup_error(_('Incorrect YAML format'));
+				popup_error(_('Incorrect configuration file format'));
 				redirect();
 			}
 
 			if(count(array_keys($parsed_config)) > 1) {
-				popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
+				popup_info(_('Configuration file has more than one main level key. The first main level key will be used'));
 			}
 
-			$main_key = current(array_keys($parsed_config));
 			if (empty ($url_prefix)) {
-				// If no prefix was given, use one from YAML file.
-				$url_prefix = $main_key;
+				popup_error(_('No URL prefix'));
+				redirect();
 			}
 			
 			// Check if url prefix is valid.
@@ -472,8 +472,6 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				redirect();
 			}
 			
-			$config_content = $parsed_config[$main_key];
-			
 			$pieces = NULL;
 			preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
 			$has_matches = count($pieces) > 0;
@@ -481,20 +479,16 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 			if($has_matches) {
 				$dynamic_vars = array_unique($pieces[1]);
 				foreach($dynamic_vars as $index=>$varname) {
-					if (!array_key_exists($varname, $config_content['Configuration'])) {
-						popup_error(_('Incorrect YAML format - missing '.$varname.' parameter'));
+					if (!array_key_exists($varname, $parsed_config['Configuration'])) {
+						popup_error(_('Incorrect configuration file format - missing '.$varname.' parameter'));
 						redirect();
 					}
 				}
 			}
-			
-			// Transform YAML - change save under url_prefix.
-			$transformed_config = array($url_prefix => $config_content);
-			$transformed_yaml = yaml_emit($transformed_config);
 
-			$ret = $_SESSION['service']->application_webapp_add($name, $description, $transformed_yaml);
+			$ret = $_SESSION['service']->application_webapp_add($name, $description, $url_prefix, $configuration);
 			if (! $ret) {
-				popup_error(_('Unable to add web application'));
+				popup_error(_('Unable to add Web Application'));
 				redirect();
 			}
 
@@ -529,7 +523,7 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				popup_info(_('Unable to change icon'));
 			}
 			
-			popup_info(sprintf(_("Web application '%s' has been successfully uploaded"), $ret));
+			popup_info(sprintf(_("Web Application '%s' has been successfully uploaded"), $ret));
 			redirect('applications_webapp.php?action=manage&id='.$ret);
 
 		}
@@ -577,35 +571,32 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					$dynamic_variables[$attr_name] = $_REQUEST[$attr_name];
 
 			$app_id = $_REQUEST['id'];
-			$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
-			if ($raw_config !== NULL) {
-				$parsed_config = yaml_parse($raw_config);
-				$main_key = current(array_keys($parsed_config));
+			$config = $_SESSION['service']->application_webapp_info($app_id);
+			if ($config !== NULL) {
+				$parsed_config = json_decode($config['raw_configuration'], True);
 				
 				// rewrite values from request into config
 				foreach ($dynamic_variables as $name => $value) {
-					if ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'boolean') {
-						$value = (bool)$value == "on";
-					} elseif ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'url') {
+					if ($parsed_config['Configuration'][$name]['type'] === 'boolean') {
+						$dynamic_variables[$name] = (bool)$value == "on";
+					} elseif ($parsed_config['Configuration'][$name]['type'] === 'url') {
 						if (!preg_match("#((http|https)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie", $value)) {
 							popup_error(sprintf(_("Parameter '%s' is not a valid URL"), $name));
 							redirect();
 						}
-					} elseif ($parsed_config[$main_key]['Configuration'][$name]['type'] === 'inetaddr') {
+					} elseif ($parsed_config['Configuration'][$name]['type'] === 'inetaddr') {
 						if (!filter_var($value, FILTER_VALIDATE_IP)) {
 							popup_error(sprintf(_("Parameter '%s' is not a valid IP address"), $name));
 							redirect();
 						}
 					}
-					$parsed_config[$main_key]['Configuration'][$name]['value'] = $value;
 				}
 				
-				$new_config = yaml_emit($parsed_config);
-				if ($new_config != $raw_config) {
+				if ($dynamic_variables != $config['values']) {
 					//save
-					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app_id, $new_config);
+					$ret = $_SESSION['service']->application_webapp_set_values($app_id, $dynamic_variables);
 					if (! $ret) {
-						popup_error(_('Unable to update web application configuration'));
+						popup_error(_('Unable to update Web Application configuration'));
 						redirect();
 					}
 				}
@@ -615,12 +606,16 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 		// Modyfing application.
 		elseif (isset($_REQUEST['id']) && isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
 			$app = $_SESSION['service']->application_info($_REQUEST['id']);
-			if (! is_object($app)) {
+			$webapp = $_SESSION['service']->application_webapp_info($_REQUEST['id']);
+			if (! is_object($app) || $webapp === NULL) {
 				popup_error(sprintf(_("Unable to import application '%s'"), $_REQUEST['id']));
 				redirect();
 			}
 			
-			$current_url_prefix = getUrlPrefix($_REQUEST['id']);
+			$app_modified = false;
+			$webapp_modified = false;
+			
+			$current_url_prefix = $webapp['url_prefix'];
 			if (array_key_exists('url_prefix', $_REQUEST)) {
 				$form_url_prefix = $_REQUEST['url_prefix'];
 				if ($form_url_prefix) {
@@ -644,7 +639,11 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				$form_url_prefix = $current_url_prefix;
 			}
 			
-			$app_modified = false;
+			if ($form_url_prefix != $current_url_prefix) {
+				$webapp_modified = true;
+				$webapp['url_prefix'] = $form_url_prefix;
+			}
+
 			if (array_key_exists('application_name', $_REQUEST)) {
 				if ($app->getAttribute('name') != $_REQUEST['application_name']) {
 					$app_modified = true;
@@ -676,11 +675,11 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 				if($upload['error']) {
 					switch ($upload['error']) {
 						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+							popup_error(_('File too large to be used for server rules'));
 							redirect();
 							break;
 						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
+							popup_error(_('The file was corrupted during the upload'));
 							redirect();
 							break;
 						case 4: // UPLOAD_ERR_NO_FILE
@@ -704,76 +703,39 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 					}
 				}
 			}
-			if (array_key_exists('file_yaml', $_FILES)) {
-				$upload = $_FILES['file_yaml'];
-				
-				$have_file = true;
-				if($upload['error']) {
-					switch ($upload['error']) {
-						case 1: // UPLOAD_ERR_INI_SIZE
-							popup_error(_('Oversized file for server rules'));
+			if (array_key_exists('app_conf_raw', $_REQUEST)) {
+				$configuration = $_REQUEST['app_conf_raw'];
+				$parsed_config = json_decode($configuration, True);
+				if(!$parsed_config){
+					popup_error(_('Incorrect configuration file format'));
+					redirect();
+				}
+
+				$pieces = NULL;
+				preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
+				$has_matches = count($pieces) > 0;
+
+				if($has_matches) {
+					$dynamic_vars = array_unique($pieces[1]);
+					foreach($dynamic_vars as $index=>$name) {
+						if (!array_key_exists($name, $parsed_config['Configuration'])) {
+							popup_error(_('Incorrect configuration file format - missing '.$name.' parameter'));
 							redirect();
-							break;
-						case 3: // UPLOAD_ERR_PARTIAL
-							popup_error(_('The file was corrupted while upload'));
-							redirect();
-							break;
-						case 4: // UPLOAD_ERR_NO_FILE
-							$have_file = false;
-							break;
+						}
 					}
 				}
-				
-				if ($have_file) {
-					$source_file = $upload['tmp_name'];
-					if (! is_readable($source_file)) {
-						popup_error(_('The file is not readable'));
-						redirect();
-					}
-					
-					$configuration = @file_get_contents($source_file);
-					$parsed_config = yaml_parse($configuration);
-					if(!$parsed_config){
-						popup_error(_('Incorrect YAML format'));
-						redirect();
-					}
 
-					if(count(array_keys($parsed_config)) > 1)
-						popup_info(_('YAML file has more than one main level key, using first, rest will be ignored'));
-
-					$main_key = current(array_keys($parsed_config));
-					$pieces = NULL;
-					preg_match_all('/\$\((\w+)\)/m', $configuration, $pieces);
-					$has_matches = count($pieces) > 0;
-
-					if($has_matches) {
-						$dynamic_vars = array_unique($pieces[1]);
-						foreach($dynamic_vars as $index=>$name) {
-							if (!array_key_exists($name, $parsed_config[$main_key]['Configuration'])) {
-								popup_error(_('Incorrect YAML format - missing '.$name.' parameter'));
-								redirect();
-							}
-						}
-					}
-
-					$transformed_config = array($form_url_prefix => $parsed_config[$main_key]);
-					$transformed_yaml = yaml_emit($transformed_config);
-					
-					$ret = $_SESSION['service']->application_webapp_set_raw_configuration($app->getAttribute('id'), $transformed_yaml);
-					if (! $ret) {
-						popup_error(_('Unable to change yaml'));
-						redirect();
-					}
-				} else {
-					// Check if we need to change url prefix.
-					if ($form_url_prefix != $current_url_prefix) {
-						// Just change the prefix.
-						$ret = changeUrlPrefix($app->getAttribute('id'), $form_url_prefix);
-						if (! $ret) {
-							popup_info(_('Unable to update web application prefix'));
-							// Warn, but continue flow.
-						}
-					}
+				if ($configuration != $webapp['raw_configuration']) {
+					$webapp['raw_configuration'] = $configuration;
+					$webapp_modified = true;
+				}
+			}
+			
+			if ($webapp_modified) {
+				$ret = $_SESSION['service']->application_webapp_modify($app->getAttribute('id'), $webapp);
+				if (! $ret) {
+					popup_error(_('Unable to change configuration'));
+					redirect();
 				}
 			}
 			$app_id = $app->getAttribute('id');
@@ -791,22 +753,22 @@ if ($_REQUEST['name'] == 'Application_webapp') {
 
 		$ret = $_SESSION['service']->application_webapp_clone($_REQUEST['id']);
 		if (! $ret) {
-			popup_error(sprintf(_("Failed to clone web application '%s'"), $app->getAttribute('name')));
+			popup_error(sprintf(_("Failed to clone Web Application '%s'"), $app->getAttribute('name')));
 			redirect();
 		}
-		popup_info(sprintf(_("Web application '%s' successfully added"), $app->getAttribute('name')));
+		popup_info(sprintf(_("Web Application '%s' successfully added"), $app->getAttribute('name')));
 		redirect('applications_webapp.php');
 	}
 	
 	if ($_REQUEST['action'] == 'download') {
 		$app_id = $_REQUEST['id'];
-		$raw_config = $_SESSION['service']->application_webapp_get_raw_configuration($app_id);
+		$config = $_SESSION['service']->application_webapp_info($app_id);
 
-		if($raw_config!==NULL) {
-			header('Content-disposition: attachment; filename=webapp_'.$app_id.'_config.yaml');
-			header('Content-type: application/x-yaml');
+		if ($config!==NULL) {
+			header('Content-disposition: attachment; filename=webapp_'.$app_id.'_config.json');
+			header('Content-type: application/x-json');
 			$ignore_redirect = true;
-			print $raw_config;
+			print $config['raw_configuration'];
 		} else {
 			popup_error(sprintf(_("Failed to get application's configuration '%s'"), $_REQUEST['id']));
 			redirect('applications_webapp.php');
@@ -861,14 +823,14 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		$ret = $_SESSION['service']->applications_group_add_application($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+			popup_info(sprintf(_('Application Group \'%s\' successfully modified'), $group->name));
 		}
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$ret = $_SESSION['service']->applications_group_remove_application($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+			popup_info(sprintf(_('Application Group \'%s\' successfully modified'), $group->name));
 		}
 	}
 }
@@ -884,11 +846,11 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			
 			$res = $_SESSION['service']->applications_group_add($name, $description);
 			if (!$res) {
-				popup_error(sprintf(_("Unable to create applications group '%s'"), $name));
+				popup_error(sprintf(_("Unable to create Application Group '%s'"), $name));
 				redirect('appsgroup.php');
 			}
 			
-			popup_info(sprintf(_("Applications group '%s' successfully added"), $name));
+			popup_info(sprintf(_("Application Group '%s' successfully added"), $name));
 			redirect('appsgroup.php?action=manage&id='.$res);
 		}
 	}
@@ -899,16 +861,16 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			foreach ($ids as $id) {
 				$group = $_SESSION['service']->applications_group_info($id);
 				if (! is_object($group)) {
-					popup_error(sprintf(_("Importing applications group '%s' failed"), $id));
+					popup_error(sprintf(_("Importing Application Group '%s' failed"), $id));
 					continue;
 				}
 				
 				$res = $_SESSION['service']->applications_group_remove($id);
 				if (! $res) {
-					popup_error(sprintf(_("Unable to remove applications group '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to remove Application Group '%s'"), $group->name));
 					continue;
 				}
-				popup_info(sprintf(_("Applications group '%s' successfully deleted"), $group->name));
+				popup_info(sprintf(_("Application Group '%s' successfully deleted"), $group->name));
 			}
 			redirect('appsgroup.php');
 		}
@@ -919,7 +881,7 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			$id = $_REQUEST['id'];
 			$group = $_SESSION['service']->applications_group_info($id);
 			if (! is_object($group))
-				popup_error(sprintf(_("Import of applications group '%s' failed"), $id));
+				popup_error(sprintf(_("Import of Application Group '%s' failed"), $id));
 			
 			$has_change = false;
 			
@@ -941,12 +903,74 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			if ($has_change) {
 				$res = $_SESSION['service']->applications_group_modify($group->id, $group->name, $group->description, $group->published);
 				if (! $res)
-					popup_error(sprintf(_("Unable to modify applications group '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to modify Application Group '%s'"), $group->name));
 				else
-					popup_info(sprintf(_("Applications group '%s' successfully modified"), $group->name));
+					popup_info(sprintf(_("Application Group '%s' successfully modified"), $group->name));
 			}
 			redirect('appsgroup.php?action=manage&id='.$group->id);
 		}
+	}
+}
+
+
+if ($_REQUEST['name'] == 'Certificate') {
+	if (! checkAuthorization('manageConfiguration'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (! array_key_exists('certificate', $_FILES)) {
+			popup_info(_("No Subscription Keys were uploaded"));
+			redirect();
+		}
+		
+		$upload = $_FILES['certificate'];
+		if ($upload['error']) {
+			switch ($upload['error']) {
+				case 1: // UPLOAD_ERR_INI_SIZE
+					popup_error(_('File too large to be used for server rules'));
+					break;
+				case 3: // UPLOAD_ERR_PARTIAL
+					popup_error(_('The file was corrupted during the upload'));
+					break;
+				case 4: // UPLOAD_ERR_NO_FILE
+					popup_error(_('No files were uploaded'));
+					break;
+			}
+			
+			redirect();
+		}
+		
+		$source_file = $upload['tmp_name'];
+		if (! is_readable($source_file)) {
+			popup_error(_('The file is not readable'));
+			redirect();
+		}
+
+		$content = @file_get_contents($source_file);
+		if (strlen($content) == 0) {
+			popup_error(_('The file is empty'));
+			redirect();
+		}
+		
+		$res = $_SESSION['service']->certificate_add(base64_encode($content));
+		if (! $res) {
+			popup_error(_('The uploaded file is not a valid Subscription Key'));
+			redirect();
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (empty($_REQUEST['id'])) {
+			redirect();
+		}
+		
+		$_SESSION['service']->certificate_del($_REQUEST['id']);
+		redirect();
+	}
+
+	if ($_REQUEST['action'] == 'reset_named_users') {
+		$_SESSION['service']->certificate_reset_named_users();
+		redirect();
 	}
 }
 
@@ -955,15 +979,15 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
-		$ret = $_SESSION['service']->user_addToGroup($_REQUEST['element'], $_REQUEST['group']);
+		$ret = $_SESSION['service']->users_group_add_user($_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true) {
 			$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
 			if (is_object($group)) {
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+				popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 			}
 			else {
 				// problem, what to do ?
-				popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']));
+				popup_info(sprintf(_('User Group \'%s\' successfully modified'), $_REQUEST['group']));
 			}
 		}
 	}
@@ -971,17 +995,17 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'del') {
 		$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
 		if (! is_object($group)) {
-			popup_error(sprintf(_("Usergroup '%s' does not exist"), $_REQUEST['group']));
+			popup_error(sprintf(_("User Group '%s' does not exist"), $_REQUEST['group']));
 			redirect();
 		}
 
 		if ($group->isDefault()) {
-			popup_error(sprintf(_("Unable to remove a user from usergroup '%s' because it is the default usergroup"), $group->name));
+			popup_error(sprintf(_("Unable to remove a user from User Group '%s' because it is the default User Group"), $group->name));
 			redirect();
 		}
 
-		$_SESSION['service']->user_removeToGroup($_REQUEST['element'], $_REQUEST['group']);
-		popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+		$_SESSION['service']->users_group_remove_user($_REQUEST['element'], $_REQUEST['group']);
+		popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 		
 		redirect();
 	}
@@ -997,19 +1021,19 @@ if ($_REQUEST['name'] == 'Publication') {
 	if ($_REQUEST['action'] == 'add') {
 		$usergroup = $_SESSION['service']->users_group_info($_REQUEST['group_u']);
 		if (is_object($usergroup) == false) {
-			popup_error(sprintf(_("Importing usergroup '%s' failed"), $_REQUEST['group_u']));
+			popup_error(sprintf(_("Importing User Group '%s' failed"), $_REQUEST['group_u']));
 			redirect();
 		}
 		
 		$applicationsgroup = $_SESSION['service']->applications_group_info($_REQUEST['group_a']);
 		if (is_object($applicationsgroup) == false) {
-			popup_error(sprintf(_("Importing applications group '%s' failed"), $_REQUEST['group_a']));
+			popup_error(sprintf(_("Importing Application Group '%s' failed"), $_REQUEST['group_a']));
 			redirect();
 		}
 		
 		$res = $_SESSION['service']->publication_add($_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (! $res) {
-			popup_error(_('Unable to save the publication'));
+			popup_error(_('Unable to save the Publication'));
 			redirect();
 		}
 		
@@ -1019,7 +1043,7 @@ if ($_REQUEST['name'] == 'Publication') {
 	if ($_REQUEST['action'] == 'del') {
 		$res = $_SESSION['service']->publication_remove($_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (! $res) {
-			popup_error(_('Unable to delete the publication'));
+			popup_error(_('Unable to delete the Publication'));
 			redirect();
 		}
 		
@@ -1034,12 +1058,12 @@ if ($_REQUEST['name'] == 'UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		if (isset($_REQUEST['type']) && isset($_REQUEST['name_group']) &&  isset($_REQUEST['description_group'])) {
 			if ($_REQUEST['name_group'] == '') {
-				popup_error(_('You must define a name for your usergroup'));
+				popup_error(_('You must define a name for your User Group'));
 				redirect('usersgroup.php');
 			}
 			
 			if ($_REQUEST['type'] == 'static') {
-				$res = $_SESSION['service']->user_addsGroup($_REQUEST['name_group'], $_REQUEST['description_group']);
+				$res = $_SESSION['service']->users_group_add($_REQUEST['name_group'], $_REQUEST['description_group']);
 			}
 			elseif ($_REQUEST['type'] == 'dynamic') {
 				if ($_REQUEST['cached'] === '0') {
@@ -1050,22 +1074,22 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				}
 				
 				if (!$res) {
-					popup_error(sprintf(_("Unable to create usergroup '%s'"), $_REQUEST['name_group']));
+					popup_error(sprintf(_("Unable to create User Group '%s'"), $_REQUEST['name_group']));
 					redirect('usersgroup.php');
 				}
 				
 				$res = $_SESSION['service']->users_group_dynamic_modify($res, $_POST['rules'], $_REQUEST['validation_type']);
 			}
 			else {
-				die_error(_('Unknow usergroup type'));
+				die_error(_('Unknown User Group type'));
 			}
 			
 			if (!$res) {
-				popup_error(sprintf(_("Unable to create usergroup '%s'"), $_REQUEST['name_group']));
+				popup_error(sprintf(_("Unable to create User Group '%s'"), $_REQUEST['name_group']));
 				redirect('usersgroup.php');
 			}
 			
-			popup_info(_('UserGroup successfully added'));
+			popup_info(_('User Group successfully added'));
 			redirect('usersgroup.php?action=manage&id='.$res);
 		}
 	}
@@ -1075,16 +1099,16 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			foreach ($_REQUEST['checked_groups'] as $id) {
 				$group = $_SESSION['service']->users_group_info($id);
 				if (! is_object($group)) {
-					popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+					popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 					redirect();
 				}
 				
-				$res = $_SESSION['service']->user_removesGroup($id);
+				$res = $_SESSION['service']->users_group_remove($id);
 				if (! $res) {
-					popup_error(sprintf(_("Unable to remove usergroup '%s'"), $id));
+					popup_error(sprintf(_("Unable to remove User Group '%s'"), $id));
 				}
 				
-				popup_info(sprintf(_("UserGroup '%s' successfully deleted"), $group->name));
+				popup_info(sprintf(_("User Group '%s' successfully deleted"), $group->name));
 			}
 			redirect('usersgroup.php');
 		}
@@ -1096,7 +1120,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			
 			$group = $_SESSION['service']->users_group_info($id);
 			if (! is_object($group)) {
-				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+				popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 				redirect();
 			}
 			
@@ -1118,9 +1142,9 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			}
 			
 			if ($has_change) {
-				$ret = $_SESSION['service']->user_modifysGroup($group->id, $group->name, $group->description, $group->published);
+				$ret = $_SESSION['service']->users_group_modify($group->id, $group->name, $group->description, $group->published);
 				if (! $ret) {
-					popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 					redirect();
 				}
 			}
@@ -1128,12 +1152,12 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			if (isset($_REQUEST['schedule'])) {
 				$ret = $_SESSION['service']->users_group_dynamic_cached_set_schedule($group->id, $_REQUEST['schedule']);
 				if (! $ret) {
-					popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+					popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 					redirect();
 				}
 			}
 			
-			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			popup_info(sprintf(_("User Group '%s' successfully modified"), $group->name));
 			redirect('usersgroup.php?action=manage&id='.$group->id);
 		}
 	}
@@ -1158,7 +1182,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 				$_SESSION['service']->system_unset_default_users_group();
 			}
 			
-			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			popup_info(sprintf(_("User Group '%s' successfully modified"), $group->name));
 			redirect('usersgroup.php?action=manage&id='.$group->id);
 			
 		}
@@ -1169,13 +1193,13 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			$id = $_REQUEST['id'];
 			$group = $_SESSION['service']->users_group_info($id);
 			if (! is_object($group)) {
-				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+				popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 				redirect();
 			}
 			
 			$res = $_SESSION['service']->users_group_dynamic_modify($id, $_POST['rules'], $_REQUEST['validation_type']);
 			if (! $res) 
-				popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+				popup_error(sprintf(_("Unable to update User Group '%s'"), $group->name));
 			else
 				popup_info(sprintf(_("Rules of '%s' successfully modified"), $group->name));
 			
@@ -1205,16 +1229,16 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 
 	$group = $_SESSION['service']->users_group_info($_REQUEST['id']);
 	if (! is_object($group)) {
-		popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
+		popup_error(sprintf(_("Failed to import User Group '%s'"), $id));
 		redirect();
 	}
 
 	if ($_REQUEST['action'] == 'add')
-		$res = $_SESSION['service']->user_addsGroup_policy($group->id, $_REQUEST['element']);
+		$res = $_SESSION['service']->users_group_add_policy($group->id, $_REQUEST['element']);
 	else
-		$res = $_SESSION['service']->user_removesGroup_policy($group->id, $_REQUEST['element']);
+		$res = $_SESSION['service']->users_group_remove_policy($group->id, $_REQUEST['element']);
 
-	popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
+	popup_info(sprintf(_('User Group \'%s\' successfully modified'), $group->name));
 	redirect();
 }
 
@@ -1252,10 +1276,10 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 		}
 		
 		if ($ret === true) {
-			popup_info(_('Usergroup successfully modified'));
+			popup_info(_('User Group successfully modified'));
 		}
 		else if ($ret === false) {
-			popup_error(_('Failed to modify usergroup'));
+			popup_error(_('Failed to modify User Group'));
 		}
 	}
 }
@@ -1318,7 +1342,7 @@ if ($_REQUEST['name'] == 'User') {
 		
 		$res = $_SESSION['service']->user_modify($login, $displayname, $password);
 		if (! $res)
-			die_error(sprintf(_("Unable to modify user '%s'"), $login), __FILE__, __LINE__);
+			die_error(sprintf(_("Unable to modify User '%s'"), $login), __FILE__, __LINE__);
 		
 		popup_info(sprintf(_("User '%s' successfully modified"), $login));
 		redirect('users.php?action=manage&id='.$login);
@@ -1328,7 +1352,7 @@ if ($_REQUEST['name'] == 'User') {
 		$override = ($_REQUEST['override'] == '1');
 		if ($_REQUEST['password'] == 'custom') {
 			if (strlen($_REQUEST['password_str']) == 0) {
-				popup_error(_('No custom password given for populating the database.'));
+				popup_error(_('No custom password specified for populating the database.'));
 				redirect();
 			}
 			
@@ -1385,7 +1409,7 @@ if ($_REQUEST['name'] == 'User_settings') {
 			popup_info(_('User successfully modified'));
 		}
 		else if ($ret === false) {
-			popup_error(_('Failed to modify user'));
+			popup_error(_('Failed to modify User'));
 		}
 	}
 }
@@ -1487,7 +1511,7 @@ if ($_REQUEST['name'] == 'Profile') {
 		}
 		
 		foreach ($_REQUEST['users'] as $user_login) {
-			$res = $_SESSION['service']->user_addProfile($user_login);
+			$res = $_SESSION['service']->user_profile_add($user_login);
 			if (! $res) {
 				popup_error(_('Unable to associate the user to the profile'));
 				redirect();
@@ -1501,7 +1525,7 @@ if ($_REQUEST['name'] == 'Profile') {
 
 	if ($_REQUEST['action'] == 'del') {
 		foreach ($_REQUEST['ids'] as $id) {
-			$res = $_SESSION['service']->user_removeProfile($id);
+			$res = $_SESSION['service']->user_profile_remove($id);
 			if (! $res) {
 				popup_error(sprintf(_("Unable to delete profile '%s'"), $id));
 			}
@@ -1511,6 +1535,128 @@ if ($_REQUEST['name'] == 'Profile') {
 		}
 
 		redirect();
+	}
+}
+
+if ($_REQUEST['name'] == 'ServersGroup') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if ( isset($_REQUEST['name_group']) && isset($_REQUEST['description_group'])) {
+			$name = $_REQUEST['name_group'];
+			$description = $_REQUEST['description_group'];
+			
+			$res = $_SESSION['service']->servers_group_add($name, $description);
+			if (!$res) {
+				popup_error(sprintf(_("Unable to create server group '%s'"), $name));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("Server group '%s' successfully added"), $name));
+			redirect('serversgroup.php?action=manage&id='.$res);
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_groups']) and is_array($_REQUEST['checked_groups'])) {
+			$ids = $_REQUEST['checked_groups'];
+			foreach ($ids as $id) {
+				$res = $_SESSION['service']->servers_group_remove($id);
+				if (! $res) {
+					popup_error(sprintf(_("Unable to remove group '%s'"), $id));
+					continue;
+				}
+				
+				popup_info(sprintf(_("Server Group '%s' successfully deleted"), $id));
+			}
+			
+			redirect('serversgroup.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		if (isset($_REQUEST['id']) && (isset($_REQUEST['name_group']) || isset($_REQUEST['description_group']) || isset($_REQUEST['published_group']))) {
+			$id = $_REQUEST['id'];
+			$name = null;
+			$description = null;
+			$published = null;
+			
+			if (isset($_REQUEST['name_group'])) {
+				$name = $_REQUEST['name_group'];
+			}
+			
+			if (isset($_REQUEST['description_group'])) {
+				$description = $_REQUEST['description_group'];
+			}
+			
+			if (isset($_REQUEST['published_group'])) {
+				$published = (bool)$_REQUEST['published_group'];
+			}
+			
+			$res = $_SESSION['service']->servers_group_modify($id, $name, $description, $published);
+			if (! $res) {
+				popup_error(sprintf(_("Unable to modify application group '%s'"), $id));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("Application Group '%s' successfully modified"), $name));
+			redirect('serversgroup.php?action=manage&id='.$id);
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'Server_ServersGroup') {
+	if (! checkAuthorization('manageServers')) {
+		redirect();
+	}
+	
+	if (! isset($_REQUEST['server']) && isset($_REQUEST['group'])) {
+		redirect();
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->servers_group_add_server($_REQUEST['server'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('Server Group \'%s\' successfully modified'), $_REQUEST['group']));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->servers_group_remove_server($_REQUEST['server'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('Server Group \'%s\' successfully modified'), $_REQUEST['group']));
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'UsersGroupServersGroup') {
+	if (! checkAuthorization('managePublications')) {
+		redirect();
+	}
+	
+	if (!isset($_REQUEST['servers_group']) or !isset($_REQUEST['users_group'])) {
+		redirect();
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->servers_group_publication_add($_REQUEST['users_group'], $_REQUEST['servers_group']);
+		if ($ret !== true) {
+			popup_error(_('Unable to save the publication'));
+			redirect();
+		}
+		
+		popup_info(_('Publication successfully added'));
+	}
+
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->servers_group_publication_remove($_REQUEST['users_group'], $_REQUEST['servers_group']);
+		if ($ret !== true) {
+			popup_error(_('Unable to delete the publication'));
+			redirect();
+		}
+		
+		popup_info(_('Publication successfully deleted'));
 	}
 }
 
@@ -1547,7 +1693,81 @@ if ($_REQUEST['name'] == 'News') {
 		redirect();
 	}
 }
+if ($_REQUEST['name'] == 'Script') {
+	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['script_name']) && isset($_REQUEST['script_data'])) {
+		$data = $_REQUEST['script_data'];
+		if (array_key_exists('script_file', $_FILES) && trim($data) == '') {
+			$upload = $_FILES['script_file'];
+			
+			$have_file = true;
+			if ($upload['error']) {
+				switch ($upload['error']) {
+					case 1: // UPLOAD_ERR_INI_SIZE
+						popup_error(_('File too large to be used for server rules'));
+						redirect();
+						break;
+					case 3: // UPLOAD_ERR_PARTIAL
+						popup_error(_('The file was corrupted during the upload'));
+						redirect();
+						break;
+					case 4: // UPLOAD_ERR_NO_FILE
+						$have_file = false;
+						break;
+				}
+			}
+			
+			if ($have_file) {
+				$source_file = $upload['tmp_name'];
+				if (! is_readable($source_file)) {
+					popup_error(_('The file is not readable'));
+					redirect();
+				}
+				
+				$data = @file_get_contents($source_file);
+			}
+		}
+		
+		$ret = $_SESSION['service']->script_add($_REQUEST['script_name'], $_REQUEST['script_os'], $_REQUEST['script_type'], $data);
 
+		if ($ret === true)
+			popup_info(_('Script successfully added'));
+		redirect();
+	}
+	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['id'])) {
+		$buf = $_SESSION['service']->script_remove($_REQUEST['id']);
+
+		if (! $buf)
+			popup_error(_('Unable to delete this script'));
+		else
+			popup_info(_('Script successfully deleted'));
+
+		redirect();
+	}
+}
+
+if ($_REQUEST['name'] == 'Script_UserGroup') {
+	if (! checkAuthorization('manageScriptsGroups'))
+		redirect();
+	
+	$group = $_SESSION['service']->users_group_info($_REQUEST['group']);
+	if (! is_object($group)) {
+		popup_error(sprintf(_('Unable to import group "%s"'), $_REQUEST['group']));
+		redirect();
+	}
+	if ($_REQUEST['action'] == 'add') {
+		$ret = $_SESSION['service']->users_group_add_script($_REQUEST['element'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('UserGroup \'%s\' successfully modified'), $group->name));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		$ret = $_SESSION['service']->users_group_remove_script($_REQUEST['element'], $_REQUEST['group']);
+		if ($ret === true) {
+			popup_info(sprintf(_('UserGroup \'%s\' successfully modified'), $group->name));
+		}
+	}
+}
 if ($_REQUEST['name'] == 'password') {
 	if ($_REQUEST['action'] == 'change') {
 		if (isset($_REQUEST['password_current']) && isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {
@@ -1596,6 +1816,25 @@ if ($_REQUEST['name'] == 'Session') {
 			redirect('sessions.php');
 		}
 	}
+	
+	if ($_REQUEST['action'] == 'disc') {
+		if (! checkAuthorization('manageSession'))
+			redirect();
+		
+		if (isset($_REQUEST['selected_session']) && is_array($_REQUEST['selected_session'])) {
+			foreach ($_POST['selected_session'] as $session) {
+				$ret = $_SESSION['service']->session_disconnect($session);
+				if (! $ret) {
+					popup_error(sprintf(_("Unable to disconnect session '%s'"), $session));
+					continue;
+				}
+				else {
+					popup_info(sprintf(_("Session '%s' successfully disconnected"), $session));
+				}
+			}
+			redirect('sessions.php');
+		}
+	}
 }
 
 if ($_REQUEST['name'] == 'Server') {
@@ -1634,7 +1873,7 @@ if ($_REQUEST['name'] == 'Server') {
 				}
 				else {
 					$errors = true;
-					popup_error(sprintf(_("Failed to register Server '%s'"), $buf->getDisplayName()));
+					popup_error(sprintf(_("Failed to register server '%s'"), $buf->getDisplayName()));
 				}
 			}
 		}

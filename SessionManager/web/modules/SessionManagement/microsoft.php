@@ -31,7 +31,7 @@ class SessionManagement_microsoft extends SessionManagement {
 	}
 
 	public static function getServerRoles() {
-		return array(Server::SERVER_ROLE_APS);
+		return array(Server::SERVER_ROLE_APS, Server::SERVER_ROLE_WEBAPPS);
 	}
 
 	public static function getApplicationServerTypes() {

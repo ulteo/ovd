@@ -242,7 +242,7 @@ class UserGroupDBDynamicCached_internal extends UserGroupDBDynamicCached {
 		}
 	}
 	
-	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0, $user_=null) {
 		$groups = array();
 		$count = 0;
 		$sizelimit_exceeded = false;

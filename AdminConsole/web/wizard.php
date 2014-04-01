@@ -21,8 +21,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once(dirname(__FILE__).'/includes/page_template.php');
+require_once(dirname(dirname(__FILE__)).'/includes/core.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/page_template.php');
 
 if (! checkAuthorization('managePublications'))
 	redirect('index.php');
@@ -37,7 +37,7 @@ if (isset($_POST['from'])) {
 			$_SESSION['wizard']['use_users'] = 'usergroups';
 
 			if (!isset($_POST['usergroups']) || !is_array($_POST['usergroups'])) {
-				popup_error(_('No user group selected'));
+				popup_error(_('No User Group selected'));
 				show_step1();
 			} else {
 				$_SESSION['wizard']['usergroups'] = $_POST['usergroups'];
@@ -47,7 +47,7 @@ if (isset($_POST['from'])) {
 			$_SESSION['wizard']['use_users'] = 'users';
 
 			if (!isset($_POST['users']) || !is_array($_POST['users'])) {
-				popup_error(_('No user selected'));
+				popup_error(_('No User selected'));
 				show_step1();
 			} else {
 				$_SESSION['wizard']['users'] = $_POST['users'];
@@ -61,7 +61,7 @@ if (isset($_POST['from'])) {
 			show_step1();
 		elseif (isset($_POST['submit_next'])) {
 			if (!isset($_POST['group_name']) || $_POST['group_name'] === '') {
-				popup_error(_('No group name'));
+				popup_error(_('No group name specified'));
 				show_step2();
 			} else {
 				$_SESSION['wizard']['user_group_name'] = $_POST['group_name'];
@@ -85,7 +85,7 @@ if (isset($_POST['from'])) {
 		} elseif (isset($_POST['submit_next'])) {
 			if ($_SESSION['wizard']['use_apps'] == 'appgroups')
 				if (!isset($_POST['appgroups']) || !is_array($_POST['appgroups'])) {
-					popup_error(_('No application group selected'));
+					popup_error(_('No Application Group selected'));
 					show_step3();
 				} else {
 					$_SESSION['wizard']['appgroups'] = $_POST['appgroups'];
@@ -93,7 +93,7 @@ if (isset($_POST['from'])) {
 				}
 			elseif ($_SESSION['wizard']['use_apps'] == 'apps')
 				if (!isset($_POST['apps']) || !is_array($_POST['apps'])) {
-					popup_error(_('No application selected'));
+					popup_error(_('No Application selected'));
 					show_step3();
 				} else {
 					$_SESSION['wizard']['apps'] = $_POST['apps'];
@@ -107,7 +107,7 @@ if (isset($_POST['from'])) {
 			show_step3();
 		elseif (isset($_POST['submit_next'])) {
 			if (!isset($_POST['group_name']) || $_POST['group_name'] === '') {
-				popup_error(_('No group name'));
+				popup_error(_('No group name specified'));
 				show_step4();
 			} else {
 				$_SESSION['wizard']['application_group_name'] = $_POST['group_name'];
@@ -138,7 +138,7 @@ function show_step1() {
 	$usergroups = $usersgroupsList->search();
 	if (! is_array($usergroups)) {
 		$usergroups = array();
-		popup_error(_("Failed to get users groups list"));
+		popup_error(_("Failed to get User Group data"));
 	}
 	uasort($usergroups, "usergroup_cmp");
 	$searchDiv = $usersgroupsList->getForm();
@@ -171,17 +171,17 @@ function show_step1() {
   $applications = $_SESSION['service']->applications_list();
 
   if (!count($users))
-    popup_error(_('No available user'));
+    popup_error(_('No available users'));
   if (!count($applications))
-    popup_error(_('No available application'));
+    popup_error(_('No available applications'));
   if ($sizelimit_exceeded) {
-    popup_error(_('Unable to display users list: too many users'));
+    popup_error(_('Unable to display the list of users: too many users'));
     $users = array();
   }
 
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('User/group selection').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Select User Groups').'</h1>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step1" />';
@@ -193,13 +193,13 @@ function show_step1() {
 		echo '<input class="input_radio" type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
 		if (!$usergroup_selected)
 			echo ' checked="checked"';
-		echo '/>'._('Create a group with users');
+		echo '/>'._('Create a new User Group');
 	}
 	echo '</th>';
 	echo '<th><input class="input_radio" type="radio" name="use" value="usergroups" onclick="$(\'wizard_users_list_table\').hide(); $(\'wizard_usergroups_list_table\').show()"';
 	if ($usergroup_selected)
 		echo ' checked="checked"';
-	echo '/> '._('Use usergroups').'</th>';
+	echo '/> '._('Use existing User Groups').'</th>';
 	echo '</tr>';
   } else
   	echo '<input type="hidden" name="use" value="users" />';
@@ -268,7 +268,7 @@ function show_step2() {
 
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create usergroup').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create User Group').'</h1>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step2" />';
@@ -323,11 +323,11 @@ function show_step3() {
   $has_applications  = $applications !== array() && !is_null($applications);
 
   if (!$has_applications) {
-    popup_error(_('No available application'));
+    popup_error(_('No available applications'));
   }
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Select Application Groups').'</h1>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step3" />';
@@ -339,11 +339,11 @@ function show_step3() {
 	echo '<th><input class="input_radio" type="radio" name="use" value="apps" onclick="$(\'wizard_appgroups_list_table\').hide(); $(\'wizard_apps_list_table\').show()"';
 	if (!$appgroup_selected)
 		echo ' checked="checked"';
-	echo '/>'._('Create a group with applications').'</th>';
+	echo '/>'._('Create a new Application Group').'</th>';
 	echo '<th><input class="input_radio" type="radio" name="use" value="appgroups" onclick="$(\'wizard_apps_list_table\').hide(); $(\'wizard_appgroups_list_table\').show()"';
 	if ($appgroup_selected)
 		echo ' checked="checked"';
-	echo '/> '._('Use an application group').'</th>';
+	echo '/> '._('Use an existing Application Group').'</th>';
 	echo '</tr>';
   } else
   	echo '<input type="hidden" name="use" value="apps" />';
@@ -417,7 +417,7 @@ function show_step4() {
   $count = 0;
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create application group').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create Application Group').'</h1>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step4" />';
@@ -462,7 +462,7 @@ function show_step5() {
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Confirmation').'</h1>';
 
-  echo '<p>'._('Are you sure that you want to create this publication?').'</p>';
+  echo '<p>'._('Are you sure that you want to create this Publication?').'</p>';
 
 	echo '<table style="width: 50%;" border="0" cellspacing="1" cellpadding="3">';
 	echo '<tr>';
@@ -471,16 +471,16 @@ function show_step5() {
 	if ($_SESSION['wizard']['use_users'] == 'usergroups') {  
 		echo '<p style="font-weight: bold;">';
 		if (count($_SESSION['wizard']['usergroups']) == 1)
-			echo _('Between this users group');
+			echo _('Between this User Group');
 		else
-			echo _('Between these users groups');
+			echo _('Between these User Groups');
 		echo '</p>';
 
 		echo '<ul>';
 		foreach ($_SESSION['wizard']['usergroups'] as $ug_id) {
 			$ug = $_SESSION['service']->users_group_info($ug_id);
 			if (! is_object($ug)) {
-				popup_error(sprintf(_("Unable to load users group '%s'"), $ug_id));
+				popup_error(sprintf(_("Unable to load User Group '%s'"), $ug_id));
 				continue;
 			}
 
@@ -489,7 +489,7 @@ function show_step5() {
 		echo '</ul>';
 	} elseif ($_SESSION['wizard']['use_users'] == 'users') {
 		echo '<p style="font-weight: bold;">';
-		echo _('Between this newly created users group');
+		echo _('Between this newly created User Group');
 		echo '</p>';
 
 		echo '<ul>';
@@ -517,9 +517,9 @@ function show_step5() {
 	if ($_SESSION['wizard']['use_apps'] == 'appgroups') {
 		echo '<p style="font-weight: bold;">';
 		if (count($_SESSION['wizard']['appgroups']) == 1)
-			echo _('and this applications group');
+			echo _('and this Application Group');
 		else
-			echo _('and these applications groups');
+			echo _('and these Application Groups');
 		echo '</p>';
 
 		echo '<ul>';
@@ -531,7 +531,7 @@ function show_step5() {
 		echo '</ul>';
 	} elseif ($_SESSION['wizard']['use_apps'] == 'apps') {
 		echo '<p style="font-weight: bold;">';
-		echo _('and this newly created applications group');
+		echo _('and this newly created Application Group');
 		echo '</p>';
 
 		echo '<ul>';
@@ -593,9 +593,9 @@ function do_validate() {
 			'published' => 1)
 		);
 		
-		$res = $_SESSION['service']->user_addsGroup($g->getAttribute('name'), $g->getAttribute('description'));
+		$res = $_SESSION['service']->users_group_add($g->getAttribute('name'), $g->getAttribute('description'));
 		if (is_null($res))
-			popup_error(_('Cannot create usergroup'));
+			popup_error(_('Cannot create User Group'));
 
 		$g->id = $res;
 		$g->setAttribute('id', $res);
@@ -603,7 +603,7 @@ function do_validate() {
 		$users = $_SESSION['wizard']['users'];
 
 		foreach ($users as $user) {
-			$_SESSION['service']->user_addToGroup($user, $g->id);
+			$_SESSION['service']->users_group_add_user($user, $g->id);
 		}
 
 		$usergroups = array($g->id);
@@ -623,7 +623,7 @@ function do_validate() {
 		
 		$res = $_SESSION['service']->applications_group_add($g->getAttribute('name'), $g->getAttribute('description'));
 		if (! $res)
-			popup_error(_('Cannot create application group'));
+			popup_error(_('Cannot create Application Group'));
 
 		$g->id = $res;
 		$g->setAttribute('id', $res);

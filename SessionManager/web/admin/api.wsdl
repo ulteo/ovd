@@ -32,6 +32,15 @@
 			</xsd:sequence>
 		</xsd:complexType>
 		
+		<xsd:complexType name="web_application">
+			<xsd:sequence>
+				<xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="url_prefix" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="raw_configuration" type="xsd:string" minOccurs="1" maxOccurs="1" />
+				<xsd:element name="values" type="urn:any" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
 		<xsd:complexType name="application_array" final="#all">
 			<xsd:sequence>
 				<xsd:element name="item" type="urn:application" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
@@ -102,6 +111,11 @@
 		<part name="role" type="xsd:string"/>
 	</message>
 	
+	<message name="ServerToGroupMessage">
+		<part name="server" type="urn:string"/>
+		<part name="group" type="urn:string"/>
+	</message>
+	
 	<message name="Application">
 		<part name="parameters" type="urn:application"/>
 	</message>
@@ -149,16 +163,26 @@
 	<message name="application_webapp_addMessage">
 		<part name="name" type="urn:string"/>
 		<part name="description" type="urn:string"/>
+		<part name="url_prefix" type="urn:string"/>
 		<part name="configuration" type="urn:any"/>
 	</message>
 
-	<message name="application_webapp_get_raw_configurationMessage">
+	<message name="application_webapp_infoMessage">
 		<part name="application_id" type="urn:integer"/>
 	</message>
 
-	<message name="application_webapp_set_raw_configurationMessage">
+	<message name="application_webapp_info_retMessage">
+		<part name="parameters" type="urn:web_application"/>
+	</message>
+
+	<message name="application_webapp_modifyMessage">
 		<part name="application_id" type="urn:integer"/>
-		<part name="configuration" type="urn:any"/>
+		<part name="parameters" type="urn:web_application"/>
+	</message>
+	
+	<message name="application_webapp_set_valuesMessage">
+		<part name="application_id" type="urn:integer"/>
+		<part name="values" type="urn:any"/>
 	</message>
 	
 	<message name="applications_group_addMessage">
@@ -182,6 +206,7 @@
 		<part name="search" type="xsd:string"/>
 <!-- 		<part name="search_fields" type="urn:any"/>-->
 		<part name="search_fields" type="urn:string_array"/>
+		<part name="search_user" type="urn:string"/>
 	</message>
 	
 	<message name="UsersPartialListResponse">
@@ -208,12 +233,12 @@
 		<part name="setting" type="xsd:string"/>
 	</message>
 	
-	<message name="user_addsGroupMessage">
+	<message name="users_group_addMessage">
 		<part name="name" type="xsd:string"/>
 		<part name="description" type="xsd:string"/>
 	</message>
 	
-	<message name="user_modifysGroupMessage">
+	<message name="users_group_modifyMessage">
 		<part name="id" type="xsd:string"/>
 		<part name="name" type="xsd:string"/>
 		<part name="description" type="xsd:string"/>
@@ -301,6 +326,26 @@
 		<part name="limit" type="xsd:integer"/>
 	</message>
 	
+	<message name="script_addMessage">
+		<part name="name" type="xsd:string"/>
+		<part name="os" type="xsd:string"/>
+		<part name="type" type="xsd:string"/>
+		<part name="data" type="xsd:string"/>
+	</message>
+	
+	<message name="script_modifyMessage">
+		<part name="id" type="xsd:string"/>
+		<part name="name" type="xsd:string"/>
+		<part name="os" type="xsd:string"/>
+		<part name="type" type="xsd:string"/>
+		<part name="data" type="xsd:string"/>
+	</message>
+	
+	<message name="ScriptToGroupMessage">
+		<part name="script" type="urn:string"/>
+		<part name="group" type="urn:string"/>
+	</message>
+	
 	<message name="news_modifyMessage">
 		<part name="id" type="xsd:string"/>
 		<part name="title" type="xsd:string"/>
@@ -345,11 +390,6 @@
 		</operation>
 		
 		<operation name="settings_domain_integration_preview">
-			<input message="urn:Any"/>
-			<output message="urn:Any"/>
-		</operation>
-		
-		<operation name="settings_domain_integration_set">
 			<input message="urn:Any"/>
 			<output message="urn:Any"/>
 		</operation>
@@ -436,6 +476,51 @@
 		
 		<operation name="server_remove_static_application">
 			<input message="urn:ApplicationToServerMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_groups_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="servers_group_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="servers_group_add">
+			<input message="urn:applications_group_addMessage"/>
+			<output message="urn:String"/>
+		</operation>
+		
+		<operation name="servers_group_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_modify">
+			<input message="urn:applications_group_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_add_server">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_remove_server">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_publication_add">
+			<input message="urn:ServerToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="servers_group_publication_remove">
+			<input message="urn:ServerToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -544,13 +629,18 @@
 			<output message="urn:String"/>
 		</operation>
 
-		<operation name="application_webapp_get_raw_configuration">
-			<input message="urn:application_webapp_get_raw_configurationMessage"/>
-			<output message="urn:String"/>
+		<operation name="application_webapp_info">
+			<input message="urn:application_webapp_infoMessage"/>
+			<output message="urn:application_webapp_info_retMessage"/>
 		</operation>
 
-		<operation name="application_webapp_set_raw_configuration">
-			<input message="urn:application_webapp_set_raw_configurationMessage"/>
+		<operation name="application_webapp_modify">
+			<input message="urn:application_webapp_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+
+		<operation name="application_webapp_set_values">
+			<input message="urn:application_webapp_set_valuesMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
         
@@ -654,11 +744,6 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="users_list">
-			<input message="urn:String"/>
-			<output message="urn:Any"/>
-		</operation>
-		
 		<operation name="users_list_partial">
 			<input message="urn:UsersPartialListRequest"/>
 			<output message="urn:UsersPartialListResponse"/>
@@ -699,19 +784,14 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_addsGroup_policy">
+		<operation name="users_group_add_policy">
 			<input message="urn:UsersGroup_policyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removesGroup_policy">
+		<operation name="users_group_remove_policy">
 			<input message="urn:UsersGroup_policyMessage"/>
 			<output message="urn:Boolean"/>
-		</operation>
-		
-		<operation name="users_groups_list">
-			<input message="urn:voidRequest"/>
-			<output message="urn:Any"/>
 		</operation>
 		
 		<operation name="users_groups_list_partial">
@@ -724,18 +804,18 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="user_addsGroup">
-			<input message="urn:user_addsGroupMessage"/>
+		<operation name="users_group_add">
+			<input message="urn:users_group_addMessage"/>
 			<output message="urn:String"/>
 		</operation>
 		
-		<operation name="user_removesGroup">
+		<operation name="users_group_remove">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_modifysGroup">
-			<input message="urn:user_modifysGroupMessage"/>
+		<operation name="users_group_modify">
+			<input message="urn:users_group_modifyMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -779,12 +859,12 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_addToGroup">
+		<operation name="users_group_add_user">
 			<input message="urn:UserToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removeToGroup">
+		<operation name="users_group_remove_user">
 			<input message="urn:UserToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -796,6 +876,46 @@
 		
 		<operation name="publication_remove">
 			<input message="urn:PublicationMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+
+		<operation name="scripts_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="script_modify">
+			<input message="urn:script_modifyMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_add">
+			<input message="urn:script_addMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_remove">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="script_info">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="scripts_groups_list">
+			<input message="urn:String"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="users_group_add_script">
+			<input message="urn:ScriptToGroupMessage"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="users_group_remove_script">
+			<input message="urn:ScriptToGroupMessage"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
@@ -844,12 +964,12 @@
 			<output message="urn:Any"/>
 		</operation>
 		
-		<operation name="user_addProfile">
+		<operation name="user_profile_add">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
 		
-		<operation name="user_removeProfile">
+		<operation name="user_profile_remove">
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
@@ -884,9 +1004,45 @@
 			<output message="urn:Boolean"/>
 		</operation>
 		
+		<operation name="session_disconnect">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
 		<operation name="session_simulate">
 			<input message="urn:String"/>
 			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="has_valid_certificate">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+
+		<operation name="certificates_list">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+
+		<operation name="certificates_limits">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Any"/>
+		</operation>
+		
+		<operation name="certificate_add">
+			<documentation>Add a Subscription Key (base64 encoded)</documentation>
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="certificate_del">
+			<input message="urn:String"/>
+			<output message="urn:Boolean"/>
+		</operation>
+		
+		<operation name="certificate_reset_named_users">
+			<input message="urn:voidRequest"/>
+			<output message="urn:Boolean"/>
 		</operation>
 		
 		<operation name="log_preview">
@@ -969,6 +1125,11 @@
 			<input message="urn:String"/>
 			<output message="urn:Boolean"/>
 		</operation>
+		
+		<operation name="admin_actions_list">
+			<input message="urn:Integer"/>
+			<output message="urn:Any"/>
+		</operation>
 	</portType>
 	
 	<binding name="OvdAdminBinding" type="urn:OvdAdminPortType">
@@ -1035,16 +1196,6 @@
 		
 		<operation name="settings_domain_integration_preview">
 			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_preview"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
-		<operation name="settings_domain_integration_set">
-			<soap:operation soapAction="urn:OvdAdmin#settings_domain_integration_set"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1215,6 +1366,96 @@
 		
 		<operation name="server_remove_static_application">
 			<soap:operation soapAction="urn:OvdAdmin#server_remove_static_application"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#servers_groups_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_info">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_info"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_add">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_remove">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_modify">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_add_server">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_add_server"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_remove_server">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_remove_server"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_publication_add">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_publication_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="servers_group_publication_remove">
+			<soap:operation soapAction="urn:OvdAdmin#servers_group_publication_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1453,8 +1694,8 @@
 			</output>
 		</operation>
 
-		<operation name="application_webapp_get_raw_configuration">
-			<soap:operation soapAction="urn:OvdAdmin#application_webapp_get_raw_configuration"/>
+		<operation name="application_webapp_info">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_info"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1463,8 +1704,18 @@
 			</output>
 		</operation>
 
-		<operation name="application_webapp_set_raw_configuration">
-			<soap:operation soapAction="urn:OvdAdmin#application_webapp_set_raw_configuration"/>
+		<operation name="application_webapp_modify">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="application_webapp_set_values">
+			<soap:operation soapAction="urn:OvdAdmin#application_webapp_set_values"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1653,8 +1904,8 @@
 			</output>
 		</operation>
 		
-		<operation name="users_list">
-			<soap:operation soapAction="urn:OvdAdmin#users_list"/>
+		<operation name="scripts_groups_list">
+			<soap:operation soapAction="urn:OvdAdmin#scripts_groups_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1743,16 +1994,6 @@
 			</output>
 		</operation>
 		
-		<operation name="users_groups_list">
-			<soap:operation soapAction="urn:OvdAdmin#users_groups_list"/>
-			<input>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-		</operation>
-		
 		<operation name="users_groups_list_partial">
 			<soap:operation soapAction="urn:OvdAdmin#users_groups_list_partial"/>
 			<input>
@@ -1773,8 +2014,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addsGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup"/>
+		<operation name="users_group_add">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1783,8 +2024,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removesGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup"/>
+		<operation name="users_group_remove">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1793,8 +2034,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_modifysGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_modifysGroup"/>
+		<operation name="users_group_modify">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_modify"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1883,8 +2124,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addsGroup_policy">
-			<soap:operation soapAction="urn:OvdAdmin#user_addsGroup_policy"/>
+		<operation name="users_group_add_policy">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add_policy"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1893,8 +2134,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removesGroup_policy">
-			<soap:operation soapAction="urn:OvdAdmin#user_removesGroup_policy"/>
+		<operation name="users_group_remove_policy">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove_policy"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1903,8 +2144,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addToGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_addToGroup"/>
+		<operation name="users_group_add_user">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_add_user"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1913,8 +2154,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removeToGroup">
-			<soap:operation soapAction="urn:OvdAdmin#user_removeToGroup"/>
+		<operation name="users_group_remove_user">
+			<soap:operation soapAction="urn:OvdAdmin#users_group_remove_user"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -1935,6 +2176,76 @@
 		
 		<operation name="publication_remove">
 			<soap:operation soapAction="urn:OvdAdmin#publication_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="scripts_list">
+			<soap:operation soapAction="urn:OvdAdmin#scripts_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+
+		<operation name="script_modify">
+			<soap:operation soapAction="urn:OvdAdmin#script_modify"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_add">
+			<soap:operation soapAction="urn:OvdAdmin#script_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_remove">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_add_script">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="users_group_remove_script">
+			<soap:operation soapAction="urn:OvdAdmin#script_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="script_info">
+			<soap:operation soapAction="urn:OvdAdmin#script_info"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2033,8 +2344,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_addProfile">
-			<soap:operation soapAction="urn:OvdAdmin#user_addProfile"/>
+		<operation name="user_profile_add">
+			<soap:operation soapAction="urn:OvdAdmin#user_profile_add"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2043,8 +2354,8 @@
 			</output>
 		</operation>
 		
-		<operation name="user_removeProfile">
-			<soap:operation soapAction="urn:OvdAdmin#user_removeProfile"/>
+		<operation name="user_profile_remove">
+			<soap:operation soapAction="urn:OvdAdmin#user_profile_remove"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2113,8 +2424,78 @@
 			</output>
 		</operation>
 		
+		<operation name="session_disconnect">
+			<soap:operation soapAction="urn:OvdAdmin#session_disconnect"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
 		<operation name="session_simulate">
 			<soap:operation soapAction="urn:OvdAdmin#session_simulate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="has_valid_certificate">
+			<soap:operation soapAction="urn:OvdAdmin#has_valid_certificate"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="certificates_list">
+			<soap:operation soapAction="urn:OvdAdmin#certificates_list"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="certificates_limits">
+			<soap:operation soapAction="urn:OvdAdmin#certificates_limits"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="certificate_add">
+			<soap:operation soapAction="urn:OvdAdmin#certificate_add"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="certificate_del">
+			<soap:operation soapAction="urn:OvdAdmin#certificate_del"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="certificate_reset_named_users">
+			<soap:operation soapAction="urn:OvdAdmin#certificate_reset_named_users"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>
@@ -2275,6 +2656,16 @@
 		
 		<operation name="news_remove">
 			<soap:operation soapAction="urn:OvdAdmin#news_remove"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="admin_actions_list">
+			<soap:operation soapAction="urn:OvdAdmin#admin_actions_list"/>
 			<input>
 				<soap:body use="encoded" namespace="urn:OvdAdmin" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</input>

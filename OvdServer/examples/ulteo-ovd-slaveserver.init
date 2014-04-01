@@ -89,6 +89,28 @@ do_stop () {
 
 	else
 		kill $pid
+		waitpid $pid
+		rm -f $PIDFILE
+	fi
+
+	log_end_msg 0
+}
+
+do_force_stop () {
+	log_begin_msg "Force stopping $NAME"
+
+	if [ ! -f $PIDFILE ]; then
+		log_warning_msg "not running"
+		return 0
+	fi
+
+	local pid=$(pidofproc -p $PIDFILE)
+	if [ $? -ne 0 -o "0$pid" == "0" ]; then
+		log_warning_msg "not running"
+		rm -f $PIDFILE
+
+	else
+		kill $pid
 		waitpid $pid 10
 		if [ $? -eq 1 ]; then
 			log_warning_msg "Force kill"
@@ -100,6 +122,13 @@ do_stop () {
 	log_end_msg 0
 }
 
+
+if [ -r /etc/default/locale ]; then
+	. /etc/default/locale
+	export LANG=$LANG
+	export LC_ALL=$LANG
+fi
+
 case $1 in
 	start)
 		do_start;;
@@ -107,13 +136,16 @@ case $1 in
 	stop)
 		do_stop;;
 
+	force-stop)
+		do_force_stop;;
+
 	restart|force-reload)
 		do_stop
 		sleep 0.2
 		do_start
 		;;
 	*)
-		log_success_msg "Usage: $0 {start|stop|force-reload|restart}";;
+		log_success_msg "Usage: $0 {start|stop|force-stop|force-reload|restart}";;
 esac
 
 exit 0

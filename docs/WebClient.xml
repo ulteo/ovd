@@ -17,7 +17,7 @@
     <title id="intro_title">Introduction</title>
 
     <para>
-	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Web Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+	  This documentation describes how to use the Ulteo Open Virtual Desktop "Web Client", its capabilities and how to launch Ulteo OVD sessions using a web client.
     </para>
   </section>
 
@@ -25,75 +25,78 @@
     <title id="prerequisites_title">Prerequisites</title>
 
     <para>
-      This is not a Web Client installation documentation. You need to have already installed a Web Client to be able to launch Ulteo OVD sessions with it.
+      This is not the Web Portal installation documentation. You need to have already installed a Web Portal to be able to launch Ulteo OVD web client sessions.
     </para>
 
     <xi:include href="common.xml" xpointer="system_requirements_client" />
   </section>
 
   <section>
-    <title>User interface</title>
+    <title>User Interface</title>
 
     <para>
-      When you start using a Web Client, some tests are done to see if your browser can launch OVD sessions successfully, you will see this window.
+	  Ulteo OVD provides support for HTML5 client compliant web browsers and also a Java applet. The user may decide when starting a session
+	  whether to use the HTML5 or Java client. When launching a new OVD session, the environment is validated to determine 
+	  if the browser can support the Java applet. If the requirements are not met, then the Java option is disabled.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Test window</screeninfo>
+	  <screeninfo>Web Portal - Test window</screeninfo>
 	  <graphic fileref="img/wc_test_window.png"></graphic>
     </screenshot>
 
     <para>
-      If the test fails, you will see this window, it means that your web browser does not have a working Java support, or no Java support at all.
+      If the test fails and the browser is not HTML5 compliant, you will see this window.
+      It means that your web browser does not have the required functional Java support, or no Java support at all.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Test failed</screeninfo>
+	  <screeninfo>Web Portal - Test failed</screeninfo>
 	  <graphic fileref="img/wc_test_failed.png"></graphic>
     </screenshot>
 
     <para>
-      When the tests are done and successful, you have access to the login window that you will use to launch your session.
+      When the tests are completed successfully, you have access to the login window that you will use to launch your session.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Login window</screeninfo>
+	  <screeninfo>Web Portal - Login window</screeninfo>
 	  <graphic fileref="img/wc_login_window.png"></graphic>
     </screenshot>
 
     <para>
-      You just have to pick your username in the list, type your password, click the "Connect" button and voilà!
+      You can now enter your username in the list, type your password, click the "Connect" button and voilà!
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Desktop session</screeninfo>
+	  <screeninfo>Web Portal - Desktop session</screeninfo>
 	  <graphic fileref="img/wc_desktop_session.png"></graphic>
     </screenshot>
   </section>
 
   <section>
-    <title>Advanced settings</title>
+    <title>Advanced Settings</title>
 
     <para>
-      At the login window, you can set advanced parameters by clicking the "Advanced settings" button.
+      In the login window, you can set advanced parameters by clicking the "Advanced settings" button.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Advanced login window</screeninfo>
+	  <screeninfo>Web Portal - Advanced login window</screeninfo>
 	  <graphic fileref="img/wc_advanced_login_window.png"></graphic>
     </screenshot>
 
     <para>
-      As you can see, you now have more available options, each one is described below.
+      As you can see, you now have several options, each one is described below.
     </para>
 
     <simplesect id="advanced_settings">
-      <title>Advanced settings description</title>
+      <title>Advanced Settings Description</title>
 
       <itemizedlist>
         <listitem>
           <para>
-            <emphasis>Use local credentials:</emphasis> When enabled, the Web Client will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Client will request the Session Manager with the login and password entered in the login window.
+            <emphasis>Use local credentials:</emphasis> When enabled, the Web Client will send a request to the Session Manager containg your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Client will send a request to the Session Manager containing the login and password entered in the login window.
           </para>
         </listitem>
         <listitem>
@@ -107,7 +110,24 @@
               </listitem>
               <listitem>
                 <para>
-                  <emphasis>Portal:</emphasis> Launch a web portal with applications listed in it. Applications are launched seamlessly.
+                  <emphasis>Portal:</emphasis> Launch a web portal with applications listed in it. Applications in this mode are launched seamlessly.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </listitem>
+         <listitem>
+          <para>
+            <emphasis>Type:</emphasis> This option allows you to switch between HTML5 or Java
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <emphasis>Java:</emphasis> Launch a session using the Java applet
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  <emphasis>HTML5:</emphasis> Launch a session using an HTML5 compliant browser
                 </para>
               </listitem>
             </itemizedlist>
@@ -122,25 +142,20 @@
           <para>
             <emphasis>Keyboard layout:</emphasis> This option allows you to select which keyboard layout your local keyboard is using.
           </para>
-        </listitem>
-        <listitem>
-          <para>
-            <emphasis>Use pop-up:</emphasis> Whether to launch your OVD session in a new browser window, or in the current one.
-          </para>
-        </listitem>
+        </listitem>        
       </itemizedlist>
     </simplesect>
   </section>
 
   <section>
-    <title>Start a session</title>
+    <title>Starting A Session</title>
 
     <para>
-      When you start a session, a loading splash appears.
+      When you start a session, a splash screen appears indicating that the session is loading.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Session loading</screeninfo>
+	  <screeninfo>Web Portal - Session loading</screeninfo>
 	  <graphic fileref="img/wc_session_loading.png"></graphic>
     </screenshot>
 
@@ -149,41 +164,41 @@
     </para>
 
     <simplesect>
-      <title>Desktop session</title>
+      <title>Desktop Session</title>
 
       <para>
-        When the session is ready, your Desktop is available and you can launch applications, explore your files...
+        When the session is ready, your Desktop is available and you can launch applications, explore your files etc.
       </para>
 
       <screenshot>
-	    <screeninfo>Web Client - Desktop session</screeninfo>
+	    <screeninfo>Web Portal - Desktop session</screeninfo>
 	    <graphic fileref="img/wc_desktop_session.png"></graphic>
       </screenshot>
     </simplesect>
 
     <simplesect>
-      <title>Portal session</title>
+      <title>Portal Session</title>
 
       <para>
         When the session is ready, your Portal is available and you can launch applications seamlessly.
       </para>
 
       <screenshot>
-	    <screeninfo>Web Client - Portal session</screeninfo>
+	    <screeninfo>Web Portal - Portal session</screeninfo>
 	    <graphic fileref="img/wc_portal_session.png"></graphic>
       </screenshot>
     </simplesect>
   </section>
 
   <section>
-    <title>Session end</title>
+    <title>Session End</title>
 
     <para>
       When you leave your Ulteo OVD session, you will see this window.
     </para>
 
     <screenshot>
-	  <screeninfo>Web Client - Session end</screeninfo>
+	  <screeninfo>Web Portal - Session end</screeninfo>
 	  <graphic fileref="img/wc_session_end.png"></graphic>
     </screenshot>
 

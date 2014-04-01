@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY base "Support_Ubuntu_Lucid.xml">
+<!ENTITY parent "Support_RHEL_5.5.xml">
+]>
+<article>
+  <transform_var name="gold_product_name" value="Gateway"/>
+
+  <transform_var name="distrib_pretty_name" value="openSUSE 11.3"/>
+
+  <transform_var name="distrib_name" value="opensuse"/>
+
+  <transform_var name="rpm_install_cmd" value="zypper"/>
+
+  <transform_var name="distrib_version" value="11.3"/>
+
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@</subtitle>
+
+    <graphic align="center" fileref="img/ovd.png"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com"/></holder>
+    </copyright>
+  </articleinfo>
+
+  <xi:include href="Installation_Gateway_RHEL6.0.xml" xpointer="purpose"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="common.xml" xpointer="gold"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Installation_Gateway_RHEL6.0.xml"
+              xpointer="prerequisites_gw"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Installation_Gateway_SLES_11.SP1.xml"
+              xpointer="configuration_gw"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Installation_Gateway_SLES_11.SP1.xml"
+              xpointer="installation_gw"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Installation_Gateway_SLES_11.SP1.xml"
+              xpointer="webclient_gw"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</article>

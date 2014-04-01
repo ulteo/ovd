@@ -32,7 +32,6 @@ class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		Logger.info("Dummy role::__init__")
-		self.loop = True
 	
 	
 	def init(self):
@@ -40,15 +39,13 @@ class Role(AbstractRole):
 		return True
 	
 	
-	def stop(self):
-		Logger.info("Dummy role::stop")
-		self.loop = False
-	
-	
 	def run(self):
 		self.status = Role.STATUS_RUNNING
 		Logger.info("Dummy role::run begin")
 		while self.loop:
+			if self.status == Role.STATUS_STOPPING:
+				break
+			
 			Logger.info("Dummy role::run loop")
 			time.sleep(2)
 		

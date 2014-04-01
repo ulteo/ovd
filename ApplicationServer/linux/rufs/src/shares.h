@@ -43,6 +43,9 @@ typedef struct _ShareList {
 
 void shares_init(Configuration* conf);
 void shares_signalReload(int sig);
+void shares_dump();
+bool shares_reload();
+void shares_delete();
 ShareList* shares_getInstance();
 bool shares_activated(const char* name);
 long long shares_getQuota(const char* name);

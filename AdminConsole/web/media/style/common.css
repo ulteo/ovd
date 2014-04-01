@@ -216,6 +216,43 @@ html[dir="rtl"] ul {
 	font-weight: bold;
 }
 
+.msg_ok > a {
+	color: #05a305;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_error > a {
+	color: #a30505;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_warn > a {
+	color: #ff6600;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_unknown > a {
+	color: blue;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.msg_ok > a:hover, .msg_error > a:hover, .msg_warn > a:hover, .msg_unknown > a:hover {
+	color: #963;
+}
+
+.role_enabled {
+	list-style-type: disc;
+	font-weight: bold;
+}
+.role_disabled {
+	list-style-type: circle;
+	font-weight: 100;
+}
+
 .spacer {
 	clear: both;
 }
@@ -551,4 +588,40 @@ div#pageWrap {
 
 div.section {
 	margin-bottom: 20px;
+}
+
+/* Time grid part */
+
+table.time_grid {
+	border-collapse: collapse;
+}
+
+table.time_grid th {
+	font-size: 70%
+}
+
+table.time_grid th div {
+	position: relative;
+	margin-left: -15px;
+	text-align: center;
+}
+
+table.time_grid td {
+	width: 10px;
+	background: #bababa;
+	cursor:pointer;
+	padding: 1px;
+	border: 1px solid #ddd;
+}
+
+table.time_grid td.hover {
+	background: #0062b3;
+}
+
+table.time_grid td.selected {
+	 background: #004985;
+}
+
+table.time_grid td.selected.hover {
+	 background: #8e8e8e;
 }

@@ -28,7 +28,7 @@ uovd.provider.webapps.Jsonp.prototype.connectApplications = function() {
 
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) { continue; }
 
-		var url = server.webapps_url + '/connect?id=' + i + '&user=' + server.login + '&pass=' + server.password;
+		var url = server.webapps_url + '/webapps/connect?id=' + i + '&user=' + server.login + '&pass=' + server.password;
 
 		jQuery.ajax({
 			url : url,
@@ -47,7 +47,7 @@ uovd.provider.webapps.Jsonp.prototype.disconnect_implementation = function() {
 
 		if(server.type != uovd.SERVER_TYPE_WEBAPPS) { continue; }
 
-		var url = server.webapps_url + '/disconnect?id=' + i + '&user=' + server.login + '&pass=' + server.password;
+		var url = server.webapps_url + '/webapps/disconnect?id=' + i + '&user=' + server.login + '&pass=' + server.password;
 
 		jQuery.ajax({
 			url : url,

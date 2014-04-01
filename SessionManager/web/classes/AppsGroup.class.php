@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2010 Ulteo SAS
+ * Copyright (C) 2008-2013 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2009
  * Author Samuel BOVEE <samuel@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2013
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -46,11 +47,10 @@ class AppsGroup {
 		if (is_array($groups)) {
 			$result = array();
 			foreach ($groups as $UGAG_liaison){
-				$g = $UserGroupDB->import($UGAG_liaison->element);
-				if (is_object($g))
-					$result[$UGAG_liaison->element]= $g;
+				array_push($result, $UGAG_liaison->element);
 			}
-			return $result;
+			
+			return $UserGroupDB->imports($result);
 		}
 		else {
 			Logger::error('main', 'APPSGROUPS::userGroups (for id='.$this->id.') load liaison liaison failed');

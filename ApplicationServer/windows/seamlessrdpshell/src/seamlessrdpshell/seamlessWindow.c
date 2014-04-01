@@ -317,11 +317,18 @@ static void SeamlessWindow_sendState(SeamlessWindow *sw) {
 
 BOOL SeamlessWindow_updateState(SeamlessWindow *sw) {
 	int newState = 0;
+	int sendPosition = 0;
 
 	newState = WindowUtil_getState(sw->windows);
 	if (newState != sw->state) {
+		sendPosition = (sw->state == 2); /* Switched from Maximized */
+
 		sw->state = newState;
 		SeamlessWindow_sendState(sw);
+
+		if (sendPosition) {
+			SeamlessWindow_sendPosition(sw);
+		}
 
 		return TRUE;
 	}

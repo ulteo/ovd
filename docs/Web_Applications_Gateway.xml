@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+  [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+   <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="precise"/>
+  <transform_var name="distrib_name_l" value="ubuntu" />
+  <transform_var name="distrib_version_l" value="lucid"/>
+  <transform_var name="distrib_name_s" value="debian" />
+  <transform_var name="distrib_version_s" value="squeeze"/>
+  <transform_var name="distrib_name_w" value="debian" />
+  <transform_var name="distrib_version_w" value="lucid"/>
+  <transform_var name="distrib_name_r" value="rhel" />
+  <transform_var name="distrib_version_r" value="6.0"/>
+  <transform_var name="distrib_name_o" value="opensuse" />
+  <transform_var name="distrib_version_o" value="11.3"/>
+  <transform_var name="distrib_name_sl" value="sles" />
+  <transform_var name="distrib_version_sl" value="11_sp1"/>
+  <transform_var name="rpm_install_cmd_r" value="yum"/>
+  <transform_var name="product_name" value="OVD Web Application Gateway"/>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>@product_name@</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <section id="introduction">
+   <title>Introduction</title>
+   <para>
+	<emphasis>Ulteo Open Virtual Desktop 4.0</emphasis> supports the delivery of 
+	native Web Applications alongside Windows and Linux. The @product_name@ is 
+	intended to provide a single sign on (SSO) capability for Web Applications 
+	as well as the ability to integrate Web Applications into the OVD infrastructure.   	   
+    This documentation describes how to configure OVD to integrate Web Applications 
+    into an OVD user session.        
+  </para>
+  </section>
+  
+  <section id="overview">
+	<title>Overview</title>
+   <para>The <emphasis>@product_name@</emphasis> is defined as a new role named
+    ulteo-ovd-slaveserver-role-web. The role can be installed as an additional 
+    role on an existing server with the OVD farm or as a dedicated role on 
+    a standalone server 
+   </para>   
+   <para>
+	   <screenshot>
+      <screeninfo>@product_name@</screeninfo>
+      <graphic fileref="img/web_apps_overview.png"></graphic>
+    </screenshot>
+    </para>
+    
+    <para>
+	   The <emphasis>@product_name@</emphasis> can be used in two modes:
+	    <itemizedlist>
+		<listitem>
+			path: The path mode defines the full path for a Web Application 
+			such as <emphasis>http://ulteo.demo/webapps/webappname</emphasis>			
+		</listitem>
+		<listitem>
+			domain: The domain mode will use the dns configuration for a domain 
+			in order to access the Web Application such as
+			 <emphasis>http://webappname.ulteo.demo/</emphasis>			
+		</listitem>
+		</itemizedlist>		
+   </para>
+   <para>
+	   The publication and configuration of a Web Application is performed 
+	   on the Applications tab on the OVD Administration Console.
+   </para>
+    
+  </section>
+  
+  <section id="installation">
+	    <title>Installation</title>	  
+	     <para>The <emphasis>@product_name@</emphasis> can be installed on all 
+	     the supported distributions </para> 
+	        <section>			
+			<title>Red Hat Enterprise Linux 6</title>
+			 <itemizedlist>
+		<listitem> 
+				 <para>
+            Install the keyring package to validate the repository
+            using gpg:
+          </para>
+          <screen>
+<![CDATA[# rpm --import @BASE_URI@/@distrib_name_r@/@distrib_version_r@/keyring]]>
+          </screen>
+         </listitem> 
+		<listitem> 			
+			<para>Edit the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>        
+          <screen>
+<![CDATA[[ovd-@VERSIONNOTILD@]
+name=Ulteo OVD @VERSION@
+baseurl=@BASE_URI@/rhel/@distrib_version_r@/
+enabled=1
+gpgcheck=1
+gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium module <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following command:
+        </para>
+        <screen>
+<![CDATA[
+# yum install ulteo-ovd-slaveserver-role-web]]>
+        </screen>        
+        </listitem>
+         </itemizedlist>
+        </section>
+         <section>			
+			<title>SUSE Linux Enterprise Server 11.SP1</title>
+			 <itemizedlist>
+		<listitem> 			
+			<para>Add the Premium repository: </para>        
+          <screen>
+<![CDATA[# zypper ar @BASE_URI@/@distrib_name_sl@/@distrib_version_sl@ ovd]]>
+          </screen>
+          </listitem>
+           <listitem>
+           <para>
+            Install the keyring package to validate the repository using gpg:
+          </para>
+          <screen>
+<![CDATA[# rpm --import @BASE_URI@/@distrib_name_sl@/@distrib_version_sl@/keyring]]>
+          </screen>
+          </listitem>
+           <listitem>
+           <para>
+            Update the package database: 
+          </para>
+          <screen>
+<![CDATA[# zypper refresh]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following command:
+        </para>
+        <screen>
+<![CDATA[
+# zypper install ulteo-ovd-slaveserver-role-web]]>
+        </screen>        
+        </listitem>
+         </itemizedlist>
+        </section>
+	      <section>			
+			<title>Ubuntu Lucid</title>			
+			 <itemizedlist>
+		<listitem>
+          <xi:include href="&base;" xpointer="repository_online_step1_para" />
+          <screen>
+<![CDATA[deb @BASE_URI@/@distrib_name_l@ @distrib_version_l@ main]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following commands:
+        </para>
+        <screen>
+<![CDATA[# apt-get update
+# apt-get install ulteo-keyring
+# apt-get update
+# apt-get install ulteo-ovd-slaveserver-role-web]]>
+        </screen>
+        </listitem>
+         </itemizedlist>
+        </section>
+        <section>			
+			<title>Ubuntu Precise</title>
+			 <itemizedlist>
+		<listitem> 
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
+          <screen>
+<![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following commands:
+        </para>
+        <screen>
+<![CDATA[# apt-get update
+# apt-get install ulteo-keyring
+# apt-get update
+# apt-get install ulteo-ovd-slaveserver-role-web]]>
+        </screen>
+        </listitem>
+         </itemizedlist>
+        </section>
+          <section>			
+			<title>Debian Squeeze</title>
+			 <itemizedlist>
+		<listitem> 
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
+          <screen>
+<![CDATA[deb @BASE_URI@/@distrib_name_s@ @distrib_version_s@ main]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following commands:
+        </para>
+        <screen>
+<![CDATA[# apt-get update
+# apt-get install ulteo-keyring
+# apt-get update
+# apt-get install ulteo-ovd-slaveserver-role-web]]>
+        </screen>
+        </listitem>
+         </itemizedlist>
+        </section>
+         <section>			
+			<title>Debian Wheezy</title>
+			 <itemizedlist>
+		<listitem> 
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
+          <screen>
+<![CDATA[deb @BASE_URI@/@distrib_name_w@ @distrib_version_w@ main]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following commands:
+        </para>
+        <screen>
+<![CDATA[# apt-get update
+# apt-get install ulteo-keyring
+# apt-get update
+# apt-get install ulteo-ovd-slaveserver-role-web]]>
+        </screen>
+        </listitem>
+         </itemizedlist>
+        </section>      
+        <section>			
+			<title>OpenSUSE 11.3</title>
+			 <itemizedlist>
+		<listitem> 			
+			<para>Add the Premium repository: </para>         
+          <screen>
+<![CDATA[# zypper ar @BASE_URI@/@distrib_name_o@/@distrib_version_o@ ovd
+# zypper refresh]]>
+          </screen>
+          </listitem>
+           <listitem>
+           <para>
+            Install the keyring package to validate the repository using gpg:
+          </para>
+          <screen>
+<![CDATA[# rpm --import @BASE_URI@/@distrib_name_o@/@distrib_version_o@/keyring]]>
+          </screen>
+          </listitem>
+           <listitem>
+           <para>
+            Update the package database: 
+          </para>
+          <screen>
+<![CDATA[# zypper refresh]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the @product_name@ execute the following command:
+        </para>
+        <screen>
+<![CDATA[
+# zypper install ulteo-ovd-slaveserver-role-web]]>
+        </screen>        
+        </listitem>
+         </itemizedlist>
+        </section>
+	    
+	    
+  </section>
+  <section id="configuration" >
+		<title>Configuration</title>
+  <section id="format">
+	  <title>Configuration file</title>
+			In order to integrate a Web Application, a JSON configuration file is 
+			required. More details on the JSON format can be found in Wikipedia: 
+			<ulink url="http://en.wikipedia.org/wiki/JSON"></ulink>.
+			One JSON file is required for each Web Application. Once created, the 
+			JSON config file can be uploaded using the OVD Admin Console. The 
+			configuration of the JSON file is described below.
+		 	Configuration parameters described in this section can be assigned the 
+		 	value of a setting that is defined in the Admin Console. This is done 
+		 	by using variables to contain those values. They can be used in handlers 
+		 	and filters on any nesting level. 
+   
+	<section id="configuration_s" >
+		<title>Configuration Section</title>
+		<para>
+			 Parameters described in this section are variables which are configurable 
+			 in OVD Administration Console. They can be used in handlers and filters 
+			 on any nesting level. The syntax for using a variable is of the 
+			 form $(VARNAME).
+		</para>
+		<para>
+			 There are five types of variable:	
+			<itemizedlist>
+				<listitem>url – text input field in Admin console (checked if 
+				it's valid)</listitem>
+				<listitem>string – text input field in Admin Console</listitem>
+				<listitem>boolean – checkbox input field in Admin Console</listitem>
+				<listitem>user_login – login of current logged in user</listitem>
+				<listitem>user_passwd – password of current logged in user</listitem>
+			</itemizedlist>    
+		</para>
+		<para>
+			In the configuration section, you define variables which will be 
+			used in the handlers section. You have to set minimum, the type 
+			and the value. The variables will be shown on a form in the 
+			appropriate Web Application in the OVD Administration Console
+		</para>
+		<para>
+				Example:
+				<screen>
+				<![CDATA[  "Configuration": {
+        "TARGETURL": {
+            "type": "url",
+            "title": "Server URL",
+            "value": "https://demo.zarafa.com/webapp"
+        },
+        "USER_LOGIN": {
+            "type": "string",
+            "value": "demo12"
+        },
+        "USER_PASSWD": {
+            "type": "string",
+            "value": "demo12"
+        }
+    }]]>
+				</screen>
+			</para>
+		<para>
+			Any other type used in the JSON file will be displayed in 
+			Administration Console as a read-only text input field.
+		</para>
+		<para>
+			The optional parameter <emphasis>title</emphasis> is used in 
+			the Administration Console as the label for the input field.
+		</para>		
+	</section>
+	<section id="handlers">
+		<title>Handlers Section</title>
+		<para>
+			This section defines the handlers and the order in which the
+			handlers should be used to handle traffic between a user’s 
+			browser and a Web Application.
+		</para>
+		<para>
+			Each handler should have a unique name (key). The parameter
+			<emphasis>type</emphasis> is required and defines the type of 
+			handler. Optional parameter filters describes filters that 
+			should be processed during request handling.
+		</para>
+		<section id="ServerHandler">
+			<title>ServerHandler</title>
+			<para>
+				ServerHandler - manages the basic configuration for the target Web Application
+			</para>
+			<para>
+			Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>baseURI</emphasis> – (required) – address of the 
+						Web Application
+					</listitem>
+					<listitem>
+						<emphasis>next_handler</emphasis> – (required) – name of the next handler
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ "Server": {
+  "type": "ServerHandler",
+  "baseURI": "http://$(TARGETIP)",
+  "next_handler": "Dispatch"
+  }]]>
+				</screen>
+			</para>
+		</section>
+		<section id="ClientHandler">
+			<title>ClientHandler</title>
+			<para>
+				ClientHandler opens a connection to the target Web Application, downloads the requested date and returns it to the user’s browser.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ "Client":{
+  "type": "ClientHandler"
+  }]]>
+				</screen>
+			</para>
+		</section>
+		<section id="DispatchHandler">
+			<title>DispatchHandler</title>
+			<para>
+				DispatchHandler chains the query to others handlers, based on the defined rules.
+			</para>
+			<para>
+				Parameters <emphasis>bindings</emphasis> (required) consists of a list of conditions and a <emphasis>next_handler</emphasis> which is the handler to execute if no condition is fulfilled.
+			</para>
+			<para>
+			A Condition Parameter consists of a condition and a	
+			<emphasis>next_handler</emphasis> which is the handler to 
+			execute if the condition is fulfilled.
+				<itemizedlist>
+					<listitem>
+						<emphasis>cond</emphasis> – (required) – any valid python expression. 
+					</listitem>
+					<listitem>
+						<emphasis>next_handler</emphasis> (required) - name of the handler to be executed if the condition is fulfilled
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+			Variables available in a <emphasis>cond</emphasis> expression:
+				<itemizedlist>
+					<listitem>
+						<emphasis>request_path</emphasis> – (string) – path of requested resource
+					</listitem>
+					<listitem>
+						<emphasis>request_headers</emphasis> – (list) – list of request headers
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ "Dispatch":{
+  "type": "DispatchHandler",
+  "bindings":{
+    "condition1":{
+      "cond": "request_path.startswith(‘/manage’)",
+      "next_handler": "Unauthorized"
+      },
+    "condition2":{
+      "cond": "’login_form’ in request_path",
+      "next_handler": "LoginForm"
+      },
+    "next_handler": "Client"
+    }
+   }]]>
+				</screen>
+			</para>
+		</section>	
+		<section id="ChainHandler">
+			<title>ChainHandler</title>
+			<para>
+				The ChainHandler is a connector between two handlers. It is used mainly to add filters between two handlers.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ "Chain":{
+  "type": "ChainHandler",
+  "next_handler": "Client"
+  }]]>
+				</screen>
+			</para>
+		</section>
+		<section id="RedirectHandler">
+			<title>RedirectHandler</title>
+			<para>
+				The RedirectHandler redirects the browser to a given location. Parameter <emphasis>location</emphasis> (required) can define the URL or path to which the browser should be redirected.
+			</para>		
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ "Unauthorized":{
+  "type": "RedirectHandler",
+  "location": "/site/401"
+  }]]>
+				</screen>
+			</para>
+		</section>
+	
+  </section>
+  <section id="filters">
+		<title>Filters Section</title>
+		<para>
+			Each handler can define a list of filters. Filters handle several authentication by adding or modifying data in request and response.
+			Filters are defined as an array of object 
+		</para>
+		<section id="StaticRequestFilter">
+			<title>StaticRequestFilter</title>
+			<para>
+				StaticRequestFilter makes an internal http query. In most cases, it’s used to submit login form and acquired cookies created after submit.
+			</para>
+			<para>
+				Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>path</emphasis> (required) - (string) - path to login form. 
+					</listitem>
+					<listitem>
+						<emphasis>form</emphasis> (required) - (string) - input fields which are part of the form
+					</listitem>
+					<listitem>
+						<emphasis>autologin</emphasis> (required) - (boolean) - defines if the form is automatically submitted or not (true or false)
+					</listitem>
+					<listitem>						
+						<emphasis>regexp</emphasis> (optional) - (string) - regular expression used to match redirects
+					</listitem>
+					<listitem>
+						<emphasis>content_regexp</emphasis> (optional) - (string) - regular expression used to match response content
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				On first request, @product_name@ will open page configured in path parameter. In content of this page will find all input fields listed in form parameter and insert values. After this it will submit form that contains listed input fields.
+			</para>
+			<para>
+				If server response has 302 code and Location header matches regexp attribute or server response has 200 code and response content matches content_regexp attribute then @product_name@ will relogin (submit again data) to the Web Application.
+			</para>
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ {
+  "type": "StaticRequestFilter",
+  "path": "/site/login_form",
+  "autologin": false,
+  "form":{
+    "ac_login": "$(USER_LOGIN)",
+    "ac_password": "$(USER_PASSWD)"
+    }
+  }]]>
+				</screen>
+			</para>
+		</section>
+			<section id="CookieFilter">
+			<title>CookieFilter</title>
+			<para>
+				CookieFilter is able to inject cookies in the stream, read them back and update. This filter will retrieve the cookie from the server and store it user’s session to reinject it at the next requests.
+			</para>
+			<para>
+				Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>managed</emphasis> (optional) - (array) - array of cookie names that should be managed by @product_name@. Those cookies will not be visible in user’s browser. 
+					</listitem>
+					<listitem>
+						<emphasis>suppressed</emphasis> (optional) - (array) - array of 
+						cookie names that should be removed by @product_name@. If the
+						user’s browser does send such a cookie it will be dropped and 
+						the Web Application will not receive it. If Web Application does 
+						set such a cookie is will be dropped, and the user’s browser
+						will not receive it
+					</listitem>
+					<listitem>
+						<emphasis>replayed</emphasis> (optional) - (array) - array of 
+						cookie names that shouldn’t be changed
+					</listitem>					
+				</itemizedlist>
+			</para>
+			<para>
+				If cookie is not defined in managed, suppressed or replayed lists it
+				 will be dropped (such as it would be on suppressed list).
+			</para>			
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ {
+  "type": "CookieFilter",
+  "managed": "WEBAPPScookie",
+  "relayed": "I18N_LANGUAGE"
+  }]]>
+				</screen>
+			</para>
+		</section>
+	<section id="HttpBasicAuthFilter">
+			<title>HttpBasicAuthFilter</title>
+			<para>
+				HttpBasicAuthFilter is able to inject http basic authentication header.
+			</para>
+			<para>
+				Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>user</emphasis> (required) - (string) - username
+					</listitem>
+					<listitem>
+						<emphasis>pass</emphasis> (required) - (string) - password
+					</listitem>							
+				</itemizedlist>
+			</para>
+			<para>
+				If cookie is not defined in managed, suppressed or replayed lists it will be dropped (such as it would be on suppressed list).
+			</para>			
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ {
+  "type": "HttpBasicAuthFilter",
+  "user": "$(USER_LOGIN)",
+  "pass": "$(USER_PASSWD)"
+  }]]>
+				</screen>
+			</para>
+		</section>
+		<section id="NTLMFilter">
+			<title>NTLMFilter</title>
+			<para>
+				NTLMFilter is able to inject NTLM authentication header.
+			</para>
+			<para>
+				Parameters:
+				<itemizedlist>
+					<listitem>
+						<emphasis>user</emphasis> (required) - (string) - username
+					</listitem>
+					<listitem>
+						<emphasis>pass</emphasis> (required) - (string) - password
+					</listitem>							
+				</itemizedlist>
+			</para>
+			<para>
+				If cookie is not defined in managed, suppressed or replayed lists it will be dropped (such as it would be on suppressed list).
+			</para>			
+			<para>
+				Example:
+				<screen>
+				<![CDATA[ {
+  "type": "NTLMFilter",
+  "user": "$(USER_LOGIN)",
+  "pass": "$(USER_PASSWD)"
+  }]]>
+				</screen>
+			</para>
+		</section>
+  </section>
+  </section>
+  <section>
+	  <title>Configuration Example</title>
+	  <para> The example below illustrates how to configure and use Zarafa (a Webmail application) in <emphasis>Ulteo Open Virtual Desktop</emphasis></para>
+	  <screen>
+<![CDATA[
+{
+    "title": "Zarafa WebApp",
+    "Configuration": {
+        "TARGETURL": {
+            "type": "url",
+            "title": "Server URL",
+            "value": "https://demo.zarafa.com/webapp"
+        },
+        "USER_LOGIN": {
+            "type": "string",
+            "value": "demo12"
+        },
+        "USER_PASSWD": {
+            "type": "string",
+            "value": "demo12"
+        }
+    },
+    "Handlers": {
+        "Start": {
+            "baseURI": "$(TARGETURL)",
+            "next_handler": "LoginRequestHandler",
+            "type": "ServerHandler"
+        },
+        "Client": {
+            "type": "ClientHandler"
+        },
+        "LoginRequestHandler": {
+            "next_handler": "Client",
+            "type": "ChainHandler",
+            "filters": [
+                {
+                    "type": "CookieFilter",
+                    "managed": [
+                        "ZARAFA_WEBAPP"
+                    ]
+                },
+                {
+                    "type": "StaticRequestFilter",
+                    "path": "/webapp/",
+                    "autologin": false,
+                    "content_regexp": "login_main",
+                    "form": {
+                        "username": "$(USER_LOGIN)",
+                        "password": "$(USER_PASSWD)"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+]]>	  
+</screen>
+  </section>
+
+</section>
+  <xi:include href="colophon.xml" />
+</article>

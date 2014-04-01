@@ -1,0 +1,238 @@
+#applicationsHeader {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	color: #333;
+	background: #222;
+	background: linear-gradient(to bottom, #222, #111) repeat scroll 0 0 transparent;
+}
+
+#applicationsHeader #headerLogo {
+	float: left;
+	margin: 5px;
+}
+
+#applicationsHeader h1 {
+	float: right;
+	margin: 20px;
+	color: #808080;
+	font-size: 2em;
+}
+
+#applicationsHeader > a {
+    display: block;
+    float: right;
+    margin: 10px 10px 0 0;
+    text-align: center;
+}
+
+#applicationsHeader a {
+	color: #AACBEC;
+}
+
+#applicationsHeader a:hover {
+	color: #ECD0AA;
+}
+
+#applicationsHeader #newsList {
+	color: #FFFFFF;
+	float: left;
+	height: 80px;
+	margin: 5px 10px 5px 0;
+	overflow: auto;
+	width: 30%;
+}
+
+#applicationsHeader #newsList ul {
+	margin: 0;
+}
+
+#applicationsHeader #newsList li { 
+	cursor: pointer;
+}
+
+#applicationsHeader #newsList .date {
+	display: inline-block;
+	width: 62px;
+	font-weight: bold;
+}
+
+#applicationsHeader #newsList .title:before {
+	content: ":";
+	margin-right: 6px;
+}
+
+#applicationsHeader > a:hover img, #applicationsHeader > a:hover div {
+	opacity: 0.5;
+}
+
+.collapse {
+	clear: both;
+}
+
+#applicationsContainer {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 0 0;
+	padding: 0px;
+	background: #eee;
+	border-bottom: 1px solid #ccc;
+}
+
+#appsContainer ul {
+	margin: 0;
+	padding: 0;
+	clear: left;
+}
+
+#appsContainer ul:last-child {
+    padding-top: 6px;
+}
+
+#appsContainer li {
+	margin: 0 0 2px 2px;
+	padding: 5px;
+	list-style: none;
+	float:left;
+	text-align: center;
+	display: block;
+	background-color: #def;
+	width: 110px;
+	height: 90px;
+}
+
+#appsContainer li.applicationLauncherEnabled:hover {
+	background-color: #95BBFF;
+}
+
+#appsContainer li.launching, 
+#appsContainer li.applicationLauncherEnabled.launched:hover, 
+#appsContainer li.applicationLauncherEnabled.launching:hover {
+	background-color: #6EBB1B;
+}
+
+#appsContainer li.launched {
+	background-color: #147400;
+	color: #FFF;
+}
+
+#appsContainer li.launching {
+	background-color: #6EBB1B;
+	color: #FFF;
+}
+
+#appsContainer li.launched {
+	background-color: #147400;
+}
+
+#appsContainer li.applicationLauncherDisabled {
+	opacity: 0.40;
+	filter: alpha(opacity=40);
+	-moz-opacity: 0.40;
+	font-weight: bold;
+}
+
+#appsContainer li.applicationLauncherEnabled {
+	opacity: 1.00;
+	filter: alpha(opacity=100);
+	-moz-opacity: 1.00;
+	cursor: pointer;
+}
+
+#appsContainer li .application_instance_counter {
+	font-size: 0.9em;
+	font-style: italic;
+	display: block;
+	height: 0.9em;
+}
+
+#appsContainer li .application_name {
+    margin: 5px 0 0;
+    padding: 0;
+}
+
+#appsContainer li.applicationTaskbar {
+	background-color: #dcc;
+}
+
+#appsContainer li.applicationTaskbar .application_icon {
+	max-width: 100px;
+	max-height: 50px;
+}
+
+#appsContainer li.applicationTaskbar:hover .application_icon {
+	box-shadow: 2px 3px 5px rgba(0,0,0,0.30), 0 0 50px rgba(0,0,0,0.1) inset;
+}
+
+#appsContainer li.applicationTaskbar .application_name {
+	max-width: 100%;
+	max-height: 1em;
+	overflow: hidden;
+}
+
+#fileManagerContainer {
+	background-color: inherit;
+	border-left: 5px solid;
+	bottom: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 90px;
+	width: 69%;
+	width: calc(70% - 5px);
+}
+
+#fileManagerContainer h2 {
+	padding: 6px;
+}
+
+#fileManagerContainer div {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	top: 32px;
+	right: 0px;
+}
+
+#fileManagerContainer iframe {
+	border: none;
+	height: 100%;
+	width: 100%;
+}
+
+#appsContainer {
+	width: 100%;
+	overflow: auto;
+	position: absolute;
+	top: 90px;
+	bottom: 0px;
+}
+
+#appsContainer.withFileManager {
+	width: 30%;
+	background-color: inherit;
+}
+
+.menuToggled #fileManagerContainer {
+	z-index: 1000;
+	opacity: 0.95;
+}
+
+.menuToggled #appsContainer {
+	z-index: 1000;
+	opacity: 0.95;
+}
+
+.menuToggled #applicationsHeader {
+	z-index: 1000;
+}
+
+.menuToggled #headerLogo {
+	border-radius: 15px;
+	box-shadow: 0 0 15px 5px rgba(255, 255, 190, 0.75);
+}

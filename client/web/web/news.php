@@ -30,7 +30,7 @@ if (! array_key_exists('ovd-client', $_SESSION) || ! array_key_exists('sessionma
 }
 
 $sm = $_SESSION['ovd-client']['sessionmanager'];
-$xml = $sm->query('news.php');
+$xml = $sm->query('news');
 if (! $xml) {
 	echo return_error(0, 'Invalid XML');
 	die();

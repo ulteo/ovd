@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import glob
+import grp
 import os
 import statvfs
 import time
@@ -40,7 +41,6 @@ from User import User
 class Role(AbstractRole):
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
-		self.loop = False
 		self.shares = {}
 		self.FSBackend = FSBackend()
 	
@@ -77,23 +77,28 @@ class Role(AbstractRole):
 		return "FileServer"
 	
 	
-	def stop(self):
-		self.loop = False
-	
-	
 	def finalize(self):
 		self.cleanup_samba()
 		self.purgeGroup()
-		self.FSBackend.stop()
+		if not self.FSBackend.stop():
+			self.FSBackend.force_stop()
 	
 	
 	def run(self):
 		self.status = Role.STATUS_RUNNING
-		self.loop = True
-		
 		while self.loop:
-			time.sleep(5)
-		
+			time.sleep(2)
+			if self.status == Role.STATUS_STOPPING:
+				if len(self.get_enabled_usershares()) > 0:
+					Logger.debug("FileServer:: Waiting for usershares removal")
+					continue
+				
+				if len(System.groupMember(Config.group)) > 1:  # because www-data
+					Logger.debug("FileServer:: Waiting for groups removal")
+					continue
+				
+				break
+				
 		self.status = Role.STATUS_STOP
 	
 	
@@ -153,6 +158,14 @@ class Role(AbstractRole):
 		htgroup = HTGroup(Config.dav_group_file)
 		htgroup.purge()
 		
+		try:
+			groups = [g.gr_name for g in grp.getgrall() if g.gr_name.startswith("ovd_share_")]
+			for g in groups:
+				System.groupDelete(g)
+                except Exception:
+                        Logger.exception("Failed to purge groups")
+           		ret = False
+		
 		return ret
 	
 	
@@ -191,7 +204,12 @@ class Role(AbstractRole):
 		p = System.execute("net usershare list")
 		if p.returncode is not 0:
 			Logger.error("FS: unable to 'net usershare list': %d => %s"%(p.returncode, p.stdout.read()))
-			return []
+			res = []
+			try:
+				res = os.listdir("/var/lib/samba/usershares/")
+			except Exception, e:
+				Logger.exception("FS: unable to list content of /var/lib/samba/usershares")
+			return res
 		
 		names = [s.strip() for s in p.stdout.read().splitlines()]
 		

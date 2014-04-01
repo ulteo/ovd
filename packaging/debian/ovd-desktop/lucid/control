@@ -2,16 +2,44 @@ Source: ovd-desktop
 Section: x11
 Priority: extra
 Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
+ libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
+ xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev,
+ librsvg2-bin
 Standards-Version: 3.7.3
-Build-Depends: cdbs, debhelper (>= 6)
 
 Package: ulteo-ovd-desktop
 Architecture: all
-Depends: ulteo-ovd-desktop-settings, ulteo-xfce4-restricted-menu-plugin,
- thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
- xfdesktop4, xfce4-utils, xfce4-panel
-Recommends: xinit, app-install-data, xfce4-mcs-plugins, xfce4-icon-theme
+Depends: ulteo-ovd-desktop-gtk-theme, dmz-cursor-theme, ulteo-xfce4-restricted-menu-plugin,
+ xfwm4, xfce4-session, xfdesktop4, xfce4-utils, xfce4-panel, thunar
+Recommends: xinit, app-install-data, xfce4-mcs-plugins, xfce4-icon-theme,
+ ulteo-ovd-desktop-gtk-theme
 Suggests: gdm
-Conflicts: xfce (>= 4.6)
+Conflicts: xfce (>= 4.6), ulteo-ovd-xfce-default-settings,
+	xubuntu-default-settings, thunar-settings (<< 0.9.0-4ulteo2)
+Replaces: thunar-data, xfce4-utils
 Description: Ulteo Open Virtual Desktop - XFCE desktop
  A desktop based on Xfce 4.4 for Ulteo OVD solution
+
+Package: ulteo-plymouth-theme
+Architecture: any
+Depends: ${misc:Depends}, plymouth, plymouth-label
+Provides: plymouth-theme
+Description: Ulteo plymouth theme: graphical boot animation theme
+ Plymouth is an application that runs very early in the boot process
+ (even before the root filesystem is mounted!) that provides a graphical
+ boot animation while the boot process happens in the background.
+ .
+ This package contains the default ulteo logo theme.
+
+Package: ulteo-xfce4-restricted-menu-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Restricted menu for the xfce4 panel
+ This plugin for the Xfce panel allows the administrateur to restrict the
+ access to the available applications.
+
+Package: ulteo-ovd-desktop-gtk-theme
+Architecture: all
+Depends: libgtk2.0-bin, gtk2-engines-xfce
+Description: Ulteo Open Virtual Desktop

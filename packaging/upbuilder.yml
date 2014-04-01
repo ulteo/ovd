@@ -2,6 +2,7 @@ upbuilder:
   deb: "packaging/debian/$(module)"
   rpm: "packaging/rpm/$(module)"
   win: "packaging/windows/$(module)"
+  lin: "packaging/linux/$(module)"
   packages:
     sm:
       src: "SessionManager"
@@ -9,11 +10,24 @@ upbuilder:
       builder: autotools
       archs: $(consts.ALL_ARCH)
       autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
+    smp:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "SessionManager"
+      module: "ovd-session-manager-premium"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+      autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz' -p -m ovd-session-manager-premium"
+      clones:
+        - { source: "SessionManager", dest: "web/premium", orig: "/ulteo/premium"}
     ac:
       src: "AdminConsole"
       module: "ovd-administration-console"
       builder: autotools
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { orig: "/ulteo/tcpdf", dest: "includes/tcpdf", branch: "master"}
+        - { orig: "/ulteo/EditArea", dest: "web/media/script/lib/edit_area", branch: "master", source: "edit_area"}
     wc:
       src: "client/web"
       module: "ovd-web-client"
@@ -39,13 +53,12 @@ upbuilder:
            files: {"libPCSC.dll": "required_libraries/libPCSC/32/libPCSC.dll"}
           ovd-java-jni:
            files: {"libWindowsPaths.dll": "required_libraries/libPCSC/32/libWindowsPaths.dll"}
+          ovd-jni-rdp-32:
+           files: {"libRDP.dll": "required_libraries/librdp/32/librdp.dll"}
+          ovd-jni-rdp-64:
+           files: {"libRDP.dll": "required_libraries/librdp/64/librdp.dll"}
       archs: $(consts.ANY_ARCH)
       env: $(consts.JAVA_ENV)
-    settings:
-      src: "ApplicationServer/desktop"
-      module: "ovd-desktop-settings"
-      builder: autotools
-      archs: $(consts.ANY_ARCH)
     launcher:
       src: "client/OVDIntegratedLauncher"
       module: "ovd-integrated-launcher"
@@ -71,11 +84,14 @@ upbuilder:
       module: "ovd-subsystem"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
     desktop:
       module: "ovd-desktop"
-      archs: $(consts.ALL_ARCH)
-      builder: tar
-      meta: True
+      builder: autotools
+      src: "ApplicationServer/desktop"
+      archs: $(consts.ANY_ARCH)
+      clones:
+        - { dest: "icons/theme", orig: "/ulteo/artwork", source: "icon-theme", branch: "master" }
     easy:
       module: "ovd-easy-install"
       archs: $(consts.ALL_ARCH)
@@ -103,6 +119,8 @@ upbuilder:
         sdist_source: ovd-native-client
       builder: ant
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     ha:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -119,6 +137,8 @@ upbuilder:
       autogen_args: "--gateway"
       builder: python
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { source: "Gateway", dest: "ovd/Role/Gateway/premium", orig: "/ulteo/premium"}
     hyp:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -133,6 +153,8 @@ upbuilder:
       module: "setup-aps"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_aps_$(version).exe": "ulteo-ovd-applicationserver-$(version).exe"
     webdavfs:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -140,6 +162,8 @@ upbuilder:
       module: "setup-webdavfs"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_webdavfs_$(version).exe": "ulteo-webdavfs-$(version).exe"
     nativew:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -147,6 +171,10 @@ upbuilder:
       module: "setup-native-client"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_native-client_$(version).exe": "ulteo-ovd-native-client-$(version).exe"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
     nativews:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -154,3 +182,36 @@ upbuilder:
       module: "setup-native-client-standalone"
       builder: tar
       archs: $(consts.ALL_ARCH)
+      files:
+        "setup_native-client-standalone_$(version).exe": "ulteo-ovd-native-client-standalone-$(version).exe"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
+    wnos:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/wnos"
+      module: "ovd-wnos"
+      builder: autotools
+      archs: $(consts.ALL_ARCH)
+    nativel:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "archive-native-client"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+      files:
+        "ulteo-ovd-native-client_$(version).tar.gz": "ulteo-ovd-native-client_$(version).tar.gz"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
+    nativex:
+      premium: true
+      repo: "ovd-private/$(branch)"
+      src: "client/java"
+      module: "archive-native-client-macosx"
+      builder: tar
+      archs: $(consts.ALL_ARCH)
+      files:
+        "ulteo-ovd-native-client_$(version).app.zip": "ulteo-ovd-native-client_$(version).app.zip"
+      clones:
+        - { source: "JavaClient", dest: "src/org/ulteo/ovd/premium", orig: "/ulteo/premium"}
