@@ -1,88 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
-	  [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY parent "Support_SLES_11.SP1.xml">
+]>
+<article>
   <transform_var name="distrib_pretty_name" value="openSUSE 11.3"/>
-  <transform_var name="distrib_name" value="opensuse" />
+
+  <transform_var name="distrib_name" value="opensuse"/>
+
   <transform_var name="distrib_version" value="11.3"/>
+
   <transform_var name="distrib_dvd_url" value="http://software.opensuse.org"/>
+
   <transform_var name="rpm_install_cmd" value="zypper"/>
+
   <transform_var name="rpm_mysql_packages" value="mysql"/>
+
   <transform_var name="mysql_service" value="mysql"/>
+
   <transform_var name="apache_service" value="apache2"/>
+
   <transform_var name="samba_service" value="samba"/>
 
-  <xi:include href="&parent;" xpointer="header" />
-  <xi:include href="&parent;" xpointer="first_para" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="header"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="first_para"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
   <section id="prerequisites">
-    <xi:include href="&parent;" xpointer="prerequisites_title" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="prerequisites_title"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <para>
-      @distrib_pretty_name@ was the latest stable version until March
-      2011. It can be
-      downloaded <ulink url="http://software.opensuse.org">here</ulink>.
-    </para>
+    <para>@distrib_pretty_name@ can be downloaded <ulink
+    url="http://software.opensuse.org">here</ulink>.</para>
 
-    <xi:include href="&parent;" xpointer="prerequisites_root" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="prerequisites_root"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="system_requirements" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="system_requirements"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="warning_name_examples" />
-
-    <xi:include href="&parent;" xpointer="seLinux" />
+    <xi:include href="Support_SLES_11.SP1.xml"
+                xpointer="warning_name_examples"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
   </section>
 
-  <xi:include href="&parent;" xpointer="repository" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-  <xi:include href="&parent;" xpointer="sm" />
-  <xi:include href="&parent;" xpointer="subsystem" />
-  <xi:include href="&parent;" xpointer="wc" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wc"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
   <section id="aps">
-    <title id="aps_title">Application Server installation (native method)</title>
+    <title id="aps_title">Application Server installation (native
+    method)</title>
 
     <itemizedlist>
       <listitem>
-        <para id="aps_desktop">
-          Install a desktop envirnoment into your server if there is none yet:
-        </para>
+        <para id="aps_desktop">Install a desktop envirnoment into your server
+        if there is none yet:</para>
+
         <screen>
-<![CDATA[# @rpm_install_cmd@ install xfce4-desktop xfce4-settings]]>
+# @rpm_install_cmd@ install xfce4-desktop xfce4-settings
         </screen>
       </listitem>
+
       <listitem>
-        <para id="aps_applications">
-          Install some useful graphical applications :
-        </para>
+        <para id="aps_applications">Install some useful graphical applications
+        :</para>
+
         <screen>
-<![CDATA[# @rpm_install_cmd@ install gimp libreoffice]]>
+# @rpm_install_cmd@ install gimp libreoffice
         </screen>
       </listitem>
+
       <listitem>
-        <para id="aps_package">
-          Install the package <emphasis>ulteo-ovd-slaveserver-role-aps</emphasis>:
-        </para>
+        <para id="aps_package">Install the package
+        <emphasis>ulteo-ovd-slaveserver-role-aps</emphasis>:</para>
+
         <screen>
-<![CDATA[# @rpm_install_cmd@ install ulteo-ovd-slaveserver-role-aps]]>
+# @rpm_install_cmd@ install ulteo-ovd-slaveserver-role-aps
         </screen>
       </listitem>
+
       <listitem>
         <para>Launch the configuration tool</para>
+
         <screen>
-<![CDATA[# ovd-slaveserver-config
-Session Manager address [127.0.0.1]: sm.test.demo]]>
+# ovd-slaveserver-config
+Session Manager address [127.0.0.1]: sm.test.demo
         </screen>
-       </listitem>
-       <listitem>
+      </listitem>
+
+      <listitem>
         <para>Restart the service</para>
+
         <screen>
-<![CDATA[# chkconfig ulteo-ovd-slaveserver on
-# service ulteo-ovd-slaveserver stop]]>
+# chkconfig ulteo-ovd-slaveserver on
+# service ulteo-ovd-slaveserver stop
         </screen>
-       </listitem>
+      </listitem>
     </itemizedlist>
   </section>
-  <xi:include href="colophon.xml" />
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>

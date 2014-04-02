@@ -25,7 +25,42 @@
 
     <xi:include href="&parent;" xpointer="warning_name_examples" />
 
-    <xi:include href="&parent;" xpointer="seLinux" />
+     <simplesect id="seLinux">
+      <title id="seLinux_title">SELinux</title>
+
+      <para id="seLinux_para1">Ulteo OVD is not compatible with SELinux yet.
+      So, if you have SELinux installed and enabled on your system, you have
+      to disable it.</para>
+
+      <para id="seLinux_para2">To disable SELinux: <itemizedlist>
+          <listitem>
+            <para>Edit the <emphasis>/etc/selinux/config</emphasis> file and
+            set the <emphasis>SELINUX</emphasis> variable to
+            <emphasis>disabled</emphasis>.</para>
+
+            <screen>
+SELINUX=disabled
+            </screen>
+          </listitem>
+
+          <listitem>
+            <para>Reboot your system</para>
+
+            <screen>
+# reboot
+            </screen>
+          </listitem>
+
+          <listitem>
+            <para>Check SELinux is now disabled</para>
+
+            <screen>
+# sestatus
+SELinux status:              disabled
+            </screen>
+          </listitem>
+        </itemizedlist></para>
+    </simplesect>
   </section>
 
   <section id="repository">

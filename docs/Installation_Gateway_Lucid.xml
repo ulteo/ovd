@@ -106,7 +106,7 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
            or from the Ulteo OVD DVD. The second one is only available
            <ulink
            url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_version@.tar.gz">online</ulink>,
-           using your @GOLD_NAME@ Edition account credentials.
+           using your Premium Edition account credentials.
          </para>
          <para>
            Download or copy the two archives to the

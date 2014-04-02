@@ -101,6 +101,10 @@
         </listitem>
       </itemizedlist>
     </simplesect>
+    
+    <xi:include href="common.xml"
+                      xpointer="prerequisites_all"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <simplesect id="sudo">
       <title>sudo</title>

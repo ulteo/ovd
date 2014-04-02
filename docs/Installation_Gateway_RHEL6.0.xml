@@ -47,8 +47,8 @@
       </listitem>
 
       <listitem>
-        <para>An Internet connection that provides HTTP access to install @distrib_name@
-        packages.</para>
+        <para>An Internet connection that provides HTTP access to install
+        @distrib_name@ packages.</para>
       </listitem>
 
       <listitem>
@@ -63,6 +63,9 @@
       multiple roles are installed on the same system, Ulteo does not
       guarantee the system will work correctly.</para>
     </important>
+
+    <xi:include href="common.xml" xpointer="prerequisites_all_important"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <simplesect id="system_requirements">
       <title>System requirements</title>
@@ -171,9 +174,9 @@ gpgcheck=0          </screen>
 
       <listitem>
         <para>The only installation data required is the host/IP address of
-        the Session Manager. (We use <ulink
-        url="sm.test.demo"/> here as an example, but of course, you have to
-        specify your own domain name).</para>
+        the Session Manager. (We use <ulink url="sm.test.demo"/> here as an
+        example, but of course, you have to specify your own domain
+        name).</para>
 
         <para>
           <inlinemediaobject>
@@ -196,28 +199,28 @@ gpgcheck=0          </screen>
   </section>
 
   <section id="webclient_gw">
-	<title>Web Portal Configuration</title>
-	<para>For security reasons, the Gateway doesn't allow communication 
-	to the Web Portal by default. If you want to provide access 
-	to the Web Portal via the Gateway, you have to change the default configuration.
-	</para>	 
-    <para>Edit the slaveserver.conf file in 
-    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
-    </para>
+    <title>Web Portal Configuration</title>
+
+    <para>For security reasons, the Gateway doesn't allow communication to the
+    Web Portal by default. If you want to provide access to the Web Portal via
+    the Gateway, you have to change the default configuration.</para>
+
+    <para>Edit the slaveserver.conf file in
+    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this
+    line:</para>
+
     <screen>
-		<![CDATA[# web_client = http[s]://ip[:port]/]]>
+		# web_client = http[s]://ip[:port]/
     </screen>
-    <para>You have to uncomment the variable and set the value to the 
-    URL of your Web Portal. For example:
-        <screen>
-			<![CDATA[web_client = http://webportal.test.demo/]]>
-		</screen>
-    </para> 
-    <para>Now, restart the slaverserver service.
-		<screen>
-			<![CDATA[# /etc/init.d/ulteo-ovd-slaveserver restart]]>
-		</screen>
-     </para>     
+
+    <para>You have to uncomment the variable and set the value to the URL of
+    your Web Portal. For example: <screen>
+			web_client = http://webportal.test.demo/
+		</screen></para>
+
+    <para>Now, restart the slaverserver service. <screen>
+			# /etc/init.d/ulteo-ovd-slaveserver restart
+		</screen></para>
   </section>
 
   <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
