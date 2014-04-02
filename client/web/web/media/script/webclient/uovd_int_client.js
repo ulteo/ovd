@@ -228,8 +228,8 @@ function initialize_defaults() {
 	defaults.language              = jQuery('#session_language').val();
 	defaults.keymap                = jQuery('#session_keymap').val();
 	defaults.timezone              = getTimezoneName();
-	defaults.width                 = jQuery(window).innerWidth();
-	defaults.height                = jQuery(window).innerHeight();
+	defaults.width                 = window.innerWidth;
+	defaults.height                = window.innerHeight;
 	defaults.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
 	defaults.debug                 = jQuery("#debug_1").prop('checked');
 	defaults.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
@@ -257,8 +257,8 @@ function initialize_settings() {
 	settings.language              = jQuery('#session_language').val();
 	settings.keymap                = jQuery('#session_keymap').val();
 	settings.timezone              = getTimezoneName();
-	settings.width                 = jQuery(window).innerWidth();
-	settings.height                = jQuery(window).innerHeight();
+	settings.width                 = window.innerWidth;
+	settings.height                = window.innerHeight;
 	settings.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
 	settings.debug                 = jQuery("#debug_1").prop('checked');
 	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
@@ -307,8 +307,8 @@ function initialize_ui() {
 
 	/* Bind resize events */
 	jQuery(window).resize(function() {
-		settings.width  = jQuery(window).innerWidth();
-		settings.height = jQuery(window).innerHeight();
+		settings.width  = window.innerWidth;
+		settings.height = window.innerHeight;
 	});
 
 	/* Bind UI events (not forms) */
