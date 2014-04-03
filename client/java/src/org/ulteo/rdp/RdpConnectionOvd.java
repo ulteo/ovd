@@ -137,6 +137,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * @throws OvdException
 	 */
 	public void initSecondaryChannels() throws OvdException, RdesktopException {
+		this.initIMEChannel();
 		this.initClipChannel();
 
 		if ((this.flags & MODE_MULTIMEDIA) != 0) {

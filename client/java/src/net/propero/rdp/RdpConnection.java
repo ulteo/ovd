@@ -47,6 +47,7 @@ import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
+import net.propero.rdp.rdp5.imer.IMEChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected SoundChannel soundChannel = null;
 	protected ClipChannel clipChannel = null;
 	protected SeamlessChannel seamChannel = null;
+	protected IMEChannel imeChannel = null;
 	
 	protected Rdp5 RdpLayer = null;
 	protected Options opt = null;
@@ -317,6 +319,13 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.seamChannel.setClip(clipChannel);
 	}
 
+	
+	protected void initIMEChannel() throws RdesktopException {
+		this.imeChannel = new IMEChannel(this.opt, this.common);
+		this.addChannel(this.imeChannel);
+	}
+	
+	
 	protected void initSeamlessChannel() throws RdesktopException {
 		this.opt.seamlessEnabled = true;
 		if (this.seamChannel != null)
