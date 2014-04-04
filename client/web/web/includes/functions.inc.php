@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2014
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -210,6 +210,7 @@ function get_available_translations($lang) {
 		'mode'							=>	_('Mode'),
 		'mode_desktop'					=>	_('Desktop'),
 		'mode_portal'					=>	_('Portal'),
+		'rdp_mode'						=>	_('Type'),
 		'fullscreen'					=>	_('Fullscreen'),
 		'fullscreen_yes'				=>	_('Yes'),
 		'fullscreen_no'					=>	_('No'),

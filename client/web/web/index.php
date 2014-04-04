@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2014
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
@@ -494,7 +494,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 								<div class="loginElement">
 									<label class="loginLabel" for="rdp_mode">
 										<div class="image_session_mode_png"></div>
-										<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
+										<strong><span id="rdp_mode_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
 										<?php
