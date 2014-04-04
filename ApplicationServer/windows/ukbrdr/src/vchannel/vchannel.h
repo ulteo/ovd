@@ -31,21 +31,12 @@ extern "C" {
 
 #define VCHANNEL_MAX_LINE 1024
 
-#define SEAMLESS_CREATE_MODAL		0x0001
-#define SEAMLESS_CREATE_TOPMOST		0x0002
-#define SEAMLESS_CREATE_POPUP		0x0004
-#define SEAMLESS_CREATE_FIXEDSIZE	0x0008
-#define SEAMLESS_CREATE_TOOLTIP		0x0010
+#ifndef _WIN32
+	#define PACK( __Declaration__ )  __Declaration__ __attribute__((__packed__))
+#else
+	#define PACK( __Declaration__ ) __pragma( pack(push, 1)) __Declaration__ __pragma( pack(pop))
+#endif
 
-#define SEAMLESS_HELLO_RECONNECT	0x0001
-#define SEAMLESS_HELLO_HIDDEN		0x0002
-
-#define SEAMLESS_FOCUS_REQUEST      0X0000
-#define SEAMLESS_FOCUS_RELEASE      0X0001
-
-DLL_EXPORT void debug(char *format, ...);
-
-DLL_EXPORT const char *unicode_to_utf8(const unsigned short *string);
 
 DLL_EXPORT int vchannel_open(const char* name);
 DLL_EXPORT void vchannel_close();
@@ -54,13 +45,10 @@ DLL_EXPORT int vchannel_is_open();
 
 /* read may only be used by a single process. write is completely safe */
 DLL_EXPORT int vchannel_read(char *line, size_t length);
-DLL_EXPORT int vchannel_write(const char *command, const char *format, ...);
+DLL_EXPORT int vchannel_write(char *data, size_t length);
 
 DLL_EXPORT void vchannel_block();
 DLL_EXPORT void vchannel_unblock();
-
-DLL_EXPORT const char *vchannel_strfilter(char *string);
-DLL_EXPORT const char *vchannel_strfilter_unicode(const unsigned short *string);
 
 #ifdef __cplusplus
 }

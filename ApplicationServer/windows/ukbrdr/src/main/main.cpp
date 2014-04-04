@@ -1,25 +1,29 @@
 #include <iostream>
 #include <windows.h>
 #include <vchannel/vchannel.h>
-#include "ime.h"
+#include "KeyboardImprovement.h"
+#include "win.h"
 
+#define REFRESH_TIME 500
 
 using namespace std;
 
 
 int main(int argc, char** argv) {
+	KeyboardImprovement ki;
 
-	if (!ime_init()) {
+	if (!ki.init()) {
 		return 2;
 	}
 
-	while(true) {
-		std::cout<<"pouet"<<std::endl;
-		vchannel_write("TEST ", "");
+	while (true)
+	{
+		ki.update();
+		ki.processNextMessage();
 
-		Sleep(1000);
+		Sleep(REFRESH_TIME);
 	}
-	
+
 	return 0;
 }
 

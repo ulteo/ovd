@@ -1,5 +1,0 @@
-
-
-bool ime_init();
-
-

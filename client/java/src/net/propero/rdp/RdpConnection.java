@@ -43,11 +43,11 @@ import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
 import net.propero.rdp.rdp5.seamless.SeamListener;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
+import net.propero.rdp.rdp5.ukbrdr.UkbrdrChannel;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
-import net.propero.rdp.rdp5.imer.IMEChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.apache.log4j.Logger;
@@ -69,7 +69,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected SoundChannel soundChannel = null;
 	protected ClipChannel clipChannel = null;
 	protected SeamlessChannel seamChannel = null;
-	protected IMEChannel imeChannel = null;
+	protected UkbrdrChannel ukbrdrChannel = null;
 	
 	protected Rdp5 RdpLayer = null;
 	protected Options opt = null;
@@ -321,8 +321,8 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	
 	protected void initIMEChannel() throws RdesktopException {
-		this.imeChannel = new IMEChannel(this.opt, this.common);
-		this.addChannel(this.imeChannel);
+		this.ukbrdrChannel = new UkbrdrChannel(this.opt, this.common);
+		this.addChannel(this.ukbrdrChannel);
 	}
 	
 	

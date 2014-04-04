@@ -30,90 +30,11 @@
 
 #include "vchannel.h"
 
-#define INVALID_CHARS ","
-#define REPLACEMENT_CHAR '_'
-
-#ifdef __GNUC__
-#define SHARED __attribute__((section ("SHAREDDATA"), shared))
-#else
-#define SHARED
-#endif
-
-// Shared DATA
-#pragma data_seg ( "SHAREDDATA" )
-
-unsigned int g_vchannel_serial SHARED = 0;
-
-#pragma data_seg ()
-
-#pragma comment(linker, "/section:SHAREDDATA,rws")
-
 static HANDLE g_mutex = NULL;
 static HANDLE g_vchannel = NULL;
 static unsigned int g_opencount = 0;
 
-DLL_EXPORT void
-debug(char *format, ...)
-{
-	va_list argp;
-	char buf[256];
 
-	va_start(argp, format);
-	_vsnprintf(buf, sizeof(buf), format, argp);
-	va_end(argp);
-
-	vchannel_strfilter(buf);
-
-	vchannel_write("DEBUG", buf);
-}
-
-#define CONVERT_BUFFER_SIZE 1024
-static char convert_buffer[CONVERT_BUFFER_SIZE];
-
-DLL_EXPORT const char *
-unicode_to_utf8(const unsigned short *string)
-{
-	unsigned char *buf;
-	size_t size;
-
-	buf = (unsigned char *) convert_buffer;
-	size = sizeof(convert_buffer) - 1;
-
-	/* We do not handle characters outside BMP (i.e. we can't do UTF-16) */
-	while (*string != 0x0000)
-	{
-		if (*string < 0x80)
-		{
-			if (size < 1)
-				break;
-			*buf++ = (unsigned char) *string;
-			size--;
-		}
-		else if (*string < 0x800)
-		{
-			if (size < 2)
-				break;
-			*buf++ = 0xC0 | (*string >> 6);
-			*buf++ = 0x80 | (*string & 0x3F);
-			size -= 2;
-		}
-		else if ((*string < 0xD800) || (*string > 0xDFFF))
-		{
-			if (size < 3)
-				break;
-			*buf++ = 0xE0 | (*string >> 12);
-			*buf++ = 0x80 | (*string >> 6 & 0x3F);
-			*buf++ = 0x80 | (*string & 0x3F);
-			size -= 2;
-		}
-
-		string++;
-	}
-
-	*buf = '\0';
-
-	return convert_buffer;
-}
 
 DLL_EXPORT int
 vchannel_open(const char* name)
@@ -124,13 +45,12 @@ vchannel_open(const char* name)
 	if (g_opencount > 1)
 		return 0;
 
-	g_vchannel = WTSVirtualChannelOpen(WTS_CURRENT_SERVER_HANDLE,
-					   WTS_CURRENT_SESSION, name);
+	g_vchannel = WTSVirtualChannelOpen(WTS_CURRENT_SERVER_HANDLE, WTS_CURRENT_SESSION, (char*)name);
 
 	if (g_vchannel == NULL)
 		return -1;
 
-	sprintf(mutexName, "Local\\%s", name);
+	sprintf_s(mutexName, sizeof(mutexName), "Local\\%s", name);
 	g_mutex = CreateMutex(NULL, FALSE, mutexName);
 	if (!g_mutex)
 	{
@@ -193,7 +113,7 @@ vchannel_read(char *line, size_t length)
 	if (overflow_mode)
 	{
 		newline = strchr(buffer, '\n');
-		if (newline && (newline - buffer) < bytes_read)
+		if (newline && (newline - buffer) < (long)bytes_read)
 		{
 			size = bytes_read - (newline - buffer) - 1;
 			memmove(buffer, newline + 1, size);
@@ -210,7 +130,7 @@ vchannel_read(char *line, size_t length)
 	}
 
 	newline = strchr(buffer, '\n');
-	if (!newline || (newline - buffer) >= size)
+	if (!newline || (newline - buffer) >= (long)size)
 	{
 		if (size == sizeof(buffer))
 		{
@@ -221,7 +141,7 @@ vchannel_read(char *line, size_t length)
 		return -1;
 	}
 
-	if ((newline - buffer) >= length)
+	if ((newline - buffer) >= (long)length)
 	{
 		errno = ENOMEM;
 		return -1;
@@ -229,7 +149,7 @@ vchannel_read(char *line, size_t length)
 
 	*newline = '\0';
 
-	strcpy(line, buffer);
+	strcpy_s(line, length, buffer);
 	line_size = newline - buffer;
 
 	size -= newline - buffer + 1;
@@ -239,34 +159,17 @@ vchannel_read(char *line, size_t length)
 }
 
 DLL_EXPORT int
-vchannel_write(const char *command, const char *format, ...)
+vchannel_write(char *data, size_t length)
 {
 	BOOL result;
-	va_list argp;
-	char buf[VCHANNEL_MAX_LINE];
-	int size;
 	ULONG bytes_written;
 
 	assert(vchannel_is_open());
 
 	WaitForSingleObject(g_mutex, INFINITE);
 
-	size = _snprintf(buf, sizeof(buf), "%s,%u,", command, g_vchannel_serial);
-
-	assert(size < sizeof(buf));
-
-	va_start(argp, format);
-	size += _vsnprintf(buf + size, sizeof(buf) - size, format, argp);
-	va_end(argp);
-
-	size += _snprintf(buf + size, sizeof(buf) - size, "\n");
-
-	assert(size < sizeof(buf));
-
-	result = WTSVirtualChannelWrite(g_vchannel, buf, (ULONG) size, &bytes_written);
-
-	g_vchannel_serial++;
-
+	result = WTSVirtualChannelWrite(g_vchannel, data, length, &bytes_written);
+	printf("get last error %u\n", GetLastError());
 	ReleaseMutex(g_mutex);
 
 	if (!result)
@@ -285,24 +188,4 @@ DLL_EXPORT void
 vchannel_unblock()
 {
 	ReleaseMutex(g_mutex);
-}
-
-DLL_EXPORT const char *
-vchannel_strfilter(char *string)
-{
-	char *c;
-
-	for (c = string; *c != '\0'; c++)
-	{
-		if (((unsigned char) *c < 0x20) || (strchr(INVALID_CHARS, *c) != NULL))
-			*c = REPLACEMENT_CHAR;
-	}
-
-	return string;
-}
-
-DLL_EXPORT const char *
-vchannel_strfilter_unicode(const unsigned short *string)
-{
-	return vchannel_strfilter((char *) unicode_to_utf8(string));
 }
