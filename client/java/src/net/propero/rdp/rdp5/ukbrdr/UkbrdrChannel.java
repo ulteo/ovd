@@ -22,10 +22,16 @@ public class UkbrdrChannel extends VChannel {
 		UKB_PUSH_TEXT,
 		UKB_PUSH_COMPOSITION
 	};
+	
+	private enum ime_state {
+		UKB_IME_DESACTIVATED,
+		UKB_IME_ACTIVATED,
+	};
 		
 		
 	private int caretX;
 	private int caretY;
+	private ime_state imeState;
 	
     
 	public UkbrdrChannel(Options opt_, Common common_) {
@@ -61,6 +67,7 @@ public class UkbrdrChannel extends VChannel {
 			
 		case UKB_IME_STATUS:
 			System.out.println("ime status");
+			this.imeState = ime_state.values()[(int)data.get8()];
 			break;
 			
 		case UKB_PUSH_COMPOSITION:
