@@ -126,10 +126,17 @@ Exit:
 
 STDAPI CTextService::OnSetFocus(ITfDocumentMgr *pDocMgrFocus, ITfDocumentMgr *pDocMgrPrevFocus)
 {
+	int ime_status_message = RegisterWindowMessage("WM_OVD_IME_STATUS");
 	char buffer[1024];
 	BOOL status;
 
-    status = this->_IsKeyboardDisabled(pDocMgrFocus);
+	status = (this->_IsKeyboardDisabled(pDocMgrFocus) == FALSE);
+
+	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+
+	if (hwnd != 0) {
+		SendMessage(hwnd, ime_status_message, 0, (LPARAM)status);
+	}
 
     sprintf_s(buffer, sizeof(buffer), "IME status %i", status);
     OutputDebugString(buffer);
