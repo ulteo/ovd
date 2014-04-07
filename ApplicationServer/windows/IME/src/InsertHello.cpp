@@ -45,10 +45,10 @@ public:
 STDAPI CInsertHelloEditSession::DoEditSession(TfEditCookie ec)
 {
     //InsertTextAtSelection(ec, _pContext, L"き", (ULONG)wcslen(L"き"));
-	unsigned char text[4] = {0};
-	text[0] = 0xF9;
-	text[1] = 0x30;
-	InsertTextAtSelection(ec, _pContext, (const WCHAR *)text, 2);
+//	unsigned char text[4] = {0};
+//	text[0] = 0xF9;
+//	text[1] = 0x30;
+	InsertTextAtSelection(ec, _pContext, L"Hello world!", (ULONG)wcslen(L"Hello world!"));
     return S_OK;
 }
 

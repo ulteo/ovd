@@ -61,6 +61,7 @@ private:
 
     BOOL _InitLanguageBar();
     void _UninitLanguageBar();
+    BOOL _IsKeyboardDisabled(ITfDocumentMgr *pDocMgrFocus);
 
     //
     // state

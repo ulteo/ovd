@@ -15,6 +15,7 @@
 
 #include "Globals.h"
 #include "TextService.h"
+#include <stdio.h>
 
 //+---------------------------------------------------------------------------
 //
@@ -45,6 +46,75 @@ STDAPI CTextService::OnUninitDocumentMgr(ITfDocumentMgr *pDocMgr)
     return S_OK;
 }
 
+
+
+BOOL CTextService::_IsKeyboardDisabled(ITfDocumentMgr *pDocMgrFocus)
+{
+    ITfCompartmentMgr *pCompMgr = NULL;
+    ITfContext *pContext = NULL;
+    BOOL fDisabled = FALSE;
+
+    if (pDocMgrFocus == NULL)
+    {
+        // if there is no focus document manager object, the keyboard
+        // is disabled.
+        fDisabled = TRUE;
+        goto Exit;
+    }
+
+    if ((pDocMgrFocus->GetTop(&pContext) != S_OK) ||
+        (pContext == NULL))
+    {
+        // if there is no context object, the keyboard is disabled.
+        fDisabled = TRUE;
+        goto Exit;
+    }
+
+    if (pContext->QueryInterface(IID_ITfCompartmentMgr, (void **)&pCompMgr) == S_OK)
+    {
+        ITfCompartment *pCompartmentDisabled;
+        ITfCompartment *pCompartmentEmptyContext;
+
+        // Check GUID_COMPARTMENT_KEYBOARD_DISABLED.
+        if (pCompMgr->GetCompartment(GUID_COMPARTMENT_KEYBOARD_DISABLED, &pCompartmentDisabled) == S_OK)
+        {
+            VARIANT var;
+            if (S_OK == pCompartmentDisabled->GetValue(&var))
+            {
+                if (var.vt == VT_I4) // Even VT_EMPTY, GetValue() can succeed
+                {
+                    fDisabled = (BOOL)var.lVal;
+                }
+            }
+            pCompartmentDisabled->Release();
+        }
+
+        // Check GUID_COMPARTMENT_EMPTYCONTEXT.
+        if (pCompMgr->GetCompartment(GUID_COMPARTMENT_EMPTYCONTEXT, &pCompartmentEmptyContext) == S_OK)
+        {
+            VARIANT var;
+            if (S_OK == pCompartmentEmptyContext->GetValue(&var))
+            {
+                if (var.vt == VT_I4) // Even VT_EMPTY, GetValue() can succeed
+                {
+                    fDisabled = (BOOL)var.lVal;
+                }
+            }
+            pCompartmentEmptyContext->Release();
+        }
+
+        pCompMgr->Release();
+    }
+
+Exit:
+    if (pContext)
+        pContext->Release();
+
+    return fDisabled;
+}
+
+
+
 //+---------------------------------------------------------------------------
 //
 // OnSetFocus
@@ -56,6 +126,13 @@ STDAPI CTextService::OnUninitDocumentMgr(ITfDocumentMgr *pDocMgr)
 
 STDAPI CTextService::OnSetFocus(ITfDocumentMgr *pDocMgrFocus, ITfDocumentMgr *pDocMgrPrevFocus)
 {
+	char buffer[1024];
+	BOOL status;
+
+    status = this->_IsKeyboardDisabled(pDocMgrFocus);
+
+    sprintf_s(buffer, sizeof(buffer), "IME status %i", status);
+    OutputDebugString(buffer);
     //
     // Whenever focus is changed, initialize the TextEditSink.
     //
