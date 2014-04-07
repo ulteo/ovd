@@ -10,10 +10,10 @@
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	InternalWin win(hInstance);
-	KeyboardImprovement ki;
+	KeyboardImprovement& ki = KeyboardImprovement::getInstance();
 	MSG Msg;
 
-	if (!ki.init()) {
+	if (! ki.init()) {
 		return 2;
 	}
 

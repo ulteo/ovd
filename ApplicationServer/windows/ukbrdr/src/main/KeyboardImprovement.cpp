@@ -7,6 +7,11 @@
 using namespace std;
 
 
+KeyboardImprovement& KeyboardImprovement::getInstance() {
+	static KeyboardImprovement instance;
+	return instance;
+}
+
 KeyboardImprovement::KeyboardImprovement() {
 	this->x = 0;
 	this->y = 0;
@@ -87,6 +92,20 @@ bool KeyboardImprovement::sendInit() {
 	msg.header.len = sizeof(msg.u.init);
 
 	msg.u.init.version = UKB_VERSION;
+
+	return this->sendMsg(&msg);
+}
+
+
+bool KeyboardImprovement::sendIMEStatus(int status) {
+	std::cout<<"send IME status "<<(int)status<<std::endl;
+	ukb_msg msg;
+
+	msg.header.type = UKB_IME_STATUS;
+	msg.header.flags = 0;
+	msg.header.len = sizeof(msg.u.ime_status);
+
+	msg.u.ime_status.state = status;
 
 	return this->sendMsg(&msg);
 }

@@ -12,14 +12,17 @@ private:
 	int y;
 
 	bool sendMsg(ukb_msg* msg);
+	KeyboardImprovement();
 
 public:
-	KeyboardImprovement();
+	static KeyboardImprovement& getInstance();
+
 	bool init();
 	bool update();
 	void processNextMessage();
 
 	bool sendInit();
+	bool sendIMEStatus(int status);
 	bool sendCaretPosition();
 };
 
