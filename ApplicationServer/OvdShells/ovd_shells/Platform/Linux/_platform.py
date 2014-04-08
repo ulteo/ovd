@@ -113,6 +113,16 @@ def startDesktop():
 	
 	os.system("/etc/xrdp/startwm.sh")
 
+
+def startSeamless():
+	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")+"/usr/share/ovd:/usr/local/share:/usr/share"
+	os.environ["XDG_CONFIG_DIRS"] = "/etc/xdg"
+	if os.path.exists("/etc/ulteo/xdg"):
+		os.environ["XDG_CONFIG_DIRS"] = "/etc/ulteo/xdg:"+os.environ["XDG_CONFIG_DIRS"]
+	
+	return launch("seamlessrdpshell", False)
+
+
 def startWM():
 	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
 	if os.path.exists("/etc/ulteo/xdg"):

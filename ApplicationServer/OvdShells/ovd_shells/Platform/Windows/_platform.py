@@ -6,6 +6,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2013, 2014
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -195,7 +196,7 @@ def startWM():
 	pass
 
 def startSeamless():
-	launch("seamlessrdpshell")
+	return launch("seamlessrdpshell", False)
 	
 def transformCommand(cmd_, args_):
 		args = args_
