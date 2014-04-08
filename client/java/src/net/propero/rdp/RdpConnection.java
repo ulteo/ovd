@@ -323,6 +323,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected void initIMEChannel() throws RdesktopException {
 		this.ukbrdrChannel = new UkbrdrChannel(this.opt, this.common);
 		this.addChannel(this.ukbrdrChannel);
+		IMEManager.getInstance().addChannel(this.common, this.ukbrdrChannel);
 	}
 	
 	

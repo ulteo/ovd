@@ -21,7 +21,7 @@ JDK_HOME?="C:\Sun\SDK\jdk"
 
 CC=gcc
 CFLAGS=-Wall -I${JDK_HOME}\include -I${JDK_HOME}\include\win32
-LDFLAGS= -lmpr
+LDFLAGS= -lmpr -lImm32
 RM=del
 
 EXEC=libWindowsPaths.dll

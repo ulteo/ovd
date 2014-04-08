@@ -87,3 +87,33 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersona
 JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNIEnv *env, jclass class) {
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 }
+
+JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y) {
+	UINT bits = 1;
+	HWND hwnd = GetForegroundWindow();
+	HWND defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
+	
+	// TODO check windows Class
+	if (hwnd == NULL) {
+		printf("Failed to find foreground Windows\n");
+		return JNI_TRUE;
+	}
+
+	if (defaultIMEWnd == NULL) {
+		printf("Failed to find IME windows");
+		return JNI_TRUE;
+	}
+
+       	CANDIDATEFORM cf;
+       	cf.dwIndex = 0;
+       	cf.dwStyle = CFS_CANDIDATEPOS;
+       	// Since the coordinates are relative to the containing window,
+       	// we have to calculate the coordinates as below.
+       	cf.ptCurrentPos.x = x;
+       	cf.ptCurrentPos.y = y;
+
+       	// sends IMC_SETCANDIDATEPOS to IMM to move the candidate window.
+       	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
+
+	return JNI_TRUE;
+}

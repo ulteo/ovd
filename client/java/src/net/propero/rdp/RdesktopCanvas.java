@@ -16,9 +16,16 @@
 package net.propero.rdp;
 
 import java.awt.*;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.font.TextHitInfo;
+import java.awt.im.InputMethodRequests;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +41,7 @@ import org.apache.log4j.Logger;
 
 // import org.apache.log4j.NDC;
 
-public abstract class RdesktopCanvas extends Canvas implements ImeStateListener {
+public abstract class RdesktopCanvas extends Canvas implements ImeStateListener, InputMethodListener, InputMethodRequests, KeyListener {
     static Logger logger = Logger.getLogger(RdesktopCanvas.class);
 
     private RasterOp rop = null;
@@ -135,7 +142,58 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener 
 
         // now do input listeners in registerCommLayer() / registerKeyboard()
         this.ComponentListener = new ArrayList<Component>();
+        this.addKeyListener(this);
+        this.addInputMethodListener(this);
     }
+    
+    
+    public InputMethodRequests getInputMethodRequests() {
+    	System.out.println("getInputMethodRequests");
+        return this;
+    }
+
+    /* InputMethodListener interface */
+    public void caretPositionChanged(InputMethodEvent e) {
+    }
+
+    public void inputMethodTextChanged(InputMethodEvent e) {
+    	IMEManager.getInstance().inputMethodTextChanged(e, this.common);
+    }
+
+    /* InputMethodRequests interface */
+    public AttributedCharacterIterator cancelLatestCommittedText(AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public AttributedCharacterIterator getCommittedText(int beginIndex, int endIndex, AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public AttributedCharacterIterator getSelectedText(AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public int getCommittedTextLength() {
+    	return 0;
+    }
+	
+    public int getInsertPositionOffset() {
+    	return 0;
+    }
+	
+    public TextHitInfo getLocationOffset(int x, int y) {
+    	return null;
+    }
+	
+    public Rectangle getTextLocation(TextHitInfo offset) {
+    	return new java.awt.Rectangle(100, 200, 0, 10);
+    }
+
+    /* KeyListener interface */
+    public void keyPressed(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) { }
+    public void keyTyped(KeyEvent e) { }
+
     
     public void resize(int width, int height) {
         this.width = width; 

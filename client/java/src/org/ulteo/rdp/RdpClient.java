@@ -34,6 +34,8 @@ import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+
+import net.propero.rdp.IMEManager;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
@@ -426,8 +428,10 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	}
 
 	public void connect() throws OvdException {
-		for (RdpConnectionOvd connection : this.co)
+		for (RdpConnectionOvd connection : this.co) {
+			connection.setInputMethod("unicode_local_ime");
 			connection.connect();
+		}
 	}
 
 	public void disconnect() {
