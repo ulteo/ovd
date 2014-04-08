@@ -14,6 +14,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	MSG Msg;
 
 	if (! ki.init()) {
+		OutputDebugString("Failed to initialize Keyboard improvement object");
 		return 2;
 	}
 
