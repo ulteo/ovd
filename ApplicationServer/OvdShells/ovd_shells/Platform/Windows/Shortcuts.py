@@ -1,6 +1,7 @@
 # Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author David LECHEVALIER <david@ulteo.com> 2013, 2014
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -42,7 +43,7 @@ class Shortcuts(AbstractShortcuts):
 		self.installedShortcut = []
 	
 	
-	def synchronize(self, path):
+	def synchronize(self, config, path):
 		if self.version > 6.1:
 			self.defaultProgram = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_PROGRAMS, 0, 0)
 			desktopLNKFile = os.path.join(self.windowsProgramsDir, "desktop.lnk")
@@ -57,7 +58,8 @@ class Shortcuts(AbstractShortcuts):
 			threading.Thread(target=self.server2012Integration, args=(path,)).start()
 			for p in glob.glob(os.path.join(path, "*")):
 				self.installedShortcut.append(p)
-				self.installToDesktop(os.path.join(path, p))
+				if config.desktop_icons:
+					self.installToDesktop(os.path.join(path, p))
 			
 			self.handler = SessionEndHandler()
 			self.handler.register(self.cleanup)
@@ -65,7 +67,8 @@ class Shortcuts(AbstractShortcuts):
 			return
 
 		for p in glob.glob(os.path.join(path, "*")):
-			self.installToDesktop(os.path.join(path, p))
+			if config.desktop_icons:
+				self.installToDesktop(os.path.join(path, p))
 			self.installToStartMenu(os.path.join(path, p), False)
 	
 	

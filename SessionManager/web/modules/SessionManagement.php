@@ -1115,7 +1115,7 @@ abstract class SessionManagement extends Module {
 			}
 			
 			
-			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode', 'use_local_ime') as $parameter) {
+			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode', 'use_local_ime', 'desktop_icons') as $parameter) {
 				if (! isset($$parameter))
 					continue;
 				

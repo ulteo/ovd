@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2012 Ulteo SAS
+# Copyright (C) 2012-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ class Config:
 	use_known_drives = False
 	profile_mode = None
 	use_local_ime = False
+	desktop_icons = False
 	
 	application_to_start = []
 	scripts_to_start = []
@@ -78,6 +80,9 @@ class Config:
 			
 			elif key == "use_local_ime" and node.getAttribute("value") == "1":
 				self.use_local_ime = True
+			
+			elif key == "desktop_icons" and node.getAttribute("value") == "1":
+				self.desktop_icons = True
 		
 		
 		nodes = shellNode.getElementsByTagName("start")
