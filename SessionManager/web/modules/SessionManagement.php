@@ -1007,7 +1007,11 @@ abstract class SessionManagement extends Module {
 		
 		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
 		$allow_external_applications = array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1;
-		$locale = $this->user->getLocale();
+		if (isset($this->language))
+			$locale = locale2unix($this->language);
+		else
+			$locale = $this->user->getLocale();
+		
 		if (isset($this->timezone) && $this->timezone != '')
 			$timezone = $this->timezone;
 	
