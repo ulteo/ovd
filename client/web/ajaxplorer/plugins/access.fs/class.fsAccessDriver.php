@@ -1218,7 +1218,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	function copyOrMoveFile($destDir, $srcFile, &$error, &$success, $move = false)
 	{
 		$mess = ConfService::getMessages();		
-		$destFile = $this->getPath().$this->encodePath($destDir, false).'/'.$this->encodePath(basename($srcFile));
+		$destFile = $this->getPath().$this->encodePath($destDir, false).'/'.basename($this->encodePath($srcFile));
 		$realSrcFile = $this->getPath().$this->encodePath($srcFile);
 		if ($this->isDir($realSrcFile)) {
 			$isDir = true;
