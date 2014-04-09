@@ -109,8 +109,7 @@ class OvdAppChannel:
 	@classmethod
 	def packet_ORDER_START(cls, packet):
 		if len(packet) < 9:
-			print "Packet length error"
-			return
+			return (None, "Packet length error")
 		
 		token = struct.unpack('<I', packet[1:5])[0]
 		app_id = struct.unpack('<I', packet[5:9])[0]
@@ -121,8 +120,8 @@ class OvdAppChannel:
 	@classmethod
 	def packet_ORDER_STOP(cls, packet):
 		if len(packet) < 5:
-			print "Packet length error"
-			return
+			return (None, "Packet length error")
+		
 		token = struct.unpack('<I', packet[1:5])[0]
 		
 		return (cls.ORDER_STOP, (token))
@@ -136,21 +135,20 @@ class OvdAppChannel:
 			encoding = "UTF-8"
 		
 		if len(packet) < 13 + 4 + 4:
-			print "Packet length error"
-			return
+			return (None, "Packet length error")
+		
 		token = struct.unpack('<I', packet[1:5])[0]
 		app_id = struct.unpack('<I', packet[5:9])[0]
 		
 		dir_type = struct.unpack('>B', packet[9])[0]
 		if dir_type not in [cls.DIR_TYPE_SHARED_FOLDER, cls.DIR_TYPE_RDP_DRIVE, cls.DIR_TYPE_KNOWN_DRIVES, cls.DIR_TYPE_HTTP_URL]:
-			print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
-			return
+			return (None, "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type))
 		
 		ptr = 10
 		l = struct.unpack('<I', packet[ptr:ptr+4])[0]
 		if len(packet) < ptr + l + 4:
-			print "Packet length error"
-			return
+			return (None, "Packet length error")
+		
 		ptr+= 4
 		
 		share = packet[ptr:ptr+l]
@@ -158,25 +156,24 @@ class OvdAppChannel:
 			share = share.decode("UTF-16LE")
 			share = share.encode(encoding)
 		except:
-			print "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting"
-			return
+			return (None, "Message ORDER_START_WITH_ARGS: share argument is not UTF-16-LE srting")
+		
 		ptr+= l
 		
 		#elif dir_type == self.DIR_TYPE_KNOWN_DRIVES:
 			#if len(packet) < ptr + 16:
-				#print "Packet length error"
-				#return
+				#return (None, "Packet length error")
+			#
 			#share = packet[ptr:ptr+16]
 			#ptr+= 16
 		
 		#else:
-			#print "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type)
-			#return
+			#return (None, "Message ORDER_START_WITH_ARGS: unknown dir type %X"%(dir_type))
 		
 		l = struct.unpack('<I', packet[ptr:ptr+4])[0]
 		if len(packet) < ptr + l:
-			print "Packet length error"
-			return
+			return (None, "Packet length error")
+		
 		ptr+= 4
 		
 		path = packet[ptr:ptr+l]
@@ -184,8 +181,8 @@ class OvdAppChannel:
 			path = path.decode("UTF-16LE")
 			path = path.encode(encoding)
 		except:
-			print "Message ORDER_START_WITH_ARGS: path argument is not UTF-16-LE srting"
-			return
+			return (None, "Message ORDER_START_WITH_ARGS: path argument is not UTF-16-LE srting")
+		
 		ptr+=l
 		
 		return (cls.ORDER_START_WITH_ARGS, (token, app_id, dir_type, share, path))
