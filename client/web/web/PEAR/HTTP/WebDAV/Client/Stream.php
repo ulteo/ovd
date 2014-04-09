@@ -474,13 +474,14 @@ class HTTP_WebDAV_Client_Stream
         case 207: // multistatus content
             $this->dirfiles = array();
             $this->dirpos = 0;
+            $iter_dir = 0;
 
             // for all returned resource entries
             foreach (explode("\n", $req->getResponseBody()) as $line) {
                 // get the href URL
                 if (preg_match("@href>([^<]*)@", $line, $matches)) {
                     // skip the directory itself
-                    if ($matches[1] == $this->path) {
+                    if ($iter_dir++ == 0) {
                         continue;
                     }
 
