@@ -7,7 +7,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012-2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -559,6 +559,13 @@ abstract class SessionManagement extends Module {
 
 	public function generateFileServerCredentials() {
 		return false;
+	}
+
+	public function generateWebAppServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['login'] = 'u'.time().gen_string(5).'_WAS'; //hardcoded
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+		return true;
 	}
 
 	public function getDesktopServer($bypass_server_restrictions_ = true) {
