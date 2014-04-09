@@ -15,6 +15,7 @@
 
 #include "globals.h"
 #include "TextService.h"
+#include "PopupWindow.h"
 
 //+---------------------------------------------------------------------------
 //
@@ -72,7 +73,14 @@ CTextService::CTextService()
     _pTextEditSinkContext = NULL;
     _dwTextEditSinkCookie = TF_INVALID_COOKIE;
 
+    //
+    // Initialize the composition object pointer.
+    //
+    _pComposition = NULL;
+    _pPopupWindow = NULL;
+
     _cRef = 1;
+    commit_len = 0;
 }
 
 //+---------------------------------------------------------------------------
@@ -111,6 +119,22 @@ STDAPI CTextService::QueryInterface(REFIID riid, void **ppvObj)
     else if (IsEqualIID(riid, IID_ITfTextEditSink))
     {
         *ppvObj = (ITfTextEditSink *)this;
+    }
+    else if (IsEqualIID(riid, IID_ITfKeyEventSink))
+    {
+    	*ppvObj = (ITfKeyEventSink *)this;
+    }
+    else if (IsEqualIID(riid, IID_ITfCompositionSink))
+    {
+    	*ppvObj = (ITfKeyEventSink *)this;
+    }
+    else if (IsEqualIID(riid, IID_ITfDisplayAttributeProvider))
+    {
+    	*ppvObj = (ITfDisplayAttributeProvider *)this;
+    }
+    else if (IsEqualIID(riid, IID_ITfThreadFocusSink))
+    {
+        *ppvObj = (ITfThreadFocusSink *)this;
     }
 
     if (*ppvObj)
@@ -191,6 +215,30 @@ STDAPI CTextService::Activate(ITfThreadMgr *pThreadMgr, TfClientId tfClientId)
     if (!_InitLanguageBar())
         goto ExitError;
 
+    //
+    // Initialize KeyEventSink
+    //
+    if (!_InitKeyEventSink())
+        goto ExitError;
+
+    //
+    // Initialize Thread focus sink.
+    //
+    if (!_InitThreadFocusSink())
+        goto ExitError;
+
+    //
+    // Initialize PreservedKeys
+    //
+    if (!_InitPreservedKey())
+        goto ExitError;
+
+    //
+    // Initialize display guid atom
+    //
+    if (!_InitDisplayAttributeGuidAtom())
+        goto ExitError;
+
     return S_OK;
 
 ExitError:
@@ -220,6 +268,27 @@ STDAPI CTextService::Deactivate()
     // Uninitialize Language Bar.
     //
     _UninitLanguageBar();
+
+    //
+    // Uninitialize thread focus sink.
+    //
+    _UninitThreadFocusSink();
+
+    //
+    // Uninitialize KeyEventSink
+    //
+    _UninitKeyEventSink();
+
+    //
+    // Uninitialize PreservedKeys
+    //
+    _UninitPreservedKey();
+
+    if (_pPopupWindow != NULL)
+    {
+        delete _pPopupWindow;
+        _pPopupWindow = NULL;
+    }
 
     // Release ALL refs to _pThreadMgr in Deactivate
     if (_pThreadMgr != NULL)

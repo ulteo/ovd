@@ -28,7 +28,7 @@ void InsertTextAtSelection(TfEditCookie ec, ITfContext *pContext, const WCHAR *p
 class CInsertHelloEditSession : public CEditSessionBase
 {
 public:
-    CInsertHelloEditSession(ITfContext *pContext) : CEditSessionBase(pContext) 
+    CInsertHelloEditSession(CTextService *pTextService, ITfContext *pContext) : CEditSessionBase(pTextService, pContext)
     {
     }
 
@@ -114,7 +114,7 @@ void CTextService::InsertHello()
         goto Exit;
     }
 
-    if (pInsertHelloEditSession = new CInsertHelloEditSession(pContext))
+    if (pInsertHelloEditSession = new CInsertHelloEditSession(this, pContext))
     {
         //A document write lock is required to insert text
         // the CInsertHelloEditSession will do all the work when the

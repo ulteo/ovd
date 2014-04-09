@@ -47,4 +47,7 @@ extern const GUID c_guidProfile;
 extern const GUID c_guidLangBarItemButton;
 
 
+extern const GUID c_guidDisplayAttributeInput;
+extern const GUID c_guidDisplayAttributeConverted;
+
 #endif // GLOBALS_H

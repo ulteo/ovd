@@ -78,14 +78,29 @@ bool KeyboardImprovement::receiveHeader(ukb_msg* msg) {
 bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
 	int size;
 	char* data;
+    COPYDATASTRUCT cds;
+	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+
 
 	data = new char[msg->header.len];
-
 	size = vchannel_read(data, msg->header.len);
 
 	if (size < 0) {
 		return false;
 	}
+
+	if (hwnd == NULL) {
+		OutputDebugString("Failed to find windows with class OVDIMEClass");
+		return false;
+	}
+
+
+    cds.dwData = 1;
+    cds.cbData = msg->header.len;
+    cds.lpData = data;
+
+	// sends IMC_SETCANDIDATEPOS to IMM to move the candidate window.
+    SendMessage(hwnd, WM_COPYDATA, 0, (LPARAM)&cds);
 
 	delete data;
 	return true;

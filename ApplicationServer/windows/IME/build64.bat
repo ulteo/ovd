@@ -1,4 +1,4 @@
-IF EXIST build64 RD /Q /S build64
+REM IF EXIST build64 RD /Q /S build64
 
 md build64
 cd build64

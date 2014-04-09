@@ -1,33 +1,24 @@
-//////////////////////////////////////////////////////////////////////
-//
-//  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-//  ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED
-//  TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-//  PARTICULAR PURPOSE.
-//
-//  Copyright (C) 2003  Microsoft Corporation.  All rights reserved.
-//
-//  EditSession.h
-//
-//          CEditSessionBase declaration.
-//
-//////////////////////////////////////////////////////////////////////
-
 #ifndef EDITSESSION_H
 #define EDITSESSION_H
+
+#include "TextService.h"
 
 class CEditSessionBase : public ITfEditSession
 {
 public:
-    CEditSessionBase(ITfContext *pContext)
+    CEditSessionBase(CTextService *pTextService, ITfContext *pContext)
     {
         _cRef = 1;
         _pContext = pContext;
         _pContext->AddRef();
+
+        _pTextService = pTextService;
+        _pTextService->AddRef();
     }
     virtual ~CEditSessionBase()
     {
         _pContext->Release();
+        _pTextService->Release();
     }
 
     // IUnknown
@@ -75,6 +66,7 @@ public:
 
 protected:
     ITfContext *_pContext;
+    CTextService *_pTextService;
 
 private:
     LONG _cRef;     // COM ref count

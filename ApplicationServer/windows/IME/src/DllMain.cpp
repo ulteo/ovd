@@ -14,6 +14,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "Globals.h"
+#include "PopupWindow.h"
+
 
 //+---------------------------------------------------------------------------
 //
@@ -31,6 +33,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID pvReserved)
 
             if (!InitializeCriticalSectionAndSpinCount(&g_cs, 0))
                 return FALSE;
+
+
+            CPropertyPopupWindow::StaticInit();
 
             break;
 

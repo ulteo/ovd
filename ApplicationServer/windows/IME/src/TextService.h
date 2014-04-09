@@ -17,10 +17,15 @@
 #define TEXTSERVICE_H
 
 class CLangBarItemButton;
+class CPropertyPopupWindow;
 
 class CTextService : public ITfTextInputProcessor,
                      public ITfThreadMgrEventSink,
-                     public ITfTextEditSink
+                     public ITfTextEditSink,
+                     public ITfKeyEventSink,
+                     public ITfCompositionSink,
+                     public ITfThreadFocusSink,
+                     public ITfDisplayAttributeProvider
 {
 public:
     CTextService();
@@ -45,11 +50,63 @@ public:
     // ITfTextEditSink
     STDMETHODIMP OnEndEdit(ITfContext *pContext, TfEditCookie ecReadOnly, ITfEditRecord *pEditRecord);
 
+    // ITfThreadFocusSink
+    STDMETHODIMP OnSetThreadFocus();
+    STDMETHODIMP OnKillThreadFocus();
+
+//////
+
+    // ITfKeyEventSink
+    STDMETHODIMP OnSetFocus(BOOL fForeground);
+    STDMETHODIMP OnTestKeyDown(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
+    STDMETHODIMP OnKeyDown(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
+    STDMETHODIMP OnTestKeyUp(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
+    STDMETHODIMP OnKeyUp(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
+    STDMETHODIMP OnPreservedKey(ITfContext *pContext, REFGUID rguid, BOOL *pfEaten);
+
+    // ITfCompositionSink
+    STDMETHODIMP OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition *pComposition);
+
+    // ITfDisplayAttributeProvider
+    STDMETHODIMP EnumDisplayAttributeInfo(IEnumTfDisplayAttributeInfo **ppEnum);
+    STDMETHODIMP GetDisplayAttributeInfo(REFGUID guidInfo, ITfDisplayAttributeInfo **ppInfo);
+
+//////
+
     // CClassFactory factory callback
     static HRESULT CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObj);
 
     ITfThreadMgr *_GetThreadMgr() { return _pThreadMgr; }
     void InsertHello();
+    void setComposition(PVOID data, int len);
+
+    // utility function for compartment
+    BOOL _IsKeyboardDisabled();
+    BOOL _IsKeyboardOpen();
+    HRESULT _SetKeyboardOpen(BOOL fOpen);
+
+    // functions for the composition object.
+    void _StartComposition(ITfContext *pContext);
+    void _EndComposition(ITfContext *pContext);
+    void _TerminateComposition(TfEditCookie ec, ITfContext *pContext);
+    BOOL _IsComposing();
+    void _SetComposition(ITfComposition *pComposition);
+    void _ShowPopupWindow();
+
+    BOOL _InitThreadFocusSink();
+    void _UninitThreadFocusSink();
+
+    // key event handlers.
+    HRESULT _HandleCharacterKey(TfEditCookie ec, ITfContext *pContext, WPARAM wParam);
+    HRESULT _HandleArrowKey(TfEditCookie ec, ITfContext *pContext, WPARAM wParam);
+    HRESULT _HandleReturnKey(TfEditCookie ec, ITfContext *pContext);
+    HRESULT _HandleSpaceKey(TfEditCookie ec, ITfContext *pContext);
+    HRESULT _InvokeKeyHandler(ITfContext *pContext, WPARAM wParam, LPARAM lParam);
+    HRESULT _InsertComposition(TfEditCookie ec, ITfContext *pContext, PVOID data, int len);
+
+    void _ClearCompositionDisplayAttributes(TfEditCookie ec, ITfContext *pContext);
+    BOOL _SetCompositionDisplayAttributes(TfEditCookie ec, ITfContext *pContext, TfGuidAtom gaDisplayAttribute);
+    BOOL _InitDisplayAttributeGuidAtom();
 
 private:
     // initialize and uninitialize ThreadMgrEventSink.
@@ -61,7 +118,17 @@ private:
 
     BOOL _InitLanguageBar();
     void _UninitLanguageBar();
-    BOOL _IsKeyboardDisabled(ITfDocumentMgr *pDocMgrFocus);
+
+    // initialize and uninitialize KeyEventSink.
+    BOOL _InitKeyEventSink();
+    void _UninitKeyEventSink();
+
+    // initialize and uninitialize PreservedKey.
+    BOOL _InitPreservedKey();
+    void _UninitPreservedKey();
+
+    // utility function for KeyEventSink
+    BOOL _IsKeyEaten(WPARAM wParam);
 
     //
     // state
@@ -72,6 +139,9 @@ private:
     // The cookie of ThreadMgrEventSink
     DWORD _dwThreadMgrEventSinkCookie;
 
+    DWORD _dwThreadFocusCookie;
+    int commit_len;
+
     //
     // private variables for TextEditSink
     //
@@ -79,6 +149,15 @@ private:
     DWORD _dwTextEditSinkCookie;
 
     CLangBarItemButton *_pLangBarItem;
+
+    // the current composition object.
+    ITfComposition *_pComposition;
+
+    // guidatom for the display attibute.
+    TfGuidAtom _gaDisplayAttributeInput;
+    TfGuidAtom _gaDisplayAttributeConverted;
+
+    CPropertyPopupWindow *_pPopupWindow;
 
     LONG _cRef;     // COM ref count
 };

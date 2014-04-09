@@ -43,3 +43,26 @@ const GUID c_guidLangBarItemButton = {
     {0xa1, 0xd9, 0x3d, 0xc0, 0x94, 0x1a, 0x66, 0xa3}
   };
 
+//
+//  define two guids for display attribute info. This textservice has
+//  two display attribute. One is for input text and the other is for the
+//  converted text.
+//
+//      c_guidDisplayAttributeInput
+//      c_guidDisplayAttributeConverted
+//
+/* 4e1aa3fe-6c7f-11d7-a6ec-00065b84435c */
+const GUID c_guidDisplayAttributeInput = {
+    0x4e1aa3fe,
+    0x6c7f,
+    0x11d7,
+    {0xa6, 0xec, 0x00, 0x06, 0x5b, 0x84, 0x43, 0x5c}
+  };
+/* 4e1aa3ff-6c7f-11d7-a6ec-00065b84435c */
+const GUID c_guidDisplayAttributeConverted = {
+    0x4e1aa3ff,
+    0x6c7f,
+    0x11d7,
+    {0xa6, 0xec, 0x00, 0x06, 0x5b, 0x84, 0x43, 0x5c}
+  };
+
