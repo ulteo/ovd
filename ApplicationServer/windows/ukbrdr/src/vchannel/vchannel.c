@@ -91,18 +91,10 @@ vchannel_is_open()
 DLL_EXPORT int
 vchannel_read(char *line, size_t length)
 {
-	static BOOL overflow_mode = FALSE;
-	static char buffer[VCHANNEL_MAX_LINE];
-	static size_t size = 0;
-
-	char *newline;
-	int line_size;
-
 	BOOL result;
 	ULONG bytes_read;
 
-	result = WTSVirtualChannelRead(g_vchannel, 0, buffer + size,
-				       sizeof(buffer) - size, &bytes_read);
+	result = WTSVirtualChannelRead(g_vchannel, 0, line, length, &bytes_read);
 
 	if (!result)
 	{
@@ -110,52 +102,7 @@ vchannel_read(char *line, size_t length)
 		return -1;
 	}
 
-	if (overflow_mode)
-	{
-		newline = strchr(buffer, '\n');
-		if (newline && (newline - buffer) < (long)bytes_read)
-		{
-			size = bytes_read - (newline - buffer) - 1;
-			memmove(buffer, newline + 1, size);
-			overflow_mode = FALSE;
-		}
-	}
-	else
-		size += bytes_read;
-
-	if (overflow_mode)
-	{
-		errno = -EAGAIN;
-		return -1;
-	}
-
-	newline = strchr(buffer, '\n');
-	if (!newline || (newline - buffer) >= (long)size)
-	{
-		if (size == sizeof(buffer))
-		{
-			overflow_mode = TRUE;
-			size = 0;
-		}
-		errno = -EAGAIN;
-		return -1;
-	}
-
-	if ((newline - buffer) >= (long)length)
-	{
-		errno = ENOMEM;
-		return -1;
-	}
-
-	*newline = '\0';
-
-	strcpy_s(line, length, buffer);
-	line_size = newline - buffer;
-
-	size -= newline - buffer + 1;
-	memmove(buffer, newline + 1, size);
-
-	return 0;
+	return bytes_read;
 }
 
 DLL_EXPORT int

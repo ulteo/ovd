@@ -62,8 +62,52 @@ bool KeyboardImprovement::update() {
 }
 
 
-void KeyboardImprovement::processNextMessage() {
+bool KeyboardImprovement::receiveHeader(ukb_msg* msg) {
+	int size;
 
+	size = vchannel_read((char*)msg, sizeof(msg->header));
+
+	if (size <= 0) {
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
+	int size;
+	char* data;
+
+	data = new char[msg->header.len];
+
+	size = vchannel_read(data, msg->header.len);
+
+	if (size < 0) {
+		return false;
+	}
+
+	delete data;
+	return true;
+}
+
+
+void KeyboardImprovement::processNextMessage() {
+	ukb_msg msg;
+
+	if (! this->receiveHeader(&msg))
+		return;
+
+
+	switch(msg.header.type) {
+	case UKB_PUSH_COMPOSITION:
+		OutputDebugString("new UKB_PUSH_COMPOSITION message");
+		this->processCompositionMessage(&msg);
+		break;
+	default:
+		OutputDebugString("Invalid message");
+		break;
+	}
 }
 
 bool KeyboardImprovement::sendMsg(ukb_msg* msg) {
@@ -75,16 +119,13 @@ bool KeyboardImprovement::sendMsg(ukb_msg* msg) {
 	size += msg->header.len;
 
 	// TODO manage partial write
-	std::cout<<"size "<<size<<std::endl;
 	result = vchannel_write((char*)msg, size);
-	std::cout<<"result "<<result<<std::endl;
 
 	return true;
 }
 
 
 bool KeyboardImprovement::sendInit() {
-	std::cout<<"send init"<<std::endl;
 	ukb_msg msg;
 
 	msg.header.type = UKB_INIT;
@@ -98,7 +139,6 @@ bool KeyboardImprovement::sendInit() {
 
 
 bool KeyboardImprovement::sendIMEStatus(int status) {
-	std::cout<<"send IME status "<<(int)status<<std::endl;
 	ukb_msg msg;
 
 	msg.header.type = UKB_IME_STATUS;
@@ -112,7 +152,6 @@ bool KeyboardImprovement::sendIMEStatus(int status) {
 
 
 bool KeyboardImprovement::sendCaretPosition() {
-	std::cout<<"send caretPosition"<<std::endl;
 	ukb_msg msg;
 
 	msg.header.type = UKB_CARET_POS;

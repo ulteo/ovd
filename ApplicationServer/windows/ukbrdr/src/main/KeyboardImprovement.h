@@ -20,6 +20,8 @@ public:
 	bool init();
 	bool update();
 	void processNextMessage();
+	bool processCompositionMessage(ukb_msg* msg);
+	bool receiveHeader(ukb_msg* msg);
 
 	bool sendInit();
 	bool sendIMEStatus(int status);

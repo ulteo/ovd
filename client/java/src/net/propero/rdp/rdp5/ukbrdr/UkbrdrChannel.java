@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.CommunicationMonitor;
+import net.propero.rdp.HexDump;
 import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
@@ -79,7 +80,6 @@ public class UkbrdrChannel extends VChannel {
 		message_type type = message_type.values()[temp];
 		switch (type) {
 		case UKB_INIT:
-			
 			System.out.println("init msg: version "+data.getLittleEndian16());
 			break;
 			
@@ -97,14 +97,6 @@ public class UkbrdrChannel extends VChannel {
 			
 			break;
 			
-		case UKB_PUSH_COMPOSITION:
-			System.out.println("push composition");
-			break;
-			
-		case UKB_PUSH_TEXT:
-			System.out.println("push text");
-			break;
-
 		default:
 			System.out.println("Unknown problem");
 			break;
