@@ -149,7 +149,11 @@ class SQL {
 			$this->result = false;
 		}
 
-		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query,__FILE__,__LINE__);
+		$this->result = @mysqli_query($this->link, $query);
+		if ($this->result === false) {
+			Logger::error('main', 'SQL error: '.mysqli_error($this->link).'; Query: '.$query);
+			return false;
+		}
 
 		$this->total_queries += 1;
 
