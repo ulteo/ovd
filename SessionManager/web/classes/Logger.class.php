@@ -53,6 +53,13 @@ class Logger {
 			@fclose($this->fd);
 	}
 
+	public static function renew_instances() {
+		$keys = array_keys(self::$instances);
+		foreach ($keys as $k) {
+			self::$instances[$k] = new Logger($k);
+		}
+	}
+	
 	public function write($data_, $level_='info') {
 		if (is_array($this->level_flags) && ! in_array($level_, $this->level_flags))
 			return;

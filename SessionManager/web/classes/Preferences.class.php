@@ -33,6 +33,9 @@ class Preferences {
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->elements = array();
 		$this->initialize();
+	}
+
+	private function load() {
 		$filecontents = $this->getConfFileContents();
 		if (!is_array($filecontents)) {
 			Logger::error('main', 'Preferences::construct contents of conf file is not an array');
@@ -54,9 +57,12 @@ class Preferences {
 		if (!isset(self::$instance)) {
 			try {
 				self::$instance = new Preferences();
+				self::$instance->load();
 			} catch (Exception $e) {
 				return false;
 			}
+			
+			Logger::renew_instances();
 		}
 		return self::$instance;
 	}
