@@ -28,8 +28,9 @@ import java.io.InputStream;
 import org.ulteo.Logger;
 
 public class WindowsPrinter implements Runnable {
-	private final String printingCommand = "lpr.exe -print-to "; 
+	private final String printingCommand = "lpr.exe -restrict -print-to ";
 	private final String printingExecutable = "/resources/print/lpr.exe";
+	private final String printingPolicy = "/resources/print/sumatrapdfrestrict.ini";
 	private String printerName;
 	private String job;
 	private String tempDir;
@@ -39,8 +40,13 @@ public class WindowsPrinter implements Runnable {
 		this.job = job;
 		this.tempDir = System.getProperty("java.io.tmpdir");
 		
-		InputStream is = WindowsPrinter.class.getResourceAsStream(this.printingExecutable);
-		File dest = new File(tempDir+File.separator+"lpr.exe");
+		this.extract_resource(this.printingExecutable, tempDir+File.separator+"lpr.exe");
+		this.extract_resource(this.printingPolicy, tempDir+File.separator+"sumatrapdfrestrict.ini");
+	}
+	
+	private boolean extract_resource(String name, String dist) {
+		InputStream is = WindowsPrinter.class.getResourceAsStream(name);
+		File dest = new File(dist);
 		if (dest.exists()) {
 			dest.delete();
 		}
@@ -57,10 +63,14 @@ public class WindowsPrinter implements Runnable {
 			is.close();
 			
 		} catch (FileNotFoundException e) {
-			Logger.error("Unable to find the resource "+this.printingExecutable);
+			Logger.error("Unable to find the resource "+name);
+			return false;
 		} catch (IOException e) {
 			Logger.error("Unable to find the resource: "+e.getMessage());
+			return false;
 		}
+		
+		return true;
 	}
 
 	@Override
