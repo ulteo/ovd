@@ -38,7 +38,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	this.guac_keyboard = new Guacamole.NativeKeyboard();
 
 	/* Insert the hidden textfield with the canvas */
-	jQuery(this.connection.guac_display).append(this.guac_keyboard.getNode());
+	jQuery(this.connection.guac_display).prepend(this.guac_keyboard.getNode());
 
 	/* Keydown */
 	this.guac_keyboard.onkeydown = function (keysym) {
@@ -54,6 +54,50 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	this.guac_keyboard.onunicode = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(2, keysym);
 	};
+
+	/* Ukbrdr */
+	this.guac_keyboard.oncomposeupdate = function(text) {
+		var preedit = new DataStream();
+		preedit.write_UInt16LE(4);
+		preedit.write_UInt16LE(0);
+
+		var size = new DataStream();
+		size.write_UTF16LE(text+"\0");
+		preedit.write_UInt32LE(size.get_size());
+		preedit.write_UTF16LE(text+"\0");
+
+		self.connection.guac_tunnel.sendMessage("ukbrdr",preedit.toBase64());
+	}
+
+	this.guac_keyboard.oncomposeend = function() {
+		var preedit = new DataStream();
+		preedit.write_UInt16LE(5);
+		preedit.write_UInt16LE(0);
+		preedit.write_UInt32LE(0);
+
+		self.connection.guac_tunnel.sendMessage("ukbrdr",preedit.toBase64());
+	}
+
+
+	/* Install instruction hook */
+	this.connection.guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+		var stream = DataStream.fromBase64(params[0]);
+		var message = stream.read_UInt16LE();
+		var flags = stream.read_UInt16LE();
+		var size = stream.read_UInt32LE();
+
+		switch(message) {
+			case 1: // UKB_CARET_POS
+				var x = stream.read_UInt32LE();
+				var y = stream.read_UInt32LE();
+
+				var offset = jQuery(self.connection.guac_display).offset();
+				var px = offset.left + x;
+				var py = offset.top + y;
+				self.guac_keyboard.setPosition(px, py);
+				break;
+		}
+	});
 
 	/* Actions */
 	this.focus =  function() { if(!self.guac_keyboard.active()) self.guac_keyboard.enable(); };
@@ -138,6 +182,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 
 	/* Set destructor */
 	this.end = function() {
+		self.connection.guac_tunnel.removeInstructionHandler("ukbrdr");
 		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_mode);
 		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_ui);
 		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
@@ -179,29 +224,35 @@ uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
+	var self = this; /* closure */
+
 	/* Set unicode */
 	this.setUnicode();
 
-	/* Install instruction hook for imestate order*/
-	this.connection.guac_tunnel.addInstructionHandler("imestate", jQuery.proxy(this.handleOrders, this));
+	/* Install instruction hook */
+	this.connection.guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+		var stream = DataStream.fromBase64(params[0]);
+		var message = stream.read_UInt16LE();
+		var flags = stream.read_UInt16LE();
+		var size = stream.read_UInt32LE();
 
-	/* Set destructor */
-	var self = this; /* closure */
-	var super_destructor = this.end;
+		switch(message) {
+			case 1: // UKB_CARET_POS
+				var x = stream.read_UInt32LE();
+				var y = stream.read_UInt32LE();
 
-	this.end = function() {
-		super_destructor();
+				var offset = jQuery(self.connection.guac_display).offset();
+				var px = offset.left + x;
+				var py = offset.top + y;
+				self.guac_keyboard.setPosition(px, py);
+				break;
 
-		/* Remove instruction hook */
-		self.connection.guac_tunnel.removeInstructionHandler("imestate");
-	};
-}
-
-uovd.provider.rdp.html5.Keyboard.prototype.handleOrders = function(opcode, parameters) {
-	if(opcode == "imestate") {
-		var state = parseInt(parameters[1]);
-		this.guac_keyboard.setIme(state);
-	}
+			case 2: // UKB_IME_STATUS
+				var state = stream.read_Byte();
+				self.guac_keyboard.setIme(state);
+				break;
+		}
+	});
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.handleEvents = function(type, source, params) {

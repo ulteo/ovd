@@ -9,9 +9,14 @@ var Guacamole = Guacamole || {};
 Guacamole.NativeKeyboard = function() {
 	var self = this; /* closure */
 	this.focused = false;
+	this.composition = false;
+	this.skipNextInput = false;
 	this.lastvalue = " ";
 	this.node = null;
 	this.altKey = false;
+	this.input = null;
+	this.textarea = null;
+	this.field = null;
 
 	this.controlKeySym = {
 		8:   0xFF08, // backspace
@@ -65,10 +70,15 @@ Guacamole.NativeKeyboard = function() {
 	}
 
 	/* Create text entry */
-	var input = jQuery(document.createElement('input'));
-	input.attr("type", "text");
-	input.attr("autocorrect", "off");
-	input.attr("autocapitalize", "off");
+	this.textarea = jQuery(document.createElement('textarea'));
+	this.textarea.attr("type", "text");
+	this.textarea.attr("autocorrect", "off");
+	this.textarea.attr("autocapitalize", "off");
+
+	this.input = jQuery(document.createElement('input'));
+	this.input.attr("type", "password");
+	this.input.attr("autocorrect", "off");
+	this.input.attr("autocapitalize", "off");
 
 	this.node = jQuery(document.createElement('div'));
 	this.node.css({
@@ -80,16 +90,26 @@ Guacamole.NativeKeyboard = function() {
 		"z-index":  "-10",
 		"display":  "none"
 	});
-	this.node.append(input);
+	this.node.append(this.textarea);
+	this.node.append(this.input);
+	this.field = this.textarea;
+
+	function reset() {
+		self.lastvalue = " ";
+		self.input.val(" ");
+		self.textarea.val(" ");
+	}
 
 	/* Events handlers */
 	function handleKeysym(e) {
-		if(self.controlKeySym[e.keyCode]) {
-			var keysym = self.controlKeySym[e.keyCode];
-			var location = e.location || e.keyLocation || 0;
+		if(self.composition) {return;};
+
+		if(self.controlKeySym[e.which]) {
+			var keysym = self.controlKeySym[e.which];
+			var location = e.originalEvent.location || e.originalEvent.keyLocation || 0;
 			e.preventDefault();
 			e.stopPropagation();
-			e.target.value = self.lastvalue = " ";
+			reset();
 
 			if(e.type == "keydown") {
 				if (e.keyCode == 17 && self.altKey) {
@@ -117,7 +137,7 @@ Guacamole.NativeKeyboard = function() {
 				}
 			}
 		} else if((self.altKey || e.ctrlKey || e.metaKey) && !(e.altKey && e.ctrlKey)) {
-			var keysym = parseInt(e.keyCode)+0x20;
+			var keysym = parseInt(e.which)+0x20;
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -131,9 +151,19 @@ Guacamole.NativeKeyboard = function() {
 
 	function handleUnicode(e) {
 		var i;
+		var currentvalue = self.field.val();
 
-		for(i=0;i<e.target.value.length;i++) {
-			var k = e.target.value.charCodeAt(i);
+		if(self.composition) {return;};
+
+		if(self.skipNextInput) {
+			self.skipNextInput = false;
+			currentvalue = " ";
+			reset();
+			return;
+		}
+
+		for(i=0;i<currentvalue.length;i++) {
+			var k = currentvalue.charCodeAt(i);
 			var c = self.lastvalue.charCodeAt(i);
 			if(k != c) {
 				if(self.lastvalue.length > i) {
@@ -152,29 +182,44 @@ Guacamole.NativeKeyboard = function() {
 				self.onkeyup(65288);
 			}
 		}
-		if(e.target.value.length == 0) {
-			e.target.value = " ";
+		if(currentvalue.length == 0) {
+			reset();
 		}
-		self.lastvalue = e.target.value;
+		self.lastvalue = currentvalue;
 	}
 
-	function focusOut(e) {
-		self.focused = false;
-		self.node.hide();
+	function handleFocus(e) {
+		if(e.type == "focus") {
+			self.focused = true;
+			reset();
+		} else {
+			self.focused = false;
+			reset();
+		}
   }
 
-	function focusIn(e) {
-		self.focused = true;
-		self.node.show();
-		e.target.value = self.lastvalue = " ";
+	function handleComposition(e) {
+		if(e.type == "compositionstart" || e.type == "compositionupdate") {
+			self.composition = true;
+			self.oncomposeupdate(e.originalEvent.data);
+		} else {
+			self.oncomposeupdate(e.originalEvent.data);
+			self.oncomposeend();
+			self.composition = false;
+			self.skipNextInput = true;
+		}
 	}
 
 	/* Bind events */
-	input[0].addEventListener("input", handleUnicode, true);
-	input[0].addEventListener("keydown", handleKeysym, true);
-	input[0].addEventListener("keyup", handleKeysym, true);
-	input[0].addEventListener("blur", focusOut, true);
-	input[0].addEventListener("focus", focusIn, true);
+	this.input.on("keydown keyup", handleKeysym);
+	this.input.on("input", handleUnicode);
+	this.input.on("compositionstart compositionupdate compositionend", handleComposition);
+	this.input.on("focus blur", handleFocus);
+
+	this.textarea.on("keydown keyup", handleKeysym);
+	this.textarea.on("input", handleUnicode);
+	this.textarea.on("compositionstart compositionupdate compositionend", handleComposition);
+	this.textarea.on("focus blur", handleFocus);
 }
 
 
@@ -188,15 +233,13 @@ Guacamole.NativeKeyboard.prototype.getNode = function() {
 };
 
 Guacamole.NativeKeyboard.prototype.enable = function() {
-	var input = jQuery(this.node).find("input");
 	this.node.show();
-	input.focus();
+	this.field.focus();
 };
 
 Guacamole.NativeKeyboard.prototype.disable = function() {
-	var input = jQuery(this.node).find("input");
-	input.blur()
 	this.node.hide();
+	this.field.blur();
 };
 
 Guacamole.NativeKeyboard.prototype.active = function() {
@@ -212,16 +255,20 @@ Guacamole.NativeKeyboard.prototype.toggle = function() {
 };
 
 Guacamole.NativeKeyboard.prototype.setIme = function(value) {
-	var input = jQuery(this.node).find("input");
 	if(value) {
-		input.attr("type", "text");
+		if(this.field == this.textarea) { return; } /* No change */
+		else                            { this.field = this.textarea; }
+		this.field.focus();
 	} else {
-		input.attr("type", "password");
+		if(this.field == this.input) { return; } /* No change */
+		else                         { this.field = this.input; }
 	}
 
-	/* Close the keyboard to refresh the layout */
-	if(this.active()) {
-		this.disable();
-		this.enable();
-	}
+	this.enable();
+};
+
+Guacamole.NativeKeyboard.prototype.setPosition = function(x, y) {
+	this.field.css("position", "fixed");
+	this.field.css("left", x);
+	this.field.css("top", y);
 };

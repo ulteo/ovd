@@ -111,6 +111,17 @@ DataStream.prototype.read_Byte = function() {
 	return this.buffer[this.read_pos++];
 }
 
+DataStream.prototype.read_UInt16LE = function() {
+	try {
+		var v1 = this.read_Byte();
+		var v2 = this.read_Byte();
+
+		return v1 + (v2 << 8);
+	} catch(e) {
+		throw "End of stream";
+	}
+};
+
 
 DataStream.prototype.read_UInt32LE = function() {
 	try {
@@ -136,6 +147,11 @@ DataStream.prototype.write_Byte = function(byte_) {
 
 	this.buffer[this.write_pos++] = byte_;
 }
+
+DataStream.prototype.write_UInt16LE = function(value) {
+	this.write_Byte(value);
+	this.write_Byte(value >>> 8);
+};
 
 DataStream.prototype.write_UInt32LE = function(value) {
 	this.write_Byte(value);
