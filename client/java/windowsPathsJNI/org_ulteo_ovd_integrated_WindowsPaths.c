@@ -104,16 +104,16 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 		return JNI_TRUE;
 	}
 
-       	CANDIDATEFORM cf;
-       	cf.dwIndex = 0;
-       	cf.dwStyle = CFS_CANDIDATEPOS;
-       	// Since the coordinates are relative to the containing window,
-       	// we have to calculate the coordinates as below.
-       	cf.ptCurrentPos.x = x;
-       	cf.ptCurrentPos.y = y;
+	CANDIDATEFORM cf;
+	cf.dwIndex = 0;
+	cf.dwStyle = CFS_CANDIDATEPOS;
+	// Since the coordinates are relative to the containing window,
+	// we have to calculate the coordinates as below.
+	cf.ptCurrentPos.x = x;
+	cf.ptCurrentPos.y = y;
 
-       	// sends IMC_SETCANDIDATEPOS to IMM to move the candidate window.
-       	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
+	// sends IMC_SETCANDIDATEPOS to IMM to move the candidate window.
+	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
 
 	return JNI_TRUE;
 }
