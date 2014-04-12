@@ -92,11 +92,27 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 	UINT bits = 1;
 	HWND hwnd = GetForegroundWindow();
 	HWND defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
-	
+	HWND ukbrdr = FindWindow("OVDIMEClass", NULL);
+	POINT pt;
+
 	// TODO check windows Class
 	if (hwnd == NULL) {
 		printf("Failed to find foreground Windows\n");
 		return JNI_TRUE;
+	}
+
+	pt.x = x;
+	pt.y = y;
+	ClientToScreen(hwnd, &pt);
+
+	// Test if we are in external apps
+	if (ukbrdr != NULL) {
+		int external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
+		printf("send to ukbrdr\n");
+		SendMessage(ukbrdr, external_caret_pos, pt.x, pt.y);
+	}
+	else {
+		printf("do not send to ukbrdr\n");
 	}
 
 	if (defaultIMEWnd == NULL) {

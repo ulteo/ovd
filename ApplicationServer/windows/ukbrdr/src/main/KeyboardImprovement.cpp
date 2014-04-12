@@ -55,7 +55,7 @@ bool KeyboardImprovement::update() {
 		this->y = pt.y;
 		std::cout<<"caret change ["<<this->x<<"-"<<this->x<<"]"<<std::endl;
 
-		return this->sendCaretPosition();
+		return this->sendCaretPosition(x, y);
 	}
 
 	return true;
@@ -166,15 +166,15 @@ bool KeyboardImprovement::sendIMEStatus(int status) {
 }
 
 
-bool KeyboardImprovement::sendCaretPosition() {
+bool KeyboardImprovement::sendCaretPosition(int x, int y) {
 	ukb_msg msg;
 
 	msg.header.type = UKB_CARET_POS;
 	msg.header.flags = 0;
 	msg.header.len = sizeof(msg.u.caret_pos);
 
-	msg.u.caret_pos.x = this->x;
-	msg.u.caret_pos.y = this->y;
+	msg.u.caret_pos.x = x;
+	msg.u.caret_pos.y = y;
 
 	return this->sendMsg(&msg);
 }

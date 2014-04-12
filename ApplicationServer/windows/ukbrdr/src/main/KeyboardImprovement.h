@@ -25,7 +25,7 @@ public:
 
 	bool sendInit();
 	bool sendIMEStatus(int status);
-	bool sendCaretPosition();
+	bool sendCaretPosition(int x, int y);
 };
 
 #endif // KEYBOARD_IMPROVEMENT_H_
