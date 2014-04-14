@@ -15,6 +15,7 @@
 
 #include "Globals.h"
 #include "PopupWindow.h"
+#include <string>
 
 
 //+---------------------------------------------------------------------------
@@ -25,6 +26,20 @@
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID pvReserved)
 {
+	char modname[MAX_PATH] = {0};
+	if (GetModuleFileName(NULL, modname, sizeof(modname)) > 0) {
+		std::string path(modname);
+		std::string::size_type pos = path.find_last_of("\\");
+
+		if (pos != std::string::npos) {
+			path = path.substr(pos + 1, std::string::npos);
+		}
+
+		if (path.find("Dbgview") != std::string::npos) {
+			return FALSE;
+		}
+	}
+
     switch (dwReason)
     {
         case DLL_PROCESS_ATTACH:
