@@ -41,6 +41,8 @@ class Session(AbstractSession):
 	def install_client(self):
 		name = System.local_encode(self.user.name)
 		
+		self.clean_tmp_dir()
+		
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		self.init_user_session_dir(d)
 		
@@ -109,6 +111,8 @@ class Session(AbstractSession):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		if os.path.exists(d):
 			shutil.rmtree(d)
+		
+		self.clean_tmp_dir()
 	
 	
 	def get_target_file(self, application):
@@ -147,3 +151,21 @@ class Session(AbstractSession):
 			os.remove(dstFile)
 		
 		shutil.copyfile(shortcut, dstFile)
+	
+	
+	def clean_tmp_dir(self):
+		# Purge TMP directory
+		uid = pwd.getpwnam(System.local_encode(self.user.name))[2]
+		for f in os.listdir("/tmp"):
+			filename = os.path.join("/tmp", f)
+			s = os.stat(filename)
+			if s.st_uid != uid:
+				continue
+			
+			try:
+				if os.path.isdir(filename):
+					shutil.rmtree(filename)
+				else:
+					os.remove(filename)
+			except:
+				Logger.exception("Unable to remove %s"%(filename))
