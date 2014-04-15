@@ -18,9 +18,6 @@
 
 #include "TextService.h"
 
-#define POPUP_CX 450
-#define POPUP_CY 300
-
 class CPropertyPopupWindow
 {
 public:
@@ -29,16 +26,6 @@ public:
 
     HWND CreateWnd();
     void Destroy();
-    void Show();
-    void Hide();
-    void OnPaint(HWND hwnd, HDC hdc);
-    BOOL IsShown()
-    {
-        if (!IsWindow(_hwnd))
-            return FALSE;
-
-        return IsWindowVisible(_hwnd);
-    }
 
     static BOOL StaticInit();
 
@@ -58,8 +45,6 @@ public:
     HWND _hwnd;
     CTextService *_pService;
     static TCHAR _szWndClass[];
-
-    WCHAR *_psz;
 };
 
 #endif POPUPWINDOW_H

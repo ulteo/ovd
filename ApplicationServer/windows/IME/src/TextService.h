@@ -16,13 +16,11 @@
 #ifndef TEXTSERVICE_H
 #define TEXTSERVICE_H
 
-class CLangBarItemButton;
 class CPropertyPopupWindow;
 
 class CTextService : public ITfTextInputProcessor,
                      public ITfThreadMgrEventSink,
                      public ITfTextEditSink,
-                     public ITfKeyEventSink,
                      public ITfCompositionSink,
                      public ITfThreadFocusSink,
                      public ITfDisplayAttributeProvider
@@ -56,14 +54,6 @@ public:
 
 //////
 
-    // ITfKeyEventSink
-    STDMETHODIMP OnSetFocus(BOOL fForeground);
-    STDMETHODIMP OnTestKeyDown(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
-    STDMETHODIMP OnKeyDown(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
-    STDMETHODIMP OnTestKeyUp(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
-    STDMETHODIMP OnKeyUp(ITfContext *pContext, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
-    STDMETHODIMP OnPreservedKey(ITfContext *pContext, REFGUID rguid, BOOL *pfEaten);
-
     // ITfCompositionSink
     STDMETHODIMP OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition *pComposition);
 
@@ -77,7 +67,6 @@ public:
     static HRESULT CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObj);
 
     ITfThreadMgr *_GetThreadMgr() { return _pThreadMgr; }
-    void InsertHello();
     void setComposition(PVOID data, int len);
 
     // utility function for compartment
@@ -123,10 +112,6 @@ private:
     BOOL _InitKeyEventSink();
     void _UninitKeyEventSink();
 
-    // initialize and uninitialize PreservedKey.
-    BOOL _InitPreservedKey();
-    void _UninitPreservedKey();
-
     // utility function for KeyEventSink
     BOOL _IsKeyEaten(WPARAM wParam);
 
@@ -147,8 +132,6 @@ private:
     //
     ITfContext   *_pTextEditSinkContext;
     DWORD _dwTextEditSinkCookie;
-
-    CLangBarItemButton *_pLangBarItem;
 
     // the current composition object.
     ITfComposition *_pComposition;

@@ -35,7 +35,6 @@ TCHAR CPropertyPopupWindow::_szWndClass[] = TEXT("OVDIMEClass");
 CPropertyPopupWindow::CPropertyPopupWindow(CTextService *pService)
 {
     _hwnd = NULL;
-    _psz = NULL;
     _pService = pService;
 }
 
@@ -49,9 +48,6 @@ CPropertyPopupWindow::~CPropertyPopupWindow()
 {
     if (IsWindow(_hwnd))
         DestroyWindow(_hwnd);
-
-    if (_psz)
-        LocalFree(_psz);
 }
 
 
@@ -100,7 +96,7 @@ HWND CPropertyPopupWindow::CreateWnd()
     if (_hwnd)
         return _hwnd;
 
-    _hwnd = CreateWindowEx(WS_EX_TOPMOST, _szWndClass, TEXT(""),
+    _hwnd = CreateWindowEx(0, _szWndClass, TEXT(""),
                            WS_POPUP | WS_THICKFRAME | WS_DISABLED,
                            0, 0, 0, 0,
                            NULL, 0, g_hInst, this);
@@ -117,8 +113,6 @@ HWND CPropertyPopupWindow::CreateWnd()
 LRESULT CALLBACK CPropertyPopupWindow::_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     CPropertyPopupWindow *_this;
-    HDC hdc;
-    PAINTSTRUCT ps;
     COPYDATASTRUCT* cds;
   
     _this = _GetThis(hwnd);
@@ -128,13 +122,6 @@ LRESULT CALLBACK CPropertyPopupWindow::_WndProc(HWND hwnd, UINT uMsg, WPARAM wPa
         case WM_CREATE:
             _SetThis(hwnd, lParam);
             return 0;
-
-        case WM_PAINT:
-            hdc = BeginPaint(hwnd, &ps);
-            if (_this)
-                _this->OnPaint(hwnd, hdc);
-            EndPaint(hwnd, &ps);
-            break;
 
         case WM_COPYDATA:
             cds = (COPYDATASTRUCT*) lParam;
@@ -151,58 +138,6 @@ LRESULT CALLBACK CPropertyPopupWindow::_WndProc(HWND hwnd, UINT uMsg, WPARAM wPa
 
 //+---------------------------------------------------------------------------
 //
-// Show
-//
-//----------------------------------------------------------------------------
-
-void CPropertyPopupWindow::Show()
-{
-    if (!IsWindow(_hwnd))
-        return;
-
-    RECT rcWork;
-    SystemParametersInfo(SPI_GETWORKAREA,  0, &rcWork, FALSE);
-
-    InvalidateRect(_hwnd, NULL, TRUE);
-    SetWindowPos(_hwnd, HWND_TOPMOST, 0, 0, 100, 100, SWP_SHOWWINDOW | SWP_NOACTIVATE);
-}
-
-
-//+---------------------------------------------------------------------------
-//
-// Hide
-//
-//----------------------------------------------------------------------------
-
-void CPropertyPopupWindow::Hide()
-{
-    if (!IsWindow(_hwnd))
-        return;
-
-    ShowWindow(_hwnd, SW_HIDE);
-}
-
-
-//+---------------------------------------------------------------------------
-//
-// OnPaint
-//
-//----------------------------------------------------------------------------
-
-void CPropertyPopupWindow::OnPaint(HWND hwnd, HDC hdc)
-{
-    HFONT hfont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-    HFONT hfontOld = (HFONT)SelectObject(hdc, hfont);
-
-    RECT rc;
-    GetClientRect(hwnd, &rc);
-    DrawTextW(hdc, L"Hello world", lstrlenW(L"Hello world"), &rc, DT_EXPANDTABS);
-
-    SelectObject(hdc, hfontOld);
-}
-
-//+---------------------------------------------------------------------------
-//
 // _ShowPopupWindow
 //
 //----------------------------------------------------------------------------
@@ -215,6 +150,5 @@ void CTextService::_ShowPopupWindow()
     if (_pPopupWindow)
     {
         _pPopupWindow->CreateWnd();
-        _pPopupWindow->Show();
     }
 }

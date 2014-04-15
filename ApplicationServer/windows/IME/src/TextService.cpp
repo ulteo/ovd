@@ -120,10 +120,6 @@ STDAPI CTextService::QueryInterface(REFIID riid, void **ppvObj)
     {
         *ppvObj = (ITfTextEditSink *)this;
     }
-    else if (IsEqualIID(riid, IID_ITfKeyEventSink))
-    {
-    	*ppvObj = (ITfKeyEventSink *)this;
-    }
     else if (IsEqualIID(riid, IID_ITfCompositionSink))
     {
     	*ppvObj = (ITfKeyEventSink *)this;
@@ -210,27 +206,9 @@ STDAPI CTextService::Activate(ITfThreadMgr *pThreadMgr, TfClientId tfClientId)
     }
 
     //
-    // Initialize Language Bar.
-    //
-    if (!_InitLanguageBar())
-        goto ExitError;
-
-    //
-    // Initialize KeyEventSink
-    //
-    if (!_InitKeyEventSink())
-        goto ExitError;
-
-    //
     // Initialize Thread focus sink.
     //
     if (!_InitThreadFocusSink())
-        goto ExitError;
-
-    //
-    // Initialize PreservedKeys
-    //
-    if (!_InitPreservedKey())
         goto ExitError;
 
     //
@@ -265,24 +243,10 @@ STDAPI CTextService::Deactivate()
     _UninitThreadMgrEventSink();
 
     //
-    // Uninitialize Language Bar.
-    //
-    _UninitLanguageBar();
-
-    //
     // Uninitialize thread focus sink.
     //
     _UninitThreadFocusSink();
 
-    //
-    // Uninitialize KeyEventSink
-    //
-    _UninitKeyEventSink();
-
-    //
-    // Uninitialize PreservedKeys
-    //
-    _UninitPreservedKey();
 
     if (_pPopupWindow != NULL)
     {

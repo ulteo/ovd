@@ -28,11 +28,6 @@ STDAPI CTextService::OnSetThreadFocus()
 	OutputDebugString("OnSetThreadFocus");
 	_ShowPopupWindow();
 
-    if (_pPopupWindow)
-    {
-    	OutputDebugString("Show");
-       _pPopupWindow->Show();
-    }
     return S_OK;
 }
 
@@ -46,7 +41,6 @@ STDAPI CTextService::OnKillThreadFocus()
 {
     if (_pPopupWindow)
     {
-       //_pPopupWindow->Hide();
        _pPopupWindow->Destroy();
     }
 
