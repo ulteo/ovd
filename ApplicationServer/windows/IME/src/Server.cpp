@@ -19,6 +19,8 @@
 // from Register.cpp
 BOOL RegisterProfiles();
 void UnregisterProfiles();
+BOOL RegisterCategories();
+void UnregisterCategories();
 BOOL RegisterServer();
 void UnregisterServer();
 
@@ -263,6 +265,7 @@ STDAPI DllCanUnloadNow(void)
 STDAPI DllUnregisterServer(void)
 {
     UnregisterProfiles();
+    UnregisterCategories();
     UnregisterServer();
 
     return S_OK;
@@ -278,7 +281,8 @@ STDAPI DllRegisterServer(void)
 {
     // register this service's profile with the tsf
     if (!RegisterServer() ||
-        !RegisterProfiles())
+        !RegisterProfiles() ||
+        !RegisterCategories())
     {
         DllUnregisterServer(); // cleanup any loose ends
         return E_FAIL;

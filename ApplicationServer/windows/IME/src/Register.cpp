@@ -56,8 +56,7 @@ BOOL RegisterProfiles()
     achIconFile[cchIconFile] = '\0';
 
     hr = pInputProcessProfiles->AddLanguageProfile(c_clsidTextService,
-                                  //TEXTSERVICE_LANGID,
-    								-1,
+                                  TEXTSERVICE_LANGID, 
                                   c_guidProfile, 
                                   TEXTSERVICE_DESC, 
                                   (ULONG)wcslen(TEXTSERVICE_DESC),
@@ -89,6 +88,77 @@ void UnregisterProfiles()
 
     pInputProcessProfiles->Unregister(c_clsidTextService);
     pInputProcessProfiles->Release();
+}
+
+//+---------------------------------------------------------------------------
+//
+//  RegisterCategories
+//
+//----------------------------------------------------------------------------
+
+BOOL RegisterCategories()
+{
+    ITfCategoryMgr *pCategoryMgr;
+    HRESULT hr;
+
+    hr = CoCreateInstance(CLSID_TF_CategoryMgr, NULL, CLSCTX_INPROC_SERVER, 
+                          IID_ITfCategoryMgr, (void**)&pCategoryMgr);
+
+    if (hr != S_OK)
+        return FALSE;
+
+    //
+    // register this text service to GUID_TFCAT_TIP_KEYBOARD category.
+    //
+    hr = pCategoryMgr->RegisterCategory(c_clsidTextService,
+                                        GUID_TFCAT_TIP_KEYBOARD, 
+                                        c_clsidTextService);
+
+    //
+    // register this text service to GUID_TFCAT_DISPLAYATTRIBUTEPROVIDER category.
+    //
+    hr = pCategoryMgr->RegisterCategory(c_clsidTextService,
+                                        GUID_TFCAT_DISPLAYATTRIBUTEPROVIDER, 
+                                        c_clsidTextService);
+
+
+    pCategoryMgr->Release();
+    return (hr == S_OK);
+}
+
+//+---------------------------------------------------------------------------
+//
+//  UnregisterCategories
+//
+//----------------------------------------------------------------------------
+
+void UnregisterCategories()
+{
+    ITfCategoryMgr *pCategoryMgr;
+    HRESULT hr;
+
+    hr = CoCreateInstance(CLSID_TF_CategoryMgr, NULL, CLSCTX_INPROC_SERVER, 
+                          IID_ITfCategoryMgr, (void**)&pCategoryMgr);
+
+    if (hr != S_OK)
+        return;
+
+    //
+    // unregister this text service from GUID_TFCAT_TIP_KEYBOARD category.
+    //
+    pCategoryMgr->UnregisterCategory(c_clsidTextService,
+                                     GUID_TFCAT_TIP_KEYBOARD, 
+                                     c_clsidTextService);
+
+    //
+    // unregister this text service from GUID_TFCAT_DISPLAYATTRIBUTEPROVIDER category.
+    //
+    pCategoryMgr->UnregisterCategory(c_clsidTextService,
+                                     GUID_TFCAT_DISPLAYATTRIBUTEPROVIDER, 
+                                     c_clsidTextService);
+
+    pCategoryMgr->Release();
+    return;
 }
 
 //+---------------------------------------------------------------------------
@@ -145,7 +215,7 @@ LONG RecurseDeleteKey(HKEY hParentKey, LPCTSTR lpszKey)
     DWORD dwSize = ARRAYSIZE(szBuffer);
 
     if (RegOpenKey(hParentKey, lpszKey, &hKey) != ERROR_SUCCESS)
-        return ERROR_SUCCESS; // let's assume it couldn't be opened because it's not there
+        return ERROR_SUCCESS; // Assume it couldn't be opened because it's not there
 
     lRes = ERROR_SUCCESS;
     while (RegEnumKeyEx(hKey, 0, szBuffer, &dwSize, NULL, NULL, NULL, &time)==ERROR_SUCCESS)
