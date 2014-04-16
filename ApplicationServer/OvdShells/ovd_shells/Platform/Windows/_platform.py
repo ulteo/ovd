@@ -138,6 +138,37 @@ def getUserSessionDir():
 	return os.path.join(d, "ulteo", "ovd", user)
 
 
+def setupIME():
+	# Manage local ime
+	path = r"Software\Microsoft\CTF\Assemblies\0x00000409\{34745C63-B2F0-4784-8B67-5E12C8701A31}"
+	try:
+		CreateKeyR(win32con.HKEY_CURRENT_USER, path)
+		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, path, 0, win32con.KEY_SET_VALUE)
+	except:
+		key = None
+	
+	if key is None:
+		print "Unable to open key '%s'"%(path)
+	else:
+		win32api.RegSetValueEx(key, "Default", 0, win32con.REG_SZ, "{E7EA138E-69F8-11D7-A6EA-00065B84435C}")
+		win32api.RegSetValueEx(key, "Profile", 0, win32con.REG_SZ, "{E7EA138E-69F8-11D7-A6EA-00065B84435C}")
+		win32api.RegSetValueEx(key, "KeyboardLayout", 0, win32con.REG_DWORD, 0x04090409)
+		win32api.RegCloseKey(key)
+	
+	path = r"Keyboard Layout\Preload"
+	try:
+		CreateKeyR(win32con.HKEY_CURRENT_USER, path)
+		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, path, 0, win32con.KEY_SET_VALUE)
+	except:
+		key = None
+	if key is None:
+		print "Unable to open key '%s'"%(path)
+	else:
+		win32api.RegSetValueEx(key, "1", 0, win32con.REG_SZ, "00000409")
+		win32api.RegCloseKey(key)
+	
+	launch("ukbrdr.exe")
+
 
 def startDesktop():
 	explorer_path = r"%s\explorer.exe"%(os.environ["windir"])

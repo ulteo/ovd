@@ -364,6 +364,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_redirect_client_printers' => _('Redirect client printers'),
 			'general_session_settings_defaults_redirect_smartcards_readers' => _('Redirect Smart card readers'),
 			'general_session_settings_defaults_rdp_bpp' => _('RDP bpp'),
+			'general_session_settings_defaults_use_local_ime' => _('use local ime integration'),
 			'general_session_settings_defaults_enhance_user_experience' => _('Enhance user experience'),
 			
 			'general_session_settings_defaults_persistent' => _('Sessions are persistent'),

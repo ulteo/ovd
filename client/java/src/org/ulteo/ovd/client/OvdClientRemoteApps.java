@@ -221,6 +221,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			this.flags |= RdpConnectionOvd.DEBUG_SEAMLESS;
 		
 		this.bpp = properties.getRDPBpp();
+		
+		if (properties.isUseLocalIME()) {
+			this.setInputMethod("unicode_local_ime");
+		}
 	}
 	
 	/**

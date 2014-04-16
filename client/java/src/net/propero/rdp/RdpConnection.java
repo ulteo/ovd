@@ -442,6 +442,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		else if (inputMethod.equalsIgnoreCase("unicode_local_ime")) {
 			this.opt.supportUnicodeInput = true;
 			this.opt.supportIME = true;
+			this.mapFile = "us";
 		}
 	}
 

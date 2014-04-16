@@ -39,6 +39,7 @@ public class Protocol {
 	public static final String NAME_DESKTOP_ICONS = "desktop_icons";
 	public static final String NAME_USER_EXPERIENCE = "enhance_user_experience";
 	public static final String NAME_ATTR_RDP_BPP = "rdp_bpp";
+	public static final String NAME_ATTR_USE_LOCAL_IME = "use_local_ime";
 	
 	public static final String[] settingsNames = { 
 						NAME_DESKTOP_ICONS,
@@ -102,12 +103,21 @@ public class Protocol {
 			}
 		}
 		
-		if (name.equalsIgnoreCase(NAME_ATTR_CARDSREADERS)) {
+		if (name.equalsIgnoreCase(NAME_ATTR_PRINTERS)) {
 			try {
 				int val = Integer.parseInt(value);
-				properties.setCardsReaders(val > 0);
+				properties.setPrinters(val > 0);
 			} catch (NumberFormatException ex) {
-				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_CARDSREADERS+")");
+				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_PRINTERS+")");
+			}
+		}
+		
+		if (name.equalsIgnoreCase(NAME_ATTR_USE_LOCAL_IME)) {
+			try {
+				int val = Integer.parseInt(value);
+				properties.setUseLocalIME(val > 0);
+			} catch (NumberFormatException ex) {
+				Logger.error("Failed to parse value '"+value+"' (name: "+NAME_ATTR_USE_LOCAL_IME+")");
 			}
 		}
 		
