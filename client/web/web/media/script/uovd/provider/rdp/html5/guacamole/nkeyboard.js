@@ -90,11 +90,21 @@ Guacamole.NativeKeyboard = function() {
 			e.target.value = self.lastvalue = " ";
 
 			if(e.type == "keydown") {
-				self.onkeydown(keysym);
+				if (e.keyCode == 17 && e.altKey)
+					self.onkeyup(0xFFE9);
+				else if (e.keyCode == 18 && e.ctrlKey)
+					self.onkeyup(0xFFE3);
+				else
+					self.onkeydown(keysym);
 			} else {
-				self.onkeyup(keysym);
+				if (e.keyCode == 17 && e.altKey)
+					self.onkeydown(0xFFE9);
+				else if (e.keyCode == 18 && e.ctrlKey)
+					self.onkeydown(0xFFE3);
+				else
+					self.onkeyup(keysym);
 			}
-		} else if(e.altKey || e.ctrlKey || e.metaKey) {
+		} else if((e.altKey || e.ctrlKey || e.metaKey) && !(e.altKey && e.ctrlKey)) {
 			var keysym = parseInt(e.keyCode)+0x20;
 			e.preventDefault();
 			e.stopPropagation();
