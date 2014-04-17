@@ -34,6 +34,8 @@
   /sys/** r,
   /tmp/ r,
   /tmp/** rwk,
+  deny /bin/su x,
+  deny /usr/bin/sudo x,
   /usr/bin/* rPix,
   /usr/include/** r,
   /usr/lib/** rix,
@@ -56,6 +58,17 @@
   @{PROC}/** r,
 }
 
+#include <tunables/global>
+
+# No template variables specified
+
+/usr/bin/OVDExternalAppsClient {
+  #include <abstractions/base>
+  
+
+}
+
+
 /usr/bin/XHook {
   #include <abstractions/base>
 
@@ -73,7 +86,11 @@
   #include <abstractions/base>
 
   capability sys_ptrace,
+
+  network inet dgram,
   network inet stream,
+  network inet6 dgram,
+  network inet6 stream,
 
   deny / r,
 
@@ -81,7 +98,10 @@
   /dev/snd/* rw,
   /etc/** r,
   /etc/xdg/ulteo/xinitrc rix,
+  /usr/bin/startxfce4 rix,
+  /usr/bin/xdg-desktop-icon rPx,
   /etc/xrdp/startwm.sh rix,
+  /usr/bin/OVDExternalAppsClient rPx,
   /run/shm/ r,
   /run/shm/* rw,
   /run/udev/** r,
@@ -97,7 +117,7 @@
   /usr/bin/exo-desktop-item-edit rix,
   /usr/bin/iceauth rix,
   /usr/bin/pactl rix,
-  /usr/bin/pulseaudio rix,
+  /usr/bin/pulseaudio rPx,
   /usr/bin/python* rCix,
   /usr/bin/start-pulseaudio-x11 rix,
   /usr/bin/startovdapp rPix,
@@ -106,11 +126,15 @@
   /usr/bin/xfce4-session-logout rix,
   /usr/bin/ulteo-logout-dialog rix,
   /usr/bin/xfce4-settings-helper rix,
+  /usr/bin/xfconf-query rPx,
+  /usr/bin/xdg-user-dirs-update rPx,
   /usr/bin/xfce4-volumed rix,
   /usr/bin/xfdesktop rix,
   /usr/bin/xfsettingsd rix,
+  /var/cache/fontconfig/* r,
   /usr/bin/xfwm4 rix,
   /usr/bin/xrdb rix,
+  /usr/bin/java rPx,
   /usr/bin/xrdp-disconnect rix,
   /usr/bin/xsetroot rix,
   /usr/include/** r,
@@ -137,7 +161,6 @@
   /usr/share/wallpapers/* r,
   /usr/share/xfce4/** r,
   /usr/share/xfwm4/** r,
-  /var/cache/fontconfig/* r,
   /var/lib/**/ r,
   /var/lib/dbus/machine-id r,
   /var/spool/menus-common/ r,
