@@ -67,16 +67,16 @@
     <title>@gold_edition@</title>
 
     <para><emphasis>@gold_edition@</emphasis> is a comprehensive platform
-    designed to deliver solutions for workforce mobility, BYOD initiatives,
-    virtual desktop projects and more. It consiste of several advanced
-    features such as an SSL Gateway and two factor authentication support for
-    enhanced security and integration to Microsoft SharePoint and Alfresco. It
-    delivers seamless applications and desktop sessions from Windows and Linux
-    servers to native Windows and Linux clients, HTML5 enabled browsers and
-    mobile devices. A fully featured web-based Administrator Console provides
-    a configuration interface for managing server settings, user management,
-    application publishing and server monitoring along with server load
-    balancing for optimum performance and scalability. <!----> <para> The
+    designed to deliver solutions for workforce mobility, BYO initiatives,
+    desktop virtual projects and more. It comprises advanced features such as
+    an SSL VPN and two factor authentication support for en- hanced security
+    and integration to Microsoft SharePoint and Al- fresco. It delivers
+    seamless applications and desktop sessions from Windows and Linux servers
+    to native Windows and Linux clients, HTML5 enabled browsers and mobile
+    devices. A fully featured administrator web console provides for
+    configuration of server settings, user management, application publishing
+    and server monitoring along with server load balancing for optimum
+    performance and scalability. <!----> <para> The
     <emphasis>@gold_edition@</emphasis> provides @gold_edition@ features such
     as SmartCard support and enables users to connect using a
     <emphasis>@gold_edition@</emphasis> client. Ulteo provides the following
