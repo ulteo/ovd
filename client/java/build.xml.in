@@ -459,6 +459,7 @@
         <include name="keymaps/*" />
         <include name="scripts/*" />
         <include name="icons/**" />
+        <include name="externals/**" />
         <include name="po/*" />
         <include name="misc/**" />
         <include name="windowsPathsJNI/*" />
