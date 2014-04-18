@@ -46,7 +46,8 @@ public class UkbrdrChannel extends VChannel {
 		UKB_CARET_POS,
 		UKB_IME_STATUS,
 		UKB_PUSH_TEXT,
-		UKB_PUSH_COMPOSITION
+		UKB_PUSH_COMPOSITION,
+		UKB_STOP_COMPOSITION,
 	};
 	
 	private enum ime_state {
@@ -104,10 +105,21 @@ public class UkbrdrChannel extends VChannel {
 	}
 	
 	
+	public void stopComposition() {
+		RdpPacket_Localised s = new RdpPacket_Localised(8);
+		
+		s.setLittleEndian16(message_type.UKB_STOP_COMPOSITION.ordinal());
+		s.setLittleEndian16(0);
+		s.setLittleEndian32(0);
+		s.markEnd();
+		
+		this.send(s);
+	}
+	
 	public void sendPreedit(String str) {
 		int data_len = 2 * (str.length() + 1);
 		int packet_len = data_len + 8;
-				
+		
 		
 		RdpPacket_Localised s = new RdpPacket_Localised(packet_len);
 		

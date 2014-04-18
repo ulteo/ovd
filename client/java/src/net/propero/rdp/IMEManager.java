@@ -73,20 +73,17 @@ public class IMEManager {
 		if(e.getCommittedCharacterCount() == 0) {
 			this.edit = "";
 
-			if(ci == null) {
-				return;
-			}
-
-			for(int i=0 ; i < ci.getEndIndex() ; ++i) {
-				this.edit = this.edit + ci.setIndex(i);
+			if(ci != null) {
+				for(int i=0 ; i < ci.getEndIndex() ; ++i) {
+					this.edit = this.edit + ci.setIndex(i);
+				}
 			}
 			
 			channel.sendPreedit(this.edit);
-			
 		}
 		else {
 			System.out.println("Commit");
-			channel.sendPreedit("");
+			channel.stopComposition();
 			
 			
 //			if(ci == null) {
