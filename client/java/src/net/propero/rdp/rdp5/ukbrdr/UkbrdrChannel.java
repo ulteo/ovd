@@ -94,7 +94,19 @@ public class UkbrdrChannel extends VChannel {
 		case UKB_IME_STATUS:
 			this.imeState = ime_state.values()[(int)data.get8()];
 			System.out.println("ime status "+this.imeState);
-			this.common.canvas.enableInputMethods((this.imeState == ime_state.UKB_IME_ACTIVATED));
+			Input input = this.common.canvas.getInput();
+			boolean state = (this.imeState == ime_state.UKB_IME_ACTIVATED);
+			
+	        if (input.supportIME() == false) {
+	        	logger.info("IME is not supported");
+	            break; /* Not supported */
+	        }
+
+	        if (input.getImeActive() == state) {
+	            break; /* State unchanged */
+	        }
+
+	        input.setImeActive(state);
 			
 			break;
 			
