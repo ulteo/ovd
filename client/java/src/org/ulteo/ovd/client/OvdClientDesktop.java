@@ -105,6 +105,9 @@ public abstract class OvdClientDesktop extends OvdClient {
 		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
 			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 		
+		if (properties.isUseLocalIME())
+			flags |= RdpConnectionOvd.USE_LOCAL_IME;
+		
 		RdpConnectionOvd rc = null;
 		
 		try {

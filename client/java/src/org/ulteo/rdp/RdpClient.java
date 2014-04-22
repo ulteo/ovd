@@ -46,6 +46,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.profile.Profile;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.ServerAccess;
@@ -429,7 +430,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 	public void connect() throws OvdException {
 		for (RdpConnectionOvd connection : this.co) {
-			connection.setInputMethod("unicode_local_ime");
+			connection.setInputMethod(Profile.VALUE_UNICODE_LOCAL_IME);
 			connection.connect();
 		}
 	}
