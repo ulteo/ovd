@@ -124,7 +124,7 @@ HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, 
 			if(selPosInComposition) {
 				OutputDebugString("pouet2");
 				// replace context of composion area with the new string.
-				compositionRange->SetText(ec, TF_ST_CORRECTION, str, len);
+				compositionRange->SetText(ec, TF_ST_CORRECTION, str, wcslen(str));
 
 				// move the insertion point to end of the composition string
 				tfSelection.range->Collapse(ec, TF_ANCHOR_END);
