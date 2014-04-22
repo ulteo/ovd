@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.CommunicationMonitor;
-import net.propero.rdp.HexDump;
 import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
@@ -35,7 +34,6 @@ import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
-import org.apache.log4j.Level;
 import org.ulteo.utils.jni.WindowsTweaks;
 
 
@@ -64,14 +62,9 @@ public class UkbrdrChannel extends VChannel {
     
 	public UkbrdrChannel(Options opt_, Common common_) {
 		super(opt_, common_);
-		
-		if (this.opt.debug_seamless)
-			logger.setLevel(Level.DEBUG);
-
-		System.out.println("Construct");		
+		this.imeState = ime_state.UKB_IME_ACTIVATED;
 	}
 
-	/* Split input into lines, and call linehandler for each line. */
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
 		int temp = data.getLittleEndian16();
 		data.incrementPosition(2);   // flags
@@ -81,19 +74,16 @@ public class UkbrdrChannel extends VChannel {
 		message_type type = message_type.values()[temp];
 		switch (type) {
 		case UKB_INIT:
-			System.out.println("init msg: version "+data.getLittleEndian16());
 			break;
 			
 		case UKB_CARET_POS:
 			this.caretX = data.getLittleEndian32();
 			this.caretY = data.getLittleEndian32();
 			WindowsTweaks.setIMEPosition(this.caretX, this.caretY);
-			System.out.println("caret change to position ["+this.caretX+"-"+this.caretY+"]");
 			break;
 			
 		case UKB_IME_STATUS:
 			this.imeState = ime_state.values()[(int)data.get8()];
-			System.out.println("ime status "+this.imeState);
 			Input input = this.common.canvas.getInput();
 			boolean state = (this.imeState == ime_state.UKB_IME_ACTIVATED);
 			
@@ -111,7 +101,7 @@ public class UkbrdrChannel extends VChannel {
 			break;
 			
 		default:
-			System.out.println("Unknown problem");
+			logger.warn("Unknown message");
 			break;
 		}
 	}

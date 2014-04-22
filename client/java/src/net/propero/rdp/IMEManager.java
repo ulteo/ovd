@@ -27,6 +27,8 @@ import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ulteo.Logger;
+
 
 
 public class IMEManager {
@@ -53,18 +55,13 @@ public class IMEManager {
 	
 	
 	public void addChannel(Common common, UkbrdrChannel channel) {
-		System.out.println("Adding channel "+common);
 		this.channels.put(common, channel);
 	}
 	
 	public void inputMethodTextChanged(InputMethodEvent e, Common common) {
-		System.out.println("--------- InputMethodListener:inputMethodTextChanged() \n"+e.paramString()+"\n");
-		
-		System.out.println("research component "+common);
-		
 		UkbrdrChannel channel = this.channels.get(common);
 		if (channel == null) {
-			System.out.println("Failed to process inputMethod Text change");
+			Logger.warn("Failed to process inputMethod Text change");
 			return;
 		}
 		

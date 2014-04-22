@@ -125,7 +125,6 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
 		if (properties.isUseLocalIME()) {
-			System.out.println("====> activate IME");
 			rc.setInputMethod("unicode_local_ime");
 		}
 		this.configure(rc);

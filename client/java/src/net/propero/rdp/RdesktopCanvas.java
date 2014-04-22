@@ -148,7 +148,6 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
     
     
     public InputMethodRequests getInputMethodRequests() {
-    	System.out.println("getInputMethodRequests");
         return this;
     }
 

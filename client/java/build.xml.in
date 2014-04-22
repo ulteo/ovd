@@ -37,7 +37,7 @@
     </classpath>
   </taskdef>
 
-  <property name="javac.debug"       value="true"/>
+  <property name="javac.debug"       value="false"/>
   <property name="version"           value="@VERSION@" />
   <property name="mingw32.prefix"    value="i586-mingw32msvc-"/>
 
