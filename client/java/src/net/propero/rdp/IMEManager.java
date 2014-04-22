@@ -82,24 +82,15 @@ public class IMEManager {
 			channel.sendPreedit(this.edit);
 		}
 		else {
-			System.out.println("Commit");
-			channel.stopComposition();
+			char c;
+			// copy the committed text
+			if (this.edit.length() > 0) {
+				channel.stopComposition();
+				return;
+			}
 			
-			
-//			if(ci == null) {
-//				return;
-//			}
-//			
-//			for(int i=0 ; i<e.getCommittedCharacterCount() ; ++i) {
-//				channel.sendInput(ci.setIndex(i));
-//				
-//				rdp.sendInput(getTime(), RDP_INPUT_UNICODE, 0, e.getKeyChar(), 0);
-//				
-//				
-//				this.out = this.out + ci.setIndex(i);
-//				System.out.println("commited string "+this.out);
-				
-//			}
+			c = ci.first();
+			channel.sendInput(c);
 		}
 	}
 }
