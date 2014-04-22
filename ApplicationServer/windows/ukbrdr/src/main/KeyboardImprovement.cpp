@@ -46,7 +46,7 @@ bool KeyboardImprovement::update() {
 			pt.x = guiThreadInfo.rcCaret.left;
 			pt.y = guiThreadInfo.rcCaret.top;
 
-			ClientToScreen(fg_win, &pt);
+			ClientToScreen(guiThreadInfo.hwndCaret, &pt);
 		}
 	}
 
