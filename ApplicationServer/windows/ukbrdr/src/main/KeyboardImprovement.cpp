@@ -107,6 +107,21 @@ bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
 }
 
 
+bool KeyboardImprovement::processStopCompositionMessage(ukb_msg* msg) {
+	int ime_stop_composition = RegisterWindowMessage("WM_OVD_STOP_COMPOSITION");
+	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+
+	if (hwnd == NULL) {
+		OutputDebugString("Failed to find windows with class OVDIMEClass");
+		return false;
+	}
+
+	SendMessage(hwnd, ime_stop_composition, 0, 0);
+
+	return true;
+}
+
+
 void KeyboardImprovement::processNextMessage() {
 	ukb_msg msg;
 
@@ -119,6 +134,12 @@ void KeyboardImprovement::processNextMessage() {
 		OutputDebugString("new UKB_PUSH_COMPOSITION message");
 		this->processCompositionMessage(&msg);
 		break;
+
+	case UKB_STOP_COMPOSITION:
+		OutputDebugString("new UKB_STOP_COMPOSITION message");
+		this->processStopCompositionMessage(&msg);
+		break;
+
 	default:
 		OutputDebugString("Invalid message");
 		break;

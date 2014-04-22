@@ -68,6 +68,7 @@ public:
 
     ITfThreadMgr *_GetThreadMgr() { return _pThreadMgr; }
     void setComposition(PVOID data, int len);
+    void stopComposition();
 
     // utility function for compartment
     BOOL _IsKeyboardDisabled();

@@ -116,6 +116,13 @@ LRESULT CALLBACK CPropertyPopupWindow::_WndProc(HWND hwnd, UINT uMsg, WPARAM wPa
     COPYDATASTRUCT* cds;
   
     _this = _GetThis(hwnd);
+	int ime_stop_composition = RegisterWindowMessage("WM_OVD_STOP_COMPOSITION");
+
+	if (uMsg == ime_stop_composition) {
+		OutputDebugString("new WM_OVD_STOP_COMPOSITION message");
+		_this->_pService->stopComposition();
+		return 0;
+	}
 
     switch (uMsg)
     {

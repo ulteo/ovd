@@ -20,6 +20,7 @@ public:
 	bool init();
 	bool update();
 	void processNextMessage();
+	bool processStopCompositionMessage(ukb_msg* msg);
 	bool processCompositionMessage(ukb_msg* msg);
 	bool receiveHeader(ukb_msg* msg);
 

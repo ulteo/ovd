@@ -103,12 +103,6 @@ HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, 
     WCHAR* str = (WCHAR*)data;
     LONG result;
 
-    if (wcslen(str) == 0) {
-        OutputDebugString("Stop composition");
-        _EndComposition(pContext);
-    	return S_OK;
-    }
-
     // Start the new compositon if there is no composition.
     OutputDebugString("test compositing");
     if (!_IsComposing()) {
@@ -150,9 +144,9 @@ HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, 
 
 //+---------------------------------------------------------------------------
 //
-// InsertHello
+// setComposition
 //
-// Insert the string "Hello world!" to the focus context.
+// Set content of the preedit popup
 //----------------------------------------------------------------------------
 
 void CTextService::setComposition(PVOID data, int len)
@@ -182,6 +176,45 @@ void CTextService::setComposition(PVOID data, int len)
         pContext->RequestEditSession(_tfClientId, pInsertHelloEditSession, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
 
         pInsertHelloEditSession->Release();
+    }
+
+Exit:
+    if (pContext)
+        pContext->Release();
+
+    pDocMgrFocus->Release();
+}
+
+
+//+---------------------------------------------------------------------------
+//
+// stopComposition
+//
+// Stop the current composition.
+//----------------------------------------------------------------------------
+
+void CTextService::stopComposition()
+{
+    ITfDocumentMgr *pDocMgrFocus;
+    ITfContext *pContext;
+
+    // get the focus document
+    if (_pThreadMgr->GetFocus(&pDocMgrFocus) != S_OK)
+        return;
+
+    // get the topmost context, since the main doc context could be
+    // superseded by a modal tip context
+    if (pDocMgrFocus->GetTop(&pContext) != S_OK)
+    {
+        pContext = NULL;
+        goto Exit;
+    }
+
+    _EndComposition(pContext);
+
+    if (!this->_IsComposing()) {
+    	if (!this->_IsKeyboardOpen())
+    		this->_SetKeyboardOpen(FALSE);
     }
 
 Exit:
