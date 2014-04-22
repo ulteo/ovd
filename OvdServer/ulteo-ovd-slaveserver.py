@@ -1,11 +1,12 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2011 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010, 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010-2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -39,6 +40,7 @@ from ovd.Logger import Logger
 from ovd.Platform.ConfigReader import ConfigReader
 from ovd.Platform.System import System
 from ovd.SlaveServer import SlaveServer
+from ovd.Platform.ServerCheckup import ServerCheckup
 
 
 def stop(Signum, Frame):
@@ -162,6 +164,12 @@ if __name__ == "__main__":
 	if len(args) > 0:
 		print >> sys.stderr, "Invalid argument '%s'"%(args[0])
 		usage()
+		sys.exit(2)
+	
+	try:
+		ServerCheckup.check()
+	except Exception, e:
+		print >> sys.stderr, "Server checkup error:", e
 		sys.exit(2)
 	
 	if daemonize:

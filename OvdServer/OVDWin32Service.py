@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -35,6 +36,7 @@ from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
 from ovd.Platform.ConfigReader import ConfigReader
 from ovd.Platform.System import System
+from ovd.Platform.ServerCheckup import ServerCheckup
 
 class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
@@ -70,6 +72,12 @@ class OVD(win32serviceutil.ServiceFramework):
 		
 		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
+		try:
+			ServerCheckup.check()
+		except:
+			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
+			Logger.exception("Server checkup")
+			return
 		
 		slave = SlaveServer(Communication)
 		
