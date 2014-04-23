@@ -1,4 +1,4 @@
-REM IF EXIST build32 RD /Q /S build32
+IF EXIST build32 RD /Q /S build32
 
 md BUILD32
 cd build32
