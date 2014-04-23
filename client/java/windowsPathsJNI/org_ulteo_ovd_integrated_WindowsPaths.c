@@ -29,6 +29,11 @@
 #include "org_ulteo_ovd_integrated_WindowsPaths.h"
 #include "org_ulteo_utils_jni_WindowsTweaks.h"
 
+// Used for EnumThreadWndProc
+static int currentX;
+static int currentY;
+
+
 DWORD getPath(DWORD csidl, LPSTR path) {
     if (SHGetSpecialFolderPath(NULL, path, csidl, 0) == FALSE) {
         return GetLastError();
@@ -88,11 +93,60 @@ JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNI
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 }
 
+
+
+jboolean _setIMEPosition(HWND hwnd, int x, int y) {
+	UINT i = 0;
+	HWND defaultIMEWnd;
+
+	if (hwnd == NULL) {
+		printf("Invalid windows for setIMEPosition");
+		return JNI_FALSE;
+	}
+
+	defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
+
+	if (defaultIMEWnd == NULL) {
+		printf("Failed to find IME windows");
+		return JNI_FALSE;
+	}
+
+	for (i = 0; i < 32; i++) {
+		CANDIDATEFORM cf;
+		cf.dwIndex = i;
+		cf.dwStyle = CFS_CANDIDATEPOS;
+
+		cf.ptCurrentPos.x = x;
+		cf.ptCurrentPos.y = y;
+
+		SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
+	}
+
+	return JNI_TRUE;;
+}
+
+
+BOOL CALLBACK EnumThreadWndProc( HWND hwnd, LPARAM lParam) {
+	char className[255] = {0};
+
+	if (GetClassName(hwnd, className, sizeof(className)) == 0) {
+		printf("Failed to get className");
+		return TRUE;
+	}
+
+	if (strstr(className, "Sun") == NULL) {
+		return TRUE;
+	}
+
+	_setIMEPosition(hwnd, currentX, currentY);
+	return FALSE;
+}
+
+
 JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y, jboolean useSeamless) {
-	UINT bits = 1;
 	HWND hwnd = GetForegroundWindow();
-	HWND defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
 	HWND ukbrdr = FindWindow("OVDIMEChannelClass", NULL);
+	char className[255] = {0};
 	POINT pt;
 
 	// TODO check windows Class
@@ -100,9 +154,6 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 		printf("Failed to find foreground Windows\n");
 		return JNI_TRUE;
 	}
-
-	pt.x = x;
-	pt.y = y;
 
 	// Test if we are in external apps
 	if (ukbrdr != NULL) {
@@ -112,11 +163,6 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 	}
 	else {
 		printf("do not send to ukbrdr\n");
-	}
-
-	if (defaultIMEWnd == NULL) {
-		printf("Failed to find IME windows");
-		return JNI_TRUE;
 	}
 
 	pt.x = x;
@@ -134,16 +180,14 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 		return JNI_TRUE;
 	}
 
-	CANDIDATEFORM cf;
-	cf.dwIndex = 0;
-	cf.dwStyle = CFS_CANDIDATEPOS;
-	// Since the coordinates are relative to the containing window,
-	// we have to calculate the coordinates as below.
-	cf.ptCurrentPos.x = x;
-	cf.ptCurrentPos.y = y;
+	if (strstr(className, "Sun") == NULL) {
+		currentX = x;
+		currentY = y;
 
-	// sends IMC_SETCANDIDATEPOS to IMM to move the candidate window.
-	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
+		EnumChildWindows(hwnd, EnumThreadWndProc, 0);
 
-	return JNI_TRUE;
+		return JNI_TRUE;
+	}
+
+	return _setIMEPosition(hwnd, x, y);
 }
