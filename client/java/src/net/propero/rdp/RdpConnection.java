@@ -87,6 +87,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	private boolean keep_running = false;
 
 	private JFrame backstoreFrame = null;
+	private boolean useSeamless;
 	
 	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
@@ -320,8 +321,8 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 
 	
-	protected void initIMEChannel() throws RdesktopException {
-		this.ukbrdrChannel = new UkbrdrChannel(this.opt, this.common);
+	protected void initIMEChannel(boolean useSeamless) throws RdesktopException {
+		this.ukbrdrChannel = new UkbrdrChannel(this.opt, this.common, useSeamless);
 		this.addChannel(this.ukbrdrChannel);
 		IMEManager.getInstance().addChannel(this.common, this.ukbrdrChannel);
 	}

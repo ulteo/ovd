@@ -88,7 +88,7 @@ JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNI
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y) {
+JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y, jboolean useSeamless) {
 	UINT bits = 1;
 	HWND hwnd = GetForegroundWindow();
 	HWND defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
@@ -117,6 +117,21 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 
 	if (defaultIMEWnd == NULL) {
 		printf("Failed to find IME windows");
+		return JNI_TRUE;
+	}
+
+	pt.x = x;
+	pt.x = y;
+
+	if (useSeamless == JNI_TRUE) {
+		RECT rect;
+		if (GetWindowRect(hwnd, &rect) == TRUE) {
+			x -= rect.left;
+			y -= rect.top;
+		}
+	}
+
+	if (x < 0 || y < 0) {
 		return JNI_TRUE;
 	}
 

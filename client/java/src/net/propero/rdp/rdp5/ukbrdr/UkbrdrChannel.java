@@ -58,11 +58,13 @@ public class UkbrdrChannel extends VChannel {
 	private int caretX;
 	private int caretY;
 	private ime_state imeState;
+	private boolean useSeamless = false;
 	
     
-	public UkbrdrChannel(Options opt_, Common common_) {
+	public UkbrdrChannel(Options opt_, Common common_, boolean useSeamless) {
 		super(opt_, common_);
 		this.imeState = ime_state.UKB_IME_ACTIVATED;
+		this.useSeamless = useSeamless;
 	}
 
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
@@ -79,7 +81,8 @@ public class UkbrdrChannel extends VChannel {
 		case UKB_CARET_POS:
 			this.caretX = data.getLittleEndian32();
 			this.caretY = data.getLittleEndian32();
-			WindowsTweaks.setIMEPosition(this.caretX, this.caretY);
+			System.out.println("send caret to "+this.caretX+" "+this.caretY+" "+this.useSeamless);
+			WindowsTweaks.setIMEPosition(this.caretX, this.caretY, this.useSeamless);
 			break;
 			
 		case UKB_IME_STATUS:

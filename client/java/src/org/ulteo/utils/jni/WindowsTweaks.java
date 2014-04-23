@@ -22,5 +22,5 @@ package org.ulteo.utils.jni;
 
 public class WindowsTweaks {
 	public static native void desktopRefresh();
-	public static native boolean setIMEPosition(int x, int y);
+	public static native boolean setIMEPosition(int x, int y, boolean useSeamless);
 }

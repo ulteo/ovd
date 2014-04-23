@@ -143,7 +143,7 @@ public class RdpConnectionOvd extends RdpConnection {
 		
 		if ((this.flags & USE_LOCAL_IME) != 0) {
 			System.out.println("INIT local IME input method");
-			this.initIMEChannel();
+			this.initIMEChannel(this.opt.seamlessEnabled);
 		}
 
 		if ((this.flags & MODE_MULTIMEDIA) != 0) {

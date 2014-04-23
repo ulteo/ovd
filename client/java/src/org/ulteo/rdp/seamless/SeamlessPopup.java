@@ -30,24 +30,33 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
+import java.awt.font.TextHitInfo;
+import java.awt.im.InputMethodRequests;
+import java.text.AttributedCharacterIterator;
+
 import javax.swing.JDialog;
 
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.AbstractFocusManager;
 
 import net.propero.rdp.Common;
+import net.propero.rdp.IMEManager;
 import net.propero.rdp.Input;
 import net.propero.rdp.WrappedImage;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 import org.ulteo.gui.GUIActions;
 import org.ulteo.gui.SwingTools;
 
-public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, FocusListener {
+public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMovingResizing, FocusListener, InputMethodListener, InputMethodRequests, KeyListener {
 	public static AbstractFocusManager focusManager = null;
 
 	private Common common = null;
@@ -98,8 +107,58 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.addFocusListener(this);
 
 		GUIActions.setIconImage(this, GUIActions.DEFAULT_APP_ICON).run();
+        this.addKeyListener(this);
+        this.addInputMethodListener(this);
 	}
 
+	
+    public InputMethodRequests getInputMethodRequests() {
+        return this;
+    }
+
+    /* InputMethodListener interface */
+    public void caretPositionChanged(InputMethodEvent e) {
+    }
+
+    public void inputMethodTextChanged(InputMethodEvent e) {
+    	IMEManager.getInstance().inputMethodTextChanged(e, this.common);
+    }
+
+    /* InputMethodRequests interface */
+    public AttributedCharacterIterator cancelLatestCommittedText(AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public AttributedCharacterIterator getCommittedText(int beginIndex, int endIndex, AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public AttributedCharacterIterator getSelectedText(AttributedCharacterIterator.Attribute[] attributes) {
+    	return null;
+    }
+	
+    public int getCommittedTextLength() {
+    	return 0;
+    }
+	
+    public int getInsertPositionOffset() {
+    	return 0;
+    }
+	
+    public TextHitInfo getLocationOffset(int x, int y) {
+    	return null;
+    }
+	
+    public Rectangle getTextLocation(TextHitInfo offset) {
+    	return new java.awt.Rectangle(100, 200, 0, 10);
+    }
+
+    /* KeyListener interface */
+    public void keyPressed(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) { }
+    public void keyTyped(KeyEvent e) { }
+
+	
 	private void parseFlags(int flags) {
 		if ((flags & SeamlessChannel.WINDOW_CREATE_MODAL) != 0)
 			this.modal = true;
