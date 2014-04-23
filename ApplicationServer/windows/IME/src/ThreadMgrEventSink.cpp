@@ -64,7 +64,7 @@ STDAPI CTextService::OnSetFocus(ITfDocumentMgr *pDocMgrFocus, ITfDocumentMgr *pD
 
 	status = (this->_IsKeyboardDisabled() == FALSE);
 
-	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+	HWND hwnd = FindWindow("OVDIMEChannelClass", NULL);
 
 	if (hwnd != 0) {
 		PostMessage(hwnd, ime_status_message, 0, (LPARAM)status);

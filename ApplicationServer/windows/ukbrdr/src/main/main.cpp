@@ -18,7 +18,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 2;
 	}
 
-	if (! win.init("OVDIMEClass")) {
+	if (! win.init("OVDIMEChannelClass")) {
 		OutputDebugString("Failed to initialize windows ");
 		return 2;
 	}

@@ -7,7 +7,7 @@
 LRESULT CALLBACK InternalWin::wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	int ime_status_message = RegisterWindowMessage("WM_OVD_IME_STATUS");
 	int external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
-
+	
 	if (msg == ime_status_message) {
 		KeyboardImprovement::getInstance().sendIMEStatus((int)lParam);
 		return 0;

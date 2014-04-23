@@ -92,7 +92,7 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 	UINT bits = 1;
 	HWND hwnd = GetForegroundWindow();
 	HWND defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
-	HWND ukbrdr = FindWindow("OVDIMEClass", NULL);
+	HWND ukbrdr = FindWindow("OVDIMEChannelClass", NULL);
 	POINT pt;
 
 	// TODO check windows Class
@@ -103,7 +103,6 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 
 	pt.x = x;
 	pt.y = y;
-	ClientToScreen(hwnd, &pt);
 
 	// Test if we are in external apps
 	if (ukbrdr != NULL) {
