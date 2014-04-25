@@ -273,7 +273,7 @@ Section "post" PostCmd
   DetailPrint "Generating Config file"
   WriteRegStr HKLM "${CONFIG_REG_PATH}" "session_manager" "$sm_address"
   WriteRegStr HKLM "${CONFIG_REG_PATH}" "roles" "aps"
-  WriteRegStr HKLM "${CONFIG_REG_PATH}\log" "level" "*"
+  WriteRegStr HKLM "${CONFIG_REG_PATH}\log" "level" "error warn info"
 
   SetOutPath "$APPDATA\ulteo\ovd\log"
   SetOverwrite ifnewer
