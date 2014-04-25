@@ -35,6 +35,12 @@ bool KeyboardImprovement::init() {
 }
 
 
+bool KeyboardImprovement::uninit() {
+	vchannel_close();
+	return true;
+}
+
+
 void KeyboardImprovement::setIMEStatus(int processID, int status) {
 	std::stringstream ss;
 	ss<<"set IMEStatus "<<(int)processID<<" "<<this->lastTSFProcessID<<" "<<status;
@@ -111,6 +117,23 @@ bool KeyboardImprovement::receiveHeader(ukb_msg* msg) {
 	}
 
 	return true;
+}
+
+
+bool KeyboardImprovement::isConnected() {
+	BOOL res;
+	INT *state;
+	DWORD size;
+
+	res = WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, WTS_CURRENT_SESSION, WTSConnectState, (LPTSTR *) & state, &size);
+	if (!res)
+		return true;
+
+	res = (*state == WTSActive);
+
+	WTSFreeMemory(state);
+
+	return (res == TRUE);
 }
 
 

@@ -3,6 +3,7 @@
 
 
 #include "proto.h"
+#include <wtsapi32.h>
 
 
 
@@ -23,8 +24,12 @@ public:
 	static KeyboardImprovement& getInstance();
 
 	bool init();
+	bool uninit();
+
 	bool update();
 	void setIMEStatus(int processID, int status);
+
+	bool isConnected();
 	void processNextMessage();
 	bool processStopCompositionMessage(ukb_msg* msg);
 	bool processCompositionMessage(ukb_msg* msg);
