@@ -5,7 +5,7 @@
 #include "InternalWin.h"
 #include "win.h"
 
-#define REFRESH_TIME 100
+#define REFRESH_TIME 200
 
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {

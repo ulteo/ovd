@@ -1,5 +1,6 @@
 #include <iostream>
 #include <windows.h>
+#include <sstream>
 #include <vchannel/vchannel.h>
 #include "KeyboardImprovement.h"
 
@@ -15,6 +16,11 @@ KeyboardImprovement& KeyboardImprovement::getInstance() {
 KeyboardImprovement::KeyboardImprovement() {
 	this->x = 0;
 	this->y = 0;
+	this->imeStatus = 1;
+	this->currentTSFStatus = 1;
+	this->lastImeStatus = 1;
+	this->currentTSFProcessID = 0;
+	this->lastTSFProcessID = 0;
 }
 
 bool KeyboardImprovement::init() {
@@ -29,11 +35,29 @@ bool KeyboardImprovement::init() {
 }
 
 
+void KeyboardImprovement::setIMEStatus(int processID, int status) {
+	std::stringstream ss;
+	ss<<"set IMEStatus "<<(int)processID<<" "<<this->lastTSFProcessID<<" "<<status;
+	OutputDebugString(ss.str().c_str());
+
+	if (processID == this->lastTSFProcessID) {
+		this->currentTSFStatus = status;
+	}
+
+	this->lastTSFProcessID = processID;
+	
+	if (status == 1) {
+		this->currentTSFStatus = status;
+	}
+}
+
+
 bool KeyboardImprovement::update() {
 	std::cout<<"checking caret position"<<std::endl;
-
+	char classname[32];
 	HWND fg_win;
 	POINT pt;
+	boolean windowExist;
 
 	fg_win = GetForegroundWindow();
 
@@ -56,6 +80,21 @@ bool KeyboardImprovement::update() {
 		std::cout<<"caret change ["<<this->x<<"-"<<this->x<<"]"<<std::endl;
 
 		return this->sendCaretPosition(x, y);
+	}
+	
+	this->imeStatus = 1;
+	windowExist = (FindWindow("OVDIMEClass", NULL) != NULL);
+	if (windowExist) {
+		this->imeStatus = this->currentTSFStatus;
+	}
+	else {
+		if (GetClassName(fg_win, classname, sizeof(classname)) && !strcmp(classname, "ConsoleWindowClass"))
+			this->imeStatus = 0;
+	}
+
+	if (this->lastImeStatus != this->imeStatus) {
+		this->sendIMEStatus(this->imeStatus);
+		this->lastImeStatus = this->imeStatus;
 	}
 
 	return true;

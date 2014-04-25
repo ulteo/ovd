@@ -67,7 +67,7 @@ STDAPI CTextService::OnSetFocus(ITfDocumentMgr *pDocMgrFocus, ITfDocumentMgr *pD
 	HWND hwnd = FindWindow("OVDIMEChannelClass", NULL);
 
 	if (hwnd != 0) {
-		PostMessage(hwnd, ime_status_message, 0, (LPARAM)status);
+		PostMessage(hwnd, ime_status_message, GetCurrentProcessId(), (LPARAM)status);
 	}
 
     sprintf_s(buffer, sizeof(buffer), "IME status %i", status);

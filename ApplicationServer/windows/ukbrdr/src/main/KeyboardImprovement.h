@@ -10,6 +10,11 @@ class KeyboardImprovement {
 private:
 	int x;
 	int y;
+	int imeStatus;
+	int lastImeStatus;
+	int currentTSFStatus;
+	int currentTSFProcessID;
+	int lastTSFProcessID;
 
 	bool sendMsg(ukb_msg* msg);
 	KeyboardImprovement();
@@ -19,6 +24,7 @@ public:
 
 	bool init();
 	bool update();
+	void setIMEStatus(int processID, int status);
 	void processNextMessage();
 	bool processStopCompositionMessage(ukb_msg* msg);
 	bool processCompositionMessage(ukb_msg* msg);

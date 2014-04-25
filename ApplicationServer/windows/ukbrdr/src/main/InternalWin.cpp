@@ -9,7 +9,7 @@ LRESULT CALLBACK InternalWin::wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	int external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
 	
 	if (msg == ime_status_message) {
-		KeyboardImprovement::getInstance().sendIMEStatus((int)lParam);
+		KeyboardImprovement::getInstance().setIMEStatus((int)wParam, (int)lParam);
 		return 0;
 	}
 	
