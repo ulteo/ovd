@@ -9,7 +9,8 @@
  * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author Tomasz MACKOWIAK <tomasz.mackowiak@stxnext.pl> 2013
- * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+ * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013 
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -953,6 +954,19 @@ if ($_REQUEST['name'] == 'Certificate') {
 		}
 		
 		$res = $_SESSION['service']->certificate_add(base64_encode($content));
+		switch($res) {
+			case 0: // CERT_OK
+				popup_info("The Subscription key is installed");
+				break;
+			case 1: // CERT_ERROR
+				popup_error("The uploaded file is not a valid Subscription Key");
+				break;
+			case 2: // CERT_EXIST
+				popup_error("This Subscription key have already been uploaded");
+				break;
+		}
+		redirect();
+		
 		if (! $res) {
 			popup_error(_('The uploaded file is not a valid Subscription Key'));
 			redirect();

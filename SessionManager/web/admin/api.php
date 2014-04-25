@@ -7,7 +7,8 @@
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  * Author David LECHEVALIER <david@ulteo.com> 2013, 2014
- *
+ * Author Vincent ROULLIER <v.roullier@ulteo.com> 2014
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
@@ -5142,12 +5143,10 @@ class OvdAdminSoap {
 		
 		if (class_exists("PremiumManager")) {
 			$result = PremiumManager::certificate_add($content_);
-			if ($result !== false) {
-				$this->log_action('certificate_add', array('id' => $result));
-				return true;
-			}
+			$certificate = new Certificate(-1, base64_decode($content_));
+			$this->log_action('certificate_add', array('id' => $certificate));
+			return $result;
 		}
-		
 		return false;
 	}
 	
