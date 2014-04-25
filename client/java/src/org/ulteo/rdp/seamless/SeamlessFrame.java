@@ -73,6 +73,9 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 
 	
     public InputMethodRequests getInputMethodRequests() {
+        if(! this.common.canvas.isUseLocalIME())
+            return null;
+        
         return this;
     }
 

@@ -108,6 +108,7 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
     
     protected Options opt = null;
     protected Common common = null;
+    boolean useLocalIME = false;
 
     protected List<Component> ComponentListener = null;
 
@@ -132,6 +133,7 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
         this.bottom = this.height - 1; // changed
 
         dimension = new Dimension(width, height);
+        this.useLocalIME = false;
 
         // Component should return it's dimensions to LayoutManager by itself
         // via getMinimumSize() and getPreferredSize(). Calling setSize() from
@@ -145,9 +147,21 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
         this.addKeyListener(this);
         this.addInputMethodListener(this);
     }
+
+
+    public void useLocalIME(boolean value) {
+    	this.useLocalIME = value;
+    }
+    
+    public boolean isUseLocalIME() {
+    	return this.useLocalIME;
+    }
     
     
     public InputMethodRequests getInputMethodRequests() {
+        if (! this.useLocalIME)
+            return null;
+        
         return this;
     }
 

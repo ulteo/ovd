@@ -113,6 +113,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	
     public InputMethodRequests getInputMethodRequests() {
+        if(! this.common.canvas.isUseLocalIME())
+            return null;
+        
         return this;
     }
 

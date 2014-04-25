@@ -59,13 +59,21 @@ public class UkbrdrChannel extends VChannel {
 	private int caretY;
 	private ime_state imeState;
 	private boolean useSeamless = false;
+	private boolean isReady = false;
 	
     
 	public UkbrdrChannel(Options opt_, Common common_, boolean useSeamless) {
 		super(opt_, common_);
 		this.imeState = ime_state.UKB_IME_ACTIVATED;
 		this.useSeamless = useSeamless;
+		this.isReady = false;
 	}
+	
+	
+	public boolean isReady() {
+		return this.isReady;
+	}
+	
 
 	public void process(RdpPacket data) throws RdesktopException, IOException, CryptoException {
 		int temp = data.getLittleEndian16();
@@ -76,6 +84,8 @@ public class UkbrdrChannel extends VChannel {
 		message_type type = message_type.values()[temp];
 		switch (type) {
 		case UKB_INIT:
+			this.isReady = true;
+			this.common.canvas.useLocalIME(true);
 			break;
 			
 		case UKB_CARET_POS:
