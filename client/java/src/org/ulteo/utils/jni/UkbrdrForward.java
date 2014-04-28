@@ -20,8 +20,6 @@
 
 package org.ulteo.utils.jni;
 
-import org.ulteo.Logger;
-
 public class UkbrdrForward {
-	public static native void UkbrdrForwardImeCaretPosition(int x, int y);
+	public static native void setIMEPosition(int x, int y);
 }

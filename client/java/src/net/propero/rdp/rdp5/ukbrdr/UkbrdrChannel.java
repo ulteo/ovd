@@ -97,7 +97,7 @@ public class UkbrdrChannel extends VChannel {
 				WindowsTweaks.setIMEPosition(this.caretX, this.caretY, this.useSeamless);
 			
 			if (OSTools.isLinux())
-				UkbrdrForward.UkbrdrForwardImeCaretPosition(this.caretX, this.caretY);
+				UkbrdrForward.setIMEPosition(this.caretX, this.caretY);
 			
 			break;
 			

@@ -18,12 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+#include "org_ulteo_utils_jni_UkbrdrForward.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <jni.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <netdb.h>
 #include <errno.h>
 #include <unistd.h>
@@ -31,13 +33,17 @@
 
 /* ukbrdr protocol */
 
-#define UKB_VERSION 1;
-typedef uint8 __u8;
-typedef uint16 __u16;
-typedef uint32 __u32;
+#ifndef _WIN32
+	#define PACK( __Declaration__ )  __Declaration__ __attribute__((__packed__))
+#else
+	#define PACK( __Declaration__ ) __pragma( pack(push, 1)) __Declaration__ __pragma( pack(pop)    )
+#endif
 
-#define HANDLE_PRAGMA_PACK_PUSH_POP
-#define PACK( __Declaration__ ) __pragma( pack(push, 1)) __Declaration__ __pragma( pack(pop))
+#define UKB_VERSION 1
+typedef unsigned char  __u8;
+typedef unsigned short __u16;
+typedef unsigned int   __u32;
+
 
 enum message_type {
  UKB_INIT = 0,
@@ -95,52 +101,17 @@ struct ukb_msg {
  } u;
 };)
 
-/*****************************************************************************/
-/* connect to a socket unix */
-int unix_connect(const char* socket_filename) {
-	int sock, len;
-	struct sockaddr_un saun;
 
-	/* Create socket */
-	if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-		return 0;
-	}
-	/* Connect to server */
-	saun.sun_family = AF_UNIX;
-	strcpy(saun.sun_path, socket_filename);
-	len = sizeof(saun.sun_family) + strlen(saun.sun_path);
-	if (connect(sock, (struct sockaddr *) &saun, len) < 0) {
-		close(sock);
-		return 0;
-	}
-	return sock;
-}
+int tcp_send(int sck, const void* ptr, int len, int flags);
+int unix_connect(const char* socket_filename);
 
 /*****************************************************************************/
-int tcp_send(int sck, const void* ptr, int len, int flags) {
-	int size_send = 0;
-	int res = 0;
-
-	do {
-		res = send(sck, ptr + size_send, len - size_send, flags | MSG_NOSIGNAL);
-		if (res <= 0) {
-			return res;
-		}
-		size_send += res;
-		if (res != len && errno != 0) {
-			return size_send;
-		}
-	} while (size_send < len);
-
-	return size_send;
-}
-
-/*****************************************************************************/
-JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_UkbrdrForwardImeCaretPosition(JNIEnv *env, jclass class, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_UkbrdrForward_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y) {
 	static int sck = 0;
 	char *display;
-  char buffer[250];
+	char buffer[250];
 	int num;
+	int rv;
 	struct ukb_msg message;
 
 	if ((display = getenv("DISPLAY")) == NULL) {
@@ -167,7 +138,7 @@ JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_UkbrdrForwardImeCaretPosition(JN
 
 	printf("New position : %d, %d\n", x, y);
 
-	if ((rv = tcp_send(sck, (char*) message, sizeof(struct ukb_header) + message.header.len, 0)) < 0) {
+	if ((rv = tcp_send(sck, (char*) &message, sizeof(struct ukb_header) + message.header.len, 0)) < 0) {
 		fprintf(stderr, "Error in sending ukbrdr imeCaretPosition. (%s)\n", strerror(errno));
 		close(sck);
 		return;
