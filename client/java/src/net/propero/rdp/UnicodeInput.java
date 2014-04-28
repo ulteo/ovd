@@ -119,6 +119,9 @@ public class UnicodeInput extends Input {
 			this.canvas.removeKeyListener(klisteners[i]);
 		
 		this.canvas.addKeyListener(this.keyAdapter);
+		
+		// We need to keep the rdesktopCanvas listener for local ime integration
+		this.canvas.addKeyListener(this.canvas);
 	}
 
     /**
