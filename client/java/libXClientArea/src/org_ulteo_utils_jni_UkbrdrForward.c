@@ -143,6 +143,4 @@ JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_UkbrdrForward_setIMEPosition(JNI
 		close(sck);
 		return;
 	}
-
-	close(sck);
 }
