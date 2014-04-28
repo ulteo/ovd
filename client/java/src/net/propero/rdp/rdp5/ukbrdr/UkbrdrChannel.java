@@ -34,6 +34,7 @@ import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.utils.jni.WindowsTweaks;
 import org.ulteo.utils.jni.UkbrdrForward;
 
@@ -92,8 +93,12 @@ public class UkbrdrChannel extends VChannel {
 		case UKB_CARET_POS:
 			this.caretX = data.getLittleEndian32();
 			this.caretY = data.getLittleEndian32();
-			WindowsTweaks.setIMEPosition(this.caretX, this.caretY);
-			UkbrdrForward.UkbrdrForwardImeCaretPosition(this.caretX, this.caretY);
+			if (OSTools.isWindows())
+				WindowsTweaks.setIMEPosition(this.caretX, this.caretY, this.useSeamless);
+			
+			if (OSTools.isLinux())
+				UkbrdrForward.UkbrdrForwardImeCaretPosition(this.caretX, this.caretY);
+			
 			break;
 			
 		case UKB_IME_STATUS:
