@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from ovd_shells.ExternalAppsClient import ExternalAppsClient as AbstractExternalAppsClient
+import os
 
 class ExternalAppsClient(AbstractExternalAppsClient):
 	@classmethod
@@ -29,6 +30,15 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 	@classmethod
 	def need_specific_working_directory(cls):
 		return False
+	
+	
+	@classmethod
+	def get_env(cls):
+		my_env = os.environ.copy()
+		my_env["LANG"] = "en_US.UTF-8"
+		my_env["LC_ALL"] = "en_US.UTF-8"
+		my_env["LANGUAGE"] = "en_US.UTF-8"
+		return my_env
 	
 	
 	@classmethod

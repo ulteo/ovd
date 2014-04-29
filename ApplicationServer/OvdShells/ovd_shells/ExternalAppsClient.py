@@ -63,11 +63,16 @@ class ExternalAppsClient:
 			print "Unable to open log file %s"%(self.log_file)
 			log_stream = sys.stdout
 		
-		p = subprocess.Popen(args = cmd, shell = True, cwd = folder, stdout = log_stream, stderr = subprocess.STDOUT)
+		my_env = self.get_env()
+		p = subprocess.Popen(args = cmd, env = my_env, shell = True, cwd = folder, stdout = log_stream, stderr = subprocess.STDOUT)
 		return True
 	
 	
 	def launch(self, cmd):
+		raise NotImplementedError("must be redeclared")
+	
+	
+	def get_env(cls):
 		raise NotImplementedError("must be redeclared")
 	
 	
