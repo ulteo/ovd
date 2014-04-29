@@ -432,6 +432,9 @@ public class RdpConnection implements SeamListener, Runnable{
 		if (keymap == null)
 			throw new InvalidParameterException("'setKeymap' does not accept 'null' keymap parameter");
 		
+		if (this.opt.supportIME)
+			return;
+		
 		this.mapFile = keymap;
 	}
 	
