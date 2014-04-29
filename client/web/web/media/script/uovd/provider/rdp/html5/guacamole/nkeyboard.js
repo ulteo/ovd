@@ -11,6 +11,7 @@ Guacamole.NativeKeyboard = function() {
 	this.focused = false;
 	this.lastvalue = " ";
 	this.node = null;
+	this.altKey = false;
 
 	this.controlKeySym = {
 		8:   0xFF08, // backspace
@@ -85,26 +86,37 @@ Guacamole.NativeKeyboard = function() {
 	function handleKeysym(e) {
 		if(self.controlKeySym[e.keyCode]) {
 			var keysym = self.controlKeySym[e.keyCode];
+			var location = e.location || e.keyLocation || 0;
 			e.preventDefault();
 			e.stopPropagation();
 			e.target.value = self.lastvalue = " ";
 
 			if(e.type == "keydown") {
-				if (e.keyCode == 17 && e.altKey)
+				if (e.keyCode == 17 && self.altKey) {
+					self.altKey = false;
 					self.onkeyup(0xFFE9);
+				}
 				else if (e.keyCode == 18 && e.ctrlKey)
 					self.onkeyup(0xFFE3);
-				else
+				else if (!(e.keyCode == 18 && location == 2)) {
+					if (e.keyCode == 18) {
+						self.altKey = true;
+					}
 					self.onkeydown(keysym);
+				}
 			} else {
-				if (e.keyCode == 17 && e.altKey)
+				if (e.keyCode == 17 && self.altKey)
 					self.onkeydown(0xFFE9);
 				else if (e.keyCode == 18 && e.ctrlKey)
 					self.onkeydown(0xFFE3);
-				else
+				else if (!(e.keyCode == 18 && location == 2)) {
+					if (e.keyCode == 18) {
+						self.altKey = false;
+					}
 					self.onkeyup(keysym);
+				}
 			}
-		} else if((e.altKey || e.ctrlKey || e.metaKey) && !(e.altKey && e.ctrlKey)) {
+		} else if((self.altKey || e.ctrlKey || e.metaKey) && !(e.altKey && e.ctrlKey)) {
 			var keysym = parseInt(e.keyCode)+0x20;
 			e.preventDefault();
 			e.stopPropagation();
