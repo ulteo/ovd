@@ -96,7 +96,6 @@ JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNI
 
 
 jboolean _setIMEPosition(HWND hwnd, int x, int y) {
-	UINT i = 0;
 	HWND defaultIMEWnd;
 
 	if (hwnd == NULL) {
@@ -111,16 +110,14 @@ jboolean _setIMEPosition(HWND hwnd, int x, int y) {
 		return JNI_FALSE;
 	}
 
-	for (i = 0; i < 32; i++) {
-		CANDIDATEFORM cf;
-		cf.dwIndex = i;
-		cf.dwStyle = CFS_CANDIDATEPOS;
+	CANDIDATEFORM cf;
+	cf.dwIndex = 0;
+	cf.dwStyle = CFS_CANDIDATEPOS;
 
-		cf.ptCurrentPos.x = x;
-		cf.ptCurrentPos.y = y;
+	cf.ptCurrentPos.x = x;
+	cf.ptCurrentPos.y = y;
 
-		SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
-	}
+	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
 
 	return JNI_TRUE;;
 }
@@ -178,6 +175,11 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 
 	if (x < 0 || y < 0) {
 		return JNI_TRUE;
+	}
+
+	if (GetClassName(hwnd, className, sizeof(className)) == 0) {
+		printf("Failed to get className");
+		return TRUE;
 	}
 
 	if (strstr(className, "Sun") == NULL) {

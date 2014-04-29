@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.CommunicationMonitor;
+import net.propero.rdp.IMEManager;
 import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
@@ -69,6 +70,7 @@ public class UkbrdrChannel extends VChannel {
 		this.imeState = ime_state.UKB_IME_ACTIVATED;
 		this.useSeamless = useSeamless;
 		this.isReady = false;
+		IMEManager.getInstance().setSeamless(useSeamless);
 	}
 	
 	
@@ -98,6 +100,8 @@ public class UkbrdrChannel extends VChannel {
 			
 			if (OSTools.isLinux())
 				UkbrdrForward.setIMEPosition(this.caretX, this.caretY);
+			
+			IMEManager.getInstance().setCaret(this.caretX, this.caretY);
 			
 			break;
 			

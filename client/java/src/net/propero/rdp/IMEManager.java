@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.utils.jni.WindowsTweaks;
 
 
 
@@ -37,11 +39,15 @@ public class IMEManager {
 	protected String out = "";
 	public boolean activated = true;
 	private Map<Common, UkbrdrChannel> channels;
+	private int caretX;
+	private int caretY;
+	private boolean useSeamless;
 
 	
 	public IMEManager() {
 		this.channels = new HashMap<Common, UkbrdrChannel>();
 		this.channels.clear();
+		this.useSeamless = false;
 	}
 	
 	
@@ -56,6 +62,16 @@ public class IMEManager {
 	
 	public void addChannel(Common common, UkbrdrChannel channel) {
 		this.channels.put(common, channel);
+	}
+	
+	public void setCaret(int x, int y) {
+		this.caretX = x;
+		this.caretY = y;
+	}
+	
+	public void setSeamless(boolean value) {
+		this.useSeamless = value;
+		
 	}
 	
 	public void inputMethodTextChanged(InputMethodEvent e, Common common) {
@@ -75,6 +91,9 @@ public class IMEManager {
 					this.edit = this.edit + ci.setIndex(i);
 				}
 			}
+			
+			if (OSTools.isWindows())
+				WindowsTweaks.setIMEPosition(this.caretX, this.caretY, this.useSeamless);
 			
 			channel.sendPreedit(this.edit);
 		}
