@@ -167,6 +167,23 @@ def setupIME():
 		win32api.RegSetValueEx(key, "1", 0, win32con.REG_SZ, "00000409")
 		win32api.RegCloseKey(key)
 	
+	path = r"Software\Microsoft\CTF\LangBar"
+	try:
+		CreateKeyR(win32con.HKEY_CURRENT_USER, path)
+		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, path, 0, win32con.KEY_SET_VALUE)
+	except:
+		key = None
+	
+	if key is None:
+		print "Unable to open key '%s'"%(path)
+	else:
+		win32api.RegSetValueEx(key, "ShowStatus", 0, win32con.REG_DWORD, 3)
+		win32api.RegSetValueEx(key, "Transparency", 0, win32con.REG_DWORD, 0xff)
+		win32api.RegSetValueEx(key, "Label", 0, win32con.REG_DWORD, 1)
+		win32api.RegSetValueEx(key, "ExtraIconsOnMinimized", 0, win32con.REG_DWORD, 1)
+		win32api.RegCloseKey(key)
+
+	
 	launch("ukbrdr.exe")
 
 
