@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2011-2013 Ulteo SAS
+ * Copyright (C) 2011-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,7 +77,7 @@ if (array_key_exists('type', $_REQUEST)) {
 	$rdp_provider = $_REQUEST['type'];
 }
 
-$rdp_input_unicode = null;
+$rdp_input_unicode = "unicode";
 if (defined('RDP_INPUT_METHOD'))
 	$rdp_input_unicode = RDP_INPUT_METHOD;
 

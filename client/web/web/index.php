@@ -108,7 +108,7 @@ $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
-$rdp_input_method = null;
+$rdp_input_method = "unicode";
 if (defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
 	$rdp_input_method = (string)$_COOKIE['ovd-client']['session_input_method'];
 else
