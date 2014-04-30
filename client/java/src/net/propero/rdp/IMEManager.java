@@ -102,6 +102,7 @@ public class IMEManager {
 			// copy the committed text
 			if (this.edit.length() > 0) {
 				channel.stopComposition();
+				this.edit = "";
 				return;
 			}
 			
