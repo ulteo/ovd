@@ -155,7 +155,8 @@ JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition
 	// Test if we are in external apps
 	if (ukbrdr != NULL) {
 		int external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
-		PostMessage(ukbrdr, external_caret_pos, pt.x, pt.y);
+		PostMessage(ukbrdr, external_caret_pos, x, y);
+		return JNI_TRUE;
 	}
 
 	pt.x = x;
