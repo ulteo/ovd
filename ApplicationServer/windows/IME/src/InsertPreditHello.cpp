@@ -118,12 +118,9 @@ bool CTextService::updatePos(TfEditCookie ec, ITfContext *pContext, ITfRange *pR
 
 HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, PVOID data, int len)
 {
-    ITfRange *pRangeComposition;
     TF_SELECTION tfSelection;
     ULONG cFetched;
-    BOOL fCovered;
     WCHAR* str = (WCHAR*)data;
-    LONG result;
 
     // Start the new compositon if there is no composition.
     if (!_IsComposing()) {
