@@ -12,6 +12,13 @@ STYLE_XSL_XHTML=style/xhtml.xsl
 SRC=\
 	Architecture.xml \
 	FAQ.xml \
+	Support_Ubuntu_Lucid.xml \
+	Support_Ubuntu_Precise.xml \
+	Support_Debian_Squeeze.xml \
+	Support_Debian_Wheezy.xml \
+	Support_RHEL_6.0.xml \
+	Support_SLES_11.SP1.xml \
+	Support_openSUSE_11.3.xml \
 	Installation_ApS_Windows.xml \
 	Installation_Gateway_Lucid.xml \
 	Installation_Gateway_Precise.xml \
@@ -25,13 +32,6 @@ SRC=\
 	Protocol.xml \
 	QuickStart.xml \
 	Virtual_Appliance.xml \
-	Support_Debian_Squeeze.xml \
-	Support_Debian_Wheezy.xml \
-	Support_RHEL_6.0.xml \
-	Support_openSUSE_11.3.xml \
-	Support_SLES_11.SP1.xml \
-	Support_Ubuntu_Precise.xml \
-	Support_Ubuntu_Lucid.xml \
 	WebClient.xml \
 	WsdlApi.xml \
 	Premium_Edition.xml \
@@ -52,17 +52,17 @@ html: $(DST)
 pdf: $(PDF)
 
 # Add the depends between sources
-Installation_Gateway_Lucid.html Installation_Gateway_Lucid.pdf: common.xml
-Installation_Gateway_RHEL6.0.html Installation_Gateway_RHEL6.0.pdf: common.xml
-NativeClient.html NativeClient.pdf: common.xml
-Support_Debian_Lenny.html Support_Debian_Lenny.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
-Support_Debian_Squeeze.html Support_Debian_Squeeze.pdf: Support_Ubuntu_Lucid.xml
-Support_RHEL_5.5.html Support_RHEL_5.5.pdf: Support_SLES_11.SP1.xml
-Support_SLES_11.SP1.html Support_SLES_11.SP1.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
-Support_Ubuntu_Hardy.html Support_Ubuntu_Hardy.pdf: Support_Ubuntu_Lucid.xml
-Support_Ubuntu_Precise.html Support_Ubuntu_Precise.pdf: Support_Ubuntu_Lucid.xml
-Support_openSUSE_11.2.html Support_openSUSE_11.2.pdf: Support_SLES_11.SP1.xml
-Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
+#Installation_Gateway_Lucid.html Installation_Gateway_Lucid.pdf: common.xml
+#Installation_Gateway_RHEL6.0.html Installation_Gateway_RHEL6.0.pdf: common.xml
+#NativeClient.html NativeClient.pdf: common.xml
+#Installing OVD 4.0 on Debian Lenny.html Support_Debian_Lenny.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
+#Support_Debian_Squeeze.html Support_Debian_Squeeze.pdf: Support_Ubuntu_Lucid.xml
+#Support_RHEL_5.5.html Support_RHEL_5.5.pdf: Support_SLES_11.SP1.xml
+#Support_SLES_11.SP1.html Support_SLES_11.SP1.pdf: Support_Debian_Squeeze.xml Support_Ubuntu_Hardy.xml
+#Support_Ubuntu_Hardy.html Support_Ubuntu_Hardy.pdf: Support_Ubuntu_Lucid.xml
+#Installing_OVD_4.0_on_Ubuntu_Precise.html Support_Ubuntu_Precise.pdf: Support_Ubuntu_Lucid.xml
+#Support_openSUSE_11.2.html Support_openSUSE_11.2.pdf: Support_SLES_11.SP1.xml
+#Support_openSUSE_11.3.html Support_openSUSE_11.3.pdf: Support_SLES_11.SP1.xml
 
 
 %.html: %.xml.out $(STYLE_XSL_XHTML)

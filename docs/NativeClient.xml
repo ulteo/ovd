@@ -99,13 +99,6 @@
                 xpointer="repository_online"
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="Installation_Gateway_Precise.xml"
-                xpointer="repository_offline"
-                xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-    <xi:include href="Installation_Gateway_Precise.xml"
-                xpointer="repository_common"
-                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <section id="package_install">
       <title>Package Installation</title>

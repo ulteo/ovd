@@ -16,9 +16,12 @@
     </copyright>
   </articleinfo>
 
-  <para>The purpose of this documentation is to provide a high-level
+  <section>
+	  <title>Introduction</title>
+	  <para>The purpose of this documentation is to provide a high-level
   description of the architecture typically used in an <emphasis>Ulteo Open
   Virtual Desktop</emphasis> server farm.</para>
+  </section>
 
   <section>
     <title>Servers Roles</title>

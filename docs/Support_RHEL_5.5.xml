@@ -1,31 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
-	  [<!ENTITY parent "Support_SLES_11.SP1.xml">]> 
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
-  <transform_var name="distrib_pretty_name" value="Red Hat Enterprise Linux (RHEL) 5.5"/>
-  <transform_var name="distrib_name" value="rhel" />
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY parent "Support_SLES_11.SP1.xml">
+]>
+<article>
+  <transform_var name="distrib_pretty_name"
+                 value="Red Hat Enterprise Linux (RHEL) 5.5"/>
+
+  <transform_var name="distrib_name" value="rhel"/>
+
   <transform_var name="distrib_version" value="5.5"/>
+
   <transform_var name="distrib_dvd_url" value="http://www.redhat.com/rhel/"/>
+
   <transform_var name="rpm_install_cmd" value="yum"/>
+
   <transform_var name="rpm_mysql_packages" value="mysql mysql-server"/>
+
   <transform_var name="mysql_service" value="mysqld"/>
+
   <transform_var name="apache_service" value="httpd"/>
+
   <transform_var name="samba_service" value="samba"/>
 
-  <xi:include href="&parent;" xpointer="header" />
-  <xi:include href="&parent;" xpointer="first_para" />
- 
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="header"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="first_para"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
   <section id="prerequisites">
-    <xi:include href="&parent;" xpointer="prerequisites_title" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="prerequisites_title"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="prerequisites_root" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="prerequisites_root"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="system_requirements" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="system_requirements"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="warning_name_examples" />
+    <xi:include href="Support_SLES_11.SP1.xml"
+                xpointer="warning_name_examples"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-     <simplesect id="seLinux">
+    <simplesect id="seLinux">
       <title id="seLinux_title">SELinux</title>
 
       <para id="seLinux_para1">Ulteo OVD is not compatible with SELinux yet.
@@ -64,56 +82,44 @@ SELinux status:              disabled
   </section>
 
   <section id="repository">
-    <xi:include href="&parent;" xpointer="repository_title" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_title"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-    <xi:include href="&parent;" xpointer="repository_para" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_para"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <section id="repository_online">
-      <xi:include href="&parent;" xpointer="repository_online_title" />
-      <xi:include href="&parent;" xpointer="repository_online_para" />
+      <xi:include href="Support_SLES_11.SP1.xml"
+                  xpointer="repository_online_title"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-      <para>
-        The first step is to configure yum to enable the Ulteo rpm repository.
-        Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
-       <screen>
-<![CDATA[[ovd-@VERSIONNOTILD@]
+      <xi:include href="Support_SLES_11.SP1.xml"
+                  xpointer="repository_online_para"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+      <para>The first step is to configure yum to enable the Ulteo rpm
+      repository. Create the file
+      <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
+
+      <screen>
+[ovd-@VERSIONNOTILD@]
 name=Ulteo OVD @VERSION@
 baseurl=@BASE_URI@/rhel/@distrib_version@/
 enabled=1
 gpgcheck=1
-gpgkey=@BASE_URI@/rhel/@distrib_version@/keyring]]>
+gpgkey=@BASE_URI@/rhel/@distrib_version@/keyring
         </screen>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="&parent;" xpointer="repository_offline_title" />
-      <xi:include href="&parent;" xpointer="repository_offline_warning" />
-
-      <itemizedlist>
-        <xi:include href="&parent;" xpointer="repository_offline_step1" />
-        <xi:include href="&parent;" xpointer="repository_offline_step2" />
-        <listitem>
-          <para>
-            The first step is to configure yum to enable the Ulteo rpm
-            repository.  Create the file
-            <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
-            with:
-          </para>
-          <screen>
-<![CDATA[[ovd-@VERSIONNOTILD@]
-name=Ulteo OVD @VERSION@ offline
-baseurl=file:///root/ovd-@VERSION@-rhel-@distrib_version@/
-enabled=1
-gpgcheck=0]]>
-          </screen>
-        </listitem>
-     </itemizedlist>
     </section>
   </section>
 
-  <xi:include href="&parent;" xpointer="sm" />
-  <xi:include href="&parent;" xpointer="subsystem" />
-  <xi:include href="&parent;" xpointer="wc" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-  <xi:include href="colophon.xml" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wc"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>

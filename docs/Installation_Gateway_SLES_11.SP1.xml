@@ -65,45 +65,13 @@
 </screen></para>
         </listitem>
       </itemizedlist>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="Support_RHEL_5.5.xml"
-                  xpointer="repository_offline_title"
-                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-      <itemizedlist>
-        <listitem id="repository_offline_step2">
-          <para id="repository_offline_step2_para">The OVD offline repository
-          is made up of two archives. The first one can be found <ulink
-          url="@BASE_URI@/offline/ovd-@VERSION@-@distrib_name@-@distrib_version@.tar.gz">here</ulink>.
-          The second one is only available <ulink
-          url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@-@distrib_version@.tar.gz">online</ulink>,
-          using your @GOLD_NAME@ Edition account credentials.</para>
-
-          <para>Download or copy the two archives to the
-          <emphasis>/root/</emphasis> path of your workstation.</para>
-        </listitem>
-
-        <listitem id="repository_offline_step">
-          <para id="repository_offline_step_para">Uncompress the
-          archive:</para>
-
-          <screen># for f in ovd-@VERSION@-*-@distrib_version@.tar.gz; do tar xzf $f; done          </screen>
-        </listitem>
-
-        <xi:include href="Support_SLES_11.SP1.xml"
-                    xpointer="repository_offline_step3"
-                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-        <xi:include href="Support_SLES_11.SP1.xml"
-                    xpointer="repository_offline_step4"
-                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
-      </itemizedlist>
-    </section>
-
-    <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_common"
+      
+        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repository_common_para"
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    </section>
+   
+
+  
   </section>
 
   <section id="installation_gw">
@@ -155,16 +123,18 @@
     line:</para>
 
     <screen>
-		# web_client = http[s]://ip[:port]/
+# web_client = http[s]://ip[:port]/
     </screen>
 
     <para>You have to uncomment the variable and set the value to the URL of
-    your Web Portal. For example: <screen>
-			web_client = http://webportal.test.demo/
+    your Web Portal. For example: 
+    <screen>
+web_client = http://webportal.test.demo/
 		</screen></para>
 
-    <para>Now, restart the slaverserver service. <screen>
-			# /etc/init.d/ulteo-ovd-slaveserver restart
+    <para>Now, restart the slaverserver service. 
+ <screen>
+# /etc/init.d/ulteo-ovd-slaveserver restart
 		</screen></para>
   </section>
 

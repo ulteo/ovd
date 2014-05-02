@@ -1,5 +1,6 @@
 
-DATA= copy_setup.png
+DATA= copy_setup.png \
+	nla.png
 
 all:
 
