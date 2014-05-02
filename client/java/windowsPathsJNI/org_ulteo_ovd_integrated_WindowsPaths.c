@@ -142,20 +142,12 @@ BOOL CALLBACK EnumThreadWndProc( HWND hwnd, LPARAM lParam) {
 
 JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y, jboolean useSeamless) {
 	HWND hwnd = GetForegroundWindow();
-	HWND ukbrdr = FindWindow("OVDIMEChannelClass", NULL);
 	char className[255] = {0};
 	POINT pt;
 
 	// TODO check windows Class
 	if (hwnd == NULL) {
 		printf("Failed to find foreground Windows\n");
-		return JNI_TRUE;
-	}
-
-	// Test if we are in external apps
-	if (ukbrdr != NULL) {
-		int external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
-		PostMessage(ukbrdr, external_caret_pos, x, y);
 		return JNI_TRUE;
 	}
 

@@ -94,6 +94,28 @@ BOOL IsRangeCovered2(TfEditCookie ec, ITfRange *pRangeTest, ITfRange *pRangeCove
 //----------------------------------------------------------------------------
 
 
+bool CTextService::updatePos(TfEditCookie ec, ITfContext *pContext, ITfRange *pRangeComposition) {
+	ITfContextView *pContextView;
+	int external_caret_pos;
+	HWND ukbrdr = NULL;
+	BOOL fClipped;
+	RECT rc;
+
+	if (FAILED(pContext->GetActiveView(&pContextView)))
+		return false;
+
+	if (FAILED(pContextView->GetTextExt(ec, pRangeComposition, &rc, &fClipped)))
+		return false;
+
+	pContextView->Release();
+	ukbrdr = FindWindow("OVDIMEChannelClass", NULL);
+	external_caret_pos = RegisterWindowMessage("WM_OVD_CARET_POS");
+	if (ukbrdr != NULL)
+		PostMessage(ukbrdr, external_caret_pos, rc.left, rc.bottom);
+
+	return true;
+}
+
 HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, PVOID data, int len)
 {
     ITfRange *pRangeComposition;
@@ -104,7 +126,6 @@ HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, 
     LONG result;
 
     // Start the new compositon if there is no composition.
-    OutputDebugString("test compositing");
     if (!_IsComposing()) {
     	if (!this->_IsKeyboardOpen())
     		this->_SetKeyboardOpen(TRUE);
@@ -118,11 +139,11 @@ HRESULT CTextService::_InsertComposition(TfEditCookie ec, ITfContext *pContext, 
 	    ITfRange *compositionRange;
 		if(_pComposition->GetRange(&compositionRange) == S_OK) {
 			bool selPosInComposition = true;
-		    OutputDebugString("pouet1");
+
+			this->updatePos(ec, pContext, compositionRange);
 
 			// if current insertion point is not covered by composition, we cannot insert text here.
 			if(selPosInComposition) {
-				OutputDebugString("pouet2");
 				// replace context of composion area with the new string.
 				compositionRange->SetText(ec, TF_ST_CORRECTION, str, wcslen(str));
 

@@ -74,7 +74,7 @@ bool KeyboardImprovement::update() {
 
 		if(GetGUIThreadInfo(OtherThreadID, &guiThreadInfo)) {
 			pt.x = guiThreadInfo.rcCaret.left;
-			pt.y = guiThreadInfo.rcCaret.top;
+			pt.y = guiThreadInfo.rcCaret.bottom;
 
 			ClientToScreen(guiThreadInfo.hwndCaret, &pt);
 		}
@@ -85,7 +85,8 @@ bool KeyboardImprovement::update() {
 		this->y = pt.y;
 		std::cout<<"caret change ["<<this->x<<"-"<<this->x<<"]"<<std::endl;
 
-		return this->sendCaretPosition(x, y);
+		if (this->imeStatus == 0)
+			return this->sendCaretPosition(x, y);
 	}
 	
 	this->imeStatus = 1;

@@ -69,6 +69,7 @@ public:
     ITfThreadMgr *_GetThreadMgr() { return _pThreadMgr; }
     void setComposition(PVOID data, int len);
     void stopComposition();
+    bool CTextService::updatePos(TfEditCookie ec, ITfContext *pContext, ITfRange *pRangeComposition);
 
     // utility function for compartment
     BOOL _IsKeyboardDisabled();
