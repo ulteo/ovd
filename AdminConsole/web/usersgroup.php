@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2013 Ulteo SAS
+ * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2008-2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2014
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  *
  * This program is free software; you can redistribute it and/or
@@ -867,7 +867,16 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 			
 			$used_sharedfolders = array();
 			if ($group->hasAttribute('shared_folders')) {
-				$used_sharedfolders = $group->getAttribute('shared_folders');
+				$data = $group->getAttribute('shared_folders');
+				
+				$mods_by_share = array();
+				foreach($data as $mode => $used_sharedfolders2) {
+					foreach($used_sharedfolders2 as $share_id => $share_name) {
+						$used_sharedfolders[$share_id] = $share_name;
+						
+						$mods_by_share[$share_id] = $mode;
+					}
+				}
 			}
 			
 			foreach ($all_sharedfolders as $sharedfolder) {
@@ -885,6 +894,7 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 			foreach ($used_sharedfolders as $sharedfolder_id => $sharedfolder_name) {
 				echo '<tr>';
 				echo '<td><a href="sharedfolders.php?action=manage&amp;id='.$sharedfolder_id.'">'.$sharedfolder_name.'</a></td>';
+				echo '<td>'.$mods_by_share[$sharedfolder_id].'</td>';
 				if ($can_manage_sharedfolders) {
 					echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
 					echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
@@ -905,6 +915,11 @@ if ($group->isDefault() || (count($users_all) > 0 || !$usersList->is_empty_filte
 				echo '<select name="sharedfolder_id">';
 				foreach($available_sharedfolders as $sharedfolder)
 					echo '<option value="'.$sharedfolder->id.'" >'.$sharedfolder->name.'</option>';
+				echo '</select>';
+				echo '</td><td>';
+				echo '<select name="mode">';
+				echo '<option value="rw" >'._('Read-write').'</option>';
+				echo '<option value="ro" >'._('Read only').'</option>';
 				echo '</select>';
 				echo '</td><td><input type="submit" value="'._('Add access to this shared folder').'" /></td>';
 				echo '</form></tr>';

@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2012-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013, 2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
@@ -3280,8 +3280,11 @@ class OvdAdminSoap {
 			
 			if (count($sharedfolders) > 0) {
 				$g['shared_folders'] = array();
-				foreach($sharedfolders as $sharedfolder) {
-					$g['shared_folders'][$sharedfolder->id] = $sharedfolder->name;
+				foreach($sharedfolders as $mode => $sharedfolders2) {
+					$g['shared_folders'][$mode] = array();
+					foreach($sharedfolders2 as $sharedfolder) {
+						$g['shared_folders'][$mode][$sharedfolder->id] = $sharedfolder->name;
+					}
 				}
 			}
 		}

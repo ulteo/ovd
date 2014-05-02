@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2013 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013, 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -233,8 +233,10 @@ class UserGroupDB_sql {
 			$sharedfolderdb = SharedFolderDB::getInstance();
 			$networkfolders = $sharedfolderdb->importFromUsergroup($usergroup_->getUniqueID());
 			if (is_array($networkfolders) && count($networkfolders) > 0) {
-				foreach ($networkfolders as $networkfolder) {
-					$networkfolder->delUserGroup($usergroup_);
+				foreach ($networkfolders as $mode => $networkfolders2) {
+					foreach ($networkfolders2 as $networkfolder) {
+						$networkfolder->delUserGroup($usergroup_);
+					}
 				}
 			}
 		}

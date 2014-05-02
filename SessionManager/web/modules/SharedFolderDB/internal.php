@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009-2013 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
- * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013, 2014
  * Author David LECHEVALIER <david@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -153,7 +153,12 @@ class SharedFolderDB_internal  extends SharedFolderDB {
 			if (! is_object($sharedfolder))
 				continue;
 			
-			$sharedfolders[$sharedfolder->id] = $sharedfolder;
+			$mode = $row["mode"];
+			if (! array_key_exists($mode, $sharedfolders)) {
+				$sharedfolders[$mode] = array();
+			}
+			
+			$sharedfolders[$mode][$sharedfolder->id] = $sharedfolder;
 		}
 		return $sharedfolders;
 	}
