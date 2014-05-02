@@ -112,10 +112,15 @@ jboolean _setIMEPosition(HWND hwnd, int x, int y) {
 
 	CANDIDATEFORM cf;
 	cf.dwIndex = 0;
-	cf.dwStyle = CFS_CANDIDATEPOS;
+	cf.dwStyle = CFS_EXCLUDE;
 
 	cf.ptCurrentPos.x = x;
 	cf.ptCurrentPos.y = y;
+
+	cf.rcArea.left = x;
+	cf.rcArea.top = y - 40;
+	cf.rcArea.right = x + 10;
+	cf.rcArea.bottom = y;
 
 	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
 
