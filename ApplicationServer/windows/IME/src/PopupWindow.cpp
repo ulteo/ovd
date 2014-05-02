@@ -97,9 +97,9 @@ HWND CPropertyPopupWindow::CreateWnd()
         return _hwnd;
 
     _hwnd = CreateWindowEx(0, _szWndClass, TEXT(""),
-                           WS_POPUP | WS_THICKFRAME | WS_DISABLED,
+                           WS_POPUP | WS_THICKFRAME | WS_DISABLED | WS_EX_NOPARENTNOTIFY,
                            0, 0, 0, 0,
-                           NULL, 0, g_hInst, this);
+                           HWND_MESSAGE, 0, g_hInst, this);
 
     return _hwnd;
 }

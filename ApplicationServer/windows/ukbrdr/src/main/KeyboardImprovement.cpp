@@ -90,7 +90,7 @@ bool KeyboardImprovement::update() {
 	}
 	
 	this->imeStatus = 1;
-	windowExist = (FindWindow("OVDIMEClass", NULL) != NULL);
+	windowExist = (FindWindowEx(HWND_MESSAGE, NULL, "OVDIMEClass", NULL) != NULL);
 	if (windowExist) {
 		this->imeStatus = this->currentTSFStatus;
 	}
@@ -142,7 +142,7 @@ bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
 	int size;
 	char* data;
     COPYDATASTRUCT cds;
-	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+	HWND hwnd = FindWindowEx(HWND_MESSAGE, NULL, "OVDIMEClass", NULL);
 
 
 	data = new char[msg->header.len];
@@ -172,7 +172,7 @@ bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
 
 bool KeyboardImprovement::processStopCompositionMessage(ukb_msg* msg) {
 	int ime_stop_composition = RegisterWindowMessage("WM_OVD_STOP_COMPOSITION");
-	HWND hwnd = FindWindow("OVDIMEClass", NULL);
+	HWND hwnd = FindWindowEx(HWND_MESSAGE, NULL, "OVDIMEClass", NULL);
 
 	if (hwnd == NULL) {
 		OutputDebugString("Failed to find windows with class OVDIMEClass");
