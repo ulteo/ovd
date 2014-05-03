@@ -12,6 +12,9 @@
 #include <string>
 
 
+typedef BOOL (STDAPICALLTYPE *PtrChangeWindowMessageFilter) (UINT,DWORD);
+
+
 class InternalWin {
 private:
 	HINSTANCE hInstance;
