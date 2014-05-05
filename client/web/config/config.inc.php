@@ -66,8 +66,8 @@
 // default: false
 
 // Select RDP input method
-// define('RDP_INPUT_METHOD', 'scancode'); // default
-// define('RDP_INPUT_METHOD', 'unicode');  // alternative method
+// define('RDP_INPUT_METHOD', 'scancode'); // alternative method
+// define('RDP_INPUT_METHOD', 'unicode');  // default
 // define('RDP_INPUT_METHOD', 'unicode_local_ime');  // alternative method with client integration
 
 // RDP input method : show option
