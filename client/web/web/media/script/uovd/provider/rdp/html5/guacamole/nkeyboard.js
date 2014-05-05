@@ -88,7 +88,8 @@ Guacamole.NativeKeyboard = function() {
 		"height":   "1px",
 		"overflow": "hidden",
 		"z-index":  "-10",
-		"display":  "none"
+		"display":  "none",
+		"opacity":  "0"
 	});
 	this.node.append(this.textarea);
 	this.node.append(this.input);
@@ -192,9 +193,11 @@ Guacamole.NativeKeyboard = function() {
 		if(e.type == "focus") {
 			self.focused = true;
 			reset();
+			self.node.show();
 		} else {
 			self.focused = false;
 			reset();
+			self.node.hide();
 		}
   }
 
