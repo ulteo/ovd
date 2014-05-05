@@ -77,13 +77,6 @@ function validate_settings() {
 			jQuery('label[for="desktop_fullscreen"]').parent().hide();
 	}
 
-	/* Update InputMethod */
-	if(settings.rdp_input_method == "scancode") {
-		jQuery("#session_keymap").prop('disabled', false);
-	} else {
-		jQuery("#session_keymap").prop('disabled', true);
-	}
-
 	/* Update RDP providers */
 	var nb_rdp_providers = 0;
 	for(var i in framework.tests) {
@@ -134,11 +127,11 @@ function validate_settings() {
 		showSystemTestError("No RDP provider");
 	}
 
-	/* Hide Keymap selection in case of HTML5 */
-	if(settings.rdp_provider == 'html5') {
-		jQuery('label[for="session_keymap"]').parent().hide();
-	} else {
+	/* Update InputMethod */
+	if(settings.rdp_input_method == "scancode" && settings.rdp_provider == 'java') {
 		jQuery('label[for="session_keymap"]').parent().show();
+	} else {
+		jQuery('label[for="session_keymap"]').parent().hide();
 	}
 
 	/* Update HTTP providers */
