@@ -11,7 +11,11 @@ uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 
 	this.rdp_provider.session_management.addCallback("ovd.session.destroying", this.handler);
 
-	switch(rdp_provider.session_management.parameters.rdp_input_method) {
+	var sm_use_local_ime = this.rdp_provider.session_management.session.settings.use_local_ime || 0;
+	var force_unicode_local_ime = parseInt(sm_use_local_ime) ? 1 : 0;
+	var rdp_input_method = force_unicode_local_ime ? "unicode_local_ime" : rdp_provider.session_management.parameters.rdp_input_method;
+
+	switch(rdp_input_method) {
 		case "unicode" :
 			this.setUnicode();
 			break;
