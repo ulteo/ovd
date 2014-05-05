@@ -550,6 +550,20 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									</div>
 								</div>
 								
+								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
+									<label class="loginLabel" for="session_input_method">
+										<div class="image_keyboard_layout_png"></div>
+										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+											<?php long_list_field("session_input_method", $force_input_method === true, $rdp_input_method, array(
+												"scancode"=>"keyboard_config_scancode_gettext", 
+												"unicode"=>"keyboard_config_unicode_gettext",
+												"unicode_local_ime"=>"keyboard_config_unicode_lime_gettext")); 
+											?>
+									</div>
+								</div>
+								
 								<div class="loginElement">
 									<label class="loginLabel" for="session_keymap">
 										<div class="image_keyboard_layout_png"></div>
@@ -565,19 +579,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									</div>
 								</div>
 							
-								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
-									<label class="loginLabel" for="session_input_method">
-										<div class="image_keyboard_layout_png"></div>
-										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
-									</label>
-									<div class="loginField">
-											<?php long_list_field("session_input_method", $force_input_method === true, $rdp_input_method, array(
-												"scancode"=>"keyboard_config_scancode_gettext", 
-												"unicode"=>"keyboard_config_unicode_gettext",
-												"unicode_local_ime"=>"keyboard_config_unicode_lime_gettext")); 
-											?>
-									</div>
-								</div>
 <?php
 	if ($debug_mode) {
 ?>
