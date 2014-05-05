@@ -74,11 +74,19 @@ Guacamole.NativeKeyboard = function() {
 	this.textarea.attr("type", "text");
 	this.textarea.attr("autocorrect", "off");
 	this.textarea.attr("autocapitalize", "off");
+	this.textarea.css({
+		"width": "500px",
+		"height": "2em"
+	});
 
 	this.input = jQuery(document.createElement('input'));
 	this.input.attr("type", "password");
 	this.input.attr("autocorrect", "off");
 	this.input.attr("autocapitalize", "off");
+	this.input.css({
+		"width": "500px",
+		"height": "2em"
+	});
 
 	this.node = jQuery(document.createElement('div'));
 	this.node.css({
@@ -272,5 +280,5 @@ Guacamole.NativeKeyboard.prototype.setIme = function(value) {
 Guacamole.NativeKeyboard.prototype.setPosition = function(x, y) {
 	this.field.css("position", "fixed");
 	this.field.css("left", x);
-	this.field.css("top", y);
+	this.field.css("top", "calc("+y+"px - 2em)");
 };
