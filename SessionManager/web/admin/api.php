@@ -597,7 +597,7 @@ class OvdAdminSoap {
 			}
 		}
 		
-		if (in_array('SharedFolderDB', $prefs_->get('general', 'module_enable'))) {
+		if (in_array('SharedFolderDB', $prefs_->get('general', 'enable'))) {
 			$sharedfolderdb = SharedFolderDB::getInstance();
 			
 			// Clean usersgroup - profile liaisons
