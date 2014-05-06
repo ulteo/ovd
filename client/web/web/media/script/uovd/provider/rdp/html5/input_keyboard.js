@@ -33,6 +33,22 @@ uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 
 uovd.provider.rdp.html5.Keyboard.prototype.attach = function(connection) {
 	this.connection = connection;
+	var server_id = this.attachedTo();
+
+	if(this.ime_settings) {
+		/* Restore IME server params */
+		var params = this.ime_settings[server_id];
+		this.guac_keyboard.setPosition(params["position"]["x"], params["position"]["y"]);
+		this.guac_keyboard.setIme(params["state"]);
+	}
+}
+
+uovd.provider.rdp.html5.Keyboard.prototype.attachedTo = function() {
+	for(var i=0 ; i<this.rdp_provider.connections.length ; ++i) {
+		if(this.rdp_provider.connections[i] == this.connection) { return i; }
+	}
+
+	return undefined;
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
@@ -237,15 +253,26 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
 	/* Set unicode */
 	this.setUnicode();
 
-	/* Install instruction hook */
+	/* Keep track of IME settings by connection */
+	this.ime_settings = [];
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		this.ime_settings[i] = {
+			"position":{"x":0, "y":0},
+			"state": true
+		}
+	}
+
 	/* Install instruction hook */
 	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
 		(function(server_id) {
+			var sid = server_id;
+
 			self.rdp_provider.connections[server_id].guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
 				var stream = DataStream.fromBase64(params[0]);
 				var message = stream.read_UInt16LE();
 				var flags = stream.read_UInt16LE();
 				var size = stream.read_UInt32LE();
+				var server_attached = self.attachedTo();
 
 				switch(message) {
 					case 1: // UKB_CARET_POS
@@ -255,12 +282,30 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
 						var offset = jQuery(self.connection.guac_display).offset();
 						var px = offset.left + x;
 						var py = offset.top + y;
-						self.guac_keyboard.setPosition(px, py);
+						var last_x = self.ime_settings[sid]["position"]["x"];
+						var last_y = self.ime_settings[sid]["position"]["y"];
+
+						if(last_x != px || last_y != py) {
+							self.ime_settings[sid]["position"]["x"] = px;
+							self.ime_settings[sid]["position"]["y"] = py;
+
+							if(sid == server_attached) {
+								self.guac_keyboard.setPosition(px, py);
+							}
+						}
 						break;
 
 					case 2: // UKB_IME_STATUS
 						var state = stream.read_Byte();
-						self.guac_keyboard.setIme(state);
+						var last_state = self.ime_settings[sid]["state"];
+
+						if(last_state != state) {
+							self.ime_settings[sid]["state"] = state;
+
+							if(sid == server_attached) {
+								self.guac_keyboard.setIme(state);
+							}
+						}
 						break;
 				}
 			});

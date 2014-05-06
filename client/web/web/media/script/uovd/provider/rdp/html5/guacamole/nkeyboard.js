@@ -261,13 +261,12 @@ Guacamole.NativeKeyboard.prototype.setIme = function(value) {
 	if(value) {
 		if(this.field == this.textarea) { return; } /* No change */
 		else                            { this.field = this.textarea; }
-		this.field.focus();
 	} else {
 		if(this.field == this.input) { return; } /* No change */
 		else                         { this.field = this.input; }
 	}
 
-	this.enable();
+	this.field.focus();
 };
 
 Guacamole.NativeKeyboard.prototype.setPosition = function(x, y) {
