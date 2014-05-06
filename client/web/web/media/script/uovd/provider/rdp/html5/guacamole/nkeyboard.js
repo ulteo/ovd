@@ -8,7 +8,6 @@ var Guacamole = Guacamole || {};
  */
 Guacamole.NativeKeyboard = function() {
 	var self = this; /* closure */
-	this.focused = false;
 	this.ukbrdrEnabled = false;
 	this.composition = false;
 	this.skipNextInput = false;
@@ -198,26 +197,12 @@ Guacamole.NativeKeyboard = function() {
 		self.lastvalue = currentvalue;
 	}
 
-	function handleFocus(e) {
-		if(e.type == "focus") {
-			self.focused = true;
-			reset();
-			self.node.show();
-		} else {
-			self.focused = false;
-			reset();
-			self.node.hide();
-		}
-  }
-
 	/* Bind events */
 	this.input.on("keydown keyup", handleKeysym);
 	this.input.on("input", handleUnicode);
-	this.input.on("focus blur", handleFocus);
 
 	this.textarea.on("keydown keyup", handleKeysym);
 	this.textarea.on("input", handleUnicode);
-	this.textarea.on("focus blur", handleFocus);
 }
 
 
@@ -241,7 +226,7 @@ Guacamole.NativeKeyboard.prototype.disable = function() {
 };
 
 Guacamole.NativeKeyboard.prototype.active = function() {
-	return this.focused;
+	return jQuery(this.node).find(":focus")[0] ? true : false;
 };
 
 Guacamole.NativeKeyboard.prototype.toggle = function() {
@@ -293,7 +278,10 @@ Guacamole.NativeKeyboard.prototype.setIme = function(value) {
 		else                         { this.field = this.input; }
 	}
 
-	this.field.focus();
+	if(this.active()) {
+		this.node.show();
+		this.field.focus();
+	}
 };
 
 Guacamole.NativeKeyboard.prototype.setPosition = function(x, y) {
