@@ -84,24 +84,28 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 
 
 	/* Install instruction hook */
-	this.connection.guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
-		var stream = DataStream.fromBase64(params[0]);
-		var message = stream.read_UInt16LE();
-		var flags = stream.read_UInt16LE();
-		var size = stream.read_UInt32LE();
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		(function(server_id) {
+			self.rdp_provider.connections[server_id].guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+				var stream = DataStream.fromBase64(params[0]);
+				var message = stream.read_UInt16LE();
+				var flags = stream.read_UInt16LE();
+				var size = stream.read_UInt32LE();
 
-		switch(message) {
-			case 1: // UKB_CARET_POS
-				var x = stream.read_UInt32LE();
-				var y = stream.read_UInt32LE();
+				switch(message) {
+					case 1: // UKB_CARET_POS
+						var x = stream.read_UInt32LE();
+						var y = stream.read_UInt32LE();
 
-				var offset = jQuery(self.connection.guac_display).offset();
-				var px = offset.left + x;
-				var py = offset.top + y;
-				self.guac_keyboard.setPosition(px, py);
-				break;
-		}
-	});
+						var offset = jQuery(self.connection.guac_display).offset();
+						var px = offset.left + x;
+						var py = offset.top + y;
+						self.guac_keyboard.setPosition(px, py);
+						break;
+				}
+			});
+		})(i);
+	}
 
 	/* Actions */
 	this.focus =  function() { if(!self.guac_keyboard.active()) self.guac_keyboard.enable(); };
@@ -234,29 +238,34 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
 	this.setUnicode();
 
 	/* Install instruction hook */
-	this.connection.guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
-		var stream = DataStream.fromBase64(params[0]);
-		var message = stream.read_UInt16LE();
-		var flags = stream.read_UInt16LE();
-		var size = stream.read_UInt32LE();
+	/* Install instruction hook */
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		(function(server_id) {
+			self.rdp_provider.connections[server_id].guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+				var stream = DataStream.fromBase64(params[0]);
+				var message = stream.read_UInt16LE();
+				var flags = stream.read_UInt16LE();
+				var size = stream.read_UInt32LE();
 
-		switch(message) {
-			case 1: // UKB_CARET_POS
-				var x = stream.read_UInt32LE();
-				var y = stream.read_UInt32LE();
+				switch(message) {
+					case 1: // UKB_CARET_POS
+						var x = stream.read_UInt32LE();
+						var y = stream.read_UInt32LE();
 
-				var offset = jQuery(self.connection.guac_display).offset();
-				var px = offset.left + x;
-				var py = offset.top + y;
-				self.guac_keyboard.setPosition(px, py);
-				break;
+						var offset = jQuery(self.connection.guac_display).offset();
+						var px = offset.left + x;
+						var py = offset.top + y;
+						self.guac_keyboard.setPosition(px, py);
+						break;
 
-			case 2: // UKB_IME_STATUS
-				var state = stream.read_Byte();
-				self.guac_keyboard.setIme(state);
-				break;
-		}
-	});
+					case 2: // UKB_IME_STATUS
+						var state = stream.read_Byte();
+						self.guac_keyboard.setIme(state);
+						break;
+				}
+			});
+		})(i);
+	}
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.handleEvents = function(type, source, params) {
