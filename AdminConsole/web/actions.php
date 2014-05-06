@@ -962,7 +962,7 @@ if ($_REQUEST['name'] == 'Certificate') {
 				popup_error("The uploaded file is not a valid Subscription Key");
 				break;
 			case 2: // CERT_EXIST
-				popup_error("This Subscription key have already been uploaded");
+				popup_error("This Subscription key has already been installed");
 				break;
 		}
 		redirect();
