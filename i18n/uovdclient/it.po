@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-25 10:12+0200\n"
-"PO-Revision-Date: 2014-03-25 23:06+0200\n"
-"Last-Translator: Pier Paolo <pptiezzi@erreuno.net>\n"
+"POT-Creation-Date: 2014-05-05 14:09+0200\n"
+"PO-Revision-Date: 2014-05-12 12:17+0200\n"
+"Last-Translator: Julien <julien@ulteo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -16,119 +16,123 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.1.6\n"
 
-#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+#: ../../client/web/web/external.php:290 ../../client/web/web/index.php:303
 msgid ""
 "JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
 "seems JavaScript is either disabled or not supported by your browser. To use "
-"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
-"try again[/A]."
+"OVD Web Client, enable JavaScript by changing your browser options, then "
+"[A]try again[/A]."
 msgstr ""
 "JavaScript deve essere abilitato per usare Ulteo OVD. Sembra che JavaScript "
 "sia disabilitato o non supportato dal tuo browser. Per usare OVD Web Client, "
-"abilita JavaScript cambiando le opzioni sul browser, quindi riprova."
+"abilita JavaScript cambiando le opzioni sul browser, quindi [A]riprova[/A]."
 
 # 80%
-#: ../../client/web/web/includes/functions.inc.php:199
+#: ../../client/web/web/includes/functions.inc.php:201
 msgid "Close"
 msgstr "Chiudi"
 
-#: ../../client/web/web/includes/functions.inc.php:201
+#: ../../client/web/web/includes/functions.inc.php:203
 msgid "Session Manager"
 msgstr "Manager di Sessione"
 
-#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/web/web/includes/functions.inc.php:204
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
 msgid "Login"
 msgstr "Nome di accesso"
 
-#: ../../client/web/web/includes/functions.inc.php:203
+#: ../../client/web/web/includes/functions.inc.php:205
 msgid "Login (detected)"
 msgstr "Login (rilevato)"
 
-#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/web/web/includes/functions.inc.php:206
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
 msgid "Password"
 msgstr "Password"
 
-#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/web/web/includes/functions.inc.php:207
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
 msgid "Use local credentials"
 msgstr "Impiega delle credenziali locali"
 
-#: ../../client/web/web/includes/functions.inc.php:206
-#: ../../client/web/web/includes/functions.inc.php:212
-#: ../../client/web/web/includes/functions.inc.php:217
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/web/web/includes/functions.inc.php:215
+#: ../../client/web/web/includes/functions.inc.php:220
 msgid "Yes"
 msgstr "Si"
 
-#: ../../client/web/web/includes/functions.inc.php:207
-#: ../../client/web/web/includes/functions.inc.php:213
-#: ../../client/web/web/includes/functions.inc.php:218
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/web/web/includes/functions.inc.php:216
+#: ../../client/web/web/includes/functions.inc.php:221
 msgid "No"
 msgstr "No"
 
-#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/web/web/includes/functions.inc.php:210
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
 msgid "Mode"
 msgstr "Modo"
 
-#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/web/web/includes/functions.inc.php:211
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
 msgid "Desktop"
 msgstr "Desktop"
 
-#: ../../client/web/web/includes/functions.inc.php:210
+#: ../../client/web/web/includes/functions.inc.php:212
 msgid "Portal"
 msgstr "Portale"
 
-#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/web/web/includes/functions.inc.php:213
+msgid "Type"
+msgstr "Tipo"
+
+#: ../../client/web/web/includes/functions.inc.php:214
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
 msgid "Fullscreen"
 msgstr "A pieno schermo"
 
-#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/web/web/includes/functions.inc.php:217
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
 msgid "Language"
 msgstr "Lingua"
 
-#: ../../client/web/web/includes/functions.inc.php:215
+#: ../../client/web/web/includes/functions.inc.php:218
 msgid "Keyboard layout"
 msgstr "Mappa della tastiera"
 
-#: ../../client/web/web/includes/functions.inc.php:216
+#: ../../client/web/web/includes/functions.inc.php:219
 msgid "Debug"
 msgstr "Debug"
 
-#: ../../client/web/web/includes/functions.inc.php:220
+#: ../../client/web/web/includes/functions.inc.php:223
 msgid "Keyboard method"
-msgstr "Metodo Tastiera"
+msgstr "Metodo Tastiera (scancode/Unicode)"
 
-#: ../../client/web/web/includes/functions.inc.php:221
+#: ../../client/web/web/includes/functions.inc.php:224
 msgid "Scancode"
 msgstr "Scancode"
 
-#: ../../client/web/web/includes/functions.inc.php:222
+#: ../../client/web/web/includes/functions.inc.php:225
 msgid "Unicode"
 msgstr "Codifica Unicode"
 
-#: ../../client/web/web/includes/functions.inc.php:223
+#: ../../client/web/web/includes/functions.inc.php:226
 msgid "Unicode use local IME"
 msgstr "Unicode usa InputMethodEditor (IME) locale"
 
-#: ../../client/web/web/includes/functions.inc.php:225
+#: ../../client/web/web/includes/functions.inc.php:228
 msgid "Advanced settings"
 msgstr "Impostazioni avanzate"
 
-#: ../../client/web/web/includes/functions.inc.php:226
+#: ../../client/web/web/includes/functions.inc.php:229
 msgid "Connect"
 msgstr "Connettere"
 
-#: ../../client/web/web/includes/functions.inc.php:228
+#: ../../client/web/web/includes/functions.inc.php:231
 msgid "Checking for system compatibility"
 msgstr "Verifico la compatibilità del sistema"
 
-#: ../../client/web/web/includes/functions.inc.php:229
+#: ../../client/web/web/includes/functions.inc.php:232
 msgid ""
 "If this is your first time here, a Java security window will show up and you "
 "will have to accept it to use the service."
@@ -136,7 +140,7 @@ msgstr ""
 "Se questa è la prima connessione, verrà mostrata una finestra di sicurezza "
 "Java e dovrai accettare l'uso di questo servizio."
 
-#: ../../client/web/web/includes/functions.inc.php:230
+#: ../../client/web/web/includes/functions.inc.php:233
 msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
@@ -144,7 +148,7 @@ msgstr ""
 "Ti viene richiesto di spuntare la casella \"<em>Considera sempre affidabili i "
 "contenuti di questo editore</em>\""
 
-#: ../../client/web/web/includes/functions.inc.php:232
+#: ../../client/web/web/includes/functions.inc.php:235
 msgid "System compatibility error"
 msgstr "Errore nella compatibilità del sistema"
 
@@ -152,13 +156,12 @@ msgstr "Errore nella compatibilità del sistema"
 # 80%
 # 79%
 # 100%
-# 100%
-#: ../../client/web/web/includes/functions.inc.php:233
+#: ../../client/web/web/includes/functions.inc.php:236
 #, fuzzy
 msgid "Java is either not available on your system or in your web browser."
 msgstr "Java non è presente nel tuo sistema o nel tuo browser web."
 
-#: ../../client/web/web/includes/functions.inc.php:234
+#: ../../client/web/web/includes/functions.inc.php:237
 msgid ""
 "Please install the Java extension for your web browser or contact your "
 "administrator."
@@ -166,87 +169,88 @@ msgstr ""
 "Installa l'extension Java per il tuo web bowser o contatta l'amministratore "
 "di sistema."
 
-#: ../../client/web/web/includes/functions.inc.php:235
+#: ../../client/web/web/includes/functions.inc.php:238
 msgid "You have not accepted the Java security window."
 msgstr "Non hai accettato la finestra di sicurezza Java."
 
-#: ../../client/web/web/includes/functions.inc.php:236
+#: ../../client/web/web/includes/functions.inc.php:239
 msgid "You <strong>cannot</strong> have access to this service."
 msgstr "<strong>Non puoi</strong> accedere a questo servizio."
 
-#: ../../client/web/web/includes/functions.inc.php:238
+#: ../../client/web/web/includes/functions.inc.php:241
 msgid "Loading Open Virtual Desktop"
 msgstr "Sto caricando Open Virtual Desktop"
 
-#: ../../client/web/web/includes/functions.inc.php:239
+#: ../../client/web/web/includes/functions.inc.php:242
 msgid "Disconnecting Open Virtual Desktop"
 msgstr "Sto disconnettendo Open Virtual Desktop"
 
-#: ../../client/web/web/includes/functions.inc.php:240
+#: ../../client/web/web/includes/functions.inc.php:243
 msgid "Welcome!"
 msgstr "Benvenuto!"
 
 # 85%
-#: ../../client/web/web/includes/functions.inc.php:241
+# 100%
+#: ../../client/web/web/includes/functions.inc.php:244
 msgid "Suspend"
-msgstr "Rimanda"
+msgstr "Sospendi"
 
-#: ../../client/web/web/includes/functions.inc.php:242
+#: ../../client/web/web/includes/functions.inc.php:245
 msgid "Logout"
 msgstr "Uscita"
 
-#: ../../client/web/web/includes/functions.inc.php:244
+#: ../../client/web/web/includes/functions.inc.php:247
 msgid "The Ulteo OVD session runs in a separate window"
 msgstr "La sessione Ulteo OVD è in esecuzione in altra finestra."
 
-#: ../../client/web/web/includes/functions.inc.php:248
+#: ../../client/web/web/includes/functions.inc.php:251
 msgid "Click [A]here[/A] to switch back to your session"
 msgstr "Clicca [A]qui[/A] per ripristinare la sessione"
 
-#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/web/web/includes/functions.inc.php:254
 #: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
 msgid "My applications"
 msgstr "I miei programmi"
 
-#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/web/web/includes/functions.inc.php:255
 #: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
 msgid "Running applications"
 msgstr "Applicazioni in esecuzione"
 
-#: ../../client/web/web/includes/functions.inc.php:253
+#: ../../client/web/web/includes/functions.inc.php:256
 msgid "My files"
 msgstr "I miei files"
 
-#: ../../client/web/web/includes/functions.inc.php:257
+#: ../../client/web/web/includes/functions.inc.php:260
 msgid "Example: %EXAMPLE%"
 msgstr "Esempio: %EXAMPLE%"
 
-#: ../../client/web/web/includes/functions.inc.php:259
+#: ../../client/web/web/includes/functions.inc.php:262
 msgid "Usage: missing \"sessionmanager_host\" parameter"
 msgstr "Utilizzo: manca il parametro \"sessionmanager_host\" "
 
-#: ../../client/web/web/includes/functions.inc.php:260
+#: ../../client/web/web/includes/functions.inc.php:263
 msgid "Usage: missing \"login\" parameter"
 msgstr "Utilizzo: manca il parametro \"login\""
 
-#: ../../client/web/web/includes/functions.inc.php:261
+#: ../../client/web/web/includes/functions.inc.php:264
 msgid "Usage: missing \"password\" parameter"
 msgstr "Utilizzo: manca il parametro \"password\""
 
 # 91%
 # 97%
-#: ../../client/web/web/includes/functions.inc.php:262
+#: ../../client/web/web/includes/functions.inc.php:265
 msgid "Unable to reach the Session Manager"
 msgstr "Non riesco a raggiungere il Manager di Sessione!"
 
 # 98%
 # 100%
-#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/web/web/includes/functions.inc.php:267
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
 msgid "Authentication failed: please double-check your password and try again"
 msgstr "Autenticazione non riuscita: verifica la tua password e riprova"
 
-#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/web/web/includes/functions.inc.php:268
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
 msgid ""
 "The system is in maintenance mode, please contact your administrator for "
@@ -256,18 +260,18 @@ msgstr ""
 "ulteriori informazioni"
 
 # 98%
-#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/web/web/includes/functions.inc.php:269
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
 #, fuzzy
 msgid "An internal error occurred, please contact your administrator"
 msgstr "E' avvenuto un errore interno, contattare l'amministratore"
 
-#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/web/web/includes/functions.inc.php:270
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
 msgid "You specified an invalid login, please double-check and try again"
 msgstr "E' stato specificato un nome utente non valido, verificarlo e riprovare"
 
-#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/web/web/includes/functions.inc.php:271
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
 msgid ""
 "The service is not available, please contact your administrator for more "
@@ -276,7 +280,7 @@ msgstr ""
 "Il servizio non è disponibile, sentire l'amministratore per ulteriori "
 "informazioni"
 
-#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/web/web/includes/functions.inc.php:272
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
 msgid ""
 "You are not authorized to launch a session. Please contact your "
@@ -285,22 +289,22 @@ msgstr ""
 "Non sei autorizzato ad aprire una sessione. Contatta l'amministratore per "
 "ulteriori informazioni"
 
-#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/web/web/includes/functions.inc.php:273
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
 msgid "You already have an active session"
 msgstr "Hai già una sessione attiva"
 
-#: ../../client/web/web/includes/functions.inc.php:272
+#: ../../client/web/web/includes/functions.inc.php:275
 msgid "You will be disconnected from your OVD session."
 msgstr "Stai per essere disconnesso dalla sessione OVD"
 
-#: ../../client/web/web/includes/functions.inc.php:274
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+#: ../../client/web/web/includes/functions.inc.php:277
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:827
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr "La sessione terminerà tra tre minuti, salva subito i tuoi dati!"
 
-#: ../../client/web/web/includes/functions.inc.php:275
+#: ../../client/web/web/includes/functions.inc.php:278
 msgid ""
 "Your session is going to be disconnected in %MINUTES% minutes because of the "
 "logon time restriction policy"
@@ -308,39 +312,39 @@ msgstr ""
 "La tua sessione sarà disconnessa tra %MINUTES% minuti a causa della politica "
 "di restrizione sui tempi di accesso"
 
-#: ../../client/web/web/includes/functions.inc.php:277
+#: ../../client/web/web/includes/functions.inc.php:280
 msgid "Server: session closed unexpectedly"
 msgstr "Server: sessione chiusa inaspettatamente"
 
-#: ../../client/web/web/includes/functions.inc.php:278
+#: ../../client/web/web/includes/functions.inc.php:281
 msgid "Your session has ended, you can now close the window"
 msgstr "La sessione è terminata, si può chiudere la finestra"
 
-#: ../../client/web/web/includes/functions.inc.php:279
+#: ../../client/web/web/includes/functions.inc.php:282
 msgid "Your session has ended unexpectedly"
 msgstr "La sessione è terminata inaspettatamente"
 
-#: ../../client/web/web/includes/functions.inc.php:280
+#: ../../client/web/web/includes/functions.inc.php:283
 msgid "error details"
 msgstr "dettagli dell'errore"
 
-#: ../../client/web/web/includes/functions.inc.php:281
+#: ../../client/web/web/includes/functions.inc.php:284
 msgid "Close this window"
 msgstr "Chiudere questa finestra"
 
-#: ../../client/web/web/includes/functions.inc.php:285
+#: ../../client/web/web/includes/functions.inc.php:288
 msgid "Click [A]here[/A] to start a new session"
 msgstr "Clicca [A]qui[/A] per aprire una nuova sessione"
 
-#: ../../client/web/web/includes/functions.inc.php:288
+#: ../../client/web/web/includes/functions.inc.php:291
 msgid "suspend"
 msgstr "sospendi"
 
-#: ../../client/web/web/includes/functions.inc.php:289
+#: ../../client/web/web/includes/functions.inc.php:292
 msgid "resume"
 msgstr "riprendi"
 
-#: ../../client/web/web/includes/functions.inc.php:290
+#: ../../client/web/web/includes/functions.inc.php:293
 msgid "Are you sure you want to logout (# apps running) ?"
 msgstr "Sei sicuro di volerti disconnettere (# programmi in esecuzione) ?"
 
@@ -354,18 +358,17 @@ msgstr "File di testo (*.txt)"
 
 # 97%
 # 100%
-# 100%
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
 #, fuzzy
 msgid "An error occurred. Please try again."
 msgstr "E' avvenuto un errore. Provare nuovamente."
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:899
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:906
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:916
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:923
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
 msgid "Error"
 msgstr "Errore"
 
@@ -433,7 +436,7 @@ msgstr "Meno opzioni"
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:948
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1029
 msgid "More options..."
-msgstr "Più opzioni"
+msgstr "Più opzioni..."
 
 # 85%
 # 100%
@@ -467,7 +470,7 @@ msgstr "Ricordami"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1026
 msgid "Auto-publish shortcuts"
-msgstr "Scorciatoie per l'auto pubblicazione"
+msgstr "Scelta rapida per l'auto pubblicazione"
 
 #. Initialize UI components
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/NativeLogoutPopup.java:83
@@ -520,10 +523,10 @@ msgid "Installing application data on client"
 msgstr "Installare i dati dell'applicazione sul client"
 
 # 89%
+# 100%
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
-#, fuzzy
 msgid "Waiting on server for session"
-msgstr "Attendo il server per aprire una sessione"
+msgstr "In attesa della sessione sul server"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
@@ -581,34 +584,29 @@ msgstr "Devi specificare un nome utente!"
 msgid "You must specify a password!"
 msgstr "Devi specificare una password!"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
-msgid "Unable to find a valid certificate"
-msgstr "Impossibile trovare un certificato valido"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:827
 msgid "Session is going to end"
 msgstr "La sessione sta terminando"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:844
 msgid "Internal error: unsupported session mode"
 msgstr "Errore interno: modalità di sessione non supportata"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:886
 msgid "You have been disconnected"
 msgstr "Sei stato disconnesso"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:886
 msgid "Your session has ended"
 msgstr "La sessione è terminata"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:899
 msgid "Protocol xml error: "
-msgstr "Errore xml del protocollo:"
+msgstr "Errore del protocollo xml:"
 
 #: ../../client/java/src/org/ulteo/ovd/client/portal/NewsFrame.java:52
 msgid "OVD News"
-msgstr "Notizie da OVD"
+msgstr "News da OVD"
 
 #: ../../client/java/src/org/ulteo/ovd/client/portal/SouthEastPanel.java:158
 msgid "Enable desktop integration"
@@ -623,77 +621,7 @@ msgid "Welcome {user}"
 msgstr "Benvenuto {user}"
 
 msgid "Main gestures"
-msgstr "Principali caratteristiche"
-
-msgid "Right click"
-msgstr "Pulsante destro del mouse"
-
-msgid "View gestures"
-msgstr "Mostra caratteristiche"
-
-msgid ""
-"The system is on maintenance mode, please contact your administrator for "
-"more information"
-msgstr ""
-"Il sistema è in modalità di manutenzione, chiedere all'amministratore per "
-"ulteriori informazioni"
-
-msgid "You are not authorized to launch a session in this mode"
-msgstr ""
-"Non si possiede l'autorizzazione per lanciare una sessione in questa "
-"modalità"
-
-msgid ""
-"A network issue prevents the dialog between the client and the server. You "
-"can wait until the connection is up again or logout now."
-msgstr ""
-"Un evento sulla rete impedisce il dialogo tra il client e il server. Puoi "
-"attendere il ripristino o scollegarti dalla sessione."
-
-msgid "Gestures"
-msgstr "Caratteristiche"
-
-msgid "An error occured, please contact your administrator"
-msgstr "E' avvenuto un errore, contattare l'amministratore"
-
-msgid "Toolbar"
-msgstr "Barra degli strumenti"
-
-msgid ""
-"To log in, you need to enter your login, your password and the server name "
-"you wish to connect."
-msgstr ""
-"Per accedere, devi inserire il tuo nome utente, la tua password ed il nome "
-"del server cui connettersi."
-
-msgid "Show toolbar"
-msgstr "Mostra la barra degli strumenti"
-
-msgid "Zoom"
-msgstr "Zoom"
-
-msgid "Network is down"
-msgstr "La rete è giù"
-
-msgid "Connection"
-msgstr "Connessione"
-
-msgid "Move view"
-msgstr "Spostare lo sguardo"
-
-msgid "Show keyboard"
-msgstr "Mostra tastiera"
-
-msgid "Help"
-msgstr "Aiuto"
-
-msgid "An internal error occured, please contact your administrator"
-msgstr "E' avvenuto un errore interno, contattare l'amministratore"
-
-msgid "The question mark shows this help sheet. The cross exits the session."
-msgstr ""
-"Il punto interrogativo mostra la pagina di aiuto. La croce chiude la "
-"sessione."
+msgstr "Principali azioni"
 
 msgid "Click"
 msgstr "Click"
@@ -702,22 +630,40 @@ msgid "Session resolution"
 msgstr "Risoluzione della sessione"
 
 msgid "The password will be saved"
-msgstr "La password sarà salvata "
+msgstr "La password sarà salvata"
 
 msgid "Modem (56 Kbits/s)"
 msgstr "Modem (56 Kbits/s)"
 
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr ""
+"Il sistema è in modalità di manutenzione, chiedere all'amministratore per "
+"ulteriori informazioni"
+
 msgid "RDP Compression"
 msgstr "Compressione RDP"
 
+msgid "You are not authorized to launch a session in this mode"
+msgstr ""
+"Non si possiede l'autorizzazione per lanciare una sessione in questa "
+"modalità"
+
 msgid "Toggle keyboard"
-msgstr "Toggle keyboard"
+msgstr "Commutazione tastiera"
+
+msgid "Show toolbar"
+msgstr "Mostra la barra degli strumenti"
 
 msgid "Android controls remains visible on screen"
 msgstr "I controlli Android rimangono visibili sullo schermo"
 
 msgid "Do you want to disconnect the current session ?"
 msgstr "Vuoi disconnettere la sessione corrente?"
+
+msgid "Zoom"
+msgstr "Zoom"
 
 msgid "Manual resolution"
 msgstr "Risoluzione Manuale"
@@ -730,6 +676,9 @@ msgstr "LAN (100 Mbits/s)"
 
 msgid "Enhanced keyboard"
 msgstr "Tastiera avanzata"
+
+msgid "Right click"
+msgstr "Pulsante destro del mouse"
 
 msgid "Force wide screen"
 msgstr "Forza schermo grande"
@@ -759,10 +708,16 @@ msgid ""
 "\t\tdevice. Please enable Wifi/3G before using this application"
 msgstr ""
 "Nessuna connessione Internet rilevata su questo\n"
-"\t \t dispositivo. Abilita  Wifi/3G per poter usare questa applicazione"
+"\t \t dispositivo. Abilita Wifi/3G per poter usare questa applicazione"
+
+msgid "View gestures"
+msgstr "Mostra azioni"
 
 msgid "Hide the Session Manager in login screen"
 msgstr "Nascondi il Session Manager nello schermo di login"
+
+msgid "Show keyboard"
+msgstr "Mostra tastiera"
 
 msgid "Satellite (2 Mbits/s)"
 msgstr "Satellite (2 Mbits/s)"
@@ -781,7 +736,10 @@ msgid "Not specified"
 msgstr "Non specificato"
 
 msgid "Active desktop session"
-msgstr "Sessione desktop attiva "
+msgstr "Sessione desktop attiva"
+
+msgid "Move view"
+msgstr "Sposta la vista"
 
 msgid "Hide session manager in login screen"
 msgstr "Nascondi il session manager nello schermo di login"
@@ -808,7 +766,10 @@ msgid "Session manager Url"
 msgstr "Session manager Url"
 
 msgid "Wide screen resolution will be forced"
-msgstr "Verrà usata una risoluzione a schermo grande"
+msgstr "Verrà forzata una risoluzione a schermo grande"
+
+msgid "Help"
+msgstr "Aiuto"
 
 msgid "Disable RDP compression"
 msgstr "Disabilita la compressione RDP"
@@ -831,6 +792,9 @@ msgstr "Imposta la dimensione video della sessione"
 msgid "Broadband Low (256 Kbits/s)"
 msgstr "Broadband Low (256 Kbits/s)"
 
+msgid "Network is down"
+msgstr "La rete è giù"
+
 msgid "Broadband High (10 Mbits/s)"
 msgstr "Broadband High (10 Mbits/s)"
 
@@ -845,6 +809,43 @@ msgstr "Abilita la compressione RDP"
 
 msgid "Save the password"
 msgstr "Salva la password"
+
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
+msgstr ""
+"Un evento sulla rete impedisce il dialogo tra il client e il server. Puoi "
+"attendere il ripristino o scollegarti dalla sessione."
+
+msgid "Gestures"
+msgstr "Azioni"
+
+msgid "An error occured, please contact your administrator"
+msgstr "E' avvenuto un errore, contattare l'amministratore"
+
+msgid "Toolbar"
+msgstr "Barra degli strumenti"
+
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr ""
+"Per accedere, devi inserire il tuo nome utente, la tua password ed il nome "
+"del server cui connettersi."
+
+msgid "Connection"
+msgstr "Connessione"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr "E' avvenuto un errore interno, contattare l'amministratore"
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr ""
+"Il punto interrogativo mostra la pagina di aiuto. La croce chiude la "
+"sessione."
+
+#~ msgid "Unable to find a valid certificate"
+#~ msgstr "Impossibile trovare un certificato valido"
 
 #~ msgid ""
 #~ "Please install Java extension for your web browser or contact your "
