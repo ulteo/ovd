@@ -211,7 +211,6 @@ scripts_DATA = ad.png \
                sg.png \
                sh.png \
                sk.png \
-               sl2.png \
                sl.png \
                sm.png \
                sn.png \

@@ -415,6 +415,7 @@ class Preferences {
 			'ro_RO',
 			'ru_RU',
 			'sk_SK',
+			'sl',
 			'sv_SE',
 			'zh_CN',
 		));

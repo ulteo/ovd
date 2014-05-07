@@ -556,6 +556,7 @@ class Preferences_admin {
 			'pl_PL' => 'Polski - Polish',
 			'pt_BR' => 'Português (Brasil) - Portuguese (Brazil)',
 			'sk_SK' => 'Slovenčina - Slovak',
+			'sl' => 'Slovenščina - Slovenian',
 			'ro_RO' => 'Română - Romanian',
 			'ru_RU' => 'Русский - Russian',
 			'sv_SE' => 'Svenska - Swedish',
