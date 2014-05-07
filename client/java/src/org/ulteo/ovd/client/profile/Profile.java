@@ -63,7 +63,7 @@ public abstract class Profile {
 	private static final String FIELD_INPUT_METHOD = "input-method";
 	private static final String VALUE_SCANCODE_INPUT_METHOD = "scancode";
 	private static final String VALUE_UNICODE_INPUT_METHOD = "unicode";
-	protected static final String VALUE_UNICODE_LOCAL_IME = "unicode_local_ime";
+	public static final String VALUE_UNICODE_LOCAL_IME = "unicode_local_ime";
 	private static final String FIELD_SHOW_PROGRESSBAR = "show-progressbar";
 
 	// [publication]

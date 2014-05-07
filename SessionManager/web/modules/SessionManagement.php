@@ -998,6 +998,7 @@ abstract class SessionManagement extends Module {
 			$use_known_drives = 'true';
 		
 		$profile_mode = $default_settings['profile_mode'];
+		$use_local_ime = $session_->settings['use_local_ime'];
 		$desktop_icons = $remote_desktop_settings['desktop_icons'];
 		$need_valid_profile = ($default_settings['start_without_profile'] == 0);
 		$user_login_aps = $session_->settings['aps_access_login'];
@@ -1112,7 +1113,7 @@ abstract class SessionManagement extends Module {
 			}
 			
 			
-			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode') as $parameter) {
+			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode', 'use_local_ime') as $parameter) {
 				if (! isset($$parameter))
 					continue;
 				

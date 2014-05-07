@@ -364,6 +364,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_redirect_client_printers' => _('Redirect client printers'),
 			'general_session_settings_defaults_redirect_smartcards_readers' => _('Redirect Smart card readers'),
 			'general_session_settings_defaults_rdp_bpp' => _('RDP bpp'),
+			'general_session_settings_defaults_use_local_ime' => _('use local ime integration'),
 			'general_session_settings_defaults_enhance_user_experience' => _('Enhance user experience'),
 			
 			'general_session_settings_defaults_persistent' => _('Sessions are persistent'),
@@ -486,6 +487,7 @@ class Preferences_admin {
 			'general_session_settings_defaults_use_known_drives' => _('Provide file access optimization when using common network drives between client & Application Servers (open the file on server side instead of sending it from client using RDP disk redirection)'),
 			'general_session_settings_defaults_redirect_client_drives' => _("- None: none of the client drives will be used in the OVD session<br />- Partial: Desktop and My Documents user directories will be available in the OVD session<br />- Full: all client drives (including Desktop and My Documents) will be available in the OVD session"),
 			'general_session_settings_defaults_rdp_bpp' => _('RDP color depth'),
+			'general_session_settings_defaults_use_local_ime' => _('When you are using asian keyboard (mostly japanese, korean and chinese), \'use_local_ime\' offers a better integration with your local input method engine(IME) regarding candidates list position and input method status.'),
 			'general_session_settings_defaults_enhance_user_experience' => _('Enhance user experience: graphic effects and optimizations (It decreases performances if used in a Wide Area Network)'),
 			'general_session_settings_defaults_advanced_settings_startsession' =>  _('Choose Advanced Settings options you want to make available to users before they launch a session.'),
 			

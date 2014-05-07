@@ -35,6 +35,7 @@ import net.propero.rdp.Rdp;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.profile.Profile;
 import org.ulteo.ovd.disk.LinuxDiskManager;
 import org.ulteo.ovd.disk.WindowsDiskManager;
 import org.ulteo.ovd.disk.DiskManager;
@@ -62,6 +63,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	public static final int MOUNTING_MODE_MASK =	0x000000F0;
 	
 	public static final int MOUNT_SMARTCARD =	0x00000100;
+	public static final int USE_LOCAL_IME   =	0x00001000;
 
 	/* Flags value between 0x10000000 and 0xf0000000 are reserved for debug*/
 	public static final int DEBUG_SEAMLESS =	0x10000000;
@@ -138,6 +140,11 @@ public class RdpConnectionOvd extends RdpConnection {
 	 */
 	public void initSecondaryChannels() throws OvdException, RdesktopException {
 		this.initClipChannel();
+		
+		if ((this.flags & USE_LOCAL_IME) != 0) {
+			System.out.println("INIT local IME input method");
+			this.initIMEChannel(this.opt.seamlessEnabled);
+		}
 
 		if ((this.flags & MODE_MULTIMEDIA) != 0) {
 			this.setMultimediaMode();

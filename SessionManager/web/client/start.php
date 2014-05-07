@@ -113,6 +113,7 @@ $rdp_bpp = $default_settings['rdp_bpp'];
 $enhance_user_experience = $default_settings['enhance_user_experience'];
 $persistent = $default_settings['persistent'];
 $followme = $default_settings['followme'];
+$use_local_ime = $default_settings['use_local_ime'];
 
 $advanced_settings = array();
 foreach ($default_settings['advanced_settings_startsession'] as $v)
@@ -405,6 +406,7 @@ $default_args = array(
 	'redirect_client_printers'	=>	$redirect_client_printers,
 	'redirect_smartcards_readers'	=>	$redirect_smartcards_readers,
 	'rdp_bpp'			=>	$rdp_bpp,
+	'use_local_ime'			=>	$use_local_ime,
 	'enhance_user_experience'	=>	$enhance_user_experience
 );
 

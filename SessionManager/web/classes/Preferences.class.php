@@ -479,6 +479,10 @@ class Preferences {
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		
+		$c = new ConfigElement_select('use_local_ime', 0);
+		$c->setContentAvailable(array(0, 1));
+		$this->add($c,'general','session_settings_defaults');
+		
 		$c = new ConfigElement_select('persistent', 1);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');

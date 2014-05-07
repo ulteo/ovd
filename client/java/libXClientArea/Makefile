@@ -37,10 +37,10 @@ all: pre $(EXE) $(LIB)
 pre:
 	mkdir -p $(ARCH)
 
-$(EXE): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o
+$(EXE): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o org_ulteo_utils_jni_UkbrdrForward.o
 	$(CC) -o $@ $? $(LDFLAGS)
 
-$(LIB): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o
+$(LIB): org_ulteo_utils_jni_WorkArea.o org_ulteo_utils_jni_LinuxSessionStatus.o org_ulteo_utils_jni_UkbrdrForward.o
 ifndef STATIC
 	$(CC) -o $(ARCH)/$@ -shared -Wl,-soname,$@ $? $(LDFLAGS)
 else
@@ -48,6 +48,9 @@ else
 		-static $(LDFLAGS) -Bdynamic -lc
 endif
 
+src/org_ulteo_utils_jni_UkbrdrForward.h:
+	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/UkbrdrForward.java
+	javah -d ./src/ org.ulteo.utils.jni.UkbrdrForward
 
 src/org_ulteo_utils_jni_LinuxSessionStatus.h:
 	javac -classpath ../src -d . ../src/org/ulteo/utils/jni/LinuxSessionStatus.java
@@ -64,6 +67,7 @@ clean:
 	$(RM) *~
 	$(RM) src/org_ulteo_utils_jni_WorkArea.h
 	$(RM) src/org_ulteo_utils_jni_LinuxSessionStatus.h
+	$(RM) org_ulteo_utils_jni_UkbrdrForward.h
 	$(RM) -rf org *.o $(EXE) $(LIB) $(ARCH)
 
 install: all
@@ -79,6 +83,7 @@ dist: clean
 	cp Makefile $$DISTDIR ; \
 	cp src/org_ulteo_utils_jni_WorkArea.c $$DISTDIR/src ; \
 	cp src/org_ulteo_utils_jni_LinuxSessionStatus.c $$DISTDIR/src ; \
+	cp src/org_ulteo_utils_jni_UkbrdrForward.c $$DISTDIR/src ; \
 	tar -zcf ovd-xclient-area.tar.gz $$DISTDIR ; \
 	rm -rf $$DISTDIR
 

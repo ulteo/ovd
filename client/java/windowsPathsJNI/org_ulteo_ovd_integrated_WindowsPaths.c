@@ -29,6 +29,11 @@
 #include "org_ulteo_ovd_integrated_WindowsPaths.h"
 #include "org_ulteo_utils_jni_WindowsTweaks.h"
 
+// Used for EnumThreadWndProc
+static int currentX;
+static int currentY;
+
+
 DWORD getPath(DWORD csidl, LPSTR path) {
     if (SHGetSpecialFolderPath(NULL, path, csidl, 0) == FALSE) {
         return GetLastError();
@@ -86,4 +91,99 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_nGetPersona
 
 JNIEXPORT void JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_desktopRefresh(JNIEnv *env, jclass class) {
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
+}
+
+
+
+jboolean _setIMEPosition(HWND hwnd, int x, int y) {
+	HWND defaultIMEWnd;
+
+	if (hwnd == NULL) {
+		printf("Invalid windows for setIMEPosition");
+		return JNI_FALSE;
+	}
+
+	defaultIMEWnd = ImmGetDefaultIMEWnd(hwnd);
+
+	if (defaultIMEWnd == NULL) {
+		printf("Failed to find IME windows");
+		return JNI_FALSE;
+	}
+
+	CANDIDATEFORM cf;
+	cf.dwIndex = 0;
+	cf.dwStyle = CFS_EXCLUDE;
+
+	cf.ptCurrentPos.x = x;
+	cf.ptCurrentPos.y = y;
+
+	cf.rcArea.left = x;
+	cf.rcArea.top = y - 40;
+	cf.rcArea.right = x + 10;
+	cf.rcArea.bottom = y;
+
+	SendMessage(defaultIMEWnd, WM_IME_CONTROL, IMC_SETCANDIDATEPOS, (LPARAM)&cf);
+
+	return JNI_TRUE;;
+}
+
+
+BOOL CALLBACK EnumThreadWndProc( HWND hwnd, LPARAM lParam) {
+	char className[255] = {0};
+
+	if (GetClassName(hwnd, className, sizeof(className)) == 0) {
+		printf("Failed to get className");
+		return TRUE;
+	}
+
+	if (strstr(className, "Sun") == NULL) {
+		return TRUE;
+	}
+
+	_setIMEPosition(hwnd, currentX, currentY);
+	return FALSE;
+}
+
+
+JNIEXPORT jboolean JNICALL Java_org_ulteo_utils_jni_WindowsTweaks_setIMEPosition(JNIEnv *env, jclass class, jint x, jint y, jboolean useSeamless) {
+	HWND hwnd = GetForegroundWindow();
+	char className[255] = {0};
+	POINT pt;
+
+	// TODO check windows Class
+	if (hwnd == NULL) {
+		printf("Failed to find foreground Windows\n");
+		return JNI_TRUE;
+	}
+
+	pt.x = x;
+	pt.x = y;
+
+	if (useSeamless == JNI_TRUE) {
+		RECT rect;
+		if (GetWindowRect(hwnd, &rect) == TRUE) {
+			x -= rect.left;
+			y -= rect.top;
+		}
+	}
+
+	if (x < 0 || y < 0) {
+		return JNI_TRUE;
+	}
+
+	if (GetClassName(hwnd, className, sizeof(className)) == 0) {
+		printf("Failed to get className");
+		return TRUE;
+	}
+
+	if (strstr(className, "Sun") == NULL) {
+		currentX = x;
+		currentY = y;
+
+		EnumChildWindows(hwnd, EnumThreadWndProc, 0);
+
+		return JNI_TRUE;
+	}
+
+	return _setIMEPosition(hwnd, x, y);
 }

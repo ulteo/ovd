@@ -245,6 +245,20 @@ Section "un.pre" UnPostCmd
   nsExec::execToStack 'start /w rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
   DeleteRegKey HKLM "SOFTWARE\GPL Ghostscript\8.71"
 
+  DetailPrint "Removing IME module"
+  ClearErrors
+  ReadEnvStr $0 "PROGRAMW6432"
+  IfErrors UIME32 UIME64
+  
+  UIME64:
+    DetailPrint "Removing 64 bits version"
+    SetOutPath "$INSTDIR\ime\64"
+    nsExec::execToStack 'regsvr32.exe /u /s UlteoTSF.dll'
+  UIME32:
+    DetailPrint "Removing 32 bits version"
+    SetOutPath "$INSTDIR\ime\32"
+    nsExec::execToStack 'regsvr32.exe /u /s UlteoTSF.dll'
+
   DetailPrint "Remove PATH Environment variable"
   ${un.EnvVarUpdate} $0 "PATH" "D" "HKLM" "$INSTDIR\plus"
 
@@ -307,7 +321,22 @@ Section "post" PostCmd
     SetOutPath "$printerDir"
     DetailPrint "Installing PDF printer driver"
     nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Driver" /f ulteodll.inf'
- 
+  
+  DetailPrint "Installing IME module"
+  ClearErrors
+  ReadEnvStr $0 "PROGRAMW6432"
+  IfErrors IIME32 IIME64
+  
+  IIME64:
+    DetailPrint "Installing 64 bits version"
+    SetOutPath "$INSTDIR\ime\64"
+    nsExec::execToStack 'regsvr32.exe /s UlteoTSF.dll'
+  
+  IIME32:
+    DetailPrint "Installing 32 bits version"
+    SetOutPath "$INSTDIR\ime\32"
+    nsExec::execToStack 'regsvr32.exe /s UlteoTSF.dll'
+
   DetailPrint "Check if the service is already installed"
   ClearErrors
   UserMgr::GetUserInfo "OVDAdmin" "EXISTS"

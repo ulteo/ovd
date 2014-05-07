@@ -43,6 +43,7 @@ import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
 import net.propero.rdp.rdp5.seamless.SeamListener;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
+import net.propero.rdp.rdp5.ukbrdr.UkbrdrChannel;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
@@ -68,6 +69,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected SoundChannel soundChannel = null;
 	protected ClipChannel clipChannel = null;
 	protected SeamlessChannel seamChannel = null;
+	protected UkbrdrChannel ukbrdrChannel = null;
 	
 	protected Rdp5 RdpLayer = null;
 	protected Options opt = null;
@@ -85,6 +87,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	private boolean keep_running = false;
 
 	private JFrame backstoreFrame = null;
+	private boolean useSeamless;
 	
 	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
@@ -317,6 +320,14 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.seamChannel.setClip(clipChannel);
 	}
 
+	
+	protected void initIMEChannel(boolean useSeamless) throws RdesktopException {
+		this.ukbrdrChannel = new UkbrdrChannel(this.opt, this.common, useSeamless);
+		this.addChannel(this.ukbrdrChannel);
+		IMEManager.getInstance().addChannel(this.common, this.ukbrdrChannel);
+	}
+	
+	
 	protected void initSeamlessChannel() throws RdesktopException {
 		this.opt.seamlessEnabled = true;
 		if (this.seamChannel != null)
@@ -421,6 +432,9 @@ public class RdpConnection implements SeamListener, Runnable{
 		if (keymap == null)
 			throw new InvalidParameterException("'setKeymap' does not accept 'null' keymap parameter");
 		
+		if (this.opt.supportIME)
+			return;
+		
 		this.mapFile = keymap;
 	}
 	
@@ -432,6 +446,7 @@ public class RdpConnection implements SeamListener, Runnable{
 		else if (inputMethod.equalsIgnoreCase("unicode_local_ime")) {
 			this.opt.supportUnicodeInput = true;
 			this.opt.supportIME = true;
+			this.mapFile = "us";
 		}
 	}
 

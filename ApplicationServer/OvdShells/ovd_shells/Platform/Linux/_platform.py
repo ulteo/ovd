@@ -100,6 +100,9 @@ def existProcess(pid):
 
 def getUserSessionDir():
 	return os.path.join("/var/spool/ulteo/ovd/", os.environ["USER"])
+
+def setupIME():
+	launch("ukbrdr")
 	
 
 def startDesktop():

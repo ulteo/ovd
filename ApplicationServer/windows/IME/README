@@ -1,0 +1,10 @@
+=TO COMPILE=
+==PREREQUITE==
+ * install VC2010
+ * install cmake2.8
+
+==COMPILE==
+ * open a cmd
+ * type start buid.bat
+ * result is located in dist directory
+

@@ -76,6 +76,10 @@ class ExternalAppsClient(AbstractExternalAppsClient):
 		
 		return None
 	
+	@classmethod
+	def get_env(cls):
+		return os.environ.copy()
+	
 	
 	@classmethod
 	def detectEmbededJava(cls):

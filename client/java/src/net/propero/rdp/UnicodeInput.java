@@ -90,16 +90,38 @@ public class UnicodeInput extends Input {
     */
 	protected void setInputListeners() {
 		this.mouseAdapter = new UnicodeRdesktopMouseAdapter();
+		MouseListener[] mlisteners = this.canvas.getMouseListeners();
+		for (int i=0 ; i < mlisteners.length; i++)
+			this.canvas.removeMouseListener(mlisteners[i]);
+		
 		this.canvas.addMouseListener(this.mouseAdapter);
+		
+		MouseWheelListener[] mwlisteners = this.canvas.getMouseWheelListeners();
+		for (int i=0 ; i < mwlisteners.length; i++)
+			this.canvas.removeMouseWheelListener(mwlisteners[i]);
+		
 		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3) {
 			this.opt.isMouseWheelEnabled = true;
 			this.canvas.addMouseWheelListener(this.mouseAdapter);
 		} else
 			Input.logger.warn("No mouse wheel was detected");
+		
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
+		MouseMotionListener[] mmlisteners = this.canvas.getMouseMotionListeners();
+		for (int i=0 ; i < mlisteners.length; i++)
+			this.canvas.removeMouseMotionListener(mmlisteners[i]);
+		
 		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
+		
 		this.keyAdapter = new UnicodeAdapter();
+		KeyListener[] klisteners = this.canvas.getKeyListeners();
+		for (int i=0 ; i < klisteners.length; i++)
+			this.canvas.removeKeyListener(klisteners[i]);
+		
 		this.canvas.addKeyListener(this.keyAdapter);
+		
+		// We need to keep the rdesktopCanvas listener for local ime integration
+		this.canvas.addKeyListener(this.canvas);
 	}
 
     /**
