@@ -63,17 +63,9 @@
     <pathelement location="required_libraries/registry.jar" />
   </path>
 
-  <available file="windowsPathsJNI/Makefile" property="jni.exist"/>
-  <target name="clean.jni" if="jni.exist" >
-    <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
-      <arg value="clean" />
-    </exec>
-  </target>
-
   <target name="clean" description="clean files">
     <delete dir="build"/>
     <delete dir="jars"/>
-    <antcall target="clean.jni" />
   </target>
 
   <target name="precompile">
@@ -351,10 +343,6 @@
       <filelist dir="required_libraries"
                 files="log4j-1.2.jar, jpedal.jar" />
     </unjar>
-    <exec executable="make" failonerror="true" dir="windowsPathsJNI">
-       <env key="JAVAHOME"  path="${java.home}/.." />
-       <env key="BINPREFIX" value="${mingw32.prefix}" />
-    </exec>
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="ovdIntegratedLauncher.jar,applet" >
@@ -365,8 +353,10 @@
     <copy todir="build/pics">
       <filelist dir="icons" files="ulteo.png default_icon.png" />
     </copy>
-    <copy file="windowsPathsJNI/libWindowsPaths.dll"
-          todir="build/resources/WindowsLibs/32" />
+    <copy file="required_libraries/libWindowsPaths/32/libWindowsPaths.dll"
+          todir="build/resources/WindowsLibs/32" failonerror="false" />
+    <copy file="required_libraries/libWindowsPaths/64/libWindowsPaths.dll"
+          todir="build/resources/WindowsLibs/64" failonerror="false" />
     <copy file="required_libraries/libXClientArea/32/libXClientArea.so"
           todir="build/resources/LinuxLibs/32" failonerror="false" />
     <copy file="required_libraries/libXClientArea/64/libXClientArea.so"
