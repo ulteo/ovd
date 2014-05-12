@@ -141,9 +141,7 @@
       <title id="repository_online_title">Online Method</title>
 
       <para id="repository_online_para">The following method describes the
-      repository process when your servers have access to the Internet. If no
-      access is available, please read the information presented in the
-      section "Offline Method".</para>
+      repository process when your servers have access to the Internet.</para>
 
       <itemizedlist>
         <listitem id="repository_step1">

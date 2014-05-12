@@ -43,8 +43,7 @@
       </listitem>
 
       <listitem>
-        <para>An Internet connection that provides HTTP access or the Ulteo
-        OVD DVD to install Debian packages.</para>
+        <para>An Internet connection that provides HTTP access.</para>
       </listitem>
 
       <listitem>
@@ -108,12 +107,11 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main
           </screen>
         </listitem>
       </itemizedlist>
-      
-          <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="repository_common_para"
-                xmlns:xi="http://www.w3.org/2001/XInclude"/>
-      
+
+      <xi:include href="Support_Ubuntu_Lucid.xml"
+                  xpointer="repository_common_para"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
     </section>
- 
   </section>
 
   <section id="installation_gw">
@@ -171,13 +169,11 @@ deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main
     </screen>
 
     <para>You have to uncomment the variable and set the value to the URL of
-    your Web Portal. For example: 
-    <screen>
+    your Web Portal. For example: <screen>
 web_client = http://webportal.test.demo/
 		</screen></para>
 
-    <para>Now, restart the slaverserver service.
-     <screen>
+    <para>Now, restart the slaverserver service. <screen>
 # /etc/init.d/ulteo-ovd-slaveserver restart
 		</screen></para>
   </section>
