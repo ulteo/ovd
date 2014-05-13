@@ -24,10 +24,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#include <windows.h>
-#include <wtsapi32.h>
-#include <cchannel.h>
-
 #include "vchannel.h"
 
 static HANDLE g_mutex = NULL;
@@ -60,6 +56,11 @@ vchannel_open(const char* name)
 	}
 
 	return 0;
+}
+
+DLL_EXPORT HANDLE
+vchannel_gethandle() {
+	return g_vchannel;
 }
 
 DLL_EXPORT void

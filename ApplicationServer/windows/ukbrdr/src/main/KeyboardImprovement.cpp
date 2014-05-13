@@ -138,6 +138,12 @@ bool KeyboardImprovement::isConnected() {
 }
 
 
+void KeyboardImprovement::waitMessage(int timeout) {
+	HANDLE channel = vchannel_gethandle();
+	WaitForSingleObject(channel, timeout);
+}
+
+
 bool KeyboardImprovement::processCompositionMessage(ukb_msg* msg) {
 	int size;
 	char* data;

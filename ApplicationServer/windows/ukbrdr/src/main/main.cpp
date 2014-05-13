@@ -42,6 +42,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		while(ki.isConnected()) {
+			ki.waitMessage(REFRESH_TIME);
 			ki.update();
 			ki.processNextMessage();
 
@@ -50,8 +51,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				TranslateMessage(&Msg);
 				DispatchMessage(&Msg);
 			}
-
-			Sleep(REFRESH_TIME);
 		}
 
 		OutputDebugString("session disconnected");

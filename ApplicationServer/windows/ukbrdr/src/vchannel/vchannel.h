@@ -22,6 +22,10 @@
 #ifndef __VCHANNEL_H__
 #define __VCHANNEL_H__
 
+#include <windows.h>
+#include <wtsapi32.h>
+#include <cchannel.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +44,7 @@ extern "C" {
 
 DLL_EXPORT int vchannel_open(const char* name);
 DLL_EXPORT void vchannel_close();
+DLL_EXPORT HANDLE vchannel_gethandle();
 
 DLL_EXPORT int vchannel_is_open();
 

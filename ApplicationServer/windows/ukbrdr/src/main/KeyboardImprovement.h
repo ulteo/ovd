@@ -29,6 +29,7 @@ public:
 	bool update();
 	void setIMEStatus(int processID, int status);
 
+	void waitMessage(int timeout);
 	bool isConnected();
 	void processNextMessage();
 	bool processStopCompositionMessage(ukb_msg* msg);
