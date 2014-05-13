@@ -232,6 +232,10 @@ class HTTP_WebDAV_Client_Stream
      */
     function stream_read($count) 
     {
+        if ($this->eof) {
+            return "";
+        }
+
         // do some math
         $start = $this->position;
         $end   = $start + $count - 1;
@@ -272,7 +276,7 @@ class HTTP_WebDAV_Client_Stream
         }
 
         // no data indicates end of file
-        if (!$len) {
+        if (!$len || $len < $count) {
             $this->eof = true;
         }
 
