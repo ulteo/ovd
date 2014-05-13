@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-05 14:09+0200\n"
-"PO-Revision-Date: 2014-05-12 12:17+0200\n"
-"Last-Translator: Julien <julien@ulteo.com>\n"
+"PO-Revision-Date: 2014-05-12 19:03+0200\n"
+"Last-Translator: Pier Paolo <pptiezzi@erreuno.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -157,7 +157,6 @@ msgstr "Errore nella compatibilità del sistema"
 # 79%
 # 100%
 #: ../../client/web/web/includes/functions.inc.php:236
-#, fuzzy
 msgid "Java is either not available on your system or in your web browser."
 msgstr "Java non è presente nel tuo sistema o nel tuo browser web."
 
@@ -262,7 +261,6 @@ msgstr ""
 # 98%
 #: ../../client/web/web/includes/functions.inc.php:269
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
-#, fuzzy
 msgid "An internal error occurred, please contact your administrator"
 msgstr "E' avvenuto un errore interno, contattare l'amministratore"
 
@@ -359,7 +357,6 @@ msgstr "File di testo (*.txt)"
 # 97%
 # 100%
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-#, fuzzy
 msgid "An error occurred. Please try again."
 msgstr "E' avvenuto un errore. Provare nuovamente."
 
@@ -545,7 +542,6 @@ msgstr "Sto caricando"
 
 # 98%
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:509
-#, fuzzy
 msgid "An error occurred, please contact your administrator"
 msgstr "E' avvenuto un errore, contattare l'amministratore"
 
