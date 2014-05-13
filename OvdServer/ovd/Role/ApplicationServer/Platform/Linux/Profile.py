@@ -40,7 +40,7 @@ from ovd.Platform.System import System
 class Profile(AbstractProfile):
 	TEMPORARY_PROFILE_PATH = "/var/spool/ulteo/ovd/profiles/"
 	MOUNT_POINT = "/mnt/ulteo/ovd"
-	DEFAULT_PERMISSION = "file_mode=0700,dir_mode=0600"
+	DEFAULT_PERMISSION = "file_mode=0600,dir_mode=0700"
 	
 	def init(self):
 		self.profileMounted = False
