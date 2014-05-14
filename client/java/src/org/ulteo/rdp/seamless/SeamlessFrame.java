@@ -173,7 +173,11 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 			this.rw.setVisible(false);
 	}
 
-	public void setImeState(boolean state) {
+	public void setImeState(Input input, boolean state) {
+		if (input != this.input) {
+			return;
+		}
+
 		ImeStateSetter imeStS = new ImeStateSetter(this, this, state);
 	}
 
@@ -201,6 +205,10 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 		if (SeamlessFrame.focusManager != null)
 		{
 			SeamlessFrame.focusManager.performedFocusLost(this);
+		}
+		
+		if (this.input.getImeActive() != this.getInputContext().isCompositionEnabled()) {
+			this.input.setImeActive(this.input.getImeActive());
 		}
 	}
 

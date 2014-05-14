@@ -1586,7 +1586,11 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
 		this.refresh_rect = refresh_rect.union(new Rectangle(x, y, cx, cy)); 
 	}
 
-	public void setImeState(boolean state) {
+	public void setImeState(Input input, boolean state) {
+		if (input != this.input) {
+			return;
+		}
+		
 		ImeStateSetter imeStS = new ImeStateSetter(this, this.getParent(), state); 
 	}
 }

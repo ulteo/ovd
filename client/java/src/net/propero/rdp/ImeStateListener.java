@@ -21,5 +21,5 @@
 package net.propero.rdp;
 
 public interface ImeStateListener {
-	public void setImeState(boolean state);
+	public void setImeState(Input input, boolean state);
 }

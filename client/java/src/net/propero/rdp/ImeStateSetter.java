@@ -59,7 +59,10 @@ public class ImeStateSetter implements FocusListener {
 
 	public void focusLost(FocusEvent e) {
 		/* Remove the TextField */
+		this.textField.setEnabled(false);
+		this.textField.setFocusable(false);
 		this.container.remove(this.textField);
+		this.component.requestFocusInWindow();
 	}
 
 	public void focusGained(FocusEvent e) {

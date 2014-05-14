@@ -281,7 +281,7 @@ public abstract class Input {
 		this.imeActive = state;
 
 		if (last_focus != null && last_focus instanceof net.propero.rdp.ImeStateListener) {
-			((net.propero.rdp.ImeStateListener)last_focus).setImeState(state);
+			((net.propero.rdp.ImeStateListener)last_focus).setImeState(this, state);
 		}
 	}
 
