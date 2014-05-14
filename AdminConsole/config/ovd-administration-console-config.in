@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Copyright (C) 2011-2012 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@
 PROGRAM=$(basename $0)
 
 CONFFILE=/etc/ulteo/administration_console/config.inc.php
+INTERACTIVE_MODE=1
 
 usage ()
 {
@@ -38,7 +39,8 @@ unset SM
 while [ -n "$1" ]; do
     case $1 in
         --sm-address)
-            DEFAULT_SM="$2"
+            SM="$2"
+            INTERACTIVE_MODE=0
             shift;;
         --help|-h)
             usage
@@ -53,13 +55,22 @@ while [ -n "$1" ]; do
     shift
 done
 
-[ -z "$DEFAULT_SM" ] && DEFAULT_SM=$(expr "$(grep SESSIONMANAGER_HOST $CONFFILE)" : ".*'\(.*\)' *) *;.*")
-if [ -n "$DEFAULT_SM" ] && [ "$DEFAULT_SM" = "@SM_HOST@" ]; then
-    DEFAULT_SM="127.0.0.1"
+if [ $INTERACTIVE_MODE -eq 1 ]; then
+	DEFAULT_SM=$(expr "$(grep SESSIONMANAGER_HOST $CONFFILE)" : ".*'\(.*\)' *) *;.*")
+	if [ -n "$DEFAULT_SM" ] && [ "$DEFAULT_SM" = "@SM_HOST@" ]; then
+	    DEFAULT_SM="127.0.0.1"
+	fi
+	
+	echo -n "Session Manager address [$DEFAULT_SM]: " && read SM
+	[ -z "$SM" ] && SM=$DEFAULT_SM
 fi
 
-echo -n "Session Manager address [$DEFAULT_SM]: " && read SM
-[ -z "$SM" ] && SM=$DEFAULT_SM
+if [ -z "$SM" ]; then
+	echo "No Session Manager address specified" 2>&1
+	exit 1
+fi
+
+
 sed -i -e '/SESSIONMANAGER_HOST/ s,^// *,,' \
 	-e "/SESSIONMANAGER_HOST/ s/, *'.*' *);/, '${SM}');/" \
 	$CONFFILE
