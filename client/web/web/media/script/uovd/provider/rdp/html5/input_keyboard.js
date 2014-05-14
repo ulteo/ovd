@@ -275,6 +275,10 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
 				var server_attached = self.attachedTo();
 
 				switch(message) {
+					case 0: // UKB_INIT
+						self.guac_keyboard.setUkbrdr(true);
+						break;
+
 					case 1: // UKB_CARET_POS
 						var x = stream.read_UInt32LE();
 						var y = stream.read_UInt32LE();

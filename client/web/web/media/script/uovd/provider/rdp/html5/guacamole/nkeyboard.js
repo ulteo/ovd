@@ -9,6 +9,7 @@ var Guacamole = Guacamole || {};
 Guacamole.NativeKeyboard = function() {
 	var self = this; /* closure */
 	this.focused = false;
+	this.ukbrdrEnabled = false;
 	this.composition = false;
 	this.skipNextInput = false;
 	this.lastvalue = " ";
@@ -209,27 +210,13 @@ Guacamole.NativeKeyboard = function() {
 		}
   }
 
-	function handleComposition(e) {
-		if(e.type == "compositionstart" || e.type == "compositionupdate") {
-			self.composition = true;
-			self.oncomposeupdate(e.originalEvent.data);
-		} else {
-			self.oncomposeupdate(e.originalEvent.data);
-			self.oncomposeend();
-			self.composition = false;
-			self.skipNextInput = true;
-		}
-	}
-
 	/* Bind events */
 	this.input.on("keydown keyup", handleKeysym);
 	this.input.on("input", handleUnicode);
-	this.input.on("compositionstart compositionupdate compositionend", handleComposition);
 	this.input.on("focus blur", handleFocus);
 
 	this.textarea.on("keydown keyup", handleKeysym);
 	this.textarea.on("input", handleUnicode);
-	this.textarea.on("compositionstart compositionupdate compositionend", handleComposition);
 	this.textarea.on("focus blur", handleFocus);
 }
 
@@ -262,6 +249,38 @@ Guacamole.NativeKeyboard.prototype.toggle = function() {
 		this.disable();
 	} else {
 		this.enable();
+	}
+};
+
+Guacamole.NativeKeyboard.prototype.setUkbrdr = function(state) {
+	var self = this; /* closure */
+
+	if(state == this.ukbrdrEnabled) {
+		return;
+	}
+
+	function handleComposition(e) {
+		if(e.type == "compositionstart" || e.type == "compositionupdate") {
+			self.composition = true;
+			self.oncomposeupdate(e.originalEvent.data);
+		} else {
+			self.oncomposeupdate(e.originalEvent.data);
+			self.oncomposeend();
+			self.composition = false;
+			self.skipNextInput = true;
+		}
+	}
+
+	this.composition = false;
+	this.skipNextInput = false;
+	this.ukbrdrEnabled = state;
+
+	if(state) {
+		this.input.on("compositionstart.ukbrdr compositionupdate.ukbrdr compositionend.ukbrdr", handleComposition);
+		this.textarea.on("compositionstart.ukbrdr compositionupdate.ukbrdr compositionend.ukbrdr", handleComposition);
+	} else {
+		this.input.off("compositionstart.ukbrdr compositionupdate.ukbrdr compositionend.ukbrdr");
+		this.textarea.off("compositionstart.ukbrdr compositionupdate.ukbrdr compositionend.ukbrdr");
 	}
 };
 
