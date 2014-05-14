@@ -1300,11 +1300,11 @@ class fsAccessDriver extends AbstractAccessDriver
 			}
 			if(isset($dirRes))
 			{
-				$success[] = $mess[117]." ".SystemTextEncoding::toUTF8(basename($srcFile))." ".$messagePart." (".SystemTextEncoding::toUTF8($dirRes)." ".$mess[116].") ";
+				$success[] = $mess[117]." ".SystemTextEncoding::toUTF8($this->decodePath(basename($this->encodePath($srcFile))))." ".$messagePart." (".SystemTextEncoding::toUTF8($dirRes)." ".$mess[116].") ";
 			}
 			else 
 			{
-				$success[] = $mess[34]." ".SystemTextEncoding::toUTF8(basename($srcFile))." ".$messagePart;
+				$success[] = $mess[34]." ".SystemTextEncoding::toUTF8($this->decodePath(basename($this->encodePath($srcFile))))." ".$messagePart;
 			}
 		}
 		else
@@ -1315,11 +1315,11 @@ class fsAccessDriver extends AbstractAccessDriver
 			}
 			if(isSet($dirRes))
 			{
-				$success[] = $mess[117]." ".SystemTextEncoding::toUTF8(basename($srcFile))." ".$mess[73]." ".SystemTextEncoding::toUTF8($destDir)." (".SystemTextEncoding::toUTF8($dirRes)." ".$mess[116].")";	
+				$success[] = $mess[117]." ".SystemTextEncoding::toUTF8($this->decodePath(basename($this->encodePath($srcFile))))." ".$mess[73]." ".SystemTextEncoding::toUTF8($destDir)." (".SystemTextEncoding::toUTF8($dirRes)." ".$mess[116].")";	
 			}
 			else 
 			{
-				$success[] = $mess[34]." ".SystemTextEncoding::toUTF8(basename($srcFile))." ".$mess[73]." ".SystemTextEncoding::toUTF8($destDir);
+				$success[] = $mess[34]." ".SystemTextEncoding::toUTF8($this->decodePath(basename($this->encodePath($srcFile))))." ".$mess[73]." ".SystemTextEncoding::toUTF8($destDir);
 			}
 		}
 		
