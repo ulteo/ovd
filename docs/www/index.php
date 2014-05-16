@@ -43,7 +43,7 @@ $files = glob("*.html");
 				overflow:auto;
 			}
 			#content {
-				width:900px;
+				width:500px;
 				margin:0px auto;
 				text-align:justify;
 				padding:15px;

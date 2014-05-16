@@ -77,13 +77,6 @@ function validate_settings() {
 			jQuery('label[for="desktop_fullscreen"]').parent().hide();
 	}
 
-	/* Update InputMethod */
-	if(settings.rdp_input_method == "scancode") {
-		jQuery("#session_keymap").prop('disabled', false);
-	} else {
-		jQuery("#session_keymap").prop('disabled', true);
-	}
-
 	/* Update RDP providers */
 	var nb_rdp_providers = 0;
 	for(var i in framework.tests) {
@@ -134,11 +127,11 @@ function validate_settings() {
 		showSystemTestError("No RDP provider");
 	}
 
-	/* Hide Keymap selection in case of HTML5 */
-	if(settings.rdp_provider == 'html5') {
-		jQuery('label[for="session_keymap"]').parent().hide();
-	} else {
+	/* Update InputMethod */
+	if(settings.rdp_input_method == "scancode" && settings.rdp_provider == 'java') {
 		jQuery('label[for="session_keymap"]').parent().show();
+	} else {
+		jQuery('label[for="session_keymap"]').parent().hide();
 	}
 
 	/* Update HTTP providers */
@@ -228,8 +221,8 @@ function initialize_defaults() {
 	defaults.language              = jQuery('#session_language').val();
 	defaults.keymap                = jQuery('#session_keymap').val();
 	defaults.timezone              = getTimezoneName();
-	defaults.width                 = jQuery(window).innerWidth();
-	defaults.height                = jQuery(window).innerHeight();
+	defaults.width                 = window.innerWidth;
+	defaults.height                = window.innerHeight;
 	defaults.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
 	defaults.debug                 = jQuery("#debug_1").prop('checked');
 	defaults.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
@@ -257,8 +250,8 @@ function initialize_settings() {
 	settings.language              = jQuery('#session_language').val();
 	settings.keymap                = jQuery('#session_keymap').val();
 	settings.timezone              = getTimezoneName();
-	settings.width                 = jQuery(window).innerWidth();
-	settings.height                = jQuery(window).innerHeight();
+	settings.width                 = window.innerWidth;
+	settings.height                = window.innerHeight;
 	settings.fullscreen            = jQuery("#desktop_fullscreen_1").prop('checked');
 	settings.debug                 = jQuery("#debug_1").prop('checked');
 	settings.use_local_credentials = jQuery("#use_local_credentials_1").prop('checked');
@@ -307,8 +300,8 @@ function initialize_ui() {
 
 	/* Bind resize events */
 	jQuery(window).resize(function() {
-		settings.width  = jQuery(window).innerWidth();
-		settings.height = jQuery(window).innerHeight();
+		settings.width  = window.innerWidth;
+		settings.height = window.innerHeight;
 	});
 
 	/* Bind UI events (not forms) */

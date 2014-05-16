@@ -7,7 +7,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2013
  * Author David LECHEVALIER <david@ulteo.com> 2012-2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -561,6 +561,13 @@ abstract class SessionManagement extends Module {
 		return false;
 	}
 
+	public function generateWebAppServerCredentials() {
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['login'] = 'u'.time().gen_string(5).'_WAS'; //hardcoded
+		$this->credentials[Server::SERVER_ROLE_WEBAPPS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+		return true;
+	}
+
 	public function getDesktopServer($bypass_server_restrictions_ = true) {
 		if (! $this->user) {
 			Logger::error('main', 'SessionManagement::getDesktopServer() - User is not authenticated, aborting');
@@ -991,6 +998,7 @@ abstract class SessionManagement extends Module {
 			$use_known_drives = 'true';
 		
 		$profile_mode = $default_settings['profile_mode'];
+		$use_local_ime = $session_->settings['use_local_ime'];
 		$desktop_icons = $remote_desktop_settings['desktop_icons'];
 		$need_valid_profile = ($default_settings['start_without_profile'] == 0);
 		$user_login_aps = $session_->settings['aps_access_login'];
@@ -1000,7 +1008,11 @@ abstract class SessionManagement extends Module {
 		
 		$remote_desktop_settings = $this->user->getSessionSettings('remote_desktop_settings');
 		$allow_external_applications = array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1;
-		$locale = $this->user->getLocale();
+		if (isset($this->language))
+			$locale = locale2unix($this->language);
+		else
+			$locale = $this->user->getLocale();
+		
 		if (isset($this->timezone) && $this->timezone != '')
 			$timezone = $this->timezone;
 	
@@ -1101,7 +1113,7 @@ abstract class SessionManagement extends Module {
 			}
 			
 			
-			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode') as $parameter) {
+			foreach (array('no_desktop_process', 'use_known_drives', 'profile_mode', 'use_local_ime') as $parameter) {
 				if (! isset($$parameter))
 					continue;
 				

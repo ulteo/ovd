@@ -46,43 +46,6 @@
     <xi:include href="Support_Debian_Squeeze.xml"
                 xpointer="warning_name_examples"
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-    <simplesect id="seLinux">
-      <title id="seLinux_title">SELinux</title>
-
-      <para id="seLinux_para1">Ulteo OVD is not compatible with SELinux yet.
-      So, if you have SELinux installed and enabled on your system, you have
-      to disable it.</para>
-
-      <para id="seLinux_para2">To disable SELinux: <itemizedlist>
-          <listitem>
-            <para>Edit the <emphasis>/etc/selinux/config</emphasis> file and
-            set the <emphasis>SELINUX</emphasis> variable to
-            <emphasis>disabled</emphasis>.</para>
-
-            <screen>
-SELINUX=disabled
-            </screen>
-          </listitem>
-
-          <listitem>
-            <para>Reboot your system</para>
-
-            <screen>
-# reboot
-            </screen>
-          </listitem>
-
-          <listitem>
-            <para>Check SELinux is now disabled</para>
-
-            <screen>
-# sestatus
-SELinux status:              disabled
-            </screen>
-          </listitem>
-        </itemizedlist></para>
-    </simplesect>
   </section>
 
   <section id="repository">
@@ -90,9 +53,9 @@ SELinux status:              disabled
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <para id="repository_para">@distrib_pretty_name@ uses the RPM packaging
-    system. An Internet connection that provides HTTP access is required on your
-    @distrib_pretty_name@ system and add an Ulteo RPM repository into your
-    system.</para>
+    system. An Internet connection that provides HTTP access is required on
+    your @distrib_pretty_name@ system and add an Ulteo RPM repository into
+    your system.</para>
 
     <section id="repository_online">
       <xi:include href="Support_Debian_Squeeze.xml"
@@ -122,48 +85,8 @@ SELinux status:              disabled
           </screen>
         </listitem>
       </itemizedlist>
-    </section>
-
-    <section id="repository_offline">
-      <xi:include href="Support_Debian_Squeeze.xml"
-                  xpointer="repository_offline_title"
-                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-      <xi:include href="Support_Debian_Squeeze.xml"
-                  xpointer="repository_offline_warning"
-                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-      <itemizedlist>
+      <para id="repository_common_para">
         <xi:include href="Support_Debian_Squeeze.xml"
-                    xpointer="repository_offline_step1"
-                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-        <xi:include href="Support_Debian_Squeeze.xml"
-                    xpointer="repository_offline_step2"
-                    xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-        <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">Add the ovd
-          repository:</para>
-
-          <screen>
-# zypper ar file:///root/ovd-@VERSION@-@distrib_name@-@distrib_version@ ovd-offline
-          </screen>
-        </listitem>
-
-        <listitem id="repository_offline_step4">
-          <para id="repository_offline_step4_para">Install the keyring package
-          to validate the repository using gpg:</para>
-
-          <screen>
-# rpm --import ovd-@VERSION@-@distrib_name@-@distrib_version@/keyring
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <section id="repository_common">
-      <xi:include href="Support_Debian_Squeeze.xml"
                   xpointer="repository_common_title"
                   xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
@@ -178,7 +101,12 @@ SELinux status:              disabled
           </screen>
         </listitem>
       </itemizedlist>
+      </para>
     </section>
+
+     
+
+    
   </section>
 
   <section id="sm">
@@ -298,6 +226,24 @@ Session Manager address [127.0.0.1]:
 
       <xi:include href="Support_Debian_Squeeze.xml" xpointer="sm_chroot"
                   xmlns:xi="http://www.w3.org/2001/XInclude"/>
+       <section id="php_conf">
+		<title>PHP Settings</title>
+			<para>
+				You have to set the timezone setting located in the php configuration file. Edit the php configuration file
+<screen>
+# vi /etc/php.ini
+</screen>
+			Change the setting with your own value (values can be found here <ulink url="http://php.net/manual/en/timezones.php">http://php.net/manual/en/timezones.php</ulink>)
+<screen>
+date.timezone =	Europe/Paris
+</screen> 			
+			Restart the Apache server	
+			<screen>
+# service httpd restart
+</screen> 			
+			
+			</para>
+       </section>
     </section>
   </section>
 

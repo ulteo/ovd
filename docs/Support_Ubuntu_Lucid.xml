@@ -102,6 +102,9 @@
       </itemizedlist>
     </simplesect>
 
+    <xi:include href="common.xml" xpointer="prerequisites_all"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
     <simplesect id="sudo">
       <title>sudo</title>
 
@@ -138,73 +141,24 @@
       <title id="repository_online_title">Online Method</title>
 
       <para id="repository_online_para">The following method describes the
-      repository process when your servers have access to the Internet. If no
-      access is available, please read the information presented in the
-      section "Offline Method".</para>
+      repository process when your servers have access to the Internet.</para>
 
       <itemizedlist>
         <listitem id="repository_step1">
-          <para id="repository_online_step1_para">
-            Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo_ovd.list</emphasis>
-            file and add these lines:
-          </para>
+          <para id="repository_online_step1_para">Edit the
+          <emphasis>/etc/apt/sources.list.d/ulteo_ovd.list</emphasis> file and
+          add these lines:</para>
+
           <screen>
 deb @BASE_URI@/@distrib_name@ @distrib_version@ main
           </screen>
         </listitem>
       </itemizedlist>
-    </section>
 
-    <section id="repository_offline">
-      <title id="repository_offline_title">Offline Method</title>
+      <itemizedlist id="repository_common_para">
+        <para id="repository_common_title">Completing the Installation
+        Process</para>
 
-      <important id="repository_offline_warning">
-        <para>The Ulteo OVD offline installation requires that the <ulink
-        url="@distrib_dvd_url@">@distrib_pretty_name@ DVD</ulink> is
-        registered on the system as a packages repository in order to match
-        package dependencies.</para>
-
-        <para>If the system is not set to get packages from the DVD, Ulteo
-        dependencies like Apache, for instance, won't be installed and the
-        Ulteo solution will not work.</para>
-      </important>
-
-      <itemizedlist>
-        <listitem id="repository_offline_step1">
-          <para id="repository_offline_step1_para">Get this
-          <emphasis>ovd-@VERSION@-@distrib_version@.tar.gz</emphasis> archive
-          from <ulink url="@BASE_URI@/offline/">the Ulteo website</ulink> or
-          from the Ulteo OVD DVD and copy it in the <emphasis>/root</emphasis>
-          of your machine.</para>
-        </listitem>
-
-        <listitem id="repository_offline_step2">
-          <para id="repository_offline_step2_para">Uncompress the
-          archive:</para>
-
-          <screen>
-# tar xzf ovd-@VERSION@-@distrib_version@.tar.gz
-          </screen>
-        </listitem>
-
-        <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">Edit the
-          <emphasis>/etc/apt/sources.list.d/ulteo-ovd-offline.list</emphasis>
-          file and add these lines:</para>
-
-          <screen>
-deb file:///root/ovd-@VERSION@-@distrib_version@ @distrib_version@ main
-          </screen>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <simplesect id="repository_common">
-      <title id="repository_common_title">Completing the Installation
-      Process</title>
-
-      <itemizedlist>
         <listitem>
           <para id="repository_common_step1_para">Update the package
           database:</para>
@@ -230,7 +184,7 @@ deb file:///root/ovd-@VERSION@-@distrib_version@ @distrib_version@ main
           </screen>
         </listitem>
       </itemizedlist>
-    </simplesect>
+    </section>
   </section>
 
   <section id="sm">

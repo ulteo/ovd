@@ -52,6 +52,10 @@ def main():
 	config = Config()
 	config.load(user_sdir)
 	
+	# IME customization
+	if config.use_local_ime:
+		Platform.setupIME()
+	
 	# Load profile share
 	folders = Folders(config.profile_mode)
 	folders.registerShares()

@@ -49,6 +49,7 @@ public class Properties {
 	private boolean desktop_effects = false;
 	
 	private int rdp_bpp = RdpConnectionOvd.DEFAULT_BPP;
+	private boolean use_local_ime = false;
 	
 	public Properties(int mode) {
 		this.mode = mode;
@@ -102,6 +103,14 @@ public class Properties {
 		this.printers = printers;
 	}
 
+	public boolean isUseLocalIME() {
+		return this.use_local_ime;
+	}
+	
+	public void setUseLocalIME(boolean value) {
+		this.use_local_ime = value;
+	}
+	
 	public int isDrives() {
 		return this.drives;
 	}

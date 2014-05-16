@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-25 10:11+0100\n"
-"PO-Revision-Date: 2014-03-17 11:20+0200\n"
+"POT-Creation-Date: 2014-03-28 15:41+0100\n"
+"PO-Revision-Date: 2014-04-03 11:21+0200\n"
 "Last-Translator: Zhengquan <zhongzhengquan@zhiyisoft.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -30,7 +30,7 @@ msgstr "大"
 
 #: ../../AdminConsole/classes/ConfigElement_sliders_loadbalancing.class.php:126
 msgid "Reset to default"
-msgstr ""
+msgstr "恢复默认设置"
 
 #: ../../AdminConsole/classes/ConfigElement_sliders_loadbalancing.class.php:132
 msgid "Examples"
@@ -75,7 +75,7 @@ msgid "Saturday"
 msgstr "周六"
 
 #: ../../AdminConsole/classes/Configuration_mode_ad.class.php:30
-#: ../../AdminConsole/classes/Preferences_admin.class.php:582
+#: ../../AdminConsole/classes/Preferences_admin.class.php:584
 msgid "Microsoft"
 msgstr "微软"
 
@@ -205,7 +205,7 @@ msgstr "使用内部用户组"
 
 #. to change !
 #: ../../AdminConsole/classes/Configuration_mode_internal.class.php:27
-#: ../../AdminConsole/classes/Preferences_admin.class.php:581
+#: ../../AdminConsole/classes/Preferences_admin.class.php:583
 msgid "Internal"
 msgstr "内部"
 
@@ -217,7 +217,7 @@ msgstr "内部数据库配置"
 msgid ""
 "This is the default profile manager. It saves all data in the SQL database "
 "that was defined in the system configuration settings."
-msgstr ""
+msgstr "这是默认的配置文件管理器。它保存所有那些系统配置设置数据到SQL数据库中。"
 
 #: ../../AdminConsole/classes/Configuration_mode_internal.class.php:93
 msgid "Use a dynamic internal User Group"
@@ -225,7 +225,7 @@ msgstr "使用动态内部用户组"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:28
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:224
-#: ../../AdminConsole/classes/Preferences_admin.class.php:387
+#: ../../AdminConsole/classes/Preferences_admin.class.php:388
 msgid "Lightweight Directory Access Protocol (LDAP)"
 msgstr "轻量级目录访问协议（LDAP）"
 
@@ -240,8 +240,8 @@ msgid "Server Port:"
 msgstr "服务器端口："
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:237
-#: ../../AdminConsole/classes/Preferences_admin.class.php:432
-#: ../../AdminConsole/classes/Preferences_admin.class.php:445
+#: ../../AdminConsole/classes/Preferences_admin.class.php:433
+#: ../../AdminConsole/classes/Preferences_admin.class.php:446
 msgid "Use SSL"
 msgstr "使用SSL"
 
@@ -263,7 +263,7 @@ msgstr "绑定密码:"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:257
 #: ../../AdminConsole/includes/page_template.php:53
-#: ../../AdminConsole/includes/page_template.php:119
+#: ../../AdminConsole/includes/page_template.php:125
 #: ../../AdminConsole/web/index.php:55 ../../AdminConsole/web/summary.php:69
 #: ../../AdminConsole/web/summary.php:79 ../../AdminConsole/web/sumup.php:40
 #: ../../AdminConsole/web/users.php:58
@@ -294,7 +294,7 @@ msgstr "本地栏"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:269
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:304
-#: ../../AdminConsole/includes/page_template.php:126
+#: ../../AdminConsole/includes/page_template.php:132
 #: ../../AdminConsole/web/index.php:57
 #: ../../AdminConsole/web/usersgroup.php:72
 msgid "User Groups"
@@ -341,9 +341,9 @@ msgid "User DN"
 msgstr "用户专有名称"
 
 #: ../../AdminConsole/classes/Configuration_mode_ldap.class.php:322
-#: ../../AdminConsole/classes/Preferences_admin.class.php:411
-#: ../../AdminConsole/classes/Preferences_admin.class.php:418
-#: ../../AdminConsole/classes/Preferences_admin.class.php:433
+#: ../../AdminConsole/classes/Preferences_admin.class.php:412
+#: ../../AdminConsole/classes/Preferences_admin.class.php:419
+#: ../../AdminConsole/classes/Preferences_admin.class.php:434
 msgid "User login"
 msgstr "用户登入"
 
@@ -361,7 +361,7 @@ msgid "User branch:"
 msgstr "用户分支:"
 
 #: ../../AdminConsole/classes/Configuration_mode_novell.class.php:27
-#: ../../AdminConsole/classes/Preferences_admin.class.php:583
+#: ../../AdminConsole/classes/Preferences_admin.class.php:585
 msgid "Novell"
 msgstr "Novell"
 
@@ -416,7 +416,7 @@ msgstr "未知"
 #: ../../AdminConsole/classes/Preferences_admin.class.php:296
 #: ../../AdminConsole/web/index.php:92
 msgid "General Configuration"
-msgstr ""
+msgstr "通用配置"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:297
 msgid "System in maintenance mode"
@@ -424,19 +424,20 @@ msgstr "系统处于维护模式"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:298
 msgid "Administration Console language"
-msgstr ""
+msgstr "管理控制台语言类型"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:299
 msgid "Debug options list"
 msgstr "调试选项列表"
 
+# 96%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:300
 msgid "Cached logs update interval"
-msgstr ""
+msgstr "缓存日志更新间隔"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:301
 msgid "Cached logs expiry time"
-msgstr ""
+msgstr "缓存记录过期时间"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:302
 msgid "Default user group"
@@ -461,7 +462,7 @@ msgstr "联络人"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:308
 msgid "Policy for Administration Delegation"
-msgstr ""
+msgstr "管理委派策略"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:309
 msgid "Default policy"
@@ -488,8 +489,8 @@ msgid "Database password"
 msgstr "数据库密码"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:316
-#: ../../AdminConsole/classes/Preferences_admin.class.php:413
-#: ../../AdminConsole/classes/Preferences_admin.class.php:420
+#: ../../AdminConsole/classes/Preferences_admin.class.php:414
+#: ../../AdminConsole/classes/Preferences_admin.class.php:421
 msgid "Database name"
 msgstr "数据库名"
 
@@ -499,11 +500,12 @@ msgstr "表前缀"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:319
 msgid "Email Settings"
-msgstr ""
+msgstr "电子邮件设置"
 
+# 87%
 #: ../../AdminConsole/classes/Preferences_admin.class.php:320
 msgid "Mail Server Type"
-msgstr ""
+msgstr "邮件服务器类型"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:321
 #: ../../AdminConsole/web/reporting.php:576
@@ -553,7 +555,7 @@ msgstr "使用反向服务器的 FQDN"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:333
 msgid "Action when a server status becomes not ready"
-msgstr ""
+msgstr "当服务器状态变为未准备好时采取行动"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:334
 msgid "Auto-recover server"
@@ -561,7 +563,7 @@ msgstr "自动覆盖服务器"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:335
 msgid "Remove orphan applications when an Application Server is deleted"
-msgstr ""
+msgstr "删除服务器时移除孤立程序"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:336
 msgid "Auto register new servers"
@@ -587,7 +589,7 @@ msgstr "文件服务器负载平衡策略"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:342
 msgid "Remote Desktop Settings"
-msgstr ""
+msgstr "远程桌面设置"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:343
 msgid "Enable Remote Desktop"
@@ -615,7 +617,7 @@ msgstr "授权启动一个桌面会话而不是桌面进程"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:350
 msgid "Remote Application Settings"
-msgstr ""
+msgstr "远程应用程序设置"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:351
 msgid "Enable Remote Applications"
@@ -652,336 +654,348 @@ msgid "User can use a console in the session"
 msgstr "会话中用户可使用控制台"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:360
+msgid "Bypass server restrictions"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:361
 msgid "Use known drives"
 msgstr "使用已知驱动器"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:361
+#: ../../AdminConsole/classes/Preferences_admin.class.php:362
 msgid "Multimedia"
 msgstr "多媒体"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:362
+#: ../../AdminConsole/classes/Preferences_admin.class.php:363
 msgid "Redirect client drives"
 msgstr "重定向客房端驱动"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:363
+#: ../../AdminConsole/classes/Preferences_admin.class.php:364
 msgid "Redirect client printers"
 msgstr "重定向客户端打印机"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:364
+#: ../../AdminConsole/classes/Preferences_admin.class.php:365
 msgid "Redirect Smart card readers"
 msgstr "重定向智能卡阅读器"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:365
+#: ../../AdminConsole/classes/Preferences_admin.class.php:366
 msgid "RDP bpp"
 msgstr "RDP bpp"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:366
+#: ../../AdminConsole/classes/Preferences_admin.class.php:367
 msgid "Enhance user experience"
 msgstr "提高用户体验"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:368
+#: ../../AdminConsole/classes/Preferences_admin.class.php:369
 msgid "Sessions are persistent"
 msgstr "会话稳定"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:369
+#: ../../AdminConsole/classes/Preferences_admin.class.php:370
 msgid "Follow me"
 msgstr "跟我来"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:370
+#: ../../AdminConsole/classes/Preferences_admin.class.php:371
 msgid "Enable user profiles"
 msgstr "激活用户配置文件"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:371
-msgid "Auto-create user profiles when non-existent"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:372
+msgid "Auto-create user profiles when non-existent"
+msgstr "当用户配置文件不存在时自动生成"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:373
 msgid "Quota assigned to the profile"
 msgstr "分配给配置文件配额"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:373
+#: ../../AdminConsole/classes/Preferences_admin.class.php:374
 msgid "Profile integration used in the session"
 msgstr "在会话中使用个人资料整合"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:374
+#: ../../AdminConsole/classes/Preferences_admin.class.php:375
 msgid "Launch a session without a valid profile"
 msgstr "在没有有效配置情况下启动会话"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:376
+#: ../../AdminConsole/classes/Preferences_admin.class.php:377
 msgid "Enable shared folders"
 msgstr "激活分享文件夹"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:377
+#: ../../AdminConsole/classes/Preferences_admin.class.php:378
 msgid "Launch a session even when a shared folder's fileserver is missing"
 msgstr "即使分享文件夹服务器丢失的情况下也启动会话"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:378
-msgid "Allow user to force shared folders"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:379
-msgid "User selectable parameters"
-msgstr ""
+msgid "Allow user to force shared folders"
+msgstr "允许用户强制共享文件夹"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:380
+msgid "User selectable parameters"
+msgstr "用户可选参数"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:381
 msgid "Time restriction"
 msgstr "时间限制"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:382
-#: ../../AdminConsole/includes/page_template.php:228
+#: ../../AdminConsole/classes/Preferences_admin.class.php:383
+#: ../../AdminConsole/includes/page_template.php:234
 msgid "Web Interface Settings"
-msgstr ""
+msgstr "网络接口界面设置"
 
 # 100%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:383
+#: ../../AdminConsole/classes/Preferences_admin.class.php:384
 msgid "Display user list"
 msgstr "显示用户列表"
 
 # 100%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:384
+#: ../../AdminConsole/classes/Preferences_admin.class.php:385
 msgid "Public Web Services access"
 msgstr "访问公共网络服务"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:386
+#: ../../AdminConsole/classes/Preferences_admin.class.php:387
 msgid "Active Directory"
 msgstr "活动目录"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:388
+#: ../../AdminConsole/classes/Preferences_admin.class.php:389
 msgid "MySQL external"
 msgstr "MySQL扩展"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:389
+#: ../../AdminConsole/classes/Preferences_admin.class.php:390
 msgid "Unix"
 msgstr "Unix"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:391
+#: ../../AdminConsole/classes/Preferences_admin.class.php:392
 msgid "Module activation"
-msgstr ""
+msgstr "模块激活"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:404
-#: ../../AdminConsole/classes/Preferences_admin.class.php:407
-#: ../../AdminConsole/classes/Preferences_admin.class.php:415
-#: ../../AdminConsole/classes/Preferences_admin.class.php:422
-#: ../../AdminConsole/classes/Preferences_admin.class.php:436
+#: ../../AdminConsole/classes/Preferences_admin.class.php:405
+#: ../../AdminConsole/classes/Preferences_admin.class.php:408
+#: ../../AdminConsole/classes/Preferences_admin.class.php:416
+#: ../../AdminConsole/classes/Preferences_admin.class.php:423
+#: ../../AdminConsole/classes/Preferences_admin.class.php:437
 msgid "Matching"
 msgstr "匹配中"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:405
+#: ../../AdminConsole/classes/Preferences_admin.class.php:406
 msgid "Use child groups"
 msgstr "使用子组"
 
 # 100%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:408
+#: ../../AdminConsole/classes/Preferences_admin.class.php:409
 msgid "Filter"
 msgstr "过滤器:"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:410
-#: ../../AdminConsole/classes/Preferences_admin.class.php:417
-#: ../../AdminConsole/classes/Preferences_admin.class.php:430
-#: ../../AdminConsole/classes/Preferences_admin.class.php:440
+#: ../../AdminConsole/classes/Preferences_admin.class.php:411
+#: ../../AdminConsole/classes/Preferences_admin.class.php:418
+#: ../../AdminConsole/classes/Preferences_admin.class.php:431
+#: ../../AdminConsole/classes/Preferences_admin.class.php:441
 msgid "Server host address"
 msgstr "服务器主机地址"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:412
-#: ../../AdminConsole/classes/Preferences_admin.class.php:419
-#: ../../AdminConsole/classes/Preferences_admin.class.php:434
+#: ../../AdminConsole/classes/Preferences_admin.class.php:413
+#: ../../AdminConsole/classes/Preferences_admin.class.php:420
+#: ../../AdminConsole/classes/Preferences_admin.class.php:435
 msgid "User password"
 msgstr "用户密码"
 
 # 87%
 # 100%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:414
+#: ../../AdminConsole/classes/Preferences_admin.class.php:415
 msgid "Database User Group table name"
 msgstr "数据库用户组表名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:421
+#: ../../AdminConsole/classes/Preferences_admin.class.php:422
 msgid "Table of users"
 msgstr "用户列表"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:423
+#: ../../AdminConsole/classes/Preferences_admin.class.php:424
 msgid "Hash method"
 msgstr "Hash方法"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:425
-#: ../../AdminConsole/classes/Preferences_admin.class.php:499
+#: ../../AdminConsole/classes/Preferences_admin.class.php:426
+#: ../../AdminConsole/classes/Preferences_admin.class.php:501
 msgid "The address of your MySQL server."
 msgstr "MySOL服务器地址"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:426
-#: ../../AdminConsole/classes/Preferences_admin.class.php:508
-#: ../../AdminConsole/classes/Preferences_admin.class.php:514
+#: ../../AdminConsole/classes/Preferences_admin.class.php:427
+#: ../../AdminConsole/classes/Preferences_admin.class.php:510
+#: ../../AdminConsole/classes/Preferences_admin.class.php:516
 msgid ""
 "The user login that must be used to access the database (to list users "
 "accounts)."
 msgstr "用户登入必须被用于访问数据库（用于列出用户帐户）。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:427
-#: ../../AdminConsole/classes/Preferences_admin.class.php:509
-#: ../../AdminConsole/classes/Preferences_admin.class.php:515
+#: ../../AdminConsole/classes/Preferences_admin.class.php:428
+#: ../../AdminConsole/classes/Preferences_admin.class.php:511
+#: ../../AdminConsole/classes/Preferences_admin.class.php:517
 msgid ""
 "The user password that must be used to access the database (to list users "
 "accounts)."
 msgstr "用户密码必须被用于访问数据库（用于列出用户帐户）。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:428
-#: ../../AdminConsole/classes/Preferences_admin.class.php:474
-#: ../../AdminConsole/classes/Preferences_admin.class.php:502
+#: ../../AdminConsole/classes/Preferences_admin.class.php:429
+#: ../../AdminConsole/classes/Preferences_admin.class.php:475
+#: ../../AdminConsole/classes/Preferences_admin.class.php:504
 msgid "The name of the database."
 msgstr "数据库名。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:431
-#: ../../AdminConsole/classes/Preferences_admin.class.php:444
+#: ../../AdminConsole/classes/Preferences_admin.class.php:432
+#: ../../AdminConsole/classes/Preferences_admin.class.php:445
 msgid "Server port"
 msgstr "服务器端口"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:435
+#: ../../AdminConsole/classes/Preferences_admin.class.php:436
 msgid "Options given to ldap object"
 msgstr "LDAP对象选项"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:437
+#: ../../AdminConsole/classes/Preferences_admin.class.php:438
 msgid "Filter (optional)"
 msgstr "过滤器（可选项）"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:438
+#: ../../AdminConsole/classes/Preferences_admin.class.php:439
 msgid "extra"
 msgstr "额外"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:441
+#: ../../AdminConsole/classes/Preferences_admin.class.php:442
 msgid "Domain name"
 msgstr "域名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:442
+#: ../../AdminConsole/classes/Preferences_admin.class.php:443
 msgid "Administrator DN"
 msgstr "系统管理员域名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:443
+#: ../../AdminConsole/classes/Preferences_admin.class.php:444
 msgid "Administrator password"
 msgstr "管理员密码"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:446
+#: ../../AdminConsole/classes/Preferences_admin.class.php:447
 msgid "match"
 msgstr "匹配"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:447
+#: ../../AdminConsole/classes/Preferences_admin.class.php:448
 msgid "Accept expired password"
 msgstr "接受过期密码"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:449
+#: ../../AdminConsole/classes/Preferences_admin.class.php:450
 msgid "CAS server URL"
 msgstr "CAS服务器URL"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:451
+#: ../../AdminConsole/classes/Preferences_admin.class.php:452
 msgid "SERVER variable for SSO"
 msgstr "单点登录SERVER变量"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:452
+#: ../../AdminConsole/classes/Preferences_admin.class.php:453
 msgid "Remove domain if exists"
 msgstr "如果存在则删除域"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:454
+#: ../../AdminConsole/classes/Preferences_admin.class.php:455
 msgid "Token validation URL"
 msgstr "令牌验证URL"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:455
+#: ../../AdminConsole/classes/Preferences_admin.class.php:456
 msgid "Token XML user node name"
 msgstr "令牌XML用户节点名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:456
+#: ../../AdminConsole/classes/Preferences_admin.class.php:457
 msgid "Token XML login attribute name"
 msgstr "令牌XML登入属性名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:458
+#: ../../AdminConsole/classes/Preferences_admin.class.php:459
 msgid "Which login should be used for the ApplicationServer's generated user?"
 msgstr "这个登入应该用于应用服务器生成的用户？"
 
 # 84%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:459
+#: ../../AdminConsole/classes/Preferences_admin.class.php:460
 msgid ""
 "Which password should be used for the ApplicationServer's generated user?"
 msgstr "这个密码应该应用于应用服务器生成的用户？"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:461
+#: ../../AdminConsole/classes/Preferences_admin.class.php:462
 msgid "Manage users by ZENworks DLU instead of native method"
 msgstr "使用ZENworkds DLU代替本地方法管理用户"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:463
+#: ../../AdminConsole/classes/Preferences_admin.class.php:464
 msgid "Override password"
 msgstr "覆盖密码"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:467
+#: ../../AdminConsole/classes/Preferences_admin.class.php:468
 msgid "Select debug options you want to enable."
 msgstr "选择想要激活的调试选项"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:468
+#: ../../AdminConsole/classes/Preferences_admin.class.php:469
 msgid "The maximum number of items that can be displayed."
 msgstr "最多显示条目数"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:470
+#: ../../AdminConsole/classes/Preferences_admin.class.php:471
 msgid "The type of your database."
 msgstr "数据库类型"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:471
+#: ../../AdminConsole/classes/Preferences_admin.class.php:472
 msgid ""
 "The address of your database host. This database contains adminstration "
 "console data. Example: localhost or db.mycorporate.com."
 msgstr "数据库主机地址。此数据库包含管理控制台数据。例如： localhost 或 db.mycorporate.com"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:472
+#: ../../AdminConsole/classes/Preferences_admin.class.php:473
 msgid "The username that must be used to access the database."
 msgstr "用户名必须被用于访问数据库。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:473
+#: ../../AdminConsole/classes/Preferences_admin.class.php:474
 msgid "The user password that must be used to access the database."
 msgstr "用户密码必须被用于访问数据库。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:475
+#: ../../AdminConsole/classes/Preferences_admin.class.php:476
 msgid "The table prefix for the database."
 msgstr "数据库表前缀"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:477
+#: ../../AdminConsole/classes/Preferences_admin.class.php:478
 msgid ""
 "Enable this option if you don't want to check that the result of the reverse "
 "FQDN address fits the one that was registered."
 msgstr "如果不想检查反向FQDN地址是否对应曾经注册过的地址，请激活此选项。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:478
+#: ../../AdminConsole/classes/Preferences_admin.class.php:479
 msgid ""
 "Try to identify the server using the reverse DNS record associated to the "
 "remote address."
 msgstr "尝试使用关联到远程地址的反向DNS记录来标识服务器。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:479
+#: ../../AdminConsole/classes/Preferences_admin.class.php:480
 msgid ""
 "When a server status is down or broken, and it is sending monitoring, try to "
 "switch it back to ready ?"
 msgstr "当服务器状态为下线或损坏，并且有发送监视信号时，尝试切换为准备状态？"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:480
+#: ../../AdminConsole/classes/Preferences_admin.class.php:481
 msgid ""
 "An empty list means all servers can host a desktop (no restriction on "
 "desktop server choice)"
 msgstr "空列表意味着所有的服务器可以托管桌面（桌面服务器的选择没有限制）"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:481
+#: ../../AdminConsole/classes/Preferences_admin.class.php:482
 msgid ""
 "Useful for web integration starting a maximised application as only windows "
 "into the remote screen"
 msgstr "有用的Web集成启动应用程序最大化作为唯一的窗户进入远程屏幕"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:483
+#: ../../AdminConsole/classes/Preferences_admin.class.php:484
 msgid ""
 "The maximum number of sessions that can be started on the farm (0 is "
 "unlimited)."
 msgstr "开启最大会话数（0为不限制）。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:484
+#: ../../AdminConsole/classes/Preferences_admin.class.php:485
+msgid ""
+"If there is no server available for a session according to server "
+"restrictions and this setting is enabled, the system will try to use servers "
+"without taking care of server restrictions (so it become as a priority "
+"system)"
+msgstr ""
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:486
 msgid ""
 "Provide file access optimization when using common network drives between "
 "client & Application Servers (open the file on server side instead of "
 "sending it from client using RDP disk redirection)"
 msgstr "当客户端与应用服务器之间采用通用的网络驱动器时（开放服务器端文件，而不是使用RDP磁盘重定向从客户端发送）提供文件访问优化。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:485
+#: ../../AdminConsole/classes/Preferences_admin.class.php:487
 msgid ""
 "- None: none of the client drives will be used in the OVD session<br />- "
 "Partial: Desktop and My Documents user directories will be available in the "
@@ -991,54 +1005,54 @@ msgstr ""
 "- 无：OVD会话无客户端驱动器<br/> - 部分：桌面和我的文档的用户目录将在OVD会话中可用<br/> - "
 "完整：所有的客户端驱动器（包括桌面和我的文件）将可在OVD会话中可用"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:486
+#: ../../AdminConsole/classes/Preferences_admin.class.php:488
 msgid "RDP color depth"
 msgstr "RDP颜色深度"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:487
+#: ../../AdminConsole/classes/Preferences_admin.class.php:489
 msgid ""
 "Enhance user experience: graphic effects and optimizations (It decreases "
 "performances if used in a Wide Area Network)"
 msgstr "提高用户体验：图形效果和优化（如果在广域网络中使用，会减低性能）"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:488
+#: ../../AdminConsole/classes/Preferences_admin.class.php:490
 msgid ""
 "Choose Advanced Settings options you want to make available to users before "
 "they launch a session."
 msgstr "如果想在用户载入会话前使其可用，请选择高级设定选项。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:490
+#: ../../AdminConsole/classes/Preferences_admin.class.php:492
 msgid ""
 "Display the list of users from the corporate directory in the login box. If "
 "the list is not displayed, the user must provide his login name."
 msgstr "在登入框显示用户列表。如果列表未显示，用户必须手动输入用户名。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:491
+#: ../../AdminConsole/classes/Preferences_admin.class.php:493
 msgid ""
 "Authorize non authenticated requests to get information about users "
 "authorized applications or get applications icons."
 msgstr "授权未授权请求，以获得用户授权程序信息或程序图标。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:493
+#: ../../AdminConsole/classes/Preferences_admin.class.php:495
 msgid "Choose the modules you want to enable."
 msgstr "选择想要激活的模块"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:495
+#: ../../AdminConsole/classes/Preferences_admin.class.php:497
 msgid "Use child groups (works with AD up to 2008r2)"
 msgstr "使用子组 (可与 AD 高达 2008r2)"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:497
+#: ../../AdminConsole/classes/Preferences_admin.class.php:499
 #, php-format
 msgid "Filter (example: %s)"
 msgstr "过滤器(例: %s)"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:500
+#: ../../AdminConsole/classes/Preferences_admin.class.php:502
 msgid ""
 "The user login that must be used to access the database (to list users "
 "groups)."
 msgstr "用户登入必须被用于访问数据库（用于列出用户帐户）。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:501
+#: ../../AdminConsole/classes/Preferences_admin.class.php:503
 msgid ""
 "The user password that must be used to access the database (to list users "
 "groups)."
@@ -1046,43 +1060,43 @@ msgstr "用户密码必须被用于访问数据库（用于列出用户帐户）
 
 # 95%
 # 100%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:503
+#: ../../AdminConsole/classes/Preferences_admin.class.php:505
 msgid "The name of the database table which contains the User Groups"
 msgstr "数据库包含用户组表"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:505
+#: ../../AdminConsole/classes/Preferences_admin.class.php:507
 msgid "The address of your LDAP server."
 msgstr "LDAP服务器地址。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:506
-#: ../../AdminConsole/classes/Preferences_admin.class.php:516
+#: ../../AdminConsole/classes/Preferences_admin.class.php:508
+#: ../../AdminConsole/classes/Preferences_admin.class.php:518
 msgid "The port number used by your LDAP server."
 msgstr "LDAP服务器使用端口数。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:507
-#: ../../AdminConsole/classes/Preferences_admin.class.php:517
+#: ../../AdminConsole/classes/Preferences_admin.class.php:509
+#: ../../AdminConsole/classes/Preferences_admin.class.php:519
 msgid "Use SSL (ldaps://)"
 msgstr "使用SSL（ldaps://）"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:510
+#: ../../AdminConsole/classes/Preferences_admin.class.php:512
 msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
 msgstr "过滤器, 例 (&(distinguishedname=mike*)(uid=42*)) "
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:512
+#: ../../AdminConsole/classes/Preferences_admin.class.php:514
 msgid "The address of your Active Directory server."
 msgstr "活动目录服务器地址。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:513
+#: ../../AdminConsole/classes/Preferences_admin.class.php:515
 msgid "Domain name used by Active Directory"
 msgstr "活动目录域名"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:518
+#: ../../AdminConsole/classes/Preferences_admin.class.php:520
 msgid ""
 "Authorize a user connection even if the password has expired, to have the "
 "Windows server perform the password renew process"
 msgstr "授权用户连接，即使密码已过期，有在Windows服务器进行密码更新过程"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:520
+#: ../../AdminConsole/classes/Preferences_admin.class.php:522
 msgid ""
 "If a token argument is sent to <i>startsession</i>, the system performs a "
 "user login by requesting the token validation URL.<br /><br />Enter the URL "
@@ -1094,262 +1108,262 @@ msgstr ""
 "I>，该系统通过请求令牌验证网址。<br/><br/>输入URL而不是用户名/密码，如果一个token参数发送到<i>启动会话</ "
 "I>。<br/><br/>特殊字符串的<b>％TOKEN％</b>需要设定，因为它将被标记的参数被替换时的URL请求。"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:521
+#: ../../AdminConsole/classes/Preferences_admin.class.php:523
 msgid "The id of the XML node that contains the user login"
 msgstr "包含用户登入的XML节点ID"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:522
+#: ../../AdminConsole/classes/Preferences_admin.class.php:524
 msgid ""
 "The name of the XML attribute that contains the user login (in the "
 "previously defined XML node)"
 msgstr "XML属性包含用户登录名（前面定义的XML节点中）的名称"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:523
+#: ../../AdminConsole/classes/Preferences_admin.class.php:525
 msgid ""
 "Token list: the first column is supposed to be the token. the second is the "
 "user login associated with this token"
 msgstr "标记列表：第一列应该是令牌。二是与此令牌相关联的用户登录"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:527
+#: ../../AdminConsole/classes/Preferences_admin.class.php:529
 #: ../../AdminConsole/web/applications_static.php:243
 msgid "None"
 msgstr "无"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:528
-#: ../../AdminConsole/classes/Preferences_admin.class.php:629
+#: ../../AdminConsole/classes/Preferences_admin.class.php:530
+#: ../../AdminConsole/classes/Preferences_admin.class.php:631
 msgid "no"
 msgstr "否"
 
 #. todo change to false instead of 0
-#: ../../AdminConsole/classes/Preferences_admin.class.php:529
+#: ../../AdminConsole/classes/Preferences_admin.class.php:531
 msgid "yes"
 msgstr "是"
 
 #. todo change to true instead of 1
-#: ../../AdminConsole/classes/Preferences_admin.class.php:531
+#: ../../AdminConsole/classes/Preferences_admin.class.php:533
 msgid "Autodetect"
 msgstr "自动检测"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:557
+#: ../../AdminConsole/classes/Preferences_admin.class.php:559
 msgid "debug"
 msgstr "调试"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:558
+#: ../../AdminConsole/classes/Preferences_admin.class.php:560
 msgid "info"
 msgstr "信息"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:559
+#: ../../AdminConsole/classes/Preferences_admin.class.php:561
 msgid "warning"
 msgstr "警告"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:560
+#: ../../AdminConsole/classes/Preferences_admin.class.php:562
 msgid "error"
 msgstr "错误"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:561
+#: ../../AdminConsole/classes/Preferences_admin.class.php:563
 msgid "critical"
 msgstr "关键"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:563
+#: ../../AdminConsole/classes/Preferences_admin.class.php:565
 msgid "30 seconds"
 msgstr "30 秒"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:564
+#: ../../AdminConsole/classes/Preferences_admin.class.php:566
 msgid "1 minute"
 msgstr "1 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:565
+#: ../../AdminConsole/classes/Preferences_admin.class.php:567
 msgid "2 minutes"
 msgstr "2 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:566
+#: ../../AdminConsole/classes/Preferences_admin.class.php:568
 msgid "5 minutes"
 msgstr "5 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:567
+#: ../../AdminConsole/classes/Preferences_admin.class.php:569
 msgid "10 minutes"
 msgstr "10 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:568
+#: ../../AdminConsole/classes/Preferences_admin.class.php:570
 msgid "15 minutes"
 msgstr "15 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:569
+#: ../../AdminConsole/classes/Preferences_admin.class.php:571
 msgid "30 minutes"
 msgstr "30 分钟"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:570
+#: ../../AdminConsole/classes/Preferences_admin.class.php:572
 #: ../../AdminConsole/web/usersgroup.php:32
 msgid "1 hour"
 msgstr "1 小时"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:571
+#: ../../AdminConsole/classes/Preferences_admin.class.php:573
 msgid "2 hours"
 msgstr "2 小时"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:572
+#: ../../AdminConsole/classes/Preferences_admin.class.php:574
 msgid "5 hours"
 msgstr "5 小时"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:573
+#: ../../AdminConsole/classes/Preferences_admin.class.php:575
 msgid "12 hours"
 msgstr "12 小时"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:574
+#: ../../AdminConsole/classes/Preferences_admin.class.php:576
 #: ../../AdminConsole/web/usersgroup.php:33
 msgid "1 day"
 msgstr "1 天"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:575
+#: ../../AdminConsole/classes/Preferences_admin.class.php:577
 msgid "2 days"
 msgstr "2 天"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:576
+#: ../../AdminConsole/classes/Preferences_admin.class.php:578
 #: ../../AdminConsole/web/usersgroup.php:34
 msgid "1 week"
 msgstr "1 周"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:577
+#: ../../AdminConsole/classes/Preferences_admin.class.php:579
 msgid "1 month"
 msgstr "1 月"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:578
-#: ../../AdminConsole/classes/Preferences_admin.class.php:579
+#: ../../AdminConsole/classes/Preferences_admin.class.php:580
+#: ../../AdminConsole/classes/Preferences_admin.class.php:581
 msgid "1 year"
-msgstr ""
+msgstr "1年"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:585
+#: ../../AdminConsole/classes/Preferences_admin.class.php:587
 msgid "use Admin Console"
-msgstr ""
+msgstr "使用管理控制台"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:586
+#: ../../AdminConsole/classes/Preferences_admin.class.php:588
 msgid "view Servers"
 msgstr "查看服务器"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:587
+#: ../../AdminConsole/classes/Preferences_admin.class.php:589
 msgid "manage Servers"
 msgstr "管理服务器"
 
 # 94%
-#: ../../AdminConsole/classes/Preferences_admin.class.php:588
+#: ../../AdminConsole/classes/Preferences_admin.class.php:590
 msgid "view Shared Folders"
 msgstr "查看共享文件夹"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:589
+#: ../../AdminConsole/classes/Preferences_admin.class.php:591
 msgid "manage Shared Folders"
 msgstr "管理共享文件夹"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:590
+#: ../../AdminConsole/classes/Preferences_admin.class.php:592
 msgid "view Users"
 msgstr "查看用户"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:591
+#: ../../AdminConsole/classes/Preferences_admin.class.php:593
 msgid "manage Users"
 msgstr "管理用户"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:592
-msgid "view User Groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:593
-msgid "manage User Groups"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:594
+msgid "view User Groups"
+msgstr "查看用户组"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:595
+msgid "manage User Groups"
+msgstr "管理用户组"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:596
 msgid "view Applications"
 msgstr "查看程序"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:595
+#: ../../AdminConsole/classes/Preferences_admin.class.php:597
 msgid "manage Applications"
 msgstr "管理程序"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:596
-msgid "view Application Groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:597
-msgid "manage Application Groups"
-msgstr ""
-
 #: ../../AdminConsole/classes/Preferences_admin.class.php:598
+msgid "view Application Groups"
+msgstr "查看应用程序组"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:599
+msgid "manage Application Groups"
+msgstr "管理应用程序组"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:600
 msgid "view Publications"
 msgstr "查看发布"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:599
+#: ../../AdminConsole/classes/Preferences_admin.class.php:601
 msgid "manage Publications"
 msgstr "管理发布"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:600
+#: ../../AdminConsole/classes/Preferences_admin.class.php:602
 msgid "view Configuration"
 msgstr "查看配置"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:601
+#: ../../AdminConsole/classes/Preferences_admin.class.php:603
 msgid "manage Configuration"
 msgstr "管理配置"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:602
+#: ../../AdminConsole/classes/Preferences_admin.class.php:604
 msgid "view Status"
 msgstr "查看状态"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:603
+#: ../../AdminConsole/classes/Preferences_admin.class.php:605
 msgid "manage Sessions"
-msgstr ""
+msgstr "会话管理"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:604
+#: ../../AdminConsole/classes/Preferences_admin.class.php:606
 msgid "manage Reporting"
 msgstr "管理报表"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:605
+#: ../../AdminConsole/classes/Preferences_admin.class.php:607
 msgid "view Summary"
 msgstr "查看摘要"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:606
+#: ../../AdminConsole/classes/Preferences_admin.class.php:608
 msgid "view News"
 msgstr "查看新闻"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:607
+#: ../../AdminConsole/classes/Preferences_admin.class.php:609
 msgid "manage News"
 msgstr "管理新闻"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:608
+#: ../../AdminConsole/classes/Preferences_admin.class.php:610
 msgid "manage Scripts"
 msgstr "管理脚本"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:609
+#: ../../AdminConsole/classes/Preferences_admin.class.php:611
 msgid "view Scripts"
 msgstr "查看脚本"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:610
+#: ../../AdminConsole/classes/Preferences_admin.class.php:612
 msgid "view Script Groups"
-msgstr ""
-
-#: ../../AdminConsole/classes/Preferences_admin.class.php:611
-msgid "manage Script Groups"
-msgstr ""
+msgstr "查看脚本组"
 
 #: ../../AdminConsole/classes/Preferences_admin.class.php:613
-#: ../../AdminConsole/classes/Preferences_admin.class.php:614
+msgid "manage Script Groups"
+msgstr "管理脚本组"
+
+#: ../../AdminConsole/classes/Preferences_admin.class.php:615
+#: ../../AdminConsole/classes/Preferences_admin.class.php:616
 msgid "MySQL"
 msgstr "MySQL"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:616
+#: ../../AdminConsole/classes/Preferences_admin.class.php:618
 msgid "Local"
 msgstr "本地"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:617
+#: ../../AdminConsole/classes/Preferences_admin.class.php:619
 msgid "SMTP server"
 msgstr "SMTP服务器"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:619
+#: ../../AdminConsole/classes/Preferences_admin.class.php:621
 #: ../../AdminConsole/web/sessions.php:101
 #: ../../AdminConsole/web/summary.php:198
 msgid "Desktop"
 msgstr "桌面"
 
 #. general div
-#: ../../AdminConsole/classes/Preferences_admin.class.php:620
+#: ../../AdminConsole/classes/Preferences_admin.class.php:622
 #: ../../AdminConsole/includes/page_template.php:59
-#: ../../AdminConsole/includes/page_template.php:133
+#: ../../AdminConsole/includes/page_template.php:139
 #: ../../AdminConsole/web/applications.php:59
 #: ../../AdminConsole/web/index.php:114
 #: ../../AdminConsole/web/sessions.php:103
@@ -1358,87 +1372,87 @@ msgstr "桌面"
 msgid "Applications"
 msgstr "应用程序"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:622
+#: ../../AdminConsole/classes/Preferences_admin.class.php:624
 msgid "Do nothing"
 msgstr "不动作"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:623
+#: ../../AdminConsole/classes/Preferences_admin.class.php:625
 #: ../../AdminConsole/web/servers.php:101
 #: ../../AdminConsole/web/servers.php:185
 #: ../../AdminConsole/web/servers.php:338
 msgid "Switch to maintenance"
 msgstr "切换到维护模式"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:625
+#: ../../AdminConsole/classes/Preferences_admin.class.php:627
 msgid "Any"
 msgstr "任意一个"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:626
+#: ../../AdminConsole/classes/Preferences_admin.class.php:628
 msgid "Linux"
 msgstr "Linux"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:627
+#: ../../AdminConsole/classes/Preferences_admin.class.php:629
 msgid "Windows"
 msgstr "Windows"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:630
+#: ../../AdminConsole/classes/Preferences_admin.class.php:632
 msgid "partial"
 msgstr "局部"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:631
+#: ../../AdminConsole/classes/Preferences_admin.class.php:633
 msgid "full"
 msgstr "全部"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:633
+#: ../../AdminConsole/classes/Preferences_admin.class.php:635
 msgid "session mode"
 msgstr "会话模式"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:634
+#: ../../AdminConsole/classes/Preferences_admin.class.php:636
 msgid "language"
 msgstr "语言"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:635
+#: ../../AdminConsole/classes/Preferences_admin.class.php:637
 msgid "server"
 msgstr "服务器"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:636
+#: ../../AdminConsole/classes/Preferences_admin.class.php:638
 msgid "timeout"
 msgstr "超时"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:637
+#: ../../AdminConsole/classes/Preferences_admin.class.php:639
 msgid "persistent"
 msgstr "强制"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:639
+#: ../../AdminConsole/classes/Preferences_admin.class.php:641
 msgid "Auto authentication"
 msgstr "自动授权"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:640
+#: ../../AdminConsole/classes/Preferences_admin.class.php:642
 msgid "CAS authentication"
 msgstr "CAS 验证"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:641
+#: ../../AdminConsole/classes/Preferences_admin.class.php:643
 msgid "RemoteUser authentication"
 msgstr "远程用户验证"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:642
+#: ../../AdminConsole/classes/Preferences_admin.class.php:644
 msgid "Token authentication"
 msgstr "令牌验证"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:643
+#: ../../AdminConsole/classes/Preferences_admin.class.php:645
 msgid "Login/Password authentication"
 msgstr "登入/密码验证"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:645
+#: ../../AdminConsole/classes/Preferences_admin.class.php:647
 msgid "Use given login"
 msgstr "使用已给帐号"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:646
-#: ../../AdminConsole/classes/Preferences_admin.class.php:649
+#: ../../AdminConsole/classes/Preferences_admin.class.php:648
+#: ../../AdminConsole/classes/Preferences_admin.class.php:651
 msgid "Auto-generate"
 msgstr "自动产生"
 
-#: ../../AdminConsole/classes/Preferences_admin.class.php:648
+#: ../../AdminConsole/classes/Preferences_admin.class.php:650
 msgid "Use given password"
 msgstr "用给定的密码"
 
@@ -1463,7 +1477,7 @@ msgid "Broken"
 msgstr "已损坏"
 
 #: ../../AdminConsole/classes/Session.class.php:71
-#: ../../AdminConsole/includes/template_server.inc.php:422
+#: ../../AdminConsole/includes/template_server.inc.php:423
 #: ../../AdminConsole/web/applications.php:393
 #: ../../AdminConsole/web/configuration-profile.php:176
 #: ../../AdminConsole/web/error.php:35 ../../AdminConsole/web/error.php:37
@@ -1545,8 +1559,8 @@ msgstr "在区域内搜索："
 #. if ($is_rw)
 #. echo '<th class="unsortable"></th>';
 #: ../../AdminConsole/classes/UsersGroupsList.class.php:106
-#: ../../AdminConsole/includes/template_server.inc.php:624
-#: ../../AdminConsole/includes/template_server.inc.php:714
+#: ../../AdminConsole/includes/template_server.inc.php:627
+#: ../../AdminConsole/includes/template_server.inc.php:717
 #: ../../AdminConsole/web/applications.php:71
 #: ../../AdminConsole/web/applications_static.php:76
 #: ../../AdminConsole/web/applications_static.php:417
@@ -1557,12 +1571,15 @@ msgstr "在区域内搜索："
 #: ../../AdminConsole/web/appsgroup.php:120
 #: ../../AdminConsole/web/mimetypes.php:56
 #: ../../AdminConsole/web/mimetypes.php:102
-#: ../../AdminConsole/web/script.php:60 ../../AdminConsole/web/servers.php:81
+#: ../../AdminConsole/web/script.php:60
+#: ../../AdminConsole/web/serversgroup.php:55
+#: ../../AdminConsole/web/serversgroup.php:126
+#: ../../AdminConsole/web/servers.php:81
 #: ../../AdminConsole/web/sharedfolders.php:146
 #: ../../AdminConsole/web/summary.php:86
 #: ../../AdminConsole/web/usersgroup.php:94
 #: ../../AdminConsole/web/usersgroup.php:204
-#: ../../AdminConsole/web/usersgroup.php:881
+#: ../../AdminConsole/web/usersgroup.php:936
 #: ../../AdminConsole/web/users.php:440 ../../AdminConsole/web/wizard.php:279
 #: ../../AdminConsole/web/wizard.php:428
 msgid "Name"
@@ -1582,9 +1599,12 @@ msgstr "名称"
 #: ../../AdminConsole/web/appsgroup.php:59
 #: ../../AdminConsole/web/appsgroup.php:125
 #: ../../AdminConsole/web/appsgroup.php:217
+#: ../../AdminConsole/web/serversgroup.php:56
+#: ../../AdminConsole/web/serversgroup.php:131
+#: ../../AdminConsole/web/serversgroup.php:213
 #: ../../AdminConsole/web/usersgroup.php:95
 #: ../../AdminConsole/web/usersgroup.php:209
-#: ../../AdminConsole/web/usersgroup.php:438
+#: ../../AdminConsole/web/usersgroup.php:445
 #: ../../AdminConsole/web/wizard.php:284 ../../AdminConsole/web/wizard.php:433
 msgid "Description"
 msgstr "描述"
@@ -1620,7 +1640,7 @@ msgid "Login"
 msgstr "登入"
 
 #: ../../AdminConsole/classes/UsersList.class.php:111
-#: ../../AdminConsole/web/servers.php:424 ../../AdminConsole/web/users.php:73
+#: ../../AdminConsole/web/servers.php:441 ../../AdminConsole/web/users.php:73
 #: ../../AdminConsole/web/users.php:132 ../../AdminConsole/web/users.php:339
 msgid "Display name"
 msgstr "显示名称"
@@ -1664,34 +1684,37 @@ msgstr "服务器"
 
 #. reset
 #: ../../AdminConsole/includes/page_template.php:65
-#: ../../AdminConsole/includes/page_template.php:324
+#: ../../AdminConsole/includes/page_template.php:330
 #: ../../AdminConsole/web/applications_webapp.php:307
 #: ../../AdminConsole/web/applications_webapp.php:407
 #: ../../AdminConsole/web/checkup.php:120
 #: ../../AdminConsole/web/configuration-partial.php:54
 #: ../../AdminConsole/web/configuration.php:66
-#: ../../AdminConsole/web/index.php:87 ../../AdminConsole/web/servers.php:420
+#: ../../AdminConsole/web/index.php:87 ../../AdminConsole/web/servers.php:437
 #: ../../AdminConsole/web/sharedfolders.php:141
 msgid "Configuration"
 msgstr "配置"
 
 #: ../../AdminConsole/includes/page_template.php:71
-#: ../../AdminConsole/includes/template_server.inc.php:414
-#: ../../AdminConsole/includes/template_server.inc.php:544
-#: ../../AdminConsole/includes/template_server.inc.php:626
+#: ../../AdminConsole/includes/template_server.inc.php:415
+#: ../../AdminConsole/includes/template_server.inc.php:547
+#: ../../AdminConsole/includes/template_server.inc.php:629
 #: ../../AdminConsole/web/applications.php:385
 #: ../../AdminConsole/web/appsgroup.php:60
 #: ../../AdminConsole/web/appsgroup.php:218
 #: ../../AdminConsole/web/certificate.php:53
 #: ../../AdminConsole/web/certificate.php:157
-#: ../../AdminConsole/web/index.php:160 ../../AdminConsole/web/servers.php:84
-#: ../../AdminConsole/web/servers.php:379
+#: ../../AdminConsole/web/index.php:160
+#: ../../AdminConsole/web/serversgroup.php:57
+#: ../../AdminConsole/web/serversgroup.php:214
+#: ../../AdminConsole/web/servers.php:84
+#: ../../AdminConsole/web/servers.php:396
 #: ../../AdminConsole/web/sessions.php:221
 #: ../../AdminConsole/web/sessions.php:313
 #: ../../AdminConsole/web/sumup.php:213 ../../AdminConsole/web/tasks.php:77
 #: ../../AdminConsole/web/tasks.php:162
 #: ../../AdminConsole/web/usersgroup.php:96
-#: ../../AdminConsole/web/usersgroup.php:439
+#: ../../AdminConsole/web/usersgroup.php:446
 msgid "Status"
 msgstr "状态"
 
@@ -1700,36 +1723,41 @@ msgstr "状态"
 msgid "Unregistered Servers"
 msgstr "未注册服务器"
 
+#: ../../AdminConsole/includes/page_template.php:90
+#: ../../AdminConsole/web/serversgroup.php:43
+msgid "Server Groups"
+msgstr ""
+
 # 92%
 # 100%
-#: ../../AdminConsole/includes/page_template.php:93
+#: ../../AdminConsole/includes/page_template.php:99
 #: ../../AdminConsole/web/sharedfolders.php:47
-#: ../../AdminConsole/web/usersgroup.php:827
+#: ../../AdminConsole/web/usersgroup.php:882
 msgid "Shared Folders"
 msgstr "共享文件夹"
 
-#: ../../AdminConsole/includes/page_template.php:101
+#: ../../AdminConsole/includes/page_template.php:107
 msgid "Login Scripts"
 msgstr "登入脚本"
 
-#: ../../AdminConsole/includes/page_template.php:110
+#: ../../AdminConsole/includes/page_template.php:116
 #: ../../AdminConsole/web/profiles.php:51
 msgid "Profiles"
 msgstr "配置"
 
 #. general div
-#: ../../AdminConsole/includes/page_template.php:138
+#: ../../AdminConsole/includes/page_template.php:144
 #: ../../AdminConsole/web/applications_webapp.php:59
 #: ../../AdminConsole/web/index.php:115
 msgid "Web Applications"
 msgstr "Web应用程序"
 
-#: ../../AdminConsole/includes/page_template.php:146
+#: ../../AdminConsole/includes/page_template.php:152
 #: ../../AdminConsole/web/index.php:118
 msgid "Application Groups"
 msgstr "应用程序组"
 
-#: ../../AdminConsole/includes/page_template.php:153
+#: ../../AdminConsole/includes/page_template.php:159
 #: ../../AdminConsole/web/applications.php:451
 #: ../../AdminConsole/web/applications_static.php:533
 #: ../../AdminConsole/web/mimetypes.php:47
@@ -1737,255 +1765,256 @@ msgid "Mime-Types"
 msgstr "MIME类型"
 
 #. general div
-#: ../../AdminConsole/includes/page_template.php:158
+#: ../../AdminConsole/includes/page_template.php:164
 #: ../../AdminConsole/web/applications_static.php:63
 msgid "Static Applications"
 msgstr "静态程序"
 
-#: ../../AdminConsole/includes/page_template.php:166
+#: ../../AdminConsole/includes/page_template.php:172
 #: ../../AdminConsole/web/index.php:120
-#: ../../AdminConsole/web/publications.php:104
+#: ../../AdminConsole/web/publications.php:135
 #: ../../AdminConsole/web/sharedfolders.php:167
 msgid "Publications"
 msgstr "发布"
 
-#: ../../AdminConsole/includes/page_template.php:173
+#: ../../AdminConsole/includes/page_template.php:179
 #: ../../AdminConsole/web/index.php:121 ../../AdminConsole/web/wizard.php:184
 #: ../../AdminConsole/web/wizard.php:271 ../../AdminConsole/web/wizard.php:330
 #: ../../AdminConsole/web/wizard.php:420 ../../AdminConsole/web/wizard.php:463
 msgid "Publication Wizard"
 msgstr "发布向导"
 
-#: ../../AdminConsole/includes/page_template.php:180
-#: ../../AdminConsole/includes/page_template.php:289
+#: ../../AdminConsole/includes/page_template.php:186
+#: ../../AdminConsole/includes/page_template.php:295
 msgid "Summary"
 msgstr "摘要"
 
-#: ../../AdminConsole/includes/page_template.php:186
+#: ../../AdminConsole/includes/page_template.php:192
 msgid "Database Settings"
 msgstr "数据库设置"
 
-#: ../../AdminConsole/includes/page_template.php:192
+#: ../../AdminConsole/includes/page_template.php:198
 msgid "System Settings"
 msgstr "系统设置"
 
-#: ../../AdminConsole/includes/page_template.php:198
+#: ../../AdminConsole/includes/page_template.php:204
 msgid "Server Settings"
 msgstr "服务器设置"
 
-#: ../../AdminConsole/includes/page_template.php:204
+#: ../../AdminConsole/includes/page_template.php:210
 msgid "Domain Integration Settings"
 msgstr "域名集合设置"
 
-#: ../../AdminConsole/includes/page_template.php:210
+#: ../../AdminConsole/includes/page_template.php:216
 msgid "Authentication Settings"
 msgstr "验证设置"
 
-#: ../../AdminConsole/includes/page_template.php:216
+#: ../../AdminConsole/includes/page_template.php:222
 msgid "Session Settings"
 msgstr "会话设置"
 
-#: ../../AdminConsole/includes/page_template.php:222
+#: ../../AdminConsole/includes/page_template.php:228
 msgid "Event Settings"
 msgstr "事件设置"
 
-#: ../../AdminConsole/includes/page_template.php:234
+#: ../../AdminConsole/includes/page_template.php:240
 #: ../../AdminConsole/web/password.php:37
 msgid "Change Administrator Password"
 msgstr "修改管理员密码"
 
-#: ../../AdminConsole/includes/page_template.php:241
+#: ../../AdminConsole/includes/page_template.php:247
 #: ../../AdminConsole/web/certificate.php:47
 #: ../../AdminConsole/web/configuration-sumup.php:146
 msgid "Subscription Keys"
-msgstr ""
+msgstr "订阅的钥匙"
 
-#: ../../AdminConsole/includes/page_template.php:250
+#: ../../AdminConsole/includes/page_template.php:256
 msgid "Sessions"
 msgstr "会话"
 
-#: ../../AdminConsole/includes/page_template.php:256
+#: ../../AdminConsole/includes/page_template.php:262
 #: ../../AdminConsole/web/configuration-sumup.php:81
 #: ../../AdminConsole/web/logs.php:57 ../../AdminConsole/web/logs.php:132
 #: ../../AdminConsole/web/logs.php:136
 msgid "Logs"
 msgstr "日志"
 
-#: ../../AdminConsole/includes/page_template.php:262
+#: ../../AdminConsole/includes/page_template.php:268
 #: ../../AdminConsole/web/reporting.php:357
 #: ../../AdminConsole/web/reporting.php:529
 msgid "Reporting"
 msgstr "报告"
 
-#: ../../AdminConsole/includes/page_template.php:268
+#: ../../AdminConsole/includes/page_template.php:274
 #: ../../AdminConsole/web/session-reporting.php:114
 msgid "Session Reporting"
 msgstr "会话报表"
 
-#: ../../AdminConsole/includes/page_template.php:274
+#: ../../AdminConsole/includes/page_template.php:280
 #: ../../AdminConsole/web/action-reporting.php:44
 msgid "Administration Actions Log"
 msgstr "管理行为日志"
 
-#: ../../AdminConsole/includes/page_template.php:282
+#: ../../AdminConsole/includes/page_template.php:288
 #: ../../AdminConsole/web/news.php:59
 msgid "News"
 msgstr "新闻"
 
-#: ../../AdminConsole/includes/page_template.php:318
+#: ../../AdminConsole/includes/page_template.php:324
 msgid "Debug Tools"
 msgstr "调试工具"
 
-#: ../../AdminConsole/includes/page_template.php:330
+#: ../../AdminConsole/includes/page_template.php:336
 #: ../../AdminConsole/web/checkup.php:50
 msgid "Checkup"
 msgstr "审查"
 
-#: ../../AdminConsole/includes/page_template.php:336
+#: ../../AdminConsole/includes/page_template.php:342
 #: ../../AdminConsole/web/tasks.php:149
 msgid "Tasks"
 msgstr "任务"
 
-#: ../../AdminConsole/includes/page_template.php:343
+#: ../../AdminConsole/includes/page_template.php:349
 msgid "Logout"
 msgstr "登出"
 
-#: ../../AdminConsole/includes/page_template.php:350
+#: ../../AdminConsole/includes/page_template.php:356
 #: ../../AdminConsole/includes/page_template_static.php:35
 #: ../../AdminConsole/includes/page_template_static.php:74
 #: ../../AdminConsole/web/login.php:94
 msgid "Administration"
 msgstr "管理"
 
-#: ../../AdminConsole/includes/page_template.php:372
+#: ../../AdminConsole/includes/page_template.php:378
 #, php-format
 msgid "Your %sPremium Edition Subscription Key%s will expire in %d days"
-msgstr ""
+msgstr "您的%s高级版钥匙%s将在 %d 天后过期"
 
-#: ../../AdminConsole/includes/page_template.php:374
+#: ../../AdminConsole/includes/page_template.php:380
 #, php-format
 msgid "Your %sPremium Edition Subscription Key%s has expired."
-msgstr ""
+msgstr "您的%s高级版钥匙%s已过期"
 
-#: ../../AdminConsole/includes/page_template.php:377
+#: ../../AdminConsole/includes/page_template.php:383
 #, php-format
 msgid "You don't have any valid %sPremium Edition Subscription Keys%s."
-msgstr ""
+msgstr "你没有任何有效的%s高级版钥匙%s"
 
-#: ../../AdminConsole/includes/page_template.php:507
+#: ../../AdminConsole/includes/page_template.php:513
 #: ../../AdminConsole/includes/page_template_static.php:95
 msgid "powered by"
 msgstr "由提供动力"
 
-#: ../../AdminConsole/includes/template_server.inc.php:111
+#: ../../AdminConsole/includes/template_server.inc.php:112
 #: ../../AdminConsole/web/servers.php:57
 #, php-format
 msgid "Server \"%s\": redirection name may be invalid!"
 msgstr "服务器\"%s\":重定向名可能无效！"
 
-#: ../../AdminConsole/includes/template_server.inc.php:224
+#: ../../AdminConsole/includes/template_server.inc.php:225
 msgid "Number of available sessions on this server"
 msgstr "此服务器上可用会话数"
 
-#: ../../AdminConsole/includes/template_server.inc.php:236
+#: ../../AdminConsole/includes/template_server.inc.php:237
 msgid "default"
 msgstr "默认"
 
-#: ../../AdminConsole/includes/template_server.inc.php:237
-#: ../../AdminConsole/web/servers.php:434
-#: ../../AdminConsole/web/servers.php:462
+#: ../../AdminConsole/includes/template_server.inc.php:238
+#: ../../AdminConsole/web/servers.php:451
 #: ../../AdminConsole/web/servers.php:479
-#: ../../AdminConsole/web/servers.php:506
+#: ../../AdminConsole/web/servers.php:496
+#: ../../AdminConsole/web/servers.php:523
 msgid "change"
 msgstr "修改"
 
-#: ../../AdminConsole/includes/template_server.inc.php:246
+#: ../../AdminConsole/includes/template_server.inc.php:247
 msgid "Install an application"
 msgstr "安装程序"
 
-#: ../../AdminConsole/includes/template_server.inc.php:252
+#: ../../AdminConsole/includes/template_server.inc.php:253
 msgid "Install from a package name"
 msgstr "从包名称安装"
 
-#: ../../AdminConsole/includes/template_server.inc.php:257
+#: ../../AdminConsole/includes/template_server.inc.php:258
 msgid "more options"
 msgstr "更多选项"
 
-#: ../../AdminConsole/includes/template_server.inc.php:269
+#: ../../AdminConsole/includes/template_server.inc.php:270
 msgid "Category"
 msgstr "类别"
 
-#: ../../AdminConsole/includes/template_server.inc.php:274
+#: ../../AdminConsole/includes/template_server.inc.php:275
 msgid "Application"
 msgstr "程序"
 
-#: ../../AdminConsole/includes/template_server.inc.php:276
+#: ../../AdminConsole/includes/template_server.inc.php:277
 #: ../../AdminConsole/web/tasks.php:228
 msgid "Install"
 msgstr "安装"
 
-#: ../../AdminConsole/includes/template_server.inc.php:285
+#: ../../AdminConsole/includes/template_server.inc.php:286
 #: ../../AdminConsole/web/tasks.php:242
 msgid "Upgrade"
 msgstr "升级"
 
-#: ../../AdminConsole/includes/template_server.inc.php:290
+#: ../../AdminConsole/includes/template_server.inc.php:291
 #: ../../AdminConsole/web/tasks.php:231
 msgid "Upgrade the internal system and applications"
 msgstr "升级内部系统和程序"
 
-#: ../../AdminConsole/includes/template_server.inc.php:299
+#: ../../AdminConsole/includes/template_server.inc.php:300
 msgid "Applications available on this server"
 msgstr "此服务器可用程序"
 
-#: ../../AdminConsole/includes/template_server.inc.php:318
+#: ../../AdminConsole/includes/template_server.inc.php:319
 #: ../../AdminConsole/web/applications.php:327
 #: ../../AdminConsole/web/applications_static.php:464
 msgid "Are you sure you want to remove this application from this server?"
 msgstr "确认从服务器上移除此程序?"
 
-#: ../../AdminConsole/includes/template_server.inc.php:323
+#: ../../AdminConsole/includes/template_server.inc.php:324
 #: ../../AdminConsole/web/applications.php:332
 #: ../../AdminConsole/web/applications_static.php:469
 msgid "Remove from this server"
 msgstr "从服务器移除"
 
-#: ../../AdminConsole/includes/template_server.inc.php:341
+#: ../../AdminConsole/includes/template_server.inc.php:342
 msgid "install in progress"
 msgstr "安装中..."
 
-#: ../../AdminConsole/includes/template_server.inc.php:359
+#: ../../AdminConsole/includes/template_server.inc.php:360
 #: ../../AdminConsole/web/applications.php:370
 msgid "Install on this server"
 msgstr "安装到服务器"
 
-#: ../../AdminConsole/includes/template_server.inc.php:377
+#: ../../AdminConsole/includes/template_server.inc.php:378
 #: ../../AdminConsole/web/applications_static.php:486
+#: ../../AdminConsole/web/serversgroup.php:303
 msgid "Add to this server"
 msgstr "添加到此组"
 
 #. div replication
-#: ../../AdminConsole/includes/template_server.inc.php:388
+#: ../../AdminConsole/includes/template_server.inc.php:389
 msgid "Replication"
 msgstr "重复"
 
-#: ../../AdminConsole/includes/template_server.inc.php:400
+#: ../../AdminConsole/includes/template_server.inc.php:401
 msgid "Replicate on those servers"
 msgstr "在这些服务器上重复"
 
 #. div tasks
-#: ../../AdminConsole/includes/template_server.inc.php:409
+#: ../../AdminConsole/includes/template_server.inc.php:410
 msgid "Active tasks on this server"
 msgstr "在此服务器上激活任务"
 
-#: ../../AdminConsole/includes/template_server.inc.php:412
+#: ../../AdminConsole/includes/template_server.inc.php:413
 #: ../../AdminConsole/web/applications.php:383
 #: ../../AdminConsole/web/tasks.php:158
 msgid "ID"
 msgstr "ID"
 
 #. echo '<th>'._('Package').'</th>';
-#: ../../AdminConsole/includes/template_server.inc.php:413
+#: ../../AdminConsole/includes/template_server.inc.php:414
 #: ../../AdminConsole/web/applications.php:73
 #: ../../AdminConsole/web/applications.php:254
 #: ../../AdminConsole/web/applications.php:384
@@ -1996,55 +2025,55 @@ msgstr "ID"
 #: ../../AdminConsole/web/certificate.php:53
 #: ../../AdminConsole/web/script.php:60 ../../AdminConsole/web/servers.php:81
 #: ../../AdminConsole/web/servers.php:225
-#: ../../AdminConsole/web/servers.php:379 ../../AdminConsole/web/sumup.php:210
+#: ../../AdminConsole/web/servers.php:396 ../../AdminConsole/web/sumup.php:210
 #: ../../AdminConsole/web/tasks.php:75 ../../AdminConsole/web/tasks.php:160
 #: ../../AdminConsole/web/usersgroup.php:97
 msgid "Type"
 msgstr "类型"
 
-#: ../../AdminConsole/includes/template_server.inc.php:415
+#: ../../AdminConsole/includes/template_server.inc.php:416
 #: ../../AdminConsole/web/applications.php:386
 #: ../../AdminConsole/web/servers.php:84
-#: ../../AdminConsole/web/servers.php:380 ../../AdminConsole/web/tasks.php:78
+#: ../../AdminConsole/web/servers.php:397 ../../AdminConsole/web/tasks.php:78
 #: ../../AdminConsole/web/tasks.php:163
 msgid "Details"
 msgstr "细节"
 
 #. div 1 has_sessions
-#: ../../AdminConsole/includes/template_server.inc.php:440
+#: ../../AdminConsole/includes/template_server.inc.php:441
 #, php-format
 msgid "Active sessions (total: %s)"
 msgstr "活动会话 (总计: %s个)"
 
-#: ../../AdminConsole/includes/template_server.inc.php:450
+#: ../../AdminConsole/includes/template_server.inc.php:451
 #: ../../AdminConsole/web/sessions.php:110
 #: ../../AdminConsole/web/users.php:519
 msgid "Not started yet"
 msgstr "未开始"
 
-#: ../../AdminConsole/includes/template_server.inc.php:457
+#: ../../AdminConsole/includes/template_server.inc.php:458
 #: ../../AdminConsole/web/users.php:528
 msgid "Information about this session"
 msgstr "会话信息"
 
-#: ../../AdminConsole/includes/template_server.inc.php:536
+#: ../../AdminConsole/includes/template_server.inc.php:539
 msgid "User profiles on the server"
 msgstr "服务器上的用户配置"
 
-#: ../../AdminConsole/includes/template_server.inc.php:543
+#: ../../AdminConsole/includes/template_server.inc.php:546
 msgid "Owner"
 msgstr "拥有者"
 
-#: ../../AdminConsole/includes/template_server.inc.php:576
+#: ../../AdminConsole/includes/template_server.inc.php:579
 msgid "Are you sure you want to delete this user profile?"
 msgstr "确认删除此用户配置？"
 
-#: ../../AdminConsole/includes/template_server.inc.php:580
-#: ../../AdminConsole/includes/template_server.inc.php:602
-#: ../../AdminConsole/includes/template_server.inc.php:670
-#: ../../AdminConsole/includes/template_server.inc.php:692
-#: ../../AdminConsole/includes/template_server.inc.php:737
-#: ../../AdminConsole/includes/template_server.inc.php:758
+#: ../../AdminConsole/includes/template_server.inc.php:583
+#: ../../AdminConsole/includes/template_server.inc.php:605
+#: ../../AdminConsole/includes/template_server.inc.php:673
+#: ../../AdminConsole/includes/template_server.inc.php:695
+#: ../../AdminConsole/includes/template_server.inc.php:740
+#: ../../AdminConsole/includes/template_server.inc.php:761
 #: ../../AdminConsole/web/applications_static.php:111
 #: ../../AdminConsole/web/applications_static.php:131
 #: ../../AdminConsole/web/applications_static.php:364
@@ -2053,10 +2082,13 @@ msgstr "确认删除此用户配置？"
 #: ../../AdminConsole/web/applications_webapp.php:237
 #: ../../AdminConsole/web/appsgroup.php:82
 #: ../../AdminConsole/web/appsgroup.php:100
-#: ../../AdminConsole/web/publications.php:134
+#: ../../AdminConsole/web/publications.php:165
+#: ../../AdminConsole/web/publications.php:247
+#: ../../AdminConsole/web/serversgroup.php:88
+#: ../../AdminConsole/web/serversgroup.php:107
 #: ../../AdminConsole/web/servers.php:269
 #: ../../AdminConsole/web/servers.php:298
-#: ../../AdminConsole/web/servers.php:583
+#: ../../AdminConsole/web/servers.php:600
 #: ../../AdminConsole/web/session-reporting.php:281
 #: ../../AdminConsole/web/session-reporting.php:302
 #: ../../AdminConsole/web/session-reporting.php:456
@@ -2067,13 +2099,14 @@ msgstr "确认删除此用户配置？"
 msgid "Delete"
 msgstr "删除"
 
-#: ../../AdminConsole/includes/template_server.inc.php:595
-#: ../../AdminConsole/includes/template_server.inc.php:685
-#: ../../AdminConsole/includes/template_server.inc.php:751
+#: ../../AdminConsole/includes/template_server.inc.php:598
+#: ../../AdminConsole/includes/template_server.inc.php:688
+#: ../../AdminConsole/includes/template_server.inc.php:754
 #: ../../AdminConsole/web/applications_static.php:124
 #: ../../AdminConsole/web/applications_webapp.php:120
 #: ../../AdminConsole/web/appsgroup.php:95
 #: ../../AdminConsole/web/profiles.php:109
+#: ../../AdminConsole/web/serversgroup.php:102
 #: ../../AdminConsole/web/servers.php:173
 #: ../../AdminConsole/web/servers.php:284
 #: ../../AdminConsole/web/session-reporting.php:295
@@ -2085,13 +2118,14 @@ msgstr "删除"
 msgid "Mark all"
 msgstr "全选"
 
-#: ../../AdminConsole/includes/template_server.inc.php:596
-#: ../../AdminConsole/includes/template_server.inc.php:686
-#: ../../AdminConsole/includes/template_server.inc.php:752
+#: ../../AdminConsole/includes/template_server.inc.php:599
+#: ../../AdminConsole/includes/template_server.inc.php:689
+#: ../../AdminConsole/includes/template_server.inc.php:755
 #: ../../AdminConsole/web/applications_static.php:125
 #: ../../AdminConsole/web/applications_webapp.php:121
 #: ../../AdminConsole/web/appsgroup.php:95
 #: ../../AdminConsole/web/profiles.php:110
+#: ../../AdminConsole/web/serversgroup.php:102
 #: ../../AdminConsole/web/servers.php:174
 #: ../../AdminConsole/web/servers.php:285
 #: ../../AdminConsole/web/session-reporting.php:296
@@ -2103,48 +2137,48 @@ msgstr "全选"
 msgid "Unmark all"
 msgstr "全不选"
 
-#: ../../AdminConsole/includes/template_server.inc.php:599
+#: ../../AdminConsole/includes/template_server.inc.php:602
 msgid "Are you sure you want to delete these user profiles?"
 msgstr "确认删除这些用户配置？"
 
-#: ../../AdminConsole/includes/template_server.inc.php:617
+#: ../../AdminConsole/includes/template_server.inc.php:620
 msgid "Shared Folders on the server"
 msgstr "在服务器上的共享文件夹"
 
-#: ../../AdminConsole/includes/template_server.inc.php:625
+#: ../../AdminConsole/includes/template_server.inc.php:628
 #: ../../AdminConsole/web/profiles.php:165
 msgid "Used by"
 msgstr "通过使用"
 
-#: ../../AdminConsole/includes/template_server.inc.php:666
+#: ../../AdminConsole/includes/template_server.inc.php:669
 msgid "Are you sure you want to delete this network folder?"
 msgstr "确认删除此网络文件夹？"
 
-#: ../../AdminConsole/includes/template_server.inc.php:689
+#: ../../AdminConsole/includes/template_server.inc.php:692
 msgid "Are you sure you want to delete these network folders?"
 msgstr "确认删除这些网络文件夹？"
 
-#: ../../AdminConsole/includes/template_server.inc.php:707
+#: ../../AdminConsole/includes/template_server.inc.php:710
 msgid "Orphan network folders on the server"
 msgstr "在服务器上孤立的网络文件夹"
 
 # 88%
-#: ../../AdminConsole/includes/template_server.inc.php:733
+#: ../../AdminConsole/includes/template_server.inc.php:736
 msgid "Are you sure you want to delete this orphan folder?"
 msgstr "确认删除此孤立文件夹?"
 
 # 87%
-#: ../../AdminConsole/includes/template_server.inc.php:755
+#: ../../AdminConsole/includes/template_server.inc.php:758
 msgid "Are you sure you want to delete these orphan folders?"
 msgstr "确认删除这些孤立文件夹？"
 
-#: ../../AdminConsole/includes/template_server.inc.php:770
-#: ../../AdminConsole/web/usersgroup.php:884
+#: ../../AdminConsole/includes/template_server.inc.php:773
+#: ../../AdminConsole/web/usersgroup.php:939
 #: ../../AdminConsole/web/users.php:443
 msgid "Action"
 msgstr "动作"
 
-#: ../../AdminConsole/includes/template_server.inc.php:777
+#: ../../AdminConsole/includes/template_server.inc.php:780
 #: ../../AdminConsole/web/sharedfolders.php:71
 msgid "Create this shared folder"
 msgstr "创建此共享文件夹"
@@ -2238,9 +2272,9 @@ msgstr "成功添加应用程序'%s' "
 #: ../../AdminConsole/web/actions.php:423
 #: ../../AdminConsole/web/actions.php:678
 #: ../../AdminConsole/web/actions.php:930
-#: ../../AdminConsole/web/actions.php:1584
+#: ../../AdminConsole/web/actions.php:1706
 msgid "File too large to be used for server rules"
-msgstr ""
+msgstr "文件太大，无法用于服务器规则"
 
 #. UPLOAD_ERR_PARTIAL
 #: ../../AdminConsole/web/actions.php:211
@@ -2248,16 +2282,16 @@ msgstr ""
 #: ../../AdminConsole/web/actions.php:427
 #: ../../AdminConsole/web/actions.php:682
 #: ../../AdminConsole/web/actions.php:933
-#: ../../AdminConsole/web/actions.php:1588
+#: ../../AdminConsole/web/actions.php:1710
 msgid "The file was corrupted during the upload"
-msgstr ""
+msgstr "在上传过程中文件损坏"
 
 #: ../../AdminConsole/web/actions.php:223
 #: ../../AdminConsole/web/actions.php:375
 #: ../../AdminConsole/web/actions.php:443
 #: ../../AdminConsole/web/actions.php:694
 #: ../../AdminConsole/web/actions.php:945
-#: ../../AdminConsole/web/actions.php:1600
+#: ../../AdminConsole/web/actions.php:1722
 msgid "The file is not readable"
 msgstr "此文件不可读"
 
@@ -2275,15 +2309,15 @@ msgid "Icon for application '%s' has been successfully uploaded"
 msgstr "程序'%s'图标成功上传"
 
 #: ../../AdminConsole/web/actions.php:242
-#: ../../AdminConsole/web/actions.php:1727
-#: ../../AdminConsole/web/actions.php:1744
-#: ../../AdminConsole/web/actions.php:1771
-#: ../../AdminConsole/web/actions.php:1785
-#: ../../AdminConsole/web/actions.php:1807
-#: ../../AdminConsole/web/actions.php:1841
-#: ../../AdminConsole/web/actions.php:1869
-#: ../../AdminConsole/web/actions.php:1922
-#: ../../AdminConsole/web/actions.php:1953
+#: ../../AdminConsole/web/actions.php:1849
+#: ../../AdminConsole/web/actions.php:1866
+#: ../../AdminConsole/web/actions.php:1893
+#: ../../AdminConsole/web/actions.php:1907
+#: ../../AdminConsole/web/actions.php:1929
+#: ../../AdminConsole/web/actions.php:1963
+#: ../../AdminConsole/web/actions.php:1991
+#: ../../AdminConsole/web/actions.php:2044
+#: ../../AdminConsole/web/actions.php:2075
 #, php-format
 msgid "Unknown server '%s'"
 msgstr "未知服务器 '%s'"
@@ -2327,11 +2361,11 @@ msgstr "编辑程序'%s'失败"
 
 #: ../../AdminConsole/web/actions.php:413
 msgid "The Web Application name was not specified"
-msgstr ""
+msgstr "Web应用程序名称未指定"
 
 #: ../../AdminConsole/web/actions.php:437
 msgid "No configuration file was specified"
-msgstr ""
+msgstr "未指定配置文件"
 
 #: ../../AdminConsole/web/actions.php:450
 #: ../../AdminConsole/web/actions.php:710
@@ -2342,7 +2376,7 @@ msgstr "不正确的配置文件格式"
 msgid ""
 "Configuration file has more than one main level key. The first main level "
 "key will be used"
-msgstr ""
+msgstr "配置文件中有多个主级重点。第一主级重点将用于"
 
 #: ../../AdminConsole/web/actions.php:459
 msgid "No URL prefix"
@@ -2414,7 +2448,7 @@ msgstr "获取应用程序配置 '%s'失败"
 
 # 77%
 #: ../../AdminConsole/web/actions.php:819
-#: ../../AdminConsole/web/actions.php:1632
+#: ../../AdminConsole/web/actions.php:1754
 #, php-format
 #, php-format, php-format
 msgid "Unable to import group \"%s\""
@@ -2423,6 +2457,7 @@ msgstr "导入组'%s'失败"
 #: ../../AdminConsole/web/actions.php:826
 #: ../../AdminConsole/web/actions.php:833
 #: ../../AdminConsole/web/actions.php:908
+#: ../../AdminConsole/web/actions.php:1603
 #, php-format
 msgid "Application Group '%s' successfully modified"
 msgstr "应用程序组 '%s'编辑成功"
@@ -2465,12 +2500,12 @@ msgstr "无法编辑应用程序组'%s'"
 
 #: ../../AdminConsole/web/actions.php:922
 msgid "No Subscription Keys were uploaded"
-msgstr ""
+msgstr "未上传订阅的钥匙"
 
 #. UPLOAD_ERR_NO_FILE
 #: ../../AdminConsole/web/actions.php:936
 msgid "No files were uploaded"
-msgstr ""
+msgstr "未上传文件"
 
 #: ../../AdminConsole/web/actions.php:951
 msgid "The file is empty"
@@ -2478,7 +2513,7 @@ msgstr "文件为空"
 
 #: ../../AdminConsole/web/actions.php:957
 msgid "The uploaded file is not a valid Subscription Key"
-msgstr ""
+msgstr "此文件不是有效的钥匙"
 
 #. problem, what to do ?
 #: ../../AdminConsole/web/actions.php:986
@@ -2501,7 +2536,7 @@ msgstr "用户组 '%s'不存在"
 msgid ""
 "Unable to remove a user from User Group '%s' because it is the default User "
 "Group"
-msgstr ""
+msgstr "不能移除用户从用户组 '%s' 因为它是默认的用户组"
 
 #: ../../AdminConsole/web/actions.php:1024
 #, php-format
@@ -2510,17 +2545,19 @@ msgstr "导入用户组'%s'失败"
 
 #: ../../AdminConsole/web/actions.php:1036
 msgid "Unable to save the Publication"
-msgstr ""
+msgstr "无法保存发布"
 
 #: ../../AdminConsole/web/actions.php:1040
+#: ../../AdminConsole/web/actions.php:1649
 msgid "Publication successfully added"
 msgstr "添加发布成功"
 
 #: ../../AdminConsole/web/actions.php:1046
 msgid "Unable to delete the Publication"
-msgstr ""
+msgstr "无法删除发布"
 
 #: ../../AdminConsole/web/actions.php:1050
+#: ../../AdminConsole/web/actions.php:1659
 msgid "Publication successfully deleted"
 msgstr "删除发布成功"
 
@@ -2620,7 +2657,7 @@ msgstr "成功删除用户'%s'"
 #: ../../AdminConsole/web/actions.php:1345
 #, php-format
 msgid "Unable to modify User '%s'"
-msgstr ""
+msgstr "无法编辑用户 '%s'"
 
 #: ../../AdminConsole/web/actions.php:1347
 #, php-format
@@ -2629,7 +2666,7 @@ msgstr "成功编辑用户'%s'"
 
 #: ../../AdminConsole/web/actions.php:1355
 msgid "No custom password specified for populating the database."
-msgstr ""
+msgstr "没有指定自定义密码用来填充数据库。"
 
 #: ../../AdminConsole/web/actions.php:1366
 msgid "User database populated."
@@ -2646,7 +2683,7 @@ msgstr "成功编辑用户"
 
 #: ../../AdminConsole/web/actions.php:1412
 msgid "Failed to modify User"
-msgstr ""
+msgstr "编辑用户失败"
 
 #: ../../AdminConsole/web/actions.php:1446
 #, php-format
@@ -2689,196 +2726,240 @@ msgstr "无法删除配置 '%s'"
 msgid "Profile '%s' successfully deleted"
 msgstr "成功删除配置'%s'"
 
-#: ../../AdminConsole/web/actions.php:1560
+# 85%
+#: ../../AdminConsole/web/actions.php:1552
+#, fuzzy, php-format
+msgid "Unable to create server group '%s'"
+msgstr "不能创建用户组'%s'"
+
+#: ../../AdminConsole/web/actions.php:1556
+#, php-format
+msgid "Server group '%s' successfully added"
+msgstr ""
+
+# 81%
+#: ../../AdminConsole/web/actions.php:1567
+#, fuzzy, php-format
+msgid "Unable to remove group '%s'"
+msgstr "移除用户组'%s'失败"
+
+# 89%
+#: ../../AdminConsole/web/actions.php:1571
+#, fuzzy, php-format
+msgid "Server Group '%s' successfully deleted"
+msgstr "成功删除用户组'%s'"
+
+# 94%
+#: ../../AdminConsole/web/actions.php:1599
+#, fuzzy, php-format
+msgid "Unable to modify application group '%s'"
+msgstr "无法编辑应用程序组'%s'"
+
+# 89%
+#: ../../AdminConsole/web/actions.php:1621
+#: ../../AdminConsole/web/actions.php:1628
+#, fuzzy, php-format
+msgid "Server Group '%s' successfully modified"
+msgstr "成功编辑用户组'%s' "
+
+#: ../../AdminConsole/web/actions.php:1645
+msgid "Unable to save the publication"
+msgstr "无法保存发布"
+
+#: ../../AdminConsole/web/actions.php:1655
+msgid "Unable to delete the publication"
+msgstr "无法删除发布"
+
+#: ../../AdminConsole/web/actions.php:1682
 msgid "News successfully added"
 msgstr "成功添加新闻"
 
-#: ../../AdminConsole/web/actions.php:1567
+#: ../../AdminConsole/web/actions.php:1689
 msgid "Unable to delete this news"
 msgstr "无法删除此新闻"
 
-#: ../../AdminConsole/web/actions.php:1569
+#: ../../AdminConsole/web/actions.php:1691
 msgid "News successfully deleted"
 msgstr "成功删除新闻"
 
-#: ../../AdminConsole/web/actions.php:1611
+#: ../../AdminConsole/web/actions.php:1733
 msgid "Script successfully added"
 msgstr "成功添加脚本"
 
-#: ../../AdminConsole/web/actions.php:1618
+#: ../../AdminConsole/web/actions.php:1740
 msgid "Unable to delete this script"
 msgstr "无法删除此脚本"
 
-#: ../../AdminConsole/web/actions.php:1620
+#: ../../AdminConsole/web/actions.php:1742
 msgid "Script successfully deleted"
 msgstr "成功删除脚本"
 
-#: ../../AdminConsole/web/actions.php:1638
-#: ../../AdminConsole/web/actions.php:1645
+#: ../../AdminConsole/web/actions.php:1760
+#: ../../AdminConsole/web/actions.php:1767
 #, php-format
 msgid "UserGroup '%s' successfully modified"
 msgstr "成功编辑用户组'%s' "
 
-#: ../../AdminConsole/web/actions.php:1653
+#: ../../AdminConsole/web/actions.php:1775
 msgid "Password is empty"
 msgstr "密码为空"
 
-#: ../../AdminConsole/web/actions.php:1656
+#: ../../AdminConsole/web/actions.php:1778
 msgid "Passwords are not identical"
 msgstr "密码不一致"
 
-#: ../../AdminConsole/web/actions.php:1659
+#: ../../AdminConsole/web/actions.php:1781
 msgid "Current password is not correct"
 msgstr "当前密码不正确"
 
-#: ../../AdminConsole/web/actions.php:1665
+#: ../../AdminConsole/web/actions.php:1787
 msgid "Password successfully changed"
 msgstr "成功修改密码"
 
-#: ../../AdminConsole/web/actions.php:1669
+#: ../../AdminConsole/web/actions.php:1791
 msgid "Password not changed"
 msgstr "密码未修改"
 
-#: ../../AdminConsole/web/actions.php:1687
+#: ../../AdminConsole/web/actions.php:1809
 #, php-format
 msgid "Unable to delete session '%s'"
 msgstr "无法删除会话 '%s'"
 
-#: ../../AdminConsole/web/actions.php:1691
+#: ../../AdminConsole/web/actions.php:1813
 #, php-format
 msgid "Session '%s' successfully deleted"
 msgstr "成功删除会话'%s'"
 
-#: ../../AdminConsole/web/actions.php:1706
+#: ../../AdminConsole/web/actions.php:1828
 #, php-format
 msgid "Unable to disconnect session '%s'"
 msgstr "无法断开会话 '%s'"
 
-#: ../../AdminConsole/web/actions.php:1710
+#: ../../AdminConsole/web/actions.php:1832
 #, php-format
 msgid "Session '%s' successfully disconnected"
 msgstr "成功断开会话'%s'"
 
-#: ../../AdminConsole/web/actions.php:1732
+#: ../../AdminConsole/web/actions.php:1854
 #, php-format
 msgid "Server '%s' successfully deleted"
 msgstr "成功删除服务器 '%s' "
 
-#: ../../AdminConsole/web/actions.php:1750
+#: ../../AdminConsole/web/actions.php:1872
 #, php-format
 msgid "Server '%s' successfully registered"
 msgstr "成功注册服务器 '%s' "
 
-#: ../../AdminConsole/web/actions.php:1754
+#: ../../AdminConsole/web/actions.php:1876
 #, php-format
 msgid "Failed to register server '%s'"
-msgstr ""
+msgstr "注册服务器 '%s'失败"
 
-#: ../../AdminConsole/web/actions.php:1790
-#: ../../AdminConsole/web/actions.php:1827
-#: ../../AdminConsole/web/actions.php:1846
-#: ../../AdminConsole/web/actions.php:1880
-#: ../../AdminConsole/web/actions.php:1936
-#: ../../AdminConsole/web/actions.php:1975
+#: ../../AdminConsole/web/actions.php:1912
+#: ../../AdminConsole/web/actions.php:1949
+#: ../../AdminConsole/web/actions.php:1968
+#: ../../AdminConsole/web/actions.php:2002
+#: ../../AdminConsole/web/actions.php:2058
+#: ../../AdminConsole/web/actions.php:2097
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr "成功编辑服务器 '%s' "
 
-#: ../../AdminConsole/web/actions.php:1816
+#: ../../AdminConsole/web/actions.php:1938
 msgid "Nothing to save. New display name is identicall to old one"
 msgstr "没有任务保存。新的显示名称与旧的相同"
 
-#: ../../AdminConsole/web/actions.php:1835
+#: ../../AdminConsole/web/actions.php:1957
 #, php-format
 msgid "Internal name \"%s\" is invalid"
 msgstr "内部名称 \"%s\"无效"
 
-#: ../../AdminConsole/web/actions.php:1860
+#: ../../AdminConsole/web/actions.php:1982
 #, php-format
 msgid "Redirection name \"%s\" is invalid"
 msgstr "重定向名称 \"%s\" 无效"
 
-#: ../../AdminConsole/web/actions.php:1888
-#: ../../AdminConsole/web/actions.php:2027
+#: ../../AdminConsole/web/actions.php:2010
+#: ../../AdminConsole/web/actions.php:2149
 msgid "Task successfully added"
 msgstr "成功添加任务"
 
-#: ../../AdminConsole/web/actions.php:1898
+#: ../../AdminConsole/web/actions.php:2020
 #, php-format
 msgid "Server '%s' is upgrading"
 msgstr "服务器'%s'升级中"
 
-#: ../../AdminConsole/web/actions.php:1916
+#: ../../AdminConsole/web/actions.php:2038
 #, php-format
 msgid "RDP port \"%s\" is invalid"
 msgstr "RDP端口 \"%s\" 无效"
 
-#: ../../AdminConsole/web/actions.php:1927
+#: ../../AdminConsole/web/actions.php:2049
 msgid "Nothing to save. RDP port is identicall to old one"
 msgstr "无任务保存。RDP端口与旧的有相同"
 
-#: ../../AdminConsole/web/actions.php:1958
+#: ../../AdminConsole/web/actions.php:2080
 #, php-format
 msgid "%s is not an available role"
 msgstr "%s 规则无效"
 
-#: ../../AdminConsole/web/actions.php:1962
+#: ../../AdminConsole/web/actions.php:2084
 #, php-format
 msgid "Nothing to save. Role %s is already disabled"
 msgstr "无任务保存。规则 %s 已经不可用"
 
-#: ../../AdminConsole/web/actions.php:1966
+#: ../../AdminConsole/web/actions.php:2088
 #, php-format
 msgid "Nothing to save. Role %s is already enabled"
 msgstr "无任务保存。规则 %s 已可用"
 
 # 76%
-#: ../../AdminConsole/web/actions.php:2000
+#: ../../AdminConsole/web/actions.php:2122
 #, php-format
 #, php-format, php-format
 msgid "Unable to delete archived session '%s'"
 msgstr "无法删除归档会话 '%s'"
 
 # 76%
-#: ../../AdminConsole/web/actions.php:2004
+#: ../../AdminConsole/web/actions.php:2126
 #, php-format
 #, php-format, php-format
 msgid "Archived session '%s' successfully deleted"
 msgstr "成功删除归档会话'%s'"
 
-#: ../../AdminConsole/web/actions.php:2045
+#: ../../AdminConsole/web/actions.php:2167
 msgid "Task successfully deleted"
 msgstr "成功删除任务"
 
-#: ../../AdminConsole/web/actions.php:2056
+#: ../../AdminConsole/web/actions.php:2178
 msgid "You must provide a name to your shared folder"
 msgstr "必须给共享文件夹命名"
 
-#: ../../AdminConsole/web/actions.php:2067
+#: ../../AdminConsole/web/actions.php:2189
 msgid "Unable to add shared folder"
 msgstr "无法添加共享文件夹"
 
-#: ../../AdminConsole/web/actions.php:2071
+#: ../../AdminConsole/web/actions.php:2193
 #, php-format
 msgid "Shared folder '%s' successfully added"
 msgstr "成功添加共享文件夹'%s' "
 
-#: ../../AdminConsole/web/actions.php:2078
+#: ../../AdminConsole/web/actions.php:2200
 msgid "Unable to create this shared folder access"
 msgstr "无法创建此共享文件夹访问"
 
-#: ../../AdminConsole/web/actions.php:2084
-#: ../../AdminConsole/web/actions.php:2102
+#: ../../AdminConsole/web/actions.php:2206
+#: ../../AdminConsole/web/actions.php:2224
 msgid "Shared folder successfully modified"
 msgstr "成功编辑共享文件夹"
 
-#: ../../AdminConsole/web/actions.php:2088
-#: ../../AdminConsole/web/actions.php:2106
+#: ../../AdminConsole/web/actions.php:2210
+#: ../../AdminConsole/web/actions.php:2228
 #, php-format
 msgid "Unable to modify shared folder named '%s'"
 msgstr "无法编辑共享文件夹'%s'"
 
-#: ../../AdminConsole/web/actions.php:2096
+#: ../../AdminConsole/web/actions.php:2218
 msgid "Unable to delete this shared folder access"
 msgstr "无法删除此共享文件夹访问"
 
@@ -2887,7 +2968,7 @@ msgstr "无法删除此共享文件夹访问"
 #: ../../AdminConsole/web/applications_webapp.php:64
 #: ../../AdminConsole/web/wizard.php:176 ../../AdminConsole/web/wizard.php:326
 msgid "No available applications"
-msgstr ""
+msgstr "无可用程序"
 
 #: ../../AdminConsole/web/applications.php:141
 msgid "Orphan Applications"
@@ -2911,6 +2992,7 @@ msgstr "可用"
 
 #: ../../AdminConsole/web/applications.php:173
 #: ../../AdminConsole/web/appsgroup.php:159
+#: ../../AdminConsole/web/serversgroup.php:156
 #: ../../AdminConsole/web/usersgroup.php:302
 msgid "Block"
 msgstr "阻止"
@@ -2918,6 +3000,8 @@ msgstr "阻止"
 #: ../../AdminConsole/web/applications.php:176
 #: ../../AdminConsole/web/appsgroup.php:71
 #: ../../AdminConsole/web/appsgroup.php:163
+#: ../../AdminConsole/web/serversgroup.php:69
+#: ../../AdminConsole/web/serversgroup.php:160
 #: ../../AdminConsole/web/usersgroup.php:108
 #: ../../AdminConsole/web/usersgroup.php:306
 msgid "Blocked"
@@ -2983,8 +3067,10 @@ msgstr "确认从此组删除程序?"
 #: ../../AdminConsole/web/applications_webapp.php:372
 #: ../../AdminConsole/web/appsgroup.php:285
 #: ../../AdminConsole/web/script.php:214
-#: ../../AdminConsole/web/usersgroup.php:644
-#: ../../AdminConsole/web/usersgroup.php:730
+#: ../../AdminConsole/web/serversgroup.php:282
+#: ../../AdminConsole/web/servers.php:626
+#: ../../AdminConsole/web/usersgroup.php:651
+#: ../../AdminConsole/web/usersgroup.php:737
 #: ../../AdminConsole/web/users.php:386
 msgid "Delete from this group"
 msgstr "从此组删除"
@@ -2994,7 +3080,8 @@ msgstr "从此组删除"
 #: ../../AdminConsole/web/applications_webapp.php:387
 #: ../../AdminConsole/web/appsgroup.php:302
 #: ../../AdminConsole/web/script.php:229
-#: ../../AdminConsole/web/usersgroup.php:661
+#: ../../AdminConsole/web/servers.php:650
+#: ../../AdminConsole/web/usersgroup.php:668
 #: ../../AdminConsole/web/users.php:401
 msgid "Add to this group"
 msgstr "添加至此组"
@@ -3058,7 +3145,9 @@ msgstr "URL"
 #: ../../AdminConsole/web/applications_static.php:576
 #: ../../AdminConsole/web/applications_webapp.php:160
 #: ../../AdminConsole/web/appsgroup.php:138
-#: ../../AdminConsole/web/publications.php:172
+#: ../../AdminConsole/web/publications.php:203
+#: ../../AdminConsole/web/publications.php:283
+#: ../../AdminConsole/web/serversgroup.php:135
 #: ../../AdminConsole/web/usersgroup.php:264
 #: ../../AdminConsole/web/users.php:123 ../../AdminConsole/web/users.php:143
 msgid "Add"
@@ -3066,7 +3155,7 @@ msgstr "添加"
 
 #: ../../AdminConsole/web/applications_static.php:220
 msgid "Web Links Configuration"
-msgstr ""
+msgstr "互联网链接设置"
 
 #: ../../AdminConsole/web/applications_static.php:221
 msgid "Default browser for:"
@@ -3136,6 +3225,8 @@ msgstr "无可用应用程序组"
 
 #: ../../AdminConsole/web/appsgroup.php:69
 #: ../../AdminConsole/web/appsgroup.php:158
+#: ../../AdminConsole/web/serversgroup.php:66
+#: ../../AdminConsole/web/serversgroup.php:155
 #: ../../AdminConsole/web/usersgroup.php:106
 #: ../../AdminConsole/web/usersgroup.php:301
 msgid "Enabled"
@@ -3143,17 +3234,21 @@ msgstr "激活"
 
 #: ../../AdminConsole/web/appsgroup.php:81
 #: ../../AdminConsole/web/appsgroup.php:230
+#: ../../AdminConsole/web/serversgroup.php:87
+#: ../../AdminConsole/web/serversgroup.php:226
 #: ../../AdminConsole/web/usersgroup.php:126
-#: ../../AdminConsole/web/usersgroup.php:470
+#: ../../AdminConsole/web/usersgroup.php:477
 msgid "Are you sure you want to delete this group?"
 msgstr "确认删除此组?"
 
 #: ../../AdminConsole/web/appsgroup.php:97
+#: ../../AdminConsole/web/serversgroup.php:104
 #: ../../AdminConsole/web/usersgroup.php:145
 msgid "Are you sure you want to delete these groups?"
 msgstr "确认删除这些组?"
 
 #: ../../AdminConsole/web/appsgroup.php:113
+#: ../../AdminConsole/web/serversgroup.php:119
 #: ../../AdminConsole/web/usersgroup.php:170
 msgid "Create a new group"
 msgstr "创建新组"
@@ -3163,6 +3258,7 @@ msgid "Unable to import group"
 msgstr "不能导入用户组'%s'"
 
 #: ../../AdminConsole/web/appsgroup.php:164
+#: ../../AdminConsole/web/serversgroup.php:161
 #: ../../AdminConsole/web/usersgroup.php:307
 msgid "Enable"
 msgstr "启用"
@@ -3171,30 +3267,34 @@ msgstr "启用"
 #: ../../AdminConsole/web/sharedfolders.php:103
 #: ../../AdminConsole/web/wizard.php:141
 msgid "Failed to get User Group data"
-msgstr ""
+msgstr "获取用户组数据失败"
 
 #: ../../AdminConsole/web/appsgroup.php:214
 msgid "Application Group management"
 msgstr "应用程序组管理"
 
 #: ../../AdminConsole/web/appsgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:451
+#: ../../AdminConsole/web/serversgroup.php:225
+#: ../../AdminConsole/web/usersgroup.php:458
 #: ../../AdminConsole/web/users.php:317
 msgid "Settings"
 msgstr "设置"
 
 #: ../../AdminConsole/web/appsgroup.php:231
-#: ../../AdminConsole/web/usersgroup.php:471
+#: ../../AdminConsole/web/serversgroup.php:227
+#: ../../AdminConsole/web/usersgroup.php:478
 msgid "Delete this group"
 msgstr "删除此组"
 
 #: ../../AdminConsole/web/appsgroup.php:253
-#: ../../AdminConsole/web/usersgroup.php:492
+#: ../../AdminConsole/web/serversgroup.php:249
+#: ../../AdminConsole/web/usersgroup.php:499
 msgid "Update the name"
 msgstr "更新名称"
 
 #: ../../AdminConsole/web/appsgroup.php:262
-#: ../../AdminConsole/web/usersgroup.php:501
+#: ../../AdminConsole/web/serversgroup.php:258
+#: ../../AdminConsole/web/usersgroup.php:508
 msgid "Update the description"
 msgstr "更新描述"
 
@@ -3203,23 +3303,30 @@ msgid "List of applications in this group"
 msgstr "此组程序列表"
 
 #: ../../AdminConsole/web/appsgroup.php:357
-#: ../../AdminConsole/web/usersgroup.php:674
+#: ../../AdminConsole/web/usersgroup.php:681
 msgid "List of publications for this group"
 msgstr "此组发布列表"
 
 #: ../../AdminConsole/web/appsgroup.php:367
-#: ../../AdminConsole/web/publications.php:129
-#: ../../AdminConsole/web/usersgroup.php:683
+#: ../../AdminConsole/web/publications.php:160
+#: ../../AdminConsole/web/publications.php:242
+#: ../../AdminConsole/web/serversgroup.php:322
+#: ../../AdminConsole/web/usersgroup.php:690
+#: ../../AdminConsole/web/usersgroup.php:773
 msgid "Are you sure you want to delete this publication?"
 msgstr "确认删除此发布?"
 
 #: ../../AdminConsole/web/appsgroup.php:372
-#: ../../AdminConsole/web/usersgroup.php:688
+#: ../../AdminConsole/web/serversgroup.php:327
+#: ../../AdminConsole/web/usersgroup.php:695
+#: ../../AdminConsole/web/usersgroup.php:778
 msgid "Delete this publication"
 msgstr "删除此发布"
 
 #: ../../AdminConsole/web/appsgroup.php:389
-#: ../../AdminConsole/web/usersgroup.php:705
+#: ../../AdminConsole/web/serversgroup.php:347
+#: ../../AdminConsole/web/usersgroup.php:712
+#: ../../AdminConsole/web/usersgroup.php:802
 msgid "Add this publication"
 msgstr "添加此发布"
 
@@ -3229,7 +3336,7 @@ msgstr "组织"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Subscription Key Owner"
-msgstr ""
+msgstr "订阅的钥匙所有者"
 
 #: ../../AdminConsole/web/certificate.php:53
 msgid "Email"
@@ -3245,7 +3352,7 @@ msgstr "结束日期 (UTC)"
 
 #: ../../AdminConsole/web/certificate.php:65
 msgid "Evaluation"
-msgstr ""
+msgstr "评价"
 
 #: ../../AdminConsole/web/certificate.php:68
 #: ../../AdminConsole/web/certificate.php:195
@@ -3259,16 +3366,16 @@ msgstr "分配的用户"
 
 #: ../../AdminConsole/web/certificate.php:76
 msgid "Invalid Subscription Key"
-msgstr ""
+msgstr "无效的认购钥匙"
 
 #: ../../AdminConsole/web/certificate.php:79
 msgid "Subscription Key has expired"
-msgstr ""
+msgstr "认购钥匙过期"
 
 #: ../../AdminConsole/web/certificate.php:84
 #: ../../AdminConsole/web/certificate.php:163
 msgid "Subscription Key expired"
-msgstr ""
+msgstr "认购钥匙过期"
 
 #: ../../AdminConsole/web/certificate.php:86
 #: ../../AdminConsole/web/certificate.php:165
@@ -3284,19 +3391,19 @@ msgstr "确定 (%d 天剩余)"
 
 #: ../../AdminConsole/web/certificate.php:94
 msgid "Are you sure you want to delete this Subscription Key?"
-msgstr ""
+msgstr "确认删除此认购钥匙?"
 
 #: ../../AdminConsole/web/certificate.php:98
 msgid "Delete this Subscription Key"
-msgstr ""
+msgstr "删除此认购钥匙"
 
 #: ../../AdminConsole/web/certificate.php:109
 msgid "Install a Subscription Key"
-msgstr ""
+msgstr "安装一个认购钥匙"
 
 #: ../../AdminConsole/web/certificate.php:117
 msgid "Install this Subscription Key"
-msgstr ""
+msgstr "安装此认购钥匙"
 
 #: ../../AdminConsole/web/certificate.php:134
 msgid "Reset assigned users"
@@ -3304,19 +3411,19 @@ msgstr "重置分配的用户"
 
 #: ../../AdminConsole/web/certificate.php:153
 msgid "Subscription Key Summary"
-msgstr ""
+msgstr "认购钥匙概要"
 
 #: ../../AdminConsole/web/certificate.php:160
 msgid "No valid Subscription Keys"
-msgstr ""
+msgstr "无有效的认购钥匙"
 
 #: ../../AdminConsole/web/certificate.php:177
 msgid "Valid from"
-msgstr ""
+msgstr "有效的从"
 
 #: ../../AdminConsole/web/certificate.php:186
 msgid "Valid until"
-msgstr ""
+msgstr "有效到"
 
 #: ../../AdminConsole/web/certificate.php:211
 msgid "Assigned User Limit"
@@ -3337,7 +3444,7 @@ msgstr "清理联络人"
 
 #: ../../AdminConsole/web/checkup.php:122
 msgid "Default User Group"
-msgstr ""
+msgstr "默认用户组"
 
 #: ../../AdminConsole/web/checkup.php:137
 msgid "Cleanup configuration"
@@ -3385,20 +3492,20 @@ msgstr "FQDN检查"
 #: ../../AdminConsole/web/configuration-sumup.php:152
 #, php-format
 msgid "Your Premium Edition Subscription Key will expire in %d days"
-msgstr ""
+msgstr "你的高级版认购钥匙将在 %d 天后过期"
 
 #: ../../AdminConsole/web/configuration-sumup.php:154
 msgid "Your Premium Edition Subscription Key has expired."
-msgstr ""
+msgstr "你的高级版认购钥匙已过期"
 
 #: ../../AdminConsole/web/configuration-sumup.php:156
 #, php-format
 msgid "Your Premium Edition Subscription Key is valid for %d days."
-msgstr ""
+msgstr "你的高级版认购钥匙有效期为 %d 天"
 
 #: ../../AdminConsole/web/configuration-sumup.php:159
 msgid "You don't have any valid Premium Edition Subscription Keys."
-msgstr ""
+msgstr "你没有任务有效的高级版认购钥匙"
 
 #: ../../AdminConsole/web/index.php:50
 msgid "Users and User Groups"
@@ -3634,32 +3741,45 @@ msgstr "无配置文件"
 msgid "Profile: %s"
 msgstr "配置：%s"
 
-#: ../../AdminConsole/web/publications.php:55
+#: ../../AdminConsole/web/publications.php:56
 msgid "Failed to get User Groups list"
 msgstr "获取用户组列表失败"
 
 # 90%
 # 100%
-#: ../../AdminConsole/web/publications.php:109
+#: ../../AdminConsole/web/publications.php:140
+#: ../../AdminConsole/web/publications.php:222
 msgid "User Group"
 msgstr "用户组"
 
-#: ../../AdminConsole/web/publications.php:110
+#: ../../AdminConsole/web/publications.php:141
 msgid "Application Group"
 msgstr "应用程序组"
 
-#: ../../AdminConsole/web/publications.php:117
+#: ../../AdminConsole/web/publications.php:148
 #: ../../AdminConsole/web/summary.php:128
 msgid "No publications"
-msgstr ""
+msgstr "未发布"
 
-#: ../../AdminConsole/web/publications.php:172
+#: ../../AdminConsole/web/publications.php:203
 msgid "Please select a User Group"
 msgstr "请选择一个用户组"
 
-#: ../../AdminConsole/web/publications.php:172
+#: ../../AdminConsole/web/publications.php:203
 msgid "Please select an Application Group"
 msgstr "请选择一个应用程序组"
+
+#: ../../AdminConsole/web/publications.php:217
+msgid "Server Group publications"
+msgstr ""
+
+#: ../../AdminConsole/web/publications.php:223
+msgid "Server Group"
+msgstr ""
+
+#: ../../AdminConsole/web/publications.php:229
+msgid "No publication"
+msgstr "未发布"
 
 #: ../../AdminConsole/web/reporting.php:109
 msgid "Day"
@@ -3675,21 +3795,21 @@ msgstr "分钟"
 
 #: ../../AdminConsole/web/reporting.php:335
 msgid "Error: \"from\" date is after \"to\" date, the dates will be reversed"
-msgstr ""
+msgstr "错误：起始日期在结束日期后，日期将被逆转"
 
 #: ../../AdminConsole/web/reporting.php:342
 #: ../../AdminConsole/web/reporting.php:780
 msgid "Error: \"to\" field is in the future, the current time will be used"
-msgstr ""
+msgstr "错误：\"到\"项设置成了未来，当前时间将被使用"
 
 #: ../../AdminConsole/web/reporting.php:347
 msgid "Error: \"from\" field is in the future, the current time will be used"
-msgstr ""
+msgstr "错误：\"从\"项设置成了未来，当前时间将被使用"
 
 #: ../../AdminConsole/web/reporting.php:355
 #, php-format
 msgid "%s is not writable"
-msgstr "%s不可写"
+msgstr "%s 不可写"
 
 #: ../../AdminConsole/web/reporting.php:384
 #: ../../AdminConsole/web/reporting.php:458
@@ -3732,12 +3852,12 @@ msgid "Session end status"
 msgstr "会话和状态"
 
 #: ../../AdminConsole/web/reporting.php:500
-#: ../../AdminConsole/web/servers.php:396
+#: ../../AdminConsole/web/servers.php:413
 msgid "CPU usage"
 msgstr "CPU使用率"
 
 #: ../../AdminConsole/web/reporting.php:521
-#: ../../AdminConsole/web/servers.php:398
+#: ../../AdminConsole/web/servers.php:415
 msgid "RAM usage"
 msgstr "RAM使用率"
 
@@ -3802,7 +3922,7 @@ msgstr "活动会话数"
 #: ../../AdminConsole/web/reporting.php:773
 msgid ""
 "Error: \"from\" date is after \"to\" date, the current time will be used"
-msgstr ""
+msgstr "错误：起始日期在结束日期后，当前时间将被使用"
 
 #: ../../AdminConsole/web/script.php:56
 msgid "Scripts"
@@ -3835,31 +3955,79 @@ msgid "Type:"
 msgstr "类型"
 
 #: ../../AdminConsole/web/script.php:98
-#: ../../AdminConsole/web/usersgroup.php:746
+#: ../../AdminConsole/web/usersgroup.php:753
 msgid "Add this script"
 msgstr "添加此脚本"
 
 #: ../../AdminConsole/web/script.php:121
 msgid "Login Script management"
-msgstr ""
+msgstr "登入脚本管理"
 
 #: ../../AdminConsole/web/script.php:175 ../../AdminConsole/web/users.php:219
 msgid "Error while requesting User Group data"
-msgstr ""
+msgstr "获取用户组数据出错"
 
 #: ../../AdminConsole/web/script.php:195 ../../AdminConsole/web/users.php:366
 msgid "User Groups with this user"
 msgstr "此用户的用户组"
 
 #: ../../AdminConsole/web/script.php:209
-#: ../../AdminConsole/web/usersgroup.php:725
+#: ../../AdminConsole/web/usersgroup.php:732
 #: ../../AdminConsole/web/users.php:381
 msgid "Are you sure you want to delete this user from this group?"
 msgstr "确认从此组删除此用户?"
 
+# 80%
+#: ../../AdminConsole/web/serversgroup.php:46
+#, fuzzy
+msgid "No available Server Group"
+msgstr "无可用用户组"
+
+#: ../../AdminConsole/web/serversgroup.php:82
+msgid "Manage"
+msgstr "管理"
+
+#: ../../AdminConsole/web/serversgroup.php:150
+#, php-format
+msgid "Unable to load group %s"
+msgstr ""
+
+#: ../../AdminConsole/web/serversgroup.php:193
+msgid "Failed to get User Group list"
+msgstr "获取用户组列表失败"
+
+# 78%
+#: ../../AdminConsole/web/serversgroup.php:210
+#, fuzzy
+msgid "Server Group management"
+msgstr "用户组管理"
+
+#: ../../AdminConsole/web/serversgroup.php:265
+msgid "List of servers including this group"
+msgstr ""
+
+#: ../../AdminConsole/web/serversgroup.php:269
+msgid "No server has this group defined"
+msgstr ""
+
+# 83%
+#: ../../AdminConsole/web/serversgroup.php:277
+#: ../../AdminConsole/web/servers.php:621
+#, fuzzy
+msgid "Are you sure you want to delete this group from this server?"
+msgstr "确认从此组删除此用户?"
+
+#: ../../AdminConsole/web/serversgroup.php:290
+msgid "Not any available server to add"
+msgstr ""
+
+#: ../../AdminConsole/web/serversgroup.php:313
+msgid "List of published User Groups for this group"
+msgstr ""
+
 #: ../../AdminConsole/web/servers.php:82
 #: ../../AdminConsole/web/servers.php:226
-#: ../../AdminConsole/web/servers.php:379
+#: ../../AdminConsole/web/servers.php:396
 msgid "Version"
 msgstr "版本"
 
@@ -3875,27 +4043,27 @@ msgid "Switch to production"
 msgstr "切换到生产模式"
 
 #: ../../AdminConsole/web/servers.php:138
-#: ../../AdminConsole/web/servers.php:390
+#: ../../AdminConsole/web/servers.php:407
 msgid "CPU"
 msgstr "CPU"
 
 #: ../../AdminConsole/web/servers.php:139
-#: ../../AdminConsole/web/servers.php:391
+#: ../../AdminConsole/web/servers.php:408
 msgid "cores"
 msgstr "内核"
 
 #: ../../AdminConsole/web/servers.php:139
-#: ../../AdminConsole/web/servers.php:391
+#: ../../AdminConsole/web/servers.php:408
 msgid "core"
 msgstr "内核"
 
 #: ../../AdminConsole/web/servers.php:141
-#: ../../AdminConsole/web/servers.php:392
+#: ../../AdminConsole/web/servers.php:409
 msgid "RAM"
 msgstr "RAM"
 
 #: ../../AdminConsole/web/servers.php:141
-#: ../../AdminConsole/web/servers.php:392
+#: ../../AdminConsole/web/servers.php:409
 msgid "MB"
 msgstr "MB"
 
@@ -3913,13 +4081,13 @@ msgid "Register"
 msgstr "注册"
 
 #: ../../AdminConsole/web/servers.php:265
-#: ../../AdminConsole/web/servers.php:579
+#: ../../AdminConsole/web/servers.php:596
 msgid "Are you sure you want to delete this server?"
 msgstr "确认删除此服务器?"
 
 #: ../../AdminConsole/web/servers.php:309
 msgid "No unregistered servers"
-msgstr ""
+msgstr "无未注册服务器"
 
 #: ../../AdminConsole/web/servers.php:328
 msgid "Warning: server is offline"
@@ -3929,81 +4097,93 @@ msgstr "警告:服务器断线"
 msgid "Warning: server is broken"
 msgstr "警告: 服务器损坏"
 
-#: ../../AdminConsole/web/servers.php:375
-#: ../../AdminConsole/web/servers.php:382
+#: ../../AdminConsole/web/servers.php:392
+#: ../../AdminConsole/web/servers.php:399
 msgid "Monitoring"
 msgstr "监视"
 
-#: ../../AdminConsole/web/servers.php:403
+#: ../../AdminConsole/web/servers.php:420
 msgid "Session usage"
-msgstr ""
+msgstr "会话使用情况"
 
-#: ../../AdminConsole/web/servers.php:407
+#: ../../AdminConsole/web/servers.php:424
 msgid "Disk usage"
 msgstr "磁盘使用率"
 
-#: ../../AdminConsole/web/servers.php:434
-#: ../../AdminConsole/web/servers.php:479
+#: ../../AdminConsole/web/servers.php:451
+#: ../../AdminConsole/web/servers.php:496
 msgid "define"
 msgstr "定义"
 
-#: ../../AdminConsole/web/servers.php:440
+#: ../../AdminConsole/web/servers.php:457
 #, php-format
 msgid "(no display name defined yet, use \"%s\" instead"
 msgstr "(没有显示名称定义，用 \"%s\" 代替"
 
 # 83%
-#: ../../AdminConsole/web/servers.php:446
-#: ../../AdminConsole/web/servers.php:490
+#: ../../AdminConsole/web/servers.php:463
+#: ../../AdminConsole/web/servers.php:507
 msgid "delete"
 msgstr "删除"
 
-#: ../../AdminConsole/web/servers.php:452
+#: ../../AdminConsole/web/servers.php:469
 msgid "Internal name (fqdn)"
 msgstr "内部名称(fqdn)"
 
-#: ../../AdminConsole/web/servers.php:455
+#: ../../AdminConsole/web/servers.php:472
 msgid ""
 "Are you sure you want to change the internal name of this server? The server "
 "will switch to a broken state if the name is not valid!"
-msgstr ""
+msgstr "您确定要更改此服务器的内部名称？该服务器将切换到一个破碎的状态，如果该名称是无效的！"
 
-#: ../../AdminConsole/web/servers.php:469
+#: ../../AdminConsole/web/servers.php:486
 msgid "Redirection name for this server"
 msgstr "重定向此服务器名"
 
-#: ../../AdminConsole/web/servers.php:484
+#: ../../AdminConsole/web/servers.php:501
 #, php-format
 msgid "(no external name defined yet, use \"%s\" instead"
 msgstr "(没有外部名称尚未确定, 使用 \"%s\" 代替"
 
-#: ../../AdminConsole/web/servers.php:496
+#: ../../AdminConsole/web/servers.php:513
 msgid "Redirection port (rdp) for this server"
 msgstr "重定向此服务器端口 (rdp)"
 
 # 80%
-#: ../../AdminConsole/web/servers.php:511
+#: ../../AdminConsole/web/servers.php:528
 msgid "(default value)"
 msgstr "（默认值）"
 
-#: ../../AdminConsole/web/servers.php:513
+#: ../../AdminConsole/web/servers.php:530
 #, php-format
 msgid "(overloaded, default value is %d)"
 msgstr "（重载，默认值是 %d）"
 
-#: ../../AdminConsole/web/servers.php:518
+#: ../../AdminConsole/web/servers.php:535
 msgid "Roles available on this server"
 msgstr "可在此服务器上的脚角"
 
-#: ../../AdminConsole/web/servers.php:539
+#: ../../AdminConsole/web/servers.php:556
 msgid "disable this role"
 msgstr "禁用该角色"
 
-#: ../../AdminConsole/web/servers.php:543
+#: ../../AdminConsole/web/servers.php:560
 msgid "enable this role"
 msgstr "启用该角色"
 
-#: ../../AdminConsole/web/servers.php:598
+#: ../../AdminConsole/web/servers.php:609
+msgid "List of Server Groups including this server"
+msgstr ""
+
+#: ../../AdminConsole/web/servers.php:612
+msgid "No group has this group"
+msgstr ""
+
+#: ../../AdminConsole/web/servers.php:637
+msgid "Not any available group to add"
+msgstr ""
+
+#: ../../AdminConsole/web/servers.php:666
 #, php-format
 msgid "Role: %s"
 msgstr "任务：%s"
@@ -4070,7 +4250,7 @@ msgstr "返回归档会话列表"
 
 #: ../../AdminConsole/web/session-reporting.php:427
 msgid "Archived Session"
-msgstr ""
+msgstr "归档会话"
 
 #: ../../AdminConsole/web/session-reporting.php:428
 msgid "Export as PDF file"
@@ -4083,7 +4263,7 @@ msgstr "用户:"
 
 #: ../../AdminConsole/web/session-reporting.php:436
 msgid "Does not exist"
-msgstr ""
+msgstr "不存在"
 
 #: ../../AdminConsole/web/session-reporting.php:439
 msgid "Mode:"
@@ -4105,7 +4285,7 @@ msgstr "已停止："
 #: ../../AdminConsole/web/session-reporting.php:830
 #: ../../AdminConsole/web/session-reporting.php:894
 msgid "No information available"
-msgstr ""
+msgstr "无可用信息"
 
 #: ../../AdminConsole/web/session-reporting.php:474
 #: ../../AdminConsole/web/session-reporting.php:532
@@ -4115,7 +4295,7 @@ msgstr ""
 #: ../../AdminConsole/web/session-reporting.php:845
 #: ../../AdminConsole/web/session-reporting.php:874
 msgid "does not exist"
-msgstr ""
+msgstr "不存在"
 
 #: ../../AdminConsole/web/session-reporting.php:498
 msgid "Show the dump data"
@@ -4137,7 +4317,7 @@ msgstr "隐藏"
 #: ../../AdminConsole/web/sessions.php:135
 #: ../../AdminConsole/web/users.php:411
 msgid "Published Applications"
-msgstr ""
+msgstr "已发布应用程序"
 
 #: ../../AdminConsole/web/session-reporting.php:530
 #: ../../AdminConsole/web/session-reporting.php:559
@@ -4148,7 +4328,7 @@ msgstr "未来应用程序 (id: %s)"
 
 #: ../../AdminConsole/web/session-reporting.php:541
 msgid "Used Applications"
-msgstr ""
+msgstr "已使用应用程序"
 
 #: ../../AdminConsole/web/session-reporting.php:568
 #: ../../AdminConsole/web/session-reporting.php:881
@@ -4160,7 +4340,7 @@ msgstr "在服务器 %SERVER%上执行 %DURATION%m　(从 %STARTED_TIME%, 到 %S
 #: ../../AdminConsole/web/session-reporting.php:579
 #: ../../AdminConsole/web/session-reporting.php:892
 msgid "Storage"
-msgstr ""
+msgstr "存储"
 
 #: ../../AdminConsole/web/session-reporting.php:589
 #: ../../AdminConsole/web/sessions.php:81
@@ -4205,11 +4385,11 @@ msgstr "运行中程序"
 
 #: ../../AdminConsole/web/sessions.php:121
 msgid "No running applications"
-msgstr ""
+msgstr "无运行程序"
 
 #: ../../AdminConsole/web/sessions.php:138
 msgid "No published applications"
-msgstr ""
+msgstr "无已发布的应用程序"
 
 #: ../../AdminConsole/web/sessions.php:156
 #: ../../AdminConsole/web/sessions.php:161
@@ -4253,11 +4433,11 @@ msgstr "断开连接"
 
 #: ../../AdminConsole/web/sessions.php:293
 msgid "Are you sure you want to kill the selected sessions?"
-msgstr ""
+msgstr "确认结束选择会话?"
 
 #: ../../AdminConsole/web/sessions.php:300
 msgid "Are you sure you want to disconnect the selected sessions?"
-msgstr ""
+msgstr "确认断开选择会话?"
 
 #: ../../AdminConsole/web/sessions.php:314
 msgid "Number of sessions"
@@ -4265,7 +4445,7 @@ msgstr "会话数目"
 
 #: ../../AdminConsole/web/sessions.php:336
 msgid "No active sessions"
-msgstr ""
+msgstr "无活动会话"
 
 #: ../../AdminConsole/web/sharedfolders.php:56
 msgid "Are you sure you want to delete this shared folder?"
@@ -4285,12 +4465,12 @@ msgid "Rename"
 msgstr "重命名"
 
 #: ../../AdminConsole/web/sharedfolders.php:176
-#: ../../AdminConsole/web/usersgroup.php:834
+#: ../../AdminConsole/web/usersgroup.php:889
 msgid "Are you sure you want to delete this shared folder access?"
 msgstr "确认删除此共享文件夹的访问?"
 
 #: ../../AdminConsole/web/sharedfolders.php:181
-#: ../../AdminConsole/web/usersgroup.php:839
+#: ../../AdminConsole/web/usersgroup.php:894
 msgid "Delete access to this shared folder"
 msgstr "删除此共享文件夹的访问"
 
@@ -4303,7 +4483,7 @@ msgid "Read only"
 msgstr "只读"
 
 #: ../../AdminConsole/web/sharedfolders.php:201
-#: ../../AdminConsole/web/usersgroup.php:854
+#: ../../AdminConsole/web/usersgroup.php:909
 msgid "Add access to this shared folder"
 msgstr "添加此共享文件夹的访问"
 
@@ -4331,7 +4511,7 @@ msgstr "无法执行会话模拟用户 %s"
 #: ../../AdminConsole/web/summary.php:74 ../../AdminConsole/web/users.php:65
 #: ../../AdminConsole/web/wizard.php:174
 msgid "No available users"
-msgstr ""
+msgstr "无可用用户"
 
 #: ../../AdminConsole/web/summary.php:81
 msgid "Folders"
@@ -4458,7 +4638,7 @@ msgstr "使用包名安装程序"
 
 #: ../../AdminConsole/web/usersgroup.php:79
 msgid "No available User Groups"
-msgstr ""
+msgstr "无可用用户组"
 
 #: ../../AdminConsole/web/usersgroup.php:161
 msgid "Static"
@@ -4477,22 +4657,22 @@ msgid "Time between two updates:"
 msgstr "两次更新间隔时间:"
 
 #: ../../AdminConsole/web/usersgroup.php:228
-#: ../../AdminConsole/web/usersgroup.php:541
+#: ../../AdminConsole/web/usersgroup.php:548
 msgid "Validation type"
 msgstr "授权类型"
 
 #: ../../AdminConsole/web/usersgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:545
+#: ../../AdminConsole/web/usersgroup.php:552
 msgid "All"
 msgstr "全部"
 
 #: ../../AdminConsole/web/usersgroup.php:229
-#: ../../AdminConsole/web/usersgroup.php:548
+#: ../../AdminConsole/web/usersgroup.php:555
 msgid "At least one"
 msgstr "最后一个"
 
 #: ../../AdminConsole/web/usersgroup.php:233
-#: ../../AdminConsole/web/usersgroup.php:552
+#: ../../AdminConsole/web/usersgroup.php:559
 msgid "Filters"
 msgstr "过滤器"
 
@@ -4505,100 +4685,104 @@ msgstr "载入用户组失败"
 msgid "Error while requesting users"
 msgstr "请求用户时出错"
 
-#: ../../AdminConsole/web/usersgroup.php:434
+#: ../../AdminConsole/web/usersgroup.php:441
 msgid "User Group Management"
-msgstr ""
+msgstr "用户组管理"
 
-#: ../../AdminConsole/web/usersgroup.php:456
+#: ../../AdminConsole/web/usersgroup.php:463
 msgid "Remove from default"
 msgstr "从默认删除"
 
-#: ../../AdminConsole/web/usersgroup.php:459
+#: ../../AdminConsole/web/usersgroup.php:466
 msgid "Define as default"
 msgstr "设为默认"
 
-#: ../../AdminConsole/web/usersgroup.php:520
+#: ../../AdminConsole/web/usersgroup.php:527
 msgid "Update the schedule"
 msgstr "更新日程"
 
-#: ../../AdminConsole/web/usersgroup.php:531
+#: ../../AdminConsole/web/usersgroup.php:538
 msgid "Rules"
 msgstr "规则"
 
-#: ../../AdminConsole/web/usersgroup.php:610
+#: ../../AdminConsole/web/usersgroup.php:617
 msgid "Update rules"
 msgstr "更新规则"
 
-#: ../../AdminConsole/web/usersgroup.php:621
+#: ../../AdminConsole/web/usersgroup.php:628
 msgid "List of users in this group"
 msgstr "此组用户列表"
 
-#: ../../AdminConsole/web/usersgroup.php:628
+#: ../../AdminConsole/web/usersgroup.php:635
 msgid "All available users are in this group."
 msgstr "所有可用的用户都在此用户组"
 
-#: ../../AdminConsole/web/usersgroup.php:639
+#: ../../AdminConsole/web/usersgroup.php:646
 #: ../../AdminConsole/web/users.php:91 ../../AdminConsole/web/users.php:320
 msgid "Are you sure you want to delete this user?"
 msgstr "确认删除此用户?"
 
-#: ../../AdminConsole/web/usersgroup.php:715
+#: ../../AdminConsole/web/usersgroup.php:722
 msgid "List of scripts for this group"
 msgstr "列出此组脚本"
 
-#: ../../AdminConsole/web/usersgroup.php:757
+#: ../../AdminConsole/web/usersgroup.php:764
+msgid "List of published Server Groups for this group"
+msgstr ""
+
+#: ../../AdminConsole/web/usersgroup.php:812
 msgid "Policy of this group"
 msgstr "组策略"
 
-#: ../../AdminConsole/web/usersgroup.php:765
+#: ../../AdminConsole/web/usersgroup.php:820
 msgid "extend from default"
 msgstr "从默认扩展"
 
-#: ../../AdminConsole/web/usersgroup.php:771
+#: ../../AdminConsole/web/usersgroup.php:826
 msgid "Are you sure you want to delete this rule?"
 msgstr "确认删除此规则?"
 
-#: ../../AdminConsole/web/usersgroup.php:776
+#: ../../AdminConsole/web/usersgroup.php:831
 msgid "Delete this rule"
 msgstr "删除此规则"
 
-#: ../../AdminConsole/web/usersgroup.php:796
+#: ../../AdminConsole/web/usersgroup.php:851
 msgid "Add this rule"
 msgstr "添加此规则"
 
-#: ../../AdminConsole/web/usersgroup.php:865
+#: ../../AdminConsole/web/usersgroup.php:920
 #: ../../AdminConsole/web/users.php:424
 msgid "Session Settings configuration"
 msgstr "会话设置配置"
 
-#: ../../AdminConsole/web/usersgroup.php:882
+#: ../../AdminConsole/web/usersgroup.php:937
 #: ../../AdminConsole/web/users.php:441
 msgid "Default value"
 msgstr "默认策略"
 
-#: ../../AdminConsole/web/usersgroup.php:883
+#: ../../AdminConsole/web/usersgroup.php:938
 #: ../../AdminConsole/web/users.php:442
 msgid "Value"
 msgstr "值"
 
-#: ../../AdminConsole/web/usersgroup.php:905
+#: ../../AdminConsole/web/usersgroup.php:960
 #: ../../AdminConsole/web/users.php:464
 msgid "Remove this overridden setting"
 msgstr "删除此重写的设置"
 
-#: ../../AdminConsole/web/usersgroup.php:920
+#: ../../AdminConsole/web/usersgroup.php:975
 #: ../../AdminConsole/web/users.php:479
 msgid "Save settings"
 msgstr "保存设定"
 
-#: ../../AdminConsole/web/usersgroup.php:941
+#: ../../AdminConsole/web/usersgroup.php:996
 #: ../../AdminConsole/web/users.php:500
 msgid "Add this setting"
 msgstr "添加此设置"
 
 #: ../../AdminConsole/web/users.php:110
 msgid "Are you sure you want to delete the selected users?"
-msgstr ""
+msgstr "确认删除选择用户?"
 
 #: ../../AdminConsole/web/users.php:152 ../../AdminConsole/web/users.php:182
 msgid "Populate"
@@ -4646,7 +4830,7 @@ msgstr "活动会话"
 
 #: ../../AdminConsole/web/users.php:561
 msgid "This user doesn't have a user profile"
-msgstr ""
+msgstr "此用户无用户配置文件"
 
 #: ../../AdminConsole/web/users.php:565
 msgid "Are you sure you want to create a profile for this user?"
@@ -4666,11 +4850,11 @@ msgstr "没有选择用户组"
 
 #: ../../AdminConsole/web/wizard.php:50
 msgid "No User selected"
-msgstr ""
+msgstr "没有选择用户"
 
 #: ../../AdminConsole/web/wizard.php:64 ../../AdminConsole/web/wizard.php:110
 msgid "No group name specified"
-msgstr ""
+msgstr "未指定组名"
 
 #: ../../AdminConsole/web/wizard.php:88
 msgid "No Application Group selected"
@@ -4678,23 +4862,23 @@ msgstr "未选中任何应用程序组"
 
 #: ../../AdminConsole/web/wizard.php:96
 msgid "No Application selected"
-msgstr ""
+msgstr "未选中应用程序"
 
 #: ../../AdminConsole/web/wizard.php:178
 msgid "Unable to display the list of users: too many users"
-msgstr ""
+msgstr "无法显示用户列表：用户过多"
 
 #: ../../AdminConsole/web/wizard.php:184
 msgid "Select User Groups"
-msgstr ""
+msgstr "选择用户组"
 
 #: ../../AdminConsole/web/wizard.php:196
 msgid "Create a new User Group"
-msgstr ""
+msgstr "创建一个新的用户组"
 
 #: ../../AdminConsole/web/wizard.php:202
 msgid "Use existing User Groups"
-msgstr ""
+msgstr "使用已存在的用户组"
 
 #: ../../AdminConsole/web/wizard.php:255 ../../AdminConsole/web/wizard.php:275
 #: ../../AdminConsole/web/wizard.php:296 ../../AdminConsole/web/wizard.php:335
@@ -4714,15 +4898,15 @@ msgstr "后退"
 
 #: ../../AdminConsole/web/wizard.php:330
 msgid "Select Application Groups"
-msgstr ""
+msgstr "选择应用程序组"
 
 #: ../../AdminConsole/web/wizard.php:342
 msgid "Create a new Application Group"
-msgstr ""
+msgstr "创建应用程序组"
 
 #: ../../AdminConsole/web/wizard.php:346
 msgid "Use an existing Application Group"
-msgstr ""
+msgstr "使用现成应用程序组"
 
 #: ../../AdminConsole/web/wizard.php:420
 msgid "Create Application Group"
@@ -4734,7 +4918,7 @@ msgstr "确认"
 
 #: ../../AdminConsole/web/wizard.php:465
 msgid "Are you sure that you want to create this Publication?"
-msgstr ""
+msgstr "确认创建此发布?"
 
 #: ../../AdminConsole/web/wizard.php:474
 msgid "Between this User Group"
@@ -4949,12 +5133,6 @@ msgstr "无法创建应用程序组"
 #~ "usergroup"
 #~ msgstr "不能移除用户从'%s'用户组，因为它是默认用户组"
 
-#~ msgid "Unable to save the publication"
-#~ msgstr "无法保存发布"
-
-#~ msgid "Unable to delete the publication"
-#~ msgstr "无法删除发布"
-
 #, php-format
 #~ msgid "Unable to modify user '%s'"
 #~ msgstr "无法编辑用户'%s'"
@@ -4975,9 +5153,6 @@ msgstr "无法创建应用程序组"
 
 #~ msgid "Web links configuration"
 #~ msgstr "互联网链接设置"
-
-#~ msgid "Failed to get User Group list"
-#~ msgstr "获取用户组列表失败"
 
 #~ msgid "Activation certificates"
 #~ msgstr "激活证书"
@@ -5061,9 +5236,6 @@ msgstr "无法创建应用程序组"
 
 #~ msgid "Publication list"
 #~ msgstr "发布列表"
-
-#~ msgid "No publication"
-#~ msgstr "未发布"
 
 #~ msgid "Error: \"from\" date is after \"to\" date, switching"
 #~ msgstr "错误: \"从\" 数据在 \"去\"数据之后, 切换中"
@@ -5675,9 +5847,6 @@ msgstr "无法创建应用程序组"
 
 #~ msgid "Unable to load usergroup"
 #~ msgstr "无法载入用户组"
-
-#~ msgid "Manage"
-#~ msgstr "管理"
 
 #~ msgid "Use LDAP User Groups using the MemberOf field"
 #~ msgstr "使LDAP用户组使用MemberOf字段"

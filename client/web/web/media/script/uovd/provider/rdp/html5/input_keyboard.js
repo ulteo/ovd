@@ -11,7 +11,11 @@ uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 
 	this.rdp_provider.session_management.addCallback("ovd.session.destroying", this.handler);
 
-	switch(rdp_provider.session_management.parameters.rdp_input_method) {
+	var sm_use_local_ime = this.rdp_provider.session_management.session.settings.use_local_ime || 0;
+	var force_unicode_local_ime = parseInt(sm_use_local_ime) ? 1 : 0;
+	var rdp_input_method = force_unicode_local_ime ? "unicode_local_ime" : rdp_provider.session_management.parameters.rdp_input_method;
+
+	switch(rdp_input_method) {
 		case "unicode" :
 			this.setUnicode();
 			break;
@@ -29,6 +33,22 @@ uovd.provider.rdp.html5.Keyboard = function(rdp_provider, connection) {
 
 uovd.provider.rdp.html5.Keyboard.prototype.attach = function(connection) {
 	this.connection = connection;
+	var server_id = this.attachedTo();
+
+	if(this.ime_settings) {
+		/* Restore IME server params */
+		var params = this.ime_settings[server_id];
+		this.guac_keyboard.setPosition(params["position"]["x"], params["position"]["y"]);
+		this.guac_keyboard.setIme(params["state"]);
+	}
+}
+
+uovd.provider.rdp.html5.Keyboard.prototype.attachedTo = function() {
+	for(var i=0 ; i<this.rdp_provider.connections.length ; ++i) {
+		if(this.rdp_provider.connections[i] == this.connection) { return i; }
+	}
+
+	return undefined;
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
@@ -38,7 +58,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	this.guac_keyboard = new Guacamole.NativeKeyboard();
 
 	/* Insert the hidden textfield with the canvas */
-	jQuery(this.connection.guac_display).append(this.guac_keyboard.getNode());
+	jQuery(this.connection.guac_display).prepend(this.guac_keyboard.getNode());
 
 	/* Keydown */
 	this.guac_keyboard.onkeydown = function (keysym) {
@@ -54,6 +74,54 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 	this.guac_keyboard.onunicode = function (keysym) {
 		self.connection.guac_client.sendKeyEvent(2, keysym);
 	};
+
+	/* Ukbrdr */
+	this.guac_keyboard.oncomposeupdate = function(text) {
+		var preedit = new DataStream();
+		preedit.write_UInt16LE(4);
+		preedit.write_UInt16LE(0);
+
+		var size = new DataStream();
+		size.write_UTF16LE(text+"\0");
+		preedit.write_UInt32LE(size.get_size());
+		preedit.write_UTF16LE(text+"\0");
+
+		self.connection.guac_tunnel.sendMessage("ukbrdr",preedit.toBase64());
+	}
+
+	this.guac_keyboard.oncomposeend = function() {
+		var preedit = new DataStream();
+		preedit.write_UInt16LE(5);
+		preedit.write_UInt16LE(0);
+		preedit.write_UInt32LE(0);
+
+		self.connection.guac_tunnel.sendMessage("ukbrdr",preedit.toBase64());
+	}
+
+
+	/* Install instruction hook */
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		(function(server_id) {
+			self.rdp_provider.connections[server_id].guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+				var stream = DataStream.fromBase64(params[0]);
+				var message = stream.read_UInt16LE();
+				var flags = stream.read_UInt16LE();
+				var size = stream.read_UInt32LE();
+
+				switch(message) {
+					case 1: // UKB_CARET_POS
+						var x = stream.read_UInt32LE();
+						var y = stream.read_UInt32LE();
+
+						var offset = jQuery(self.connection.guac_display).offset();
+						var px = offset.left + x;
+						var py = offset.top + y;
+						self.guac_keyboard.setPosition(px, py);
+						break;
+				}
+			});
+		})(i);
+	}
 
 	/* Actions */
 	this.focus =  function() { if(!self.guac_keyboard.active()) self.guac_keyboard.enable(); };
@@ -138,6 +206,7 @@ uovd.provider.rdp.html5.Keyboard.prototype.setUnicode = function() {
 
 	/* Set destructor */
 	this.end = function() {
+		self.connection.guac_tunnel.removeInstructionHandler("ukbrdr");
 		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_mode);
 		self.rdp_provider.session_management.removeCallback("ovd.wm.keyboard.focusMode", update_ui);
 		self.rdp_provider.session_management.removeCallback("ovd.rdpProvider.gesture.twofingers", self.toggle);
@@ -179,28 +248,72 @@ uovd.provider.rdp.html5.Keyboard.prototype.setScancode = function() {
 }
 
 uovd.provider.rdp.html5.Keyboard.prototype.setUnicodeLocalIME = function() {
+	var self = this; /* closure */
+
 	/* Set unicode */
 	this.setUnicode();
 
-	/* Install instruction hook for imestate order*/
-	this.connection.guac_tunnel.addInstructionHandler("imestate", jQuery.proxy(this.handleOrders, this));
+	/* Keep track of IME settings by connection */
+	this.ime_settings = [];
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		this.ime_settings[i] = {
+			"position":{"x":0, "y":0},
+			"state": true
+		}
+	}
 
-	/* Set destructor */
-	var self = this; /* closure */
-	var super_destructor = this.end;
+	/* Install instruction hook */
+	for(var i=0 ; i<self.rdp_provider.connections.length ; ++i) {
+		(function(server_id) {
+			var sid = server_id;
 
-	this.end = function() {
-		super_destructor();
+			self.rdp_provider.connections[server_id].guac_tunnel.addInstructionHandler("ukbrdr", function(opcode, params) {
+				var stream = DataStream.fromBase64(params[0]);
+				var message = stream.read_UInt16LE();
+				var flags = stream.read_UInt16LE();
+				var size = stream.read_UInt32LE();
+				var server_attached = self.attachedTo();
 
-		/* Remove instruction hook */
-		self.connection.guac_tunnel.removeInstructionHandler("imestate");
-	};
-}
+				switch(message) {
+					case 0: // UKB_INIT
+						self.guac_keyboard.setUkbrdr(true);
+						break;
 
-uovd.provider.rdp.html5.Keyboard.prototype.handleOrders = function(opcode, parameters) {
-	if(opcode == "imestate") {
-		var state = parseInt(parameters[1]);
-		this.guac_keyboard.setIme(state);
+					case 1: // UKB_CARET_POS
+						var x = stream.read_UInt32LE();
+						var y = stream.read_UInt32LE();
+
+						var offset = jQuery(self.connection.guac_display).offset();
+						var px = offset.left + x;
+						var py = offset.top + y;
+						var last_x = self.ime_settings[sid]["position"]["x"];
+						var last_y = self.ime_settings[sid]["position"]["y"];
+
+						if(last_x != px || last_y != py) {
+							self.ime_settings[sid]["position"]["x"] = px;
+							self.ime_settings[sid]["position"]["y"] = py;
+
+							if(sid == server_attached) {
+								self.guac_keyboard.setPosition(px, py);
+							}
+						}
+						break;
+
+					case 2: // UKB_IME_STATUS
+						var state = stream.read_Byte();
+						var last_state = self.ime_settings[sid]["state"];
+
+						if(last_state != state) {
+							self.ime_settings[sid]["state"] = state;
+
+							if(sid == server_attached) {
+								self.guac_keyboard.setIme(state);
+							}
+						}
+						break;
+				}
+			});
+		})(i);
 	}
 }
 

@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2014
  * Author Omar AKHAM <oakham@ulteo.com> 2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013, 2014
  *
@@ -108,8 +108,8 @@ $wi_debug = 1;
 if (isset($_COOKIE['ovd-client']['debug']))
 	$wi_debug = ($_COOKIE['ovd-client']['debug'] == "true") ? 1:0;
 
-$rdp_input_method = null;
-if (defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD !== true && isset($_COOKIE['ovd-client']['session_input_method']))
+$rdp_input_method = "unicode";
+if ((!defined('OPTION_FORCE_INPUT_METHOD') || OPTION_FORCE_INPUT_METHOD !== true) && isset($_COOKIE['ovd-client']['session_input_method']))
 	$rdp_input_method = (string)$_COOKIE['ovd-client']['session_input_method'];
 else
 	if(defined('RDP_INPUT_METHOD'))
@@ -494,7 +494,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 								<div class="loginElement">
 									<label class="loginLabel" for="rdp_mode">
 										<div class="image_session_mode_png"></div>
-										<strong><span id="rdp_mode_gettext">Type&nbsp;</span></strong>
+										<strong><span id="rdp_mode_gettext">&nbsp;</span></strong>
 									</label>
 									<div class="loginField">
 										<?php
@@ -550,6 +550,20 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									</div>
 								</div>
 								
+								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
+									<label class="loginLabel" for="session_input_method">
+										<div class="image_keyboard_layout_png"></div>
+										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
+									</label>
+									<div class="loginField">
+											<?php long_list_field("session_input_method", $force_input_method === true, $rdp_input_method, array(
+												"scancode"=>"keyboard_config_scancode_gettext", 
+												"unicode"=>"keyboard_config_unicode_gettext",
+												"unicode_local_ime"=>"keyboard_config_unicode_lime_gettext")); 
+											?>
+									</div>
+								</div>
+								
 								<div class="loginElement">
 									<label class="loginLabel" for="session_keymap">
 										<div class="image_keyboard_layout_png"></div>
@@ -565,19 +579,6 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 									</div>
 								</div>
 							
-								<div class="loginElement" <?php if ($show_input_method === false) echo ' style="display: none;"';?>>
-									<label class="loginLabel" for="session_input_method">
-										<div class="image_keyboard_layout_png"></div>
-										<strong><span id="keyboard_config_gettext">&nbsp;</span></strong>
-									</label>
-									<div class="loginField">
-											<?php long_list_field("session_input_method", $force_input_method === true, $rdp_input_method, array(
-												"scancode"=>"keyboard_config_scancode_gettext", 
-												"unicode"=>"keyboard_config_unicode_gettext",
-												"unicode_local_ime"=>"keyboard_config_unicode_lime_gettext")); 
-											?>
-									</div>
-								</div>
 <?php
 	if ($debug_mode) {
 ?>

@@ -6,9 +6,9 @@
  * Date: $Date: 2007/03/14 23:26:08 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2013 Ulteo SAS
+ * Copyright (C) 2011-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
  * Purpose: Handles input events and sends relevant input data
@@ -45,6 +45,7 @@ public abstract class Input {
 
 	protected static boolean capsLockOn = false;
 	protected static boolean numLockOn = false;
+	protected boolean serverNumLockOn = false;
 	protected static boolean scrollLockOn = false;
 
 	protected static boolean serverAltDown = false;
@@ -76,6 +77,8 @@ public abstract class Input {
 	protected static final int KBD_ALT_KEY = 0x38;
 	protected static final int KBD_SHIFT_KEY = 0x2a;
 	protected static final int KBD_CTRL_KEY = 0x1d;
+	protected static final int KBD_NUMLOCK_KEY = 0x45;
+	
 	protected static final int KBD_ALTGR_KEY = SCANCODE_EXTENDED | KBD_ALT_KEY;
 	protected static final int KBD_KEY_WINDOWS_LEFT = SCANCODE_EXTENDED | 0x5B; // Left Windows key
 	protected static final int KBD_KEY_WINDOWS_RIGHT = SCANCODE_EXTENDED | 0x5C; // Right Windows key
@@ -135,7 +138,7 @@ public abstract class Input {
 		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
-		Input.resetState();
+		this.resetState();
 	}
 
     /**
@@ -160,12 +163,13 @@ public abstract class Input {
 		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
-		Input.resetState();
+		this.resetState();
 	}
 
-	private static void resetState() {
+	private void resetState() {
 		capsLockOn = false;
 		numLockOn = false;
+		this.serverNumLockOn = false;
 		scrollLockOn = false;
 		serverAltDown = false;
 		altDown = false;
@@ -201,16 +205,23 @@ public abstract class Input {
 			this.canvas.removeMouseListener(mlisteners[i]);
 			
 		this.canvas.addMouseListener(this.mouseAdapter);
+		
+		MouseWheelListener[] mwlisteners = this.canvas.getMouseWheelListeners();
+		for (int i=0 ; i < mwlisteners.length; i++)
+			this.canvas.removeMouseWheelListener(mwlisteners[i]);
+		
 		if (! OSTools.isMac() || MouseInfo.getNumberOfButtons() > 3) {
 			this.opt.isMouseWheelEnabled = true;
 			this.canvas.addMouseWheelListener(this.mouseAdapter);
 		} else
 			Input.logger.warn("No mouse wheel was detected");
+		
 		this.mouseMotionAdapter = new RdesktopMouseMotionAdapter();
-		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
 		MouseMotionListener[] mmlisteners = this.canvas.getMouseMotionListeners();
 		for (int i=0 ; i < mlisteners.length; i++)
 			this.canvas.removeMouseMotionListener(mmlisteners[i]);
+		
+		this.canvas.addMouseMotionListener(this.mouseMotionAdapter);
 		
 		this.keyAdapter = new RdesktopKeyAdapter();
 		KeyListener[] klisteners = this.canvas.getKeyListeners();
@@ -436,15 +447,24 @@ public abstract class Input {
 			if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_NUMPAD && !e.isActionKey()) {
 				if (! numLockOn) {
 					numLockOn = true;
-					sendScancode(getTime(), RDP_KEYPRESS, 0x45);
-					sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
+					serverNumLockOn = true;
+					sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+					sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
 				}
 			}
 			if (e.getKeyCode() == KeyEvent.VK_NUM_LOCK ) {
 				numLockOn = !numLockOn;
-				sendScancode(getTime(), RDP_KEYPRESS, 0x45);
-				sendScancode(getTime(), RDP_KEYRELEASE, 0x45);
+				serverNumLockOn = numLockOn;
+				sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+				sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
 			}
+			
+			if ( numLockOn != serverNumLockOn) {
+				serverNumLockOn = numLockOn;
+				sendScancode(getTime(), RDP_KEYPRESS, KBD_NUMLOCK_KEY);
+				sendScancode(getTime(), RDP_KEYRELEASE, KBD_NUMLOCK_KEY);
+			}
+			
 			if (OSTools.isLinux()) {
 				if (e.isAltGraphDown() && !altgrDown) {
 					altgrDown = true;
@@ -834,6 +854,7 @@ public abstract class Input {
 	public void triggerReadyToSend() {
 		capsLockOn = false;
 		numLockOn = false;
+		this.serverNumLockOn = false;
 		scrollLockOn = false;
 		doLockKeys(); // ensure lock key states are correct
 	}

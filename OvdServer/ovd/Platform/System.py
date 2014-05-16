@@ -2,7 +2,7 @@
 
 # Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2014
 # Author David LECHEVALIER <david@ulteo.com> 2012, 2013, 2014
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
@@ -128,7 +128,7 @@ class System:
 	
 	
 	@classmethod
-	def execute(cls, args, wait = True, env = {}):
+	def execute(cls, args, wait = True, env = {}, extra_args = {}):
 		if type(args) is type([]):
 			shell = False
 		elif type(args) in [type(""), type(u"")]:
@@ -144,6 +144,7 @@ class System:
 		subprocess_args["env"].update(env)
 		
 		cls.customize_subprocess_args(subprocess_args)
+		subprocess_args.update(extra_args)
 		
 		p = subprocess.Popen(args, **subprocess_args)
 		

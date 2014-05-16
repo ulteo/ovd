@@ -101,7 +101,7 @@ public class Language {
 			{"Romanian", "Română", "ro"},
 			{"Russian", "Русский", "ru"},
 			{"Slovak", "Slovenčina", "sk"},
-//			{"Slovenian", "", "sl"},
+			{"Slovenian", "Slovenščina", "sl"},
 //			{"Sorbian", "", "sb"},
 			{"Spanish", "Español", "es"},
 //			{"Spanish (Spain)", "Español (España)", "es-es"},

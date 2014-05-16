@@ -40,7 +40,7 @@ from ovd.Platform.System import System
 class Profile(AbstractProfile):
 	TEMPORARY_PROFILE_PATH = "/var/spool/ulteo/ovd/profiles/"
 	MOUNT_POINT = "/mnt/ulteo/ovd"
-	DEFAULT_PERMISSION = "file_mode=0700,dir_mode=0600"
+	DEFAULT_PERMISSION = "file_mode=0600,dir_mode=0700"
 	
 	def init(self):
 		self.profileMounted = False
@@ -59,11 +59,11 @@ class Profile(AbstractProfile):
 	def mount_cifs(self, share, uri, dest):
 		mount_env = {}
 		if share.has_key("login") and share.has_key("password"):
-			cmd = "mount -t cifs -o 'uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'uid=%s,gid=0,%s,iocharset=utf8' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 			mount_env["USER"] = share["login"]
 			mount_env["PASSWD"] = share["password"]
 		else:
-			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,%s' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
+			cmd = "mount -t cifs -o 'guest,uid=%s,gid=0,%s,iocharset=utf8' //%s%s %s"%(self.session.user.name, self.DEFAULT_PERMISSION, uri.netloc, uri.path, dest)
 		
 		cmd = self.transformToLocaleEncoding(cmd)
 		Logger.debug("Profile, share mount command: '%s'"%(cmd))

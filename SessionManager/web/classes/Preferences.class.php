@@ -415,6 +415,7 @@ class Preferences {
 			'ro_RO',
 			'ru_RU',
 			'sk_SK',
+			'sl',
 			'sv_SE',
 			'zh_CN',
 		));
@@ -476,6 +477,10 @@ class Preferences {
 		$c->setContentAvailable(array(16, 24, 32));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('enhance_user_experience', 1);
+		$c->setContentAvailable(array(0, 1));
+		$this->add($c,'general','session_settings_defaults');
+		
+		$c = new ConfigElement_select('use_local_ime', 0);
 		$c->setContentAvailable(array(0, 1));
 		$this->add($c,'general','session_settings_defaults');
 		

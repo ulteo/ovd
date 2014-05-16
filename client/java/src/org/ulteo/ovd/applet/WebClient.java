@@ -344,6 +344,11 @@ public class WebClient extends Applet implements FocusListener {
 			this.focusManager = new AppletFocusManager(appletPrinterThread);
 		}
 			
+		if (properties.isUseLocalIME()){
+			rdp_input_method = "unicode_local_ime";
+			keymap = "us";
+		}
+		
 		// configure client
 		if (this.session_mode == Properties.MODE_DESKTOP) {
 			OvdClientDesktopApplet client = new OvdClientDesktopApplet(properties, this);

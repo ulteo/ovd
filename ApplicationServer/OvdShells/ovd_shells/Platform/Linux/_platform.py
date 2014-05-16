@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2013 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
-# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
+# Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011, 2014
 # Author Thomas MOUTON <thomas@ulteo.com> 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
 #
@@ -26,6 +26,7 @@ import os
 import re
 import signal
 import sys
+import urllib2
 import xrdp.Session as XrdpSession
 
 def rdpSessionIsConnected():
@@ -99,6 +100,9 @@ def existProcess(pid):
 
 def getUserSessionDir():
 	return os.path.join("/var/spool/ulteo/ovd/", os.environ["USER"])
+
+def setupIME():
+	launch("ukbrdr")
 	
 
 def startDesktop():
@@ -149,7 +153,7 @@ def transformCommand(cmd_, args_):
 			b = []
 			for arg in args_:
 				if "://" not in arg:
-					b.append('file://%s'%(os.path.abspath(arg)))
+					b.append('file://%s'%(urllib2.quote(os.path.abspath(arg))))
 				else:
 					b.append(arg)
 			return cmd_.replace("%U", list2cmdline(b))
@@ -170,7 +174,7 @@ def transformCommand(cmd_, args_):
 		
 			arg = args.pop()
 			if tok == "u" and "://" not in arg:
-				replace = "file://%s"%(os.path.abspath(arg))
+				replace = "file://%s"%(urllib2.quote(os.path.abspath(arg)))
 			else:
 				replace = arg
 		

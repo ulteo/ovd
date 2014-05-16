@@ -5,8 +5,8 @@
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
 
-    <subtitle><trademark class="registered">Microsoft Windows</trademark>
-    server installation</subtitle>
+    <subtitle><trademark class="registered">Installing OVD on Microsoft
+    Windows</trademark> Server</subtitle>
 
     <graphic align="center" fileref="img/ovd.png"/>
 
@@ -22,9 +22,10 @@
   <trademark class="registered">Microsoft Windows</trademark> server
   system.</para>
 
-  <para>This documention <emphasis role="strong">does not describe</emphasis>
-  the OVD installation or configuration. For that, please read the <emphasis
-  role="strong">Installation documentation</emphasis>.</para>
+  <para>This documentation <emphasis role="strong">does not
+  describe</emphasis> the OVD installation or configuration. For that, please
+  read the <emphasis role="strong">Installation
+  documentation</emphasis>.</para>
 
   <section>
     <title>Prerequisites</title>
@@ -39,7 +40,7 @@
         </listitem>
 
         <listitem>
-          <para>Production envrionments: Ulteo recommends a minimum of 4GB RAM
+          <para>Production environments: Ulteo recommends a minimum of 4GB RAM
           and 2 CPU cores</para>
         </listitem>
       </itemizedlist>
@@ -71,6 +72,13 @@
       domain <emphasis role="strong">but must not</emphasis> run as a domain
       controller.</para>
     </important>
+
+    <para>You need to disable the <emphasis role="bold">Network Level
+    Authentication</emphasis> for the Remote Desktop settings. <screenshot>
+        <screeninfo>NLA setting</screeninfo>
+
+        <graphic fileref="img/windows/nla.png"/>
+      </screenshot></para>
 
     <para>An Ulteo OVD Session Manager installed and running.</para>
 
@@ -184,7 +192,7 @@
 
       <para>It's also possible to read some debug messages in the <emphasis
       role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (on
-      the Appplication section).</para>
+      the Application section).</para>
 
       <screenshot>
         <screeninfo><trademark>Windows</trademark> - events</screeninfo>

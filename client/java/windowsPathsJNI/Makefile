@@ -1,8 +1,9 @@
-# Copyright (C) 2009-2011 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Thomas MOUTON <thomas@ulteo.com> 2010-2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +23,7 @@ BINPREFIX?=i586-mingw32msvc-
 CC=$(BINPREFIX)gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
 CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux
-LDFLAGS= -lmpr
+LDFLAGS= -lmpr -lImm32
 EXEC=libWindowsPaths.dll
 
 

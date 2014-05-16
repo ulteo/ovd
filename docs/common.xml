@@ -43,4 +43,13 @@
       </listitem>
     </itemizedlist>
   </simplesect>
+
+  <simplesect id="prerequisites_all">
+    <title>Prerequisites for network</title>
+
+    <important id="prerequisites_all_important">
+      <para>You need to review the "Protocol Overview" documentation to make
+      sure that your firewalls are well configured</para>
+    </important>
+  </simplesect>
 </article>

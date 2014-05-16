@@ -1189,9 +1189,6 @@ public class Rdp {
             logger.debug("User logged on");
             this.opt.loggedon = true;
             break;
-        case (Rdp.RDP_DATA_PDU_SET_IME_STATUS):
-            this.processImeStatus(data);
-            break;
         case (Rdp.PDUTYPE2_SET_ERROR_INFO_PDU):
             /*
              * Normally received when user logs out or disconnects from a
@@ -1781,24 +1778,6 @@ public class Rdp {
         default:
             break;
         }
-    }
-
-    private void processImeStatus(RdpPacket_Localised data) {
-        int unitId = data.getLittleEndian16();
-        int imeOpen = data.getLittleEndian32();
-        int imeConvMode = data.getLittleEndian32();
-        boolean state = (imeConvMode == IME_CMODE_NATIVE);
-        Input input = this.surface.getInput();
-
-        if (input.supportIME() == false) {
-            return; /* Not supported */
-        }
-
-        if (input.getImeActive() == state) {
-            return; /* State unchanged */
-        }
-
-        input.setImeActive(state);
     }
 
     private void process_system_pointer_pdu(RdpPacket_Localised data) {

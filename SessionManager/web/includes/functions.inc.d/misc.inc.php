@@ -102,7 +102,8 @@ function locale2unix($locale_) {
 		'es'	=>	'es_ES',
 		'pt'	=>	'pt_PT',
 		'it'	=>	'it_IT',
-		'ja'	=>	'ja_JP'
+		'ja'	=>	'ja_JP',
+		'sl'	=>	'sl_SI'
 	);
 
 	if (preg_match('/([a-z]+_[A-Z]+)\.[a-zA-Z-0-9]+/', $locale_, $matches))

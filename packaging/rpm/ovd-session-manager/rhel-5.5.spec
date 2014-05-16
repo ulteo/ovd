@@ -91,7 +91,7 @@ INSTALLDIR=/usr/share/ulteo/sessionmanager
 # Check if update is possible
 if [ -f $INSTALLDIR/tools/can_update.php ]
 then
-   su %{apache_user} -c "php $INSTALLDIR/tools/can_update.php" 2>/dev/null
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/can_update.php 2>/dev/null
    if [ $? -ne 0 ]
    then
       exit 1
@@ -152,7 +152,7 @@ fi
 if [ -f $INSTALLDIR/tools/update_database.php ]
 then
    echo "Updating database."
-   su %{apache_user} -c "php $INSTALLDIR/tools/update_database.php" 2>/dev/null
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/update_database.php 2>/dev/null
    if [ $? -ne 0 ]
    then
       exit 1
@@ -163,7 +163,7 @@ fi
 if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
 then
    echo "Purging wsdl cache files."
-   su %{apache_user} -c "php $INSTALLDIR/tools/update_wsdl_cache.php" 2>/dev/null
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
    if [ $? -ne 0 ]
    then
       exit 1

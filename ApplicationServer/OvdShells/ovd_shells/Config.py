@@ -30,6 +30,7 @@ class Config:
 	no_desktop_process = False
 	use_known_drives = False
 	profile_mode = None
+	use_local_ime = False
 	
 	application_to_start = []
 	scripts_to_start = []
@@ -74,6 +75,9 @@ class Config:
 			
 			elif key == "profile_mode":
 				self.profile_mode = node.getAttribute("value").lower()
+			
+			elif key == "use_local_ime" and node.getAttribute("value") == "1":
+				self.use_local_ime = True
 		
 		
 		nodes = shellNode.getElementsByTagName("start")

@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com> 2011, 2012
  * Author Thomas MOUTON <thomas@ulteo.com> 2010-2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +42,7 @@ public class ProfileProperties {
 	private Dimension screensize = null;
 	private String lang = null;
 	private String keymap = null;
-	private String inputMethod = null;
+	private String inputMethod = "unicode";
 	private boolean showProgressbar = true;
 	private boolean isGUILocked = false;
 	private boolean isBugReporterVisible = false;

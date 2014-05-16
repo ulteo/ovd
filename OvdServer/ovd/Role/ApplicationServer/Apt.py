@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2011, 2012, 2014
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2011
 #
@@ -130,23 +130,37 @@ class Request_Packages(Request):
 	
 	def perform(self):
 		os.mkdir(self.directory)
+		f_stdout = open(os.path.join(self.directory, "stdout"), "w")
+		f_stderr = open(os.path.join(self.directory, "stderr"), "w")
+		process_out = {"stdout": f_stdout, "stderr": f_stderr}
+		
+		p = System.execute(["apt-get", "update"], True, {}, process_out)
+		if p.returncode != 0:
+			f_stdout.close()
+			f_stderr.close()
+			return False
+		
+		apt_env = {"DEBIAN_FRONTEND": "noninteractive", "DEBIAN_PRIORITY": "critical", "DEBCONF_NONINTERACTIVE_SEEN": "true"}
+		command = ["apt-get", "--yes", "--force-yes", "--option", "DPkg::Options::=--force-confold"]
 		if self.order == "upgrade":
-			command = "dist-upgrade"
+			command.append("dist-upgrade")
 		elif self.order == "install":
-			command = "install "+" ".join(self.packages)
+			command.append("install")
 		elif self.order == "remove":
-			command = "autoremove --purge "+" ".join(self.packages)
+			command.append("autoremove")
+			command.append("--purge")
 		
-		cmd = "apt-get update >>%s/stdout 2>>%s/stderr"%(self.directory, self.directory)
-		p = System.execute(cmd)
+		if self.order in ["install", "remove"]:
+			command.extend(self.packages)
+		
+		p = System.execute(command, True, apt_env, process_out)
 		if p.returncode != 0:
+			f_stdout.close()
+			f_stderr.close()
 			return False
 		
-		cmd = "DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical DEBCONF_NONINTERACTIVE_SEEN=true apt-get --yes --force-yes --option DPkg::Options::=--force-confold %s >>%s/stdout 2>>%s/stderr"%(command, self.directory, self.directory)
-		p = System.execute(cmd)
-		if p.returncode != 0:
-			return False
-		
+		f_stdout.close()
+		f_stderr.close()
 		return True
 
 

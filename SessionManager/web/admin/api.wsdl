@@ -15,6 +15,14 @@
 			</xsd:sequence>
 		</xsd:complexType>
 		
+		<xsd:simpleType name="certification_add_type">
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="CERT_OK" />
+				<xsd:enumeration value="CERT_ERROR" />
+				<xsd:enumeration value="CERT_EXIST" />
+			</xsd:restriction>
+		</xsd:simpleType>
+		
 		<xsd:complexType name="application">
 			<xsd:sequence>
 				<xsd:element name="id" type="xsd:string" minOccurs="0" />
@@ -49,6 +57,10 @@
 	</types>
 	
 	<message name="voidRequest" />
+	
+	<message name="certification_add_msg">
+		<part name="certification_add_type" element="urn:add_return_type" />
+	</message>
 	
 	<message name="Any">
 		<part name="parameters" type="urn:any"/>
@@ -1032,7 +1044,7 @@
 		<operation name="certificate_add">
 			<documentation>Add a Subscription Key (base64 encoded)</documentation>
 			<input message="urn:String"/>
-			<output message="urn:Boolean"/>
+			<output message="urn:certification_add_msg"/>
 		</operation>
 		
 		<operation name="certificate_del">

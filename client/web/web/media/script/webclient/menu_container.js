@@ -16,6 +16,16 @@ MenuContainer = function(session_management, node) {
 	this.session_management.addCallback("ovd.session.destroying",        this.handler);
 }
 
+MenuContainer.prototype.show = function() {
+	this.node.animate({"top": "0"});
+	this.bottom.html("&#x25B2"); /* Unicode "/\" arrow */
+};
+
+MenuContainer.prototype.hide = function() {
+	this.node.animate({"top": "-33%"});
+	this.bottom.html("&#x25BC"); /* Unicode " \/" arrow */
+};
+
 MenuContainer.prototype.handleEvents = function(type, source, params) {
 	var self = this; /* closure */
 
@@ -29,14 +39,8 @@ MenuContainer.prototype.handleEvents = function(type, source, params) {
 		/* Bind the show/hide button */
 		this.bottom.on("click", function() {
 			var offset_top = self.node.offset().top;
-			if(offset_top != 0) {
-				self.node.animate({"top": "0"});
-				self.bottom.html("&#x25B2"); /* Unicode "/\" arrow */
-			} else {
-				self.node.animate({"top": "-33%"});
-				self.bottom.html("&#x25BC"); /* Unicode " \/" arrow */
-			}
-
+			if(offset_top != 0) { self.show(); }
+			else                { self.hide(); }
 			self.blinkStop();
 		});
 
@@ -125,6 +129,7 @@ MenuContainer.prototype.blinkStop = function() {
 }
 
 MenuContainer.prototype.end = function() {
+	this.hide();
 	this.blinkStop();
 	this.node.empty();
 	this.content = {};

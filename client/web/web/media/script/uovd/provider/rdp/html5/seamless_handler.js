@@ -156,7 +156,7 @@ uovd.provider.rdp.html5.SeamlessHandler.prototype.handleOrders = function(server
 			*/
 			params["id"] = parseInt(seamless[2]);
 			params["property"] = "title";
-			params["value"] = seamless[3];
+			params["value"] = utf8_decode(seamless[3]);
 			this.rdp_provider.session_management.fireEvent("ovd.rdpProvider.seamless.in.windowPropertyChanged", this, params);
 		} else if(seamless[0] == "SETICON") {
 			/* seamless[2] = Window id

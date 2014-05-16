@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010-2011
- * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
+ * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012, 2014
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2013
  *
  * This program is free software; you can redistribute it and/or
@@ -80,7 +80,7 @@ function get_available_languages() {
 		array('id' => 'ro', 'english_name' => 'Romanian', 'local_name' => 'Română'),
 		array('id' => 'ru', 'english_name' => 'Russian', 'local_name' => 'Русский'),
 		array('id' => 'sk', 'english_name' => 'Slovak', 'local_name' => 'Slovenčina'),
-// 		array('id' => 'sl', 'english_name' => 'Slovenian'),
+		array('id' => 'sl', 'english_name' => 'Slovenian', 'local_name' => 'Slovenščina'),
 // 		array('id' => 'sb', 'english_name' => 'Sorbian'),
 		array('id' => 'es', 'english_name' => 'Spanish (Spain)', 'local_name' => 'Español (España)'),
 		array('id' => 'sv-se', 'english_name' => 'Swedish', 'local_name' => 'Svenska'),
@@ -171,6 +171,7 @@ function locale2unix($locale_) {
 		'ar'	=>	'ar_AE',
 		'en'	=>	'en_US',
 		'ja'	=>	'ja_JP',
+		'sl'	=>	'sl_SI',
 	);
 
 	if (! preg_match('/[a-zA-Z-_]/', $locale))
@@ -210,6 +211,7 @@ function get_available_translations($lang) {
 		'mode'							=>	_('Mode'),
 		'mode_desktop'					=>	_('Desktop'),
 		'mode_portal'					=>	_('Portal'),
+		'rdp_mode'						=>	_('Type'),
 		'fullscreen'					=>	_('Fullscreen'),
 		'fullscreen_yes'				=>	_('Yes'),
 		'fullscreen_no'					=>	_('No'),

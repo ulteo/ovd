@@ -17,6 +17,7 @@ while ! is_valid_chroot; do
     # get the tarball uri and quit if empty
     db_get ulteo-ovd-subsystem/tarball_uri && URI="$RET"
     [ -z "$URI" ] && break
+    [ "$URL" = "NONE" ] && break
 
     # session manager url
     db_get ulteo-ovd-subsystem/sm_address && SM="$RET"

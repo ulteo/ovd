@@ -70,6 +70,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 		success: function(xml) {
 			var connection = {};
 
+			/* Save server settings */
+			self.connections.push(connection);
+
 			/* Connect */
 			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
@@ -81,7 +84,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null)[0];
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null).css("position", "relative")[0];
 			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
 			/* Initialize inputs */
@@ -95,9 +98,6 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_fullscreen = function() {
 				var y = params["y"];
 				jQuery(connection.guac_display).css("cursor", "url("+url+")"+x+" "+y+", auto");
 			};
-
-			/* Save server settings */
-			self.connections.push(connection);
 
 			/* set handler for clipboard channel */
 			var clipboard_instructionHandler = new uovd.provider.rdp.html5.ClipboardHandler(self);
@@ -164,6 +164,9 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 		success: function(xml) {
 			var connection = {};
 
+			/* Save server settings */
+			self.connections.push(connection);
+
 			/* Connect */
 			connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", 0);
 			connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
@@ -175,7 +178,7 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 			connection.guac_client.connect("id=0");
 
 			/* Display */
-			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null)[0];
+			connection.guac_canvas  = jQuery(connection.guac_client.getDisplay()).find("canvas").attr("style", null).css("position", "relative")[0];
 			connection.guac_display = jQuery(document.createElement("div")).append(connection.guac_canvas)[0];
 
 			/* Initialize inputs */
@@ -189,9 +192,6 @@ uovd.provider.rdp.Html5.prototype.connectDesktop_embeeded = function() {
 				var y = params["y"];
 				jQuery(connection.guac_display).css("cursor", "url("+url+")"+x+" "+y+", auto");
 			};
-
-			/* Save server settings */
-			self.connections.push(connection);
 
 			/* set handler for clipboard channel */
 			var clipboard_instructionHandler = new uovd.provider.rdp.html5.ClipboardHandler(self);
@@ -297,6 +297,9 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 			success: function(xml) {
 				var connection = {};
 
+				/* Save server settings */
+				self.connections.push(connection);
+
 				/* Connect */
 				connection.guac_tunnel = new Guacamole.ExtHTTPTunnel(self, "/ovd/guacamole/tunnel", index);
 				connection.guac_client = new Guacamole.Client(connection.guac_tunnel);
@@ -306,9 +309,6 @@ uovd.provider.rdp.Html5.prototype.connectApplications = function() {
 					/*self.session_management.fireEvent("ovd.rdpProvider.crash", self, {message:"Tunnel error"});*/
 				}
 				connection.guac_client.connect("id="+index);
-
-				/* Save server settings */
-				self.connections.push(connection);
 
 				/* Display */
 				connection.guac_display = display;

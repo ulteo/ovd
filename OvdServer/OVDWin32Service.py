@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2010-2011 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2010, 2011
 # Author David LECHEVALIER <david@ulteo.com> 2011
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -35,6 +36,7 @@ from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
 from ovd.Platform.ConfigReader import ConfigReader
 from ovd.Platform.System import System
+from ovd.Platform.ServerCheckup import ServerCheckup
 
 class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
@@ -57,32 +59,30 @@ class OVD(win32serviceutil.ServiceFramework):
 	
 	
 	def SvcDoRun(self):
-		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
-		
 		config_file = os.path.join(System.get_default_config_dir(), "slaveserver.conf")
 		if not Config.read(ConfigReader.process(None)):
-			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
 		if not Config.is_valid():
-			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
 		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
+		try:
+			ServerCheckup.check()
+		except:
+			Logger.exception("Server checkup")
+			return
 		
 		slave = SlaveServer(Communication)
 		
 		if not slave.load_roles():
-			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 			return
 		
 		if not slave.init():
 			Logger.error("Unable to initialize SlaveServer")
 			slave.stop()
 			return
-		
-		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
 		
 		inited = False
 		rc = win32event.WAIT_TIMEOUT
@@ -104,7 +104,6 @@ class OVD(win32serviceutil.ServiceFramework):
 			slave.stop()
 		
 		Logger.info("SlaveServer stopped")
-		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 	
 	
 	def SvcStop(self):

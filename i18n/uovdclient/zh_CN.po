@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-25 10:12+0200\n"
-"PO-Revision-Date: 2014-03-17 08:27+0200\n"
+"POT-Creation-Date: 2014-05-05 14:09+0200\n"
+"PO-Revision-Date: 2014-05-08 05:30+0200\n"
 "Last-Translator: Zhengquan <zhongzhengquan@zhiyisoft.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -14,132 +14,136 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Translate Toolkit 1.10.0\n"
+"X-Generator: Pootle 2.1.6\n"
 
-#: ../../client/web/web/external.php:289 ../../client/web/web/index.php:299
+#: ../../client/web/web/external.php:290 ../../client/web/web/index.php:303
 msgid ""
 "JavaScript must be enabled in order for you to use Ulteo OVD. However, it "
 "seems JavaScript is either disabled or not supported by your browser. To use "
-"OVD Web Client, enable JavaScript by changing your browser options, then [A]"
-"try again[/A]."
+"OVD Web Client, enable JavaScript by changing your browser options, then "
+"[A]try again[/A]."
 msgstr ""
 "为了使用Ulteo OVD, JavaScript必须可用。然而，JavaScript似乎已被禁用或你的浏览器不支持。为了使用OVD "
 "Web客户端，请改变你的浏览器选项以启用JavaScript，然后[A]重启[/A]。"
 
 # 80%
-#: ../../client/web/web/includes/functions.inc.php:199
+#: ../../client/web/web/includes/functions.inc.php:201
 msgid "Close"
 msgstr "关闭"
 
-#: ../../client/web/web/includes/functions.inc.php:201
+#: ../../client/web/web/includes/functions.inc.php:203
 msgid "Session Manager"
 msgstr "会话管理器"
 
-#: ../../client/web/web/includes/functions.inc.php:202
+#: ../../client/web/web/includes/functions.inc.php:204
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1011
 msgid "Login"
 msgstr "登入"
 
-#: ../../client/web/web/includes/functions.inc.php:203
+#: ../../client/web/web/includes/functions.inc.php:205
 msgid "Login (detected)"
 msgstr "登入(检测)"
 
-#: ../../client/web/web/includes/functions.inc.php:204
+#: ../../client/web/web/includes/functions.inc.php:206
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1012
 msgid "Password"
 msgstr "密码"
 
-#: ../../client/web/web/includes/functions.inc.php:205
+#: ../../client/web/web/includes/functions.inc.php:207
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1027
 msgid "Use local credentials"
 msgstr "使用本地证书"
 
-#: ../../client/web/web/includes/functions.inc.php:206
-#: ../../client/web/web/includes/functions.inc.php:212
-#: ../../client/web/web/includes/functions.inc.php:217
+#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/web/web/includes/functions.inc.php:215
+#: ../../client/web/web/includes/functions.inc.php:220
 msgid "Yes"
 msgstr "是(Y)"
 
-#: ../../client/web/web/includes/functions.inc.php:207
-#: ../../client/web/web/includes/functions.inc.php:213
-#: ../../client/web/web/includes/functions.inc.php:218
+#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/web/web/includes/functions.inc.php:216
+#: ../../client/web/web/includes/functions.inc.php:221
 msgid "No"
 msgstr "否(N)"
 
-#: ../../client/web/web/includes/functions.inc.php:208
+#: ../../client/web/web/includes/functions.inc.php:210
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1017
 msgid "Mode"
 msgstr "模式"
 
-#: ../../client/web/web/includes/functions.inc.php:209
+#: ../../client/web/web/includes/functions.inc.php:211
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1024
 msgid "Desktop"
 msgstr "桌面"
 
-#: ../../client/web/web/includes/functions.inc.php:210
+#: ../../client/web/web/includes/functions.inc.php:212
 msgid "Portal"
-msgstr "入口"
+msgstr "Portal"
 
-#: ../../client/web/web/includes/functions.inc.php:211
+#: ../../client/web/web/includes/functions.inc.php:213
+msgid "Type"
+msgstr "类型"
+
+#: ../../client/web/web/includes/functions.inc.php:214
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:85
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1035
 msgid "Fullscreen"
 msgstr "全屏"
 
-#: ../../client/web/web/includes/functions.inc.php:214
+#: ../../client/web/web/includes/functions.inc.php:217
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/AuthFrame.java:1019
 msgid "Language"
 msgstr "语言"
 
-#: ../../client/web/web/includes/functions.inc.php:215
+#: ../../client/web/web/includes/functions.inc.php:218
 msgid "Keyboard layout"
 msgstr "键盘布局"
 
-#: ../../client/web/web/includes/functions.inc.php:216
+#: ../../client/web/web/includes/functions.inc.php:219
 msgid "Debug"
 msgstr "调试"
 
-#: ../../client/web/web/includes/functions.inc.php:220
+#: ../../client/web/web/includes/functions.inc.php:223
 msgid "Keyboard method"
 msgstr "键盘方式"
 
-#: ../../client/web/web/includes/functions.inc.php:221
+#: ../../client/web/web/includes/functions.inc.php:224
 msgid "Scancode"
 msgstr "扫描码"
 
-#: ../../client/web/web/includes/functions.inc.php:222
+#: ../../client/web/web/includes/functions.inc.php:225
 msgid "Unicode"
 msgstr "统一编码"
 
-#: ../../client/web/web/includes/functions.inc.php:223
+#: ../../client/web/web/includes/functions.inc.php:226
 msgid "Unicode use local IME"
 msgstr "统一使用本地输入法"
 
-#: ../../client/web/web/includes/functions.inc.php:225
+#: ../../client/web/web/includes/functions.inc.php:228
 msgid "Advanced settings"
 msgstr "高级设置"
 
-#: ../../client/web/web/includes/functions.inc.php:226
+#: ../../client/web/web/includes/functions.inc.php:229
 msgid "Connect"
 msgstr "连接"
 
-#: ../../client/web/web/includes/functions.inc.php:228
+#: ../../client/web/web/includes/functions.inc.php:231
 msgid "Checking for system compatibility"
 msgstr "检查系统兼容性"
 
-#: ../../client/web/web/includes/functions.inc.php:229
+#: ../../client/web/web/includes/functions.inc.php:232
 msgid ""
 "If this is your first time here, a Java security window will show up and you "
 "will have to accept it to use the service."
 msgstr "如果你是首次访问，一个Java安全窗口将呈现，为了使用服务请选择接受。"
 
-#: ../../client/web/web/includes/functions.inc.php:230
+#: ../../client/web/web/includes/functions.inc.php:233
 msgid ""
 "You are advised to check the \"<em>Always trust content from this publisher</"
 "em>\" checkbox."
 msgstr "建议检查“总是信任此发布者”选项。"
 
-#: ../../client/web/web/includes/functions.inc.php:232
+#: ../../client/web/web/includes/functions.inc.php:235
 msgid "System compatibility error"
 msgstr "系统兼容性出错"
 
@@ -147,97 +151,97 @@ msgstr "系统兼容性出错"
 # 80%
 # 79%
 # 100%
-#: ../../client/web/web/includes/functions.inc.php:233
+#: ../../client/web/web/includes/functions.inc.php:236
 msgid "Java is either not available on your system or in your web browser."
 msgstr "系统或浏览器的Java不可用。"
 
-#: ../../client/web/web/includes/functions.inc.php:234
+#: ../../client/web/web/includes/functions.inc.php:237
 msgid ""
 "Please install the Java extension for your web browser or contact your "
 "administrator."
-msgstr ""
+msgstr "请安装Java扩展您的Web浏览器或与管理员联系。"
 
-#: ../../client/web/web/includes/functions.inc.php:235
+#: ../../client/web/web/includes/functions.inc.php:238
 msgid "You have not accepted the Java security window."
 msgstr "未接受Java安全选项窗口。"
 
-#: ../../client/web/web/includes/functions.inc.php:236
+#: ../../client/web/web/includes/functions.inc.php:239
 msgid "You <strong>cannot</strong> have access to this service."
 msgstr "不能访问此服务。"
 
-#: ../../client/web/web/includes/functions.inc.php:238
+#: ../../client/web/web/includes/functions.inc.php:241
 msgid "Loading Open Virtual Desktop"
 msgstr "载入虚拟桌面"
 
-#: ../../client/web/web/includes/functions.inc.php:239
+#: ../../client/web/web/includes/functions.inc.php:242
 msgid "Disconnecting Open Virtual Desktop"
 msgstr "正在断开虚拟桌面连接"
 
-#: ../../client/web/web/includes/functions.inc.php:240
+#: ../../client/web/web/includes/functions.inc.php:243
 msgid "Welcome!"
 msgstr "欢迎！"
 
 # 85%
-#: ../../client/web/web/includes/functions.inc.php:241
+#: ../../client/web/web/includes/functions.inc.php:244
 msgid "Suspend"
 msgstr "暂停"
 
-#: ../../client/web/web/includes/functions.inc.php:242
+#: ../../client/web/web/includes/functions.inc.php:245
 msgid "Logout"
 msgstr "登出"
 
-#: ../../client/web/web/includes/functions.inc.php:244
+#: ../../client/web/web/includes/functions.inc.php:247
 msgid "The Ulteo OVD session runs in a separate window"
-msgstr ""
+msgstr "Ulteo OVD会话运行在一个分隔的窗口"
 
-#: ../../client/web/web/includes/functions.inc.php:248
+#: ../../client/web/web/includes/functions.inc.php:251
 msgid "Click [A]here[/A] to switch back to your session"
 msgstr "点击[A]这里[/A]返回会话"
 
-#: ../../client/web/web/includes/functions.inc.php:251
+#: ../../client/web/web/includes/functions.inc.php:254
 #: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:110
 msgid "My applications"
 msgstr "我的应用"
 
-#: ../../client/web/web/includes/functions.inc.php:252
+#: ../../client/web/web/includes/functions.inc.php:255
 #: ../../client/java/src/org/ulteo/ovd/client/portal/PortalFrame.java:126
 msgid "Running applications"
 msgstr "正在运行的应用"
 
-#: ../../client/web/web/includes/functions.inc.php:253
+#: ../../client/web/web/includes/functions.inc.php:256
 msgid "My files"
 msgstr "我的文件"
 
-#: ../../client/web/web/includes/functions.inc.php:257
+#: ../../client/web/web/includes/functions.inc.php:260
 msgid "Example: %EXAMPLE%"
 msgstr "例如：%EXAMPLE%"
 
-#: ../../client/web/web/includes/functions.inc.php:259
+#: ../../client/web/web/includes/functions.inc.php:262
 msgid "Usage: missing \"sessionmanager_host\" parameter"
 msgstr "用法: 缺少“sessionmanager_host”参数"
 
-#: ../../client/web/web/includes/functions.inc.php:260
+#: ../../client/web/web/includes/functions.inc.php:263
 msgid "Usage: missing \"login\" parameter"
 msgstr "用法：缺少“login”参数"
 
-#: ../../client/web/web/includes/functions.inc.php:261
+#: ../../client/web/web/includes/functions.inc.php:264
 msgid "Usage: missing \"password\" parameter"
 msgstr "用法：缺少“password”参数"
 
 # 91%
 # 97%
-#: ../../client/web/web/includes/functions.inc.php:262
+#: ../../client/web/web/includes/functions.inc.php:265
 msgid "Unable to reach the Session Manager"
 msgstr "无法访问会话管理器"
 
 # 98%
 # 100%
-#: ../../client/web/web/includes/functions.inc.php:264
+#: ../../client/web/web/includes/functions.inc.php:267
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:495
 msgid "Authentication failed: please double-check your password and try again"
 msgstr "验证失败，请仔细检查密码并重试"
 
-#: ../../client/web/web/includes/functions.inc.php:265
+#: ../../client/web/web/includes/functions.inc.php:268
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:497
 msgid ""
 "The system is in maintenance mode, please contact your administrator for "
@@ -245,84 +249,84 @@ msgid ""
 msgstr "系统处于维护模式，更多信息请联系管理员"
 
 # 100%
-#: ../../client/web/web/includes/functions.inc.php:266
+#: ../../client/web/web/includes/functions.inc.php:269
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:499
 msgid "An internal error occurred, please contact your administrator"
 msgstr "发生内部错误，请联系管理员"
 
-#: ../../client/web/web/includes/functions.inc.php:267
+#: ../../client/web/web/includes/functions.inc.php:270
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:501
 msgid "You specified an invalid login, please double-check and try again"
 msgstr "无效登入，请仔细检查并重试"
 
-#: ../../client/web/web/includes/functions.inc.php:268
+#: ../../client/web/web/includes/functions.inc.php:271
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:503
 msgid ""
 "The service is not available, please contact your administrator for more "
 "information"
 msgstr "该服务不可用，更多信息请联系管理员"
 
-#: ../../client/web/web/includes/functions.inc.php:269
+#: ../../client/web/web/includes/functions.inc.php:272
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:505
 msgid ""
 "You are not authorized to launch a session. Please contact your "
 "administrator for more information"
 msgstr "你没有权限来启动一个会话，更多信息请联系管理员"
 
-#: ../../client/web/web/includes/functions.inc.php:270
+#: ../../client/web/web/includes/functions.inc.php:273
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:507
 msgid "You already have an active session"
 msgstr "已存在一个活动会话"
 
-#: ../../client/web/web/includes/functions.inc.php:272
+#: ../../client/web/web/includes/functions.inc.php:275
 msgid "You will be disconnected from your OVD session."
 msgstr "将中断你的虚拟桌面会话"
 
-#: ../../client/web/web/includes/functions.inc.php:274
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+#: ../../client/web/web/includes/functions.inc.php:277
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:827
 msgid ""
 "Your session is going to end in 3 minutes, please save all your data now!"
 msgstr "系统3分钟内结束，请注意保存数据！"
 
-#: ../../client/web/web/includes/functions.inc.php:275
+#: ../../client/web/web/includes/functions.inc.php:278
 msgid ""
 "Your session is going to be disconnected in %MINUTES% minutes because of the "
 "logon time restriction policy"
-msgstr ""
+msgstr "您的会话会在 %MINUTES% 分钟后断开，因为登录时间限制策略"
 
-#: ../../client/web/web/includes/functions.inc.php:277
+#: ../../client/web/web/includes/functions.inc.php:280
 msgid "Server: session closed unexpectedly"
 msgstr "服务器：会话意外关闭"
 
-#: ../../client/web/web/includes/functions.inc.php:278
+#: ../../client/web/web/includes/functions.inc.php:281
 msgid "Your session has ended, you can now close the window"
 msgstr "会话已结束，可关闭窗口"
 
-#: ../../client/web/web/includes/functions.inc.php:279
+#: ../../client/web/web/includes/functions.inc.php:282
 msgid "Your session has ended unexpectedly"
 msgstr "你的会话已意外终止"
 
-#: ../../client/web/web/includes/functions.inc.php:280
+#: ../../client/web/web/includes/functions.inc.php:283
 msgid "error details"
 msgstr "错误详细"
 
-#: ../../client/web/web/includes/functions.inc.php:281
+#: ../../client/web/web/includes/functions.inc.php:284
 msgid "Close this window"
 msgstr "关闭当前窗口"
 
-#: ../../client/web/web/includes/functions.inc.php:285
+#: ../../client/web/web/includes/functions.inc.php:288
 msgid "Click [A]here[/A] to start a new session"
 msgstr "点击[A]这里[/A]以启动一个新会话"
 
-#: ../../client/web/web/includes/functions.inc.php:288
+#: ../../client/web/web/includes/functions.inc.php:291
 msgid "suspend"
 msgstr "暂停"
 
-#: ../../client/web/web/includes/functions.inc.php:289
+#: ../../client/web/web/includes/functions.inc.php:292
 msgid "resume"
 msgstr "恢复"
 
-#: ../../client/web/web/includes/functions.inc.php:290
+#: ../../client/web/web/includes/functions.inc.php:293
 msgid "Are you sure you want to logout (# apps running) ?"
 msgstr "确定要退出(# 应用正在运行) ?"
 
@@ -341,11 +345,11 @@ msgid "An error occurred. Please try again."
 msgstr "发生错误。请重试。"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:92
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:904
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:914
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:921
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:928
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:899
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:906
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:916
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:923
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:930
 msgid "Error"
 msgstr "错误"
 
@@ -359,7 +363,7 @@ msgstr "错误报告已保存"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Please fill in the description field."
-msgstr ""
+msgstr "请填写描述栏。"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:123
 msgid "Empty field"
@@ -479,15 +483,15 @@ msgstr "开始加载会话"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:54
 msgid "Connecting to the Session Manager"
-msgstr ""
+msgstr "正在连接会话管理器"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:56
 msgid "Get session information from Session Manager"
-msgstr ""
+msgstr "从会话管理器获取会话信息"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:58
 msgid "Get application data from Session Manager"
-msgstr ""
+msgstr "从会话管理器获取应用程序数据"
 
 # 89%
 # 100%
@@ -497,7 +501,7 @@ msgstr "在客户端安装应用程序数据"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:62
 msgid "Waiting on server for session"
-msgstr ""
+msgstr "等待服务器会话"
 
 #: ../../client/java/src/org/ulteo/ovd/client/authInterface/LoadingStatus.java:64
 msgid "Invalid status"
@@ -554,28 +558,23 @@ msgstr "必须指定用户名！"
 msgid "You must specify a password!"
 msgstr "必须指定密码！"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:789
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:792
-msgid "Unable to find a valid certificate"
-msgstr "找不到有效的证书"
-
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:825
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:827
 msgid "Session is going to end"
 msgstr "会话将结束"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:842
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:844
 msgid "Internal error: unsupported session mode"
 msgstr "内部错误：会话模式不支持"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:886
 msgid "You have been disconnected"
 msgstr "已断开"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:884
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:886
 msgid "Your session has ended"
 msgstr "会话已结束"
 
-#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:897
+#: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:899
 msgid "Protocol xml error: "
 msgstr "XML协议错误："
 
@@ -598,66 +597,6 @@ msgstr "欢迎{user}"
 msgid "Main gestures"
 msgstr "主要手势"
 
-msgid "Right click"
-msgstr "右键点击"
-
-msgid "View gestures"
-msgstr "查看手势"
-
-msgid ""
-"The system is on maintenance mode, please contact your administrator for "
-"more information"
-msgstr "系统处于维护模式，获取更多信息请联系系统管理员"
-
-msgid "You are not authorized to launch a session in this mode"
-msgstr "在此模式下你无权限启动一个会话"
-
-msgid ""
-"A network issue prevents the dialog between the client and the server. You "
-"can wait until the connection is up again or logout now."
-msgstr "网络问题阻止了客户端和服务器之间的对话。你可以等待直到恢复连接或现在注销。"
-
-msgid "Gestures"
-msgstr "手势"
-
-msgid "An error occured, please contact your administrator"
-msgstr "发生错误，请联系管理员"
-
-msgid "Toolbar"
-msgstr "工具栏"
-
-msgid ""
-"To log in, you need to enter your login, your password and the server name "
-"you wish to connect."
-msgstr "要登录，你需要输入你的登录名、密码和你希望连接的服务器名。"
-
-msgid "Show toolbar"
-msgstr "显示工具栏"
-
-msgid "Zoom"
-msgstr "缩放"
-
-msgid "Network is down"
-msgstr "网络已关闭"
-
-msgid "Connection"
-msgstr "连接"
-
-msgid "Move view"
-msgstr "移动视窗"
-
-msgid "Show keyboard"
-msgstr "显示键盘"
-
-msgid "Help"
-msgstr "帮助"
-
-msgid "An internal error occured, please contact your administrator"
-msgstr "发生内部错误，请联系管理员"
-
-msgid "The question mark shows this help sheet. The cross exits the session."
-msgstr "问号显示些帮助页。十字退出会话。"
-
 msgid "Click"
 msgstr "点击"
 
@@ -670,17 +609,31 @@ msgstr "密码将被保存"
 msgid "Modem (56 Kbits/s)"
 msgstr "路由器(56 Kbits/s)"
 
+msgid ""
+"The system is on maintenance mode, please contact your administrator for "
+"more information"
+msgstr "系统处于维护模式，获取更多信息请联系系统管理员"
+
 msgid "RDP Compression"
 msgstr "RDP压缩"
 
+msgid "You are not authorized to launch a session in this mode"
+msgstr "在此模式下你无权限启动一个会话"
+
 msgid "Toggle keyboard"
 msgstr "切换键盘"
+
+msgid "Show toolbar"
+msgstr "显示工具栏"
 
 msgid "Android controls remains visible on screen"
 msgstr "Android的控制仍然显示在屏幕上"
 
 msgid "Do you want to disconnect the current session ?"
 msgstr "确定断开当前会话？"
+
+msgid "Zoom"
+msgstr "缩放"
 
 msgid "Manual resolution"
 msgstr "分辨率选择"
@@ -693,6 +646,9 @@ msgstr "局域网 (100 Mbits/s)"
 
 msgid "Enhanced keyboard"
 msgstr "增强型键盘"
+
+msgid "Right click"
+msgstr "右键点击"
 
 msgid "Force wide screen"
 msgstr "强制宽屏"
@@ -713,15 +669,21 @@ msgid "Always show the system bar with clock"
 msgstr "总显示系统栏时钟"
 
 msgid "The login screen shows the Session Manager data"
-msgstr ""
+msgstr "登陆屏幕显示会话管理器数据"
 
 msgid ""
 "No Internet connection has been detected on this\n"
 "\t\tdevice. Please enable Wifi/3G before using this application"
 msgstr "在此设备上未检测到网络连接。使用这个应用程序前，请启动Wifi或3G"
 
+msgid "View gestures"
+msgstr "查看手势"
+
 msgid "Hide the Session Manager in login screen"
-msgstr ""
+msgstr "隐藏会话管理器在登入窗口"
+
+msgid "Show keyboard"
+msgstr "显示键盘"
 
 msgid "Satellite (2 Mbits/s)"
 msgstr "卫星 (2 Mbits/s)"
@@ -739,6 +701,9 @@ msgstr "未指定的"
 
 msgid "Active desktop session"
 msgstr "活动桌面会话"
+
+msgid "Move view"
+msgstr "移动视窗"
 
 msgid "Hide session manager in login screen"
 msgstr "在登入窗口隐藏会话管理器"
@@ -767,6 +732,9 @@ msgstr "会话管理器Url"
 msgid "Wide screen resolution will be forced"
 msgstr "宽屏分辨率将被强制"
 
+msgid "Help"
+msgstr "帮助"
+
 msgid "Disable RDP compression"
 msgstr "禁用RDP压缩"
 
@@ -786,13 +754,16 @@ msgid "Set the screen dimensions of the session"
 msgstr "设置会话的屏幕尺寸"
 
 msgid "Broadband Low (256 Kbits/s)"
-msgstr ""
+msgstr "低带宽 (256 Kbits/s)"
+
+msgid "Network is down"
+msgstr "网络已关闭"
 
 msgid "Broadband High (10 Mbits/s)"
 msgstr "高带宽 (10 Mbits/s)"
 
 msgid "Connection type"
-msgstr ""
+msgstr "联接类型"
 
 msgid "Connection error"
 msgstr "连接错误"
@@ -802,6 +773,37 @@ msgstr "启用RDP压缩"
 
 msgid "Save the password"
 msgstr "保存密码"
+
+msgid ""
+"A network issue prevents the dialog between the client and the server. You "
+"can wait until the connection is up again or logout now."
+msgstr "网络问题阻止了客户端和服务器之间的对话。你可以等待直到恢复连接或现在注销。"
+
+msgid "Gestures"
+msgstr "手势"
+
+msgid "An error occured, please contact your administrator"
+msgstr "发生错误，请联系管理员"
+
+msgid "Toolbar"
+msgstr "工具栏"
+
+msgid ""
+"To log in, you need to enter your login, your password and the server name "
+"you wish to connect."
+msgstr "要登录，你需要输入你的登录名、密码和你希望连接的服务器名。"
+
+msgid "Connection"
+msgstr "连接"
+
+msgid "An internal error occured, please contact your administrator"
+msgstr "发生内部错误，请联系管理员"
+
+msgid "The question mark shows this help sheet. The cross exits the session."
+msgstr "问号显示些帮助页。十字退出会话。"
+
+#~ msgid "Unable to find a valid certificate"
+#~ msgstr "找不到有效的证书"
 
 #~ msgid ""
 #~ "Please install Java extension for your web browser or contact your "

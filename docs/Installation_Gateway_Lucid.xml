@@ -1,209 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
-          [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
-<article xmlns:xi="http://www.w3.org/2001/XInclude">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY base "Support_Ubuntu_Lucid.xml">
+]>
+<article>
   <transform_var name="gold_product_name" value="Gateway"/>
+
   <transform_var name="distrib_pretty_name" value="Ubuntu 10.04 (Lucid Lynx)"/>
-  <transform_var name="distrib_name" value="ubuntu" />
+
+  <transform_var name="distrib_name" value="ubuntu"/>
+
   <transform_var name="distrib_version" value="lucid"/>
+
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
-    <subtitle>Installing OVD Gateway on @distrib_pretty_name@ </subtitle>
-    <graphic fileref="img/ovd.png" align="center"/>
 
-    <copyright>	  		 
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@</subtitle>
+
+    <graphic align="center" fileref="img/ovd.png"/>
+
+    <copyright>
       <year>@YEAR@</year>
-      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com"/></holder>
     </copyright>
   </articleinfo>
 
-  <para>
-    The purpose of this document is to describe how to install an Ulteo OVD Gateway
-    on a @distrib_pretty_name@.
-  </para>
-  
-  <xi:include href="common.xml" xpointer="gold" />
-  
+  <para>The purpose of this document is to describe how to install an Ulteo
+  OVD Gateway on a @distrib_pretty_name@.</para>
+
+  <xi:include href="common.xml" xpointer="gold"
+              xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
   <section id="prerequisites_gw">
     <title id="prerequisites_gw_title">Prerequisites</title>
 
     <itemizedlist id="prerequisites_gw_list">
       <listitem>
-        <para>
-          An installed <emphasis role="strong">@distrib_pretty_name@</emphasis> system (x86 or amd64).
-        </para>
+        <para>An installed <emphasis
+        role="strong">@distrib_pretty_name@</emphasis> system (x86 or
+        amd64).</para>
       </listitem>
-      
+
       <listitem>
-        <para>
-          An Internet connection that provides HTTP access or the Ulteo OVD DVD
-          to install Debian packages.
-        </para>
+        <para>An Internet connection that provides HTTP access.</para>
       </listitem>
-      
+
       <listitem>
-        <para>
-          An Ulteo OVD Session Manager and Application Server installed and configured.
-        </para>
+        <para>An Ulteo OVD Session Manager and Application Server installed
+        and configured.</para>
       </listitem>
     </itemizedlist>
 
     <important id="prerequisites_gw_important">
-      <para>
-	The Gateway Server has to be a system dedicated 
-	for Ulteo OVD usage only. It may also host another Ulteo OVD
-	server role. However, if multiple roles are installed on the same system, Ulteo 
-	does not guarantee that the system will work correctly.
-      </para>
+      <para>The Gateway Server has to be a system dedicated for Ulteo OVD
+      usage only. It may also host another Ulteo OVD server role. However, if
+      multiple roles are installed on the same system, Ulteo does not
+      guarantee that the system will work correctly.</para>
     </important>
 
     <simplesect id="system_requirements">
       <title>System requirements</title>
+
       <itemizedlist>
-        <listitem><para>
-          Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB RAM
-        </para></listitem>
-        <listitem><para>
-          Production envrionments: Ulteo recommends a minimum of 2GB RAM and 2 CPU cores
-        </para></listitem>
+        <listitem>
+          <para>Evaluations/POCs: Minimum prerequisites are 1 CPU core and 1GB
+          RAM</para>
+        </listitem>
+
+        <listitem>
+          <para>Production envrionments: Ulteo recommends a minimum of 2GB RAM
+          and 2 CPU cores</para>
+        </listitem>
       </itemizedlist>
     </simplesect>
 
-    <xi:include href="&base;" xpointer="warning_name_examples" />
-    <xi:include href="&base;" xpointer="sudo" />
-  </section>
+    <xi:include href="Support_Ubuntu_Lucid.xml"
+                xpointer="warning_name_examples"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sudo"
+                xmlns:xi="http://www.w3.org/2001/XInclude"/>
+  </section>
 
   <section id="configuration_gw">
     <title>Package Configuration</title>
-      
-     <section id="repository_online">
-       <xi:include href="&base;" xpointer="repository_online_title" />
-       <xi:include href="&base;" xpointer="repository_online_para" />
-      
+
+    <section id="repository_online">
+      <xi:include href="Support_Ubuntu_Lucid.xml"
+                  xpointer="repository_online_title"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
+      <xi:include href="Support_Ubuntu_Lucid.xml"
+                  xpointer="repository_online_para"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
       <itemizedlist>
         <listitem id="repository_step1">
-          <xi:include href="&base;" xpointer="repository_online_step1_para" />
+          <xi:include href="Support_Ubuntu_Lucid.xml"
+                      xpointer="repository_online_step1_para"
+                      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+
           <screen>
-<![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main
-deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main]]>
+deb @BASE_URI@/@distrib_name@ @distrib_version@ main
+deb @BASE_URI_GOLD@/@distrib_name@ @distrib_version@ main
           </screen>
         </listitem>
       </itemizedlist>
+
+      <xi:include href="Support_Ubuntu_Lucid.xml"
+                  xpointer="repository_common_para"
+                  xmlns:xi="http://www.w3.org/2001/XInclude"/>
     </section>
-
-    <section id="repository_offline">
-       <xi:include href="&base;" xpointer="repository_offline_title" />
-
-     <itemizedlist>
-       
-       <listitem id="repository_offline_step2">
-         <para id="repository_offline_step2_para">
-           The OVD offline repository is made up of two archives. The
-           first one can be found <ulink
-           url="@BASE_URI@/offline/ovd-@VERSION@-@distrib_version@.tar.gz">here</ulink>
-           or from the Ulteo OVD DVD. The second one is only available
-           <ulink
-           url="@BASE_URI@/@GOLD_NAME@/offline/ovd-@VERSION@-@GOLD_NAME@-@distrib_version@.tar.gz">online</ulink>,
-           using your @GOLD_NAME@ Edition account credentials.
-         </para>
-         <para>
-           Download or copy the two archives to the
-           <emphasis>/root/</emphasis> path of your workstation.
-         </para>
-       </listitem>
-
-       <listitem id="repository_offline_step3">
-          <para id="repository_offline_step3_para">
-            Uncompress the archive:
-          </para>
-          <screen>
-<![CDATA[# for f in ovd-@VERSION@-*-@distrib_version@.tar.gz; do tar xzf $f; done]]>
-          </screen>
-        </listitem>
-
-        <listitem id="repository_offline_step4">
-          <para id="repository_offline_step4_para">
-            Edit the
-            <emphasis>/etc/apt/sources.list.d/ulteo-ovd-offline.list</emphasis>
-            file and add these lines:
-          </para>
-          <screen>
-<![CDATA[deb file:///root/ovd-@VERSION@-@distrib_name@ @distrib_version@ main
-deb file:///root/ovd-@VERSION@-@GOLD_NAME@-@distrib_name@ @distrib_version@ main]]>
-          </screen>
-        </listitem>
-     </itemizedlist>
-    </section>
-
-    <xi:include href="&base;" xpointer="repository_common" />
-</section>
+  </section>
 
   <section id="installation_gw">
     <title>Package Installation</title>
 
     <itemizedlist>
       <listitem>
-        <para>
-          Install the package <emphasis>ulteo-ovd-slaveserver-role-gateway</emphasis>:
-        </para>
+        <para>Install the package
+        <emphasis>ulteo-ovd-slaveserver-role-gateway</emphasis>:</para>
+
         <screen>
-<![CDATA[# apt-get install ulteo-ovd-slaveserver-role-gateway]]>
+# apt-get install ulteo-ovd-slaveserver-role-gateway
         </screen>
       </listitem>
 
       <listitem>
-        <para>
-          The only installation data required is the host/IP address of the
-          Session Manager. (We use
-          <ulink url="sm.test.demo" /> here as an example, but of
-          course, you have to specify your own domain name).
-        </para>
+        <para>The only installation data required is the host/IP address of
+        the Session Manager. (We use <ulink url="sm.test.demo"/> here as an
+        example, but of course, you have to specify your own domain
+        name).</para>
 
         <para>
           <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/subsystem_install_sm_host.png"/>
             </imageobject>
+
             <textobject>
               <phrase>debconf Session Manager host/address</phrase>
             </textobject>
           </inlinemediaobject>
         </para>
-      </listitem> 
+      </listitem>
     </itemizedlist>
 
-  <para>
-    The configuration is now done. The service should be started at
-    the end of the installation and you should see the server appear in
-    the <emphasis>unregistered server</emphasis> page of your Session
-    Manager.
-  </para>
+    <para>The configuration is now done. The service should be started at the
+    end of the installation and you should see the server appear in the
+    <emphasis>unregistered server</emphasis> page of your Session
+    Manager.</para>
   </section>
+
   <section id="webclient_gw">
-	<title>Web Portal Configuration</title>
-	<para>For security reasons, the Gateway doesn't allow communication 
-	to the Web Portal by default. If you want to provide access 
-	to the Web Portal via the Gateway, you have to change the default configuration.
-	</para>	 
-    <para>Edit the slaveserver.conf file in 
-    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this line:
-    </para>
+    <title>Web Portal Configuration</title>
+
+    <para>For security reasons, the Gateway doesn't allow communication to the
+    Web Portal by default. If you want to provide access to the Web Portal via
+    the Gateway, you have to change the default configuration.</para>
+
+    <para>Edit the slaveserver.conf file in
+    <emphasis>/etc/ulteo/ovd/slaveserver.conf</emphasis> and change this
+    line:</para>
+
     <screen>
-		<![CDATA[# web_client = http[s]://ip[:port]/]]>
+# web_client = http[s]://ip[:port]/
     </screen>
-    <para>You have to uncomment the variable and set the value to the 
-    URL of your Web Portal. For example:
-        <screen>
-			<![CDATA[web_client = http://webportal.test.demo/]]>
-		</screen>
-    </para> 
-    <para>Now, restart the slaverserver service.
-		<screen>
-			<![CDATA[# /etc/init.d/ulteo-ovd-slaveserver restart]]>
-		</screen>
-     </para>     
+
+    <para>You have to uncomment the variable and set the value to the URL of
+    your Web Portal. For example: <screen>
+web_client = http://webportal.test.demo/
+		</screen></para>
+
+    <para>Now, restart the slaverserver service. <screen>
+# /etc/init.d/ulteo-ovd-slaveserver restart
+		</screen></para>
   </section>
-  <xi:include href="colophon.xml" />  
+
+  <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>

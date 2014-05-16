@@ -105,6 +105,9 @@ public abstract class OvdClientDesktop extends OvdClient {
 		else if (properties.isDrives() == Properties.REDIRECT_DRIVES_PARTIAL)
 			flags |= RdpConnectionOvd.MOUNTING_MODE_PARTIAL;
 		
+		if (properties.isUseLocalIME())
+			flags |= RdpConnectionOvd.USE_LOCAL_IME;
+		
 		RdpConnectionOvd rc = null;
 		
 		try {
@@ -124,6 +127,9 @@ public abstract class OvdClientDesktop extends OvdClient {
 		rc.setServer(server.getHost(), server.getPort());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		rc.setAllDesktopEffectsEnabled(properties.isDesktopEffectsEnabled());
+		if (properties.isUseLocalIME()) {
+			rc.setInputMethod("unicode_local_ime");
+		}
 		this.configure(rc);
 		this.connections.set(0, rc);
 		return rc;
