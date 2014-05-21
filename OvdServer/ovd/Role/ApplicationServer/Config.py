@@ -29,7 +29,7 @@ class Config:
 	thread_count = None
 	checkShell = False
 	clean_dump_archive = True
-	linux_icon_theme = "CrystalGnome"
+	linux_icon_theme = "Ulteo"
 	linux_skel_directory = "/dev/null"
 	linux_fuse_group = "fuse"
 	linux_set_password = "passwd -r files \"%s\""
