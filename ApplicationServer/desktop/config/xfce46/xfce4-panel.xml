@@ -12,6 +12,7 @@
         <value type="int" value="2"/>
         <value type="int" value="3"/>
         <value type="int" value="4"/>
+        <value type="int" value="5"/>
       </property>
       <property name="horizontal" type="bool" value="true"/>
       <property name="position" type="string" value="p=8;x=0;y=10000"/>
@@ -32,10 +33,14 @@
       <property name="show-wireframes" type="bool" value="false"/>
       <property name="show-only-minimized" type="bool" value="false"/>
     </property>
-    <property name="plugin-3" type="string" value="clock">
+    <property name="plugin-3" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-4" type="string" value="clock">
       <property name="show-frame" type="bool" value="false"/>
     </property>
-    <property name="plugin-4" type="string" value="launcher">
+    <property name="plugin-5" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="/var/spool/menus-common/quit.desktop"/>
       </property>
