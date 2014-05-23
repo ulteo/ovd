@@ -1,8 +1,8 @@
 #!/usr/bin/env python
  
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -84,10 +84,12 @@ class LogoutDialog:
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL | gtk.WINDOW_POPUP)
 		self.window.set_resizable(False)
 		self.window.set_modal(True)
-		self.window.set_can_focus(True);
+		if hasattr(self.window, "set_can_focus"):
+			self.window.set_can_focus(True)
+		
 		if self.FULLSCREEN_MASK:
-			self.window.set_decorated(False);
-			self.window.set_transient_for(self.top);
+			self.window.set_decorated(False)
+			self.window.set_transient_for(self.top)
 		
 		self.window.connect("destroy", self.destroy)
 		self.window.set_title(_("Logout"))
