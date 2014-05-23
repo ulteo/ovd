@@ -121,7 +121,7 @@ class User(AbstractUser):
 	def set_password(self):
 		lock = FileLock("/tmp/user.lock")
 		
-		cmd = 'passwd -r files "%s"'%(self.name)
+		cmd = Config.linux_set_password%(self.name)
 		password = "%s\n"%(self.infos["password"])
 		retry = 5
 		while retry !=0:
@@ -153,7 +153,7 @@ class User(AbstractUser):
 	def disable_password(self):
 		lock = FileLock("/tmp/user.lock")
 		
-		cmd = 'passwd -r files -d "%s"'%(self.name)
+		cmd = Config.linux_unset_password%(self.name)
 		retry = 5
 		while retry !=0:
 			if retry < 0:

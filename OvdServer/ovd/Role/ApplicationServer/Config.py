@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011-2013 Ulteo SAS
+# Copyright (C) 2011-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2011, 2013
 # Author David LECHEVALIER <david@ulteo.com> 2011, 2012
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -32,6 +32,8 @@ class Config:
 	linux_icon_theme = "CrystalGnome"
 	linux_skel_directory = "/dev/null"
 	linux_fuse_group = "fuse"
+	linux_set_password = "passwd -r files \"%s\""
+	linux_unset_password = "passwd -r files -d \"%s\""
 	profile_filters_filename = os.path.join(System.get_default_config_dir(), "profiles_filter.conf")
 	
 	OVERRIDE_PASSWORD_METHOD_UNIX = 0x01
@@ -70,6 +72,12 @@ class Config:
 		
 		if infos.has_key("linux_fuse_group"):
 			cls.linux_fuse_group = infos["linux_fuse_group"]
+
+		if infos.has_key("linux_set_password"):
+			cls.linux_set_password = infos["linux_set_password"]
+		
+		if infos.has_key("linux_unset_password"):
+			cls.linux_unset_password = infos["linux_unset_password"]
 		
 		if infos.has_key("linux_profile_filters_filename"):
 			cls.linux_profile_filters_filename = infos["linux_profile_filters_filename"]
