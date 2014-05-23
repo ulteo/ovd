@@ -31,8 +31,9 @@ service smbd restart || true
 service samba restart || true
 
 # VHost webdav config
-a2ensite slaveserver-fs > /dev/null
+a2ensite slaveserver-fs.conf > /dev/null
 a2enmod dav_fs dav  >/dev/null
+a2enmod authz_groupfile || true >/dev/null
 if apache2ctl configtest 2>/dev/null; then
     invoke-rc.d apache2 restart || true
 else

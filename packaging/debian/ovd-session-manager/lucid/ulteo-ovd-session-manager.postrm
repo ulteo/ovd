@@ -14,14 +14,6 @@ then
 
     # remove keys and certificates SSL files generated
     rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
-
-    # ask the user if he wants to remove base.tar.gz (if it's there)
-    if [ -e $CACHEDIR/base.tar.gz ]; then
-        db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true
-        db_go || true
-        db_get ulteo-ovd-session-manager/postrm_remove_tarball
-        [ "$RET" = "true" ] && rm -rf $CACHEDIR
-    fi
 fi
 
 #DEBHELPER#

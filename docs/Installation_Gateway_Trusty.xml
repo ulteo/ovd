@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
+           [<!ENTITY parent "Installation_Gateway_Lucid.xml">]>
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <transform_var name="gold_product_name" value="Gateway"/>
+  <transform_var name="distrib_pretty_name" value="Ubuntu 14.04 (Trusty Tahr)"/>
+  <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_version" value="trusty"/>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop v@VERSION@</title>
+    <subtitle>Installing OVD Gateway on @distrib_pretty_name@</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>@YEAR@</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The purpose of this document is to describe how to install an Ulteo OVD Gateway
+    on a @distrib_pretty_name@.
+  </para>
+  <xi:include href="common.xml" xpointer="gold" />
+  <xi:include href="&parent;" xpointer="prerequisites_gw" />
+  <xi:include href="&parent;" xpointer="configuration_gw" />
+  <xi:include href="&parent;" xpointer="installation_gw" />
+  <xi:include href="&parent;" xpointer="webclient_gw" />  
+  <xi:include href="colophon.xml" />  
+</article>

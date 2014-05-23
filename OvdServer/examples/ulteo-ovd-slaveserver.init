@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Copyright (C) 2008-2013 Ulteo SAS
+# Copyright (C) 2008-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2008
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
 # Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2011
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -82,7 +82,7 @@ do_stop () {
 		return 0
 	fi
 
-	local pid=$(pidofproc -p $PIDFILE)
+	local pid=$(pidofproc -p "$PIDFILE" "$PROGRAM")
 	if [ $? -ne 0 -o "0$pid" == "0" ]; then
 		log_warning_msg "not running"
 		rm -f $PIDFILE
@@ -96,6 +96,21 @@ do_stop () {
 	log_end_msg 0
 }
 
+do_status () {
+	if [ ! -f $PIDFILE ]; then
+		echo "$NAME is not running"
+		return 0
+	fi
+	
+	local pid=$(pidofproc -p "$PIDFILE" "$PROGRAM")
+	if [ $? -ne 0 -o "0$pid" == "0" ]; then
+		echo "$NAME is not running"
+		return 0
+	fi
+
+	echo "$NAME is running ($pid)"
+}
+
 do_force_stop () {
 	log_begin_msg "Force stopping $NAME"
 
@@ -104,7 +119,7 @@ do_force_stop () {
 		return 0
 	fi
 
-	local pid=$(pidofproc -p $PIDFILE)
+	local pid=$(pidofproc -p "$PIDFILE" "$PROGRAM")
 	if [ $? -ne 0 -o "0$pid" == "0" ]; then
 		log_warning_msg "not running"
 		rm -f $PIDFILE
@@ -136,6 +151,9 @@ case $1 in
 	stop)
 		do_stop;;
 
+	status)
+		do_status;;
+
 	force-stop)
 		do_force_stop;;
 
@@ -145,7 +163,7 @@ case $1 in
 		do_start
 		;;
 	*)
-		log_success_msg "Usage: $0 {start|stop|force-stop|force-reload|restart}";;
+		log_success_msg "Usage: $0 {start|stop|status|force-stop|force-reload|restart}";;
 esac
 
 exit 0

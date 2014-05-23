@@ -3,7 +3,7 @@ Section: x11
 Priority: extra
 Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
- libthunar-vfs-1-dev, libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
+ libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
  xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev,
  librsvg2-bin
 Standards-Version: 3.7.3

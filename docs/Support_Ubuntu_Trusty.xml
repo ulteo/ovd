@@ -5,12 +5,13 @@
 ]>
 <article>
   <transform_var name="distrib_pretty_name"
-                 value="Ubuntu 12.04 (Precise Pangolin)"/>
+                 value="Ubuntu 14.04 (Trusty Tahr)"/>
 
   <transform_var name="distrib_name" value="ubuntu"/>
 
-  <transform_var name="distrib_version" value="precise"/>
-  <transform_var name="distrib_version_num" value="12.04"/>
+  <transform_var name="distrib_version" value="trusty"/>
+  
+  <transform_var name="distrib_version_num" value="14.04"/>
 
   <transform_var name="distrib_dvd_url"
                  value="http://www.ubuntu.com/download/desktop"/>
@@ -26,9 +27,6 @@
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="lts_info"
-                xmlns:xi="http://www.w3.org/2001/XInclude"/>
-
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="lts_warning"
                 xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="system_requirements"

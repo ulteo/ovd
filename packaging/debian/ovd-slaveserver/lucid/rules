@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
-DEB_PYTHON_SYSTEM := pycentral
-DEB_PYTHON_COMPILE_VERSION = 2.6
+ifneq ("$(wildcard /usr/bin/pycentral)","")
+	DEB_PYTHON_SYSTEM := pycentral
+	DEB_PYTHON_COMPILE_VERSION = 2.6
+else
+	DEB_PYTHON2_MODULE_PACKAGES = ulteo-ovd-slaveserver ulteo-ovd-slaveserver-role-aps ulteo-ovd-slaveserver-role-fs ulteo-ovd-slaveserver-role-web
+endif
 
 DEB_DH_INSTALL_SOURCEDIR = debian/tmp
 

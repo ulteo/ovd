@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-a2dissite slaveserver-fs >/dev/null 2>&1 || true
+a2dissite slaveserver-fs.conf >/dev/null 2>&1 || true
 
 #DEBHELPER#
 

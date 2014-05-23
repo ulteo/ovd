@@ -7,6 +7,7 @@
   <transform_var name="distrib_name" value="ubuntu"/>
 
   <transform_var name="distrib_version" value="lucid"/>
+  <transform_var name="distrib_version_num" value="10.04"/>
 
   <transform_var name="distrib_dvd_url"
                  value="http://www.ubuntu.com/desktop/get-ubuntu/alternative-download#dvd"/>
@@ -33,11 +34,15 @@
     <title id="prerequisites_title">Prerequisites:
     @distrib_pretty_name@</title>
 
-    <para>@distrib_pretty_name@ is an LTS version of Ubuntu. There are several
+    <para id="lts_info">@distrib_pretty_name@ is an LTS version of Ubuntu. There are several
     editions: desktop/server, 32/64 bits. This documentation has been created
     for the server edition (32/64 bits) but it should also work with the
     desktop edition. The Ubuntu operating system can be downloaded <ulink
-    url="http://releases.ubuntu.com/10.04">here</ulink>.</para>
+    url="http://releases.ubuntu.com/@distrib_version_num@">here</ulink>.</para>
+    
+    <important id="lts_warning">
+      <para>The new LTS version is Ubuntu 14.04 (Trusty Tahr).</para>
+    </important>
 
     <simplesect id="system_requirements">
       <title>System Requirements</title>

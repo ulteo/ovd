@@ -3,7 +3,11 @@
 . /usr/share/debconf/confmodule
 
 CONFDIR=/etc/ulteo/webclient
-A2CONFDIR=/etc/apache2/conf.d
+if [ -d /etc/apache2/conf-available ]; then
+    A2CONFDIR=/etc/apache2/conf-available
+else
+    A2CONFDIR=/etc/apache2/conf.d
+fi
 
 if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ])
 then
@@ -17,8 +21,9 @@ then
     fi
 fi
 
-if [ ! -e /etc/apache2/conf.d/webclient ]; then
-    ln -s $CONFDIR/apache2.conf $A2CONFDIR/webclient
+if [ ! -e $A2CONFDIR/webclient.conf ]; then
+    ln -s $CONFDIR/apache2.conf $A2CONFDIR/webclient.conf
+    which a2enconf && a2enconf webclient
     if apache2ctl configtest 2>/dev/null; then
         invoke-rc.d apache2 reload || true
     else

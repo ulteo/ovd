@@ -13,6 +13,7 @@ SRC=\
 	Architecture.xml \
 	Support_Ubuntu_Lucid.xml \
 	Support_Ubuntu_Precise.xml \
+	Support_Ubuntu_Trusty.xml \
 	Support_Debian_Squeeze.xml \
 	Support_Debian_Wheezy.xml \
 	Support_RHEL_6.0.xml \
@@ -22,6 +23,7 @@ SRC=\
 	Installation_ApS_Windows.xml \
 	Installation_Gateway_Lucid.xml \
 	Installation_Gateway_Precise.xml \
+	Installation_Gateway_Trusty.xml \
 	Installation_Gateway_Wheezy.xml \
 	Installation_Gateway_Squeeze.xml \
 	Installation_Gateway_RHEL6.0.xml \

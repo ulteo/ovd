@@ -3,7 +3,9 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"
   [<!ENTITY base "Support_Ubuntu_Lucid.xml">]>
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
-   <transform_var name="distrib_name" value="ubuntu" />
+  <transform_var name="distrib_name_t" value="ubuntu" />
+  <transform_var name="distrib_version_t" value="trusty"/>
+  <transform_var name="distrib_name" value="ubuntu" />
   <transform_var name="distrib_version" value="precise"/>
   <transform_var name="distrib_name_l" value="ubuntu" />
   <transform_var name="distrib_version_l" value="lucid"/>
@@ -182,6 +184,29 @@ gpgkey=@BASE_URI@/rhel/@distrib_version_r@/keyring]]>
 			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
           <screen>
 <![CDATA[deb @BASE_URI@/@distrib_name@ @distrib_version@ main]]>
+          </screen>
+          </listitem>
+          <listitem>
+           <para>			  
+			To install the Premium Edition <emphasis>ulteo-ovd-slaveserver-role-web</emphasis> 
+			that provides the Web Application Gateway execute the following commands:
+        </para>
+        <screen>
+<![CDATA[# apt-get update
+# apt-get install ulteo-keyring
+# apt-get update
+# apt-get install ulteo-ovd-slaveserver-role-web]]>
+        </screen>
+        </listitem>
+         </itemizedlist>
+        </section>
+          <section>			
+			<title>Ubuntu Trusty</title>
+			 <itemizedlist>
+		<listitem> 
+			Edit the /etc/apt/sources.list.d/ulteo_ovd.list file and add these lines:          
+          <screen>
+<![CDATA[deb @BASE_URI@/@distrib_name_t@ @distrib_version_t@ main]]>
           </screen>
           </listitem>
           <listitem>

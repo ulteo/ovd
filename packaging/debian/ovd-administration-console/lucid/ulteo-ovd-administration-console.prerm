@@ -1,8 +1,13 @@
 #!/bin/sh -e
 
-A2CONFDIR=/etc/apache2/conf.d
+if [ -d /etc/apache2/conf-available ]; then
+    A2CONFDIR=/etc/apache2/conf-available
+else
+    A2CONFDIR=/etc/apache2/conf.d
+fi
 
 # remove apache2 config link
+which a2disconf && a2disconf ovd-administration-console
 rm -f $A2CONFDIR/ovd-administration-console.conf
 
 # reload apache

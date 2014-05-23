@@ -85,6 +85,9 @@ foreach ($files as $file) {
 		case "Installation_Gateway_Precise":
 			$name="Installing OVD Gateway on Ubuntu Precise";
 		break;
+		case "Installation_Gateway_Trusty":
+			$name="Installing OVD Gateway on Ubuntu Trusty";
+		break;
 		case "Installation_Gateway_Wheezy":
 			$name="Installing OVD Gateway on Debian Wheezy";
 		break;
@@ -135,6 +138,9 @@ foreach ($files as $file) {
 		break;
 		case "Support_Ubuntu_Precise":
 			$name="Installing OVD 4 on Ubuntu Precise";
+		break;
+		case "Support_Ubuntu_Trusty":
+			$name="Installing OVD 4 on Ubuntu Trusty";
 		break;
 		case "Support_openSUSE_11.3":
 			$name="Installing OVD 4 on openSUSE 11.3";

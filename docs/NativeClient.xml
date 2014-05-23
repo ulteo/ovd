@@ -5,11 +5,11 @@
   <transform_var name="gold_product_name" value="Native Client"/>
 
   <transform_var name="distrib_pretty_name"
-                 value="Ubuntu 12.04 (Precise Pangolin)"/>
+                 value="Ubuntu 14.04 (Trusty Tahr)"/>
 
   <transform_var name="distrib_name" value="ubuntu"/>
 
-  <transform_var name="distrib_version" value="precise"/>
+  <transform_var name="distrib_version" value="trusty"/>
 
   <articleinfo>
     <title>Ulteo Open Virtual Desktop v@VERSION@</title>
@@ -466,39 +466,3 @@
 
   <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>
-<?xxe-serial-numbers hsvxw5l5 mathieu
-(1z141z5 (1z141z6) (1z141z7) (1z141z8) (1z141z9) (1z141za (1z141zb)
-(1z141zc) (1z141zd) (1z141ze (1z141zf) (1z141zg (1z141zh)))) (-) (1z141zi
-(1z141zj) (1z141zk)) (1z141zl (1z141zm) (1z141zn (1z141zo) (1z141zp))
-(1z141zq) (-)) (1z141zr (1z141zs (1z141zt) (1z141zu)) (1z141zv (1z141zw))
-(1z141zx (1z141zy (1z141zz) (1z14200))) (1z14201) (1z14202 (1z14203
-(1z14204) (1z14205))) (1z14206) (1z14207 (1z14208 (1z14209) (1z1420a))))
-(1z1420b (1z1420c) (-) (-) (1z1420d) (1z1420e (1z1420f) (1z1420g (1z1420h
-(1z1420i (1z1420j)) (1z1420k))))) (1z1420l (1z1420m) (1z1420n) (1z1420o
-(1z1420p (1z1420q) (1z1420r))) (1z1420s) (1z1420t (1z1420u (1z1420v)
-(1z1420w)))) (1z1420x (1z1420y) (1z1420z) (1z14210 (1z14211 (1z14212)
-(1z14213))) (1z14214) (1z14215 (1z14216) (1z14217 (1z14218 (1z14219
-(1z1421a))) (1z1421b (1z1421c (1z1421d) (1z1421e (1z1421f (1z1421g
-(1z1421h))) (1z1421i (1z1421j (1z1421k))) (1z1421l (1z1421m (1z1421n))))))
-(1z1421o (1z1421p (1z1421q))) (1z1421r (1z1421s (1z1421t))) (1z1421u
-(1z1421v (1z1421w))) (1z1421x (1z1421y (1z1421z)))))) (1z14220 (1z14221)
-(1z14222) (1z14223 (1z14224 (1z14225) (1z14226))) (1z14227) (1z14228
-(1z14229) (1z1422a) (1z1422b (1z1422c (1z1422d) (1z1422e)))) (1z1422f
-(1z1422g) (1z1422h) (1z1422i (1z1422j (1z1422k) (1z1422l))) (1z1422m
-(1z1422n)))) (1z1422o (1z1422p) (1z1422q (1z1422r) (1z1422s (1z1422t)
-(1z1422u)) (1z1422v (1z1422w (1z1422x (1z1422y (1z1422z) (1z14230)))
-(1z14231 (1z14232 (1z14233))))) (1z14234 (1z14235 (1z14236 (1z14237
-(1z14238)) (1z14239 (1z1423a (1z1423b (1z1423c))) (1z1423d (1z1423e
-(1z1423f))))) (1z1423g (1z1423h (1z1423i)) (1z1423j (1z1423k (1z1423l
-(1z1423m))) (1z1423n (1z1423o (1z1423p) (1z1423q) (1z1423r)) (1z1423s
-(1z1423t))))) (1z1423u (1z1423v (1z1423w)) (1z1423x (1z1423y (1z1423z
-(1z14240))) (1z14241 (1z14242 (1z14243))) (1z14244 (1z14245 (1z14246)
-(1z14247) (1z14248) (1z14249))) (1z1424a (1z1424b (1z1424c) (1z1424d)
-(1z1424e))))) (1z1424f (1z1424g (1z1424h)) (1z1424i (1z1424j (1z1424k
-(1z1424l) (1z1424m) (1z1424n))))) (1z1424o (1z1424p (1z1424q)) (1z1424r
-(1z1424s (1z1424t (1z1424u) (1z1424v) (1z1424w) (1z1424x) (1z1424y)
-(1z1424z))))) (1z14250 (1z14251 (1z14252)) (1z14253 (1z14254 (1z14255
-(1z14256))))))) (1z14257 (1z14258 (1z14259)) (1z1425a (1z1425b) (1z1425c))
-(1z1425d (1z1425e)) (1z1425f (-) (-) (-) (-) (-) (-) (-) (-) (-) (-)
-(-)))) (1z1425g (1z1425h) (1z1425i (1z1425j)) (1z1425k) (1z1425l (1z1425m)
-(1z1425n)))) (-))?>

@@ -3,9 +3,10 @@ Section: net
 Priority: extra
 Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 6),
- python (>= 2.6), python-central
+ python (>= 2.6), python-central | dh-python
 Standards-Version: 3.7.3
 XS-Python-Version: >= 2.5
+X-Python-Version: >= 2.6
 
 Package: ulteo-ovd-slaveserver
 Architecture: all
@@ -19,8 +20,7 @@ Architecture: all
 Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
  uxda-server-python, uxda-server-seamrdp, uxda-server-rdpdr, uxda-server-printer, uxda-server-sound, uxda-server-clipboard,
- desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs, python-xdg,
- ulteo-ovd-regular-union-fs
+ desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs | cifs-utils, python-xdg, xdg-utils, ulteo-ovd-regular-union-fs
 Recommends: tmpreaper
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - application server role for slave server
@@ -28,7 +28,7 @@ Description: Ulteo Open Virtual Desktop - application server role for slave serv
 
 Package: ulteo-ovd-slaveserver-role-fs
 Architecture: all
-Depends: ${python:Depends}, python-pyinotify (>= 0.7.1), debconf,
+Depends: ${python:Depends}, debconf,
  ulteo-ovd-slaveserver, samba, apache2, ulteo-ovd-regular-union-fs
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - file server role for slave server

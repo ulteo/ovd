@@ -9,13 +9,18 @@ INSTALLDIR=/usr/share/ulteo/administration_console
 
 ############################# APACHE CONFIGURATION #############################
 
-A2CONFDIR=/etc/apache2/conf.d
+if [ -d /etc/apache2/conf-available ]; then
+    A2CONFDIR=/etc/apache2/conf-available
+else
+    A2CONFDIR=/etc/apache2/conf.d
+fi
 
 A2USER=www-data
 
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-administration-console.conf ]; then
     ln -sfT $CONFDIR/apache2.conf $A2CONFDIR/ovd-administration-console.conf
+    which a2enconf && a2enconf ovd-administration-console
 fi
 
 # Update wsdl
