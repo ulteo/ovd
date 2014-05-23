@@ -1,1 +1,239 @@
-rhel-5.5.spec
+# Copyright (C) 2010-2013 Ulteo SAS
+# http://www.ulteo.com
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2013
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+%define php_bin %(basename `php-config --php-binary`)
+%if %{defined rhel}
+%define httpd httpd
+%define apachectl apachectl
+%define apache_user apache
+%define apache_group apache
+%define apache_requires , mod_ssl, php-xml
+%else
+%define httpd apache2
+%define apachectl apache2ctl
+%define apache_user wwwrun
+%define apache_group www
+%define apache_requires php5-curl, php5-dom, apache2, apache2-mod_php5
+%endif
+
+Name: ovd-session-manager
+Version: @VERSION@
+Release: @RELEASE@
+
+Summary: Ulteo Open Virtual Desktop - Session Manager
+License: GPL2
+Group: Applications/System
+Vendor: Ulteo SAS
+URL: http://www.ulteo.com
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
+
+Source: %{name}-%{version}.tar.gz
+BuildArch: noarch
+Buildroot: %{buildroot}
+
+%description
+This source package provides the Session Manager web services for the Ulteo
+Open Virtual Desktop.
+
+###########################################
+%package -n ulteo-ovd-session-manager
+###########################################
+
+Summary: Ulteo Open Virtual Desktop - Session Manager
+Group: Applications/System
+Requires: %{php_bin}, %{php_bin}-ldap, %{php_bin}-mysql, %{php_bin}-mbstring, %{php_bin}-pear, php-imagick, %{php_bin}-soap, curl, openssl %{apache_requires}
+
+%description -n ulteo-ovd-session-manager
+This package provides the Session Manager web services for the Ulteo
+Open Virtual Desktop.
+
+%prep -n ulteo-ovd-session-manager
+%setup -q
+
+%build -n ulteo-ovd-session-manager
+./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart
+make
+
+%install -n ulteo-ovd-session-manager
+make DESTDIR=%{buildroot} install
+rm -rf %{buildroot}/usr/share/ulteo/sessionmanager/PEAR/php-saml
+rm -f %{buildroot}/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php
+rm -f %{buildroot}/usr/share/ulteo/sessionmanager/admin/heartbeat.php
+rm -f %{buildroot}/etc/ulteo/sessionmanager/sessionmanager-ha.cron
+
+# install the logrotate example
+mkdir -p %{buildroot}/etc/logrotate.d
+install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
+
+%if ! %{defined rhel}
+# hack to not provide /usr/bin/php (zypper)
+sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*)
+%endif
+
+# put the correct Apache user in cron file
+A2USER=%{apache_user}
+sed -i "s/@APACHE_USER@/${A2USER}/" %{buildroot}/etc/ulteo/sessionmanager/sessionmanager.cron
+
+%pre -n ulteo-ovd-session-manager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+# Check if update is possible
+if [ -f $INSTALLDIR/tools/can_update.php ]
+then
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/can_update.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
+%post -n ulteo-ovd-session-manager
+A2CONFDIR=/etc/%{httpd}/conf.d
+CONFDIR=/etc/ulteo/sessionmanager
+INSTALLDIR=/usr/share/ulteo/sessionmanager
+
+%if ! %{defined rhel}
+a2enmod php5 > /dev/null
+%endif
+
+# VHost server config
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
+    ln -sfT $CONFDIR/apache2-vhost-server.conf \
+        $A2CONFDIR/sessionmanager-vhost-server.conf
+%if ! %{defined rhel}
+    a2enmod rewrite >/dev/null
+    a2enmod headers >/dev/null
+%endif
+fi
+
+# Alias admin
+if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
+    ln -sfT $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
+fi
+
+# VHost SSL config
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
+    serverName=$(hostname -f 2>/dev/null || true)
+    [ -z "$serverName" ] && serverName=$(hostname) # Bad /etc/hosts configuration
+    sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
+        $CONFDIR/apache2-vhost-ssl.conf
+    ln -sfT $CONFDIR/apache2-vhost-ssl.conf \
+        $A2CONFDIR/sessionmanager-vhost-ssl.conf
+%if ! %{defined rhel}
+    a2enflag SSL > /dev/null
+    a2enmod ssl > /dev/null
+%endif
+fi
+
+# SSL self-signed key generation
+if [ ! -f $CONFDIR/ovd.key -o ! -f $CONFDIR/ovd.csr -o ! -f $CONFDIR/ovd.crt ]
+then
+    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+    openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+    openssl req -new -subj /CN=$(hostname)/ -batch \
+        -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr
+    openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+        -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+    chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# Update database
+if [ -f $INSTALLDIR/tools/update_database.php ]
+then
+   echo "Updating database."
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/update_database.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
+# Update WDSL
+if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
+then
+   echo "Purging wsdl cache files."
+   su %{apache_user} -s /usr/bin/php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
+   if [ $? -ne 0 ]
+   then
+      exit 1
+   fi
+fi
+
+# restart apache server
+if %{apachectl} configtest 2>/dev/null; then
+    service %{httpd} restart || true
+else
+    echo << EOF
+"Apache configuration error after enable OVD virtual hosts. Please remove your
+old SSL configuration or be sure that the following URL are valid:
+https://hostname/ovd/admin, https://hostname/ovd/client.
+If you don't change anything, you won't start OVD sessions."
+EOF
+fi
+
+# link crons
+ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
+
+%preun -n ulteo-ovd-session-manager
+if [ "$1" = "0" ]; then
+    if [ -L /etc/cron.d/sessionmanager ]; then
+        unlink /etc/cron.d/sessionmanager
+    fi
+fi
+
+%postun -n ulteo-ovd-session-manager
+if [ "$1" = "0" ]; then
+    A2CONFDIR=/etc/%{httpd}/conf.d
+    CONFDIR=/etc/ulteo/sessionmanager
+    rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
+          $A2CONFDIR/sessionmanager-vhost-ssl.conf \
+          $A2CONFDIR/ovd-admin.conf
+    rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    rm -f /etc/cron.hourly/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager/* \
+           /var/cache/ulteo/sessionmanager/* \
+           /var/log/ulteo/sessionmanager/*
+
+    if %{apachectl} configtest 2>/dev/null; then
+        service %{httpd} restart || true
+    else
+        echo "Apache configuration broken: correct the issue and restart the apache2 server"
+    fi
+fi
+
+%clean -n ulteo-ovd-session-manager
+rm -rf %{buildroot}
+
+%files -n ulteo-ovd-session-manager
+%defattr(-,root,root)
+/usr/*
+%dir /var/*
+%dir /var/*/ulteo
+%config /etc/ulteo/sessionmanager/*.conf
+%config /etc/logrotate.d/sessionmanager
+%defattr(0644,root,root)
+%config /etc/ulteo/sessionmanager/sessionmanager.cron
+%defattr(0660,%{apache_user},%{apache_group})
+%config /etc/ulteo/sessionmanager/config.inc.php
+%defattr(2770,%{apache_user},%{apache_group})
+%dir /var/*/ulteo/sessionmanager
+
+%changelog -n ulteo-ovd-session-manager
+* Thu Sep 02 2010 Samuel Bovée <samuel@ulteo.com> 3.0+svn05193-1
+- Initial release

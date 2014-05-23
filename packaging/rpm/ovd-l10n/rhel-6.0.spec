@@ -1,6 +1,7 @@
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2010, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,12 +26,12 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: RHEL 6.0
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: gettext, make
+Buildroot: %{buildroot}
 
 %description
 Localization package for Ulteo Open Virtual Desktop
@@ -52,16 +53,12 @@ Localization package for Ulteo Open Virtual Desktop
 make
 
 %install -n ulteo-ovd-session-manager
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 
 %clean -n ulteo-ovd-l10n
 make clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -n ulteo-ovd-l10n
 %defattr(-,root,root)
 /usr/share/*
-
-%changelog -n ulteo-ovd-l10n
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release

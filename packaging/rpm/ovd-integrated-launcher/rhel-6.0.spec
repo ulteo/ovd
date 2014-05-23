@@ -1,6 +1,7 @@
-# Copyright (C) 2013 Ulteo SAS
+# Copyright (C) 2013-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2013
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,9 +26,8 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Julien LANGLOIS <julien@ulteo.com>
-Distribution: RHEL 6.0
-
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
+Buildroot: %{buildroot}
 Source: %{name}-%{version}.tar.gz
 
 %description
@@ -47,19 +47,15 @@ Launch hook for seamless applications
 %setup -q
 
 %build -n ulteo-ovd-integrated-launcher
-./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+./configure --prefix=%{_prefix} --libdir=%{_libdir} -sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir}
 make
 
 %install -n ulteo-ovd-integrated-launcher
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 
 %clean ulteo-ovd-integrated-launcher
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -n ulteo-ovd-integrated-launcher
 %defattr(-,root,root)
 %{_bindir}/UlteoOVDIntegratedLauncher
-
-%changelog
-* Tue Apr 9 2013 Julien LANGLOIS <julien@ulteo.com> 99.99.svn8677
-- Initial release

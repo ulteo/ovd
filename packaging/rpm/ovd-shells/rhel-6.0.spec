@@ -61,9 +61,9 @@ These scripts handle the Open Virtual Desktop user sessions.
 
 %files -n ulteo-ovd-shells
 %defattr(-,root,root)
-/usr/lib/python*/site-packages/ovd_shells-*.egg-info
-/usr/lib/python*/site-packages/ovd_shells/*.py*
-/usr/lib/python*/site-packages/ovd_shells/Platform/*
+/usr/lib*/python*/site-packages/ovd_shells-*.egg-info
+/usr/lib*/python*/site-packages/ovd_shells/*.py*
+/usr/lib*/python*/site-packages/ovd_shells/Platform/*
 %{_bindir}/OvdDesktop
 %{_bindir}/OvdRemoteApps
 %{_bindir}/startovdapp

@@ -1,1 +1,1 @@
-rhel-5.5.spec
+rhel-6.0.spec

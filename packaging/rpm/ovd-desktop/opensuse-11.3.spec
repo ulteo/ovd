@@ -26,16 +26,15 @@ Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: Julien LANGLOIS <julien@ulteo.com>
-Distribution: RHEL 6.0
 
 Source: %{name}-%{version}.tar.gz
 BuildRequires: gcc, autoconf, automake, make, intltool, libtool
 BuildRequires: xfce4-dev-tools, libxfce4util-devel, libxfcegui4-devel, xfce4-panel-devel, gtk2-devel
 %if %{defined suse_version}
-BuildRequires: gconf2-devel, thunar-devel
+BuildRequires: gconf2-devel
 BuildRequires: rsvg-view
 %else
-BuildRequires: GConf2-devel, Thunar-devel
+BuildRequires: GConf2-devel
 %endif
 
 
@@ -63,20 +62,16 @@ rm -rf %{buildroot}/var/spool/menus-common/quit-legacy.desktop
 %clean
 rm -rf %{buildroot}
 
-
-%changelog
-* Thu Sep 19 2013 Julien LANGLOIS <julien@ulteo.com> a2ad72a78
-- Initial release
-
-
 ###########################################
 %package -n ulteo-ovd-desktop
 ###########################################
 
 Summary: Ulteo Open Virtual Desktop
 Group: Applications/System
-Requires: apparmor-profiles
-Requires: xfce4-session, xfce4-settings, xfce4-notifyd, xfce4-panel, xfce4-taskmanager
+%if %{undefined rhel}
+Requires: apparmor-profiles, xfce4-taskmanager, xfce4-notifyd
+%endif
+Requires: xfce4-session, xfce4-settings, xfce4-panel
 Requires: ulteo-ovd-desktop-gtk-theme, ulteo-xfce4-restricted-menu-plugin, ulteo-ovd-slaveserver-role-aps
 BuildArch: noarch
 
@@ -90,6 +85,20 @@ A desktop based on Xfce 4.4 for Ulteo OVD solution
 /var/spool/menus-common/quit.desktop
 /usr/share/pixmaps/*
 /usr/share/wallpapers/*
+
+%post -n ulteo-ovd-desktop
+if [ "$1" = "1" ]; then
+  sed -i "s/DMZ-White/dmz/g" /etc/ulteo/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+fi
+
+if [ ! -f /usr/bin/x-session-manager -a -f /usr/bin/xfce4-session ]; then
+  ln -sf /usr/bin/xfce4-session /usr/bin/x-session-manager
+fi
+
+%postun -n ulteo-ovd-desktop
+if [ -l /usr/bin/x-session-manager -a $(readlink /usr/bin/x-session-manager) = "/usr/bin/xfce4-session" ]; then
+  rm -f /usr/bin/x-session-manager
+fi
 
 
 ###########################################
@@ -145,7 +154,12 @@ Summary: Ulteo Open Virtual Desktop
 %package -n ulteo-ovd-logout-dialog
 ###########################################
 BuildArch: noarch
+Group: Applications/System
+%if %{defined rhel}
+Requires: pygtk2
+%else
 Requires: python-gtk2
+%endif
 Summary: Ulteo Open Virtual Desktop - Logout dialog
 
 %description -n ulteo-ovd-logout-dialog

@@ -30,7 +30,7 @@ URL: http://www.ulteo.com
 Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
-Buildrequires: ulteo-ovd-cert, ant, ant-nodeps
+Buildrequires: ant, ant-nodeps
 %if %{defined sles}
 Buildrequires: java-1_6_0-ibm-devel
 %else
@@ -97,7 +97,7 @@ a browser
 Summary: Ulteo Open Virtual Desktop - desktop applet
 Group: Applications/System
 BuildArch: noarch
-Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils, ulteo-ovd-integrated-launcher
+Requires: java-1.6.0-openjdk, cups, libovd-xclient-area, desktop-file-utils, ulteo-ovd-integrated-launcher, xorg-x11-utils
 # Java can also be provided by packages: java-1.7.0-openjdk  jre-7-linux jre-6-linux java-1_6_0-sun
 
 %description -n ulteo-ovd-externalapps-client

@@ -1,6 +1,7 @@
-# Copyright (C) 2011 Ulteo SAS
+# Copyright (C) 2010-2014 Ulteo SAS
 # http://www.ulteo.com
-# Author Samuel BOVEE <samuel@ulteo.com> 2011
+# Author Samuel BOVEE <samuel@ulteo.com> 2010, 2011
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,6 +17,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+%define php_bin %(basename `php-config --php-binary`)
+%if %{defined rhel}
+%define httpd httpd
+%define apachectl apachectl
+%define apache_user apache
+%define apache_group apache
+%else
+%define httpd apache2
+%define apachectl apache2ctl
+%define apache_user wwwrun
+%define apache_group www
+%endif
+
 Name: ovd-web-client
 Version: @VERSION@
 Release: @RELEASE@
@@ -25,12 +39,12 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: RHEL 6.0
+Packager: David PHAM-VAN <d.pham-van@ulteo.com>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: intltool
+Buildroot: %{buildroot}
 
 %description
 This is a web based client for Ulteo OVD.
@@ -41,7 +55,12 @@ This is a web based client for Ulteo OVD.
 
 Summary: Ulteo Open Virtual Desktop - web client
 Group: Applications/System
-Requires: php, php-pear, php-xml, ulteo-ovd-applets, ulteo-ovd-l10n
+Requires: ulteo-ovd-applets, ulteo-ovd-l10n
+%if %{defined rhel}
+Requires: php, php-pear, php-xml
+%else
+Requires: apache2-mod_php5, php5, php5-curl, php5-dom, php5-gettext, php5-pear
+%endif
 
 %description -n ulteo-ovd-web-client
 This is a web based client for Ulteo OVD.
@@ -57,13 +76,17 @@ make DESTDIR=$RPM_BUILD_ROOT install
 cp -a ajaxplorer $RPM_BUILD_ROOT/usr/share/ulteo/webclient
 
 %post -n ulteo-ovd-web-client
-A2CONFDIR=/etc/httpd/conf.d
+A2CONFDIR=/etc/%{httpd}/conf.d
 CONFDIR=/etc/ulteo/webclient
+
+%if ! %{defined rhel}
+a2enmod php5 > /dev/null
+%endif
 
 if [ ! -e $A2CONFDIR/webclient.conf ]; then
     ln -sf $CONFDIR/apache2.conf $A2CONFDIR/webclient.conf
     if apachectl configtest 2>/dev/null; then
-        /etc/init.d/httpd reload || true
+        service %{httpd} reload || true
     else
         echo << EOF
 "Your apache configuration is broken!
@@ -73,7 +96,7 @@ EOF
 fi
 
 %postun -n ulteo-ovd-web-client
-A2CONFDIR=/etc/httpd/conf.d
+A2CONFDIR=/etc/%{httpd}/conf.d
 
 if [ "$1" = "0" ]; then
     if [ -L $A2CONFDIR/webclient.conf ]; then
@@ -103,10 +126,6 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ulteo/webclient/config.client.ini
 %config /etc/ulteo/webclient/config.inc.php
 
-%changelog -n ulteo-ovd-web-client
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release
-
 ##############################################
 %package -n ulteo-ovd-web-client-ajaxplorer
 ##############################################
@@ -121,9 +140,5 @@ This is a web based client for Ulteo OVD.
 %files -n ulteo-ovd-web-client-ajaxplorer
 %defattr(-,root,root)
 /usr/share/ulteo/webclient/ajaxplorer
-%defattr(-,apache,apache)
+%defattr(-,%{apache_user},%{apache_group})
 /usr/share/ulteo/webclient/ajaxplorer/server/logs
-
-%changelog -n ulteo-ovd-web-client-ajaxplorer
-* Wed Sep 20 2011 Samuel Bovée <samuel@ulteo.com> 99.99.svn7521
-- Initial release
