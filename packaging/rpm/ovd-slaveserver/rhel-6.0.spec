@@ -19,6 +19,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
+%if %{defined rhel}
+%define httpd httpd
+%define apachectl apachectl
+%define apache_user apache
+%define apache_group apache
+%define apache_requires , mod_ssl, php-xml
+%else
+%define httpd apache2
+%define apachectl apache2ctl
+%define apache_user wwwrun
+%define apache_group www
+%define apache_requires php5-curl, php5-dom, apache2, apache2-mod_php5
+%endif
 
 Name: ovd-slaveserver
 Version: @VERSION@
@@ -202,13 +215,64 @@ if [ "$1" = "1" ]; then
     %{_sbindir}/ovd-slaveserver-role add FileServer
 fi
 
+DATADIR=/usr/share/ulteo/ovd/slaveserver
+SPOOLDIR=/var/spool/ulteo/ovd/slaveserver
+HOMEDIR=/var/lib/ulteo/ovd/slaveserver/fs
+REALDIR=/var/lib/ulteo/ovd/slaveserver/fs.real
+A2CONFDIR=/etc/%{httpd}/conf.d
+
+# add user ovd-fs
+getent passwd ovd-fs >/dev/null || adduser --system --user-group --create-home --home $HOMEDIR ovd-fs >/dev/null 2>&1
+usermod -G ovd-fs %{apache_user} >/dev/null
+usermod -G fuse ovd-fs >/dev/null
+chown ovd-fs:ovd-fs $HOMEDIR
+
+# create real.fs directory
+mkdir -p $REALDIR
+chown ovd-fs:ovd-fs $REALDIR
+
+# create spool directory
+mkdir -p $SPOOLDIR
+chown ovd-fs:ovd-fs $SPOOLDIR
+
+# override samba config and restart it
+ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+sed -e "s/@RANDOM@/$ID/" $DATADIR/samba.conf > /etc/samba/smb.conf
+
+mkdir -p /var/lib/samba/usershares
+chgrp users /var/lib/samba/usershares/
+chmod 1775 /var/lib/samba/usershares/
+chmod +t /var/lib/samba/usershares/
+
+service smb restart || true
+service nmb restart || true
+
+# VHost webdav config
+if [ ! -e $A2CONFDIR/slaveserver-fs.conf ]; then
+    ln -sfT $DATADIR/apache2.conf $A2CONFDIR/slaveserver-fs.conf
+fi
+a2enmod dav_fs dav  >/dev/null
+a2enmod authz_groupfile || true >/dev/null
+if %{apachectl} configtest 2>/dev/null; then
+    service %{httpd} restart || true
+else
+    echo "Your apache2 configuration is broken: update it and restart apache2 manually."
+fi
+
 
 %postun -n ulteo-ovd-slaveserver-role-fs
+A2CONFDIR=/etc/%{httpd}/conf.d
+
 if [ "$1" = "0" ]; then
     %{_sbindir}/ovd-slaveserver-role del FileServer
     service ulteo-ovd-slaveserver restart
 fi
 
+if [ -e $A2CONFDIR/slaveserver-fs.conf ]; then
+    rm -f $A2CONFDIR/slaveserver-fs.conf
+fi
+
+service %{httpd} restart || true
 
 %files -n ulteo-ovd-slaveserver-role-fs
 %defattr(-,root,root)

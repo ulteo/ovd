@@ -180,7 +180,7 @@ class Share:
 		if not self.active:
 			self.enable(mode)
 		
-		cmd = "adduser %s %s_%s"%(user, self.group, mode)
+		cmd = "gpasswd -a %s %s_%s"%(user, self.group, mode)
 		p = System.execute(cmd)
 		if p.returncode is not 0:
 			Logger.error("FS: unable to add user in group")
@@ -205,9 +205,9 @@ class Share:
 		
 		ret = True
 		if user in self.ro_users:
-			cmd = "deluser %s %s_ro"%(user, self.group)
+			cmd = "gpasswd -d %s %s_ro"%(user, self.group)
 		else:
-			cmd = "deluser %s %s_rw"%(user, self.group)
+			cmd = "gpasswd -d %s %s_rw"%(user, self.group)
 		
 		p = System.execute(cmd)
 		if p.returncode is not 0:

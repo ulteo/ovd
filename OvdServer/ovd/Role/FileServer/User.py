@@ -34,7 +34,7 @@ class User:
 	
 	
 	def create(self, password):
-		cmd = "useradd -d /dev/null -s /bin/false -G %s,%s %s"%(Config.group, "sambashare", self.login)
+		cmd = "useradd -d /dev/null -s /bin/false -G %s,%s %s"%(Config.group, Config.sambashare, self.login)
 		p = System.execute(cmd)
 		if p.returncode == 9:
 			Logger.warn("FS: unable to create user: already exists")

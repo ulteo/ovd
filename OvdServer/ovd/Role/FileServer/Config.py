@@ -34,6 +34,7 @@ class Config:
 	gid = None
 	spool = None
 	backendSpool = None
+	sambashare = "sambashare"
 	
 	dav_user = "www-data"
 	dav_uid = None
@@ -45,7 +46,13 @@ class Config:
 	def init(cls, infos):
 		if infos.has_key("user"):
 			cls.user = infos["user"]
-		
+
+		if infos.has_key("sambashare"):
+			cls.user = infos["sambashare"]
+
+		if infos.has_key("dav_user"):
+			cls.user = infos["dav_user"]
+
 		if infos.has_key("FSBackendConf"):
 			cls.FSBackendConf = infos["FSBackendConf"]
 		

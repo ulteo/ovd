@@ -71,8 +71,8 @@ Group: Applications/System
 %if %{undefined rhel}
 Requires: apparmor-profiles, xfce4-taskmanager, xfce4-notifyd
 %endif
-Requires: xfce4-session, xfce4-settings, xfce4-panel
-Requires: ulteo-ovd-desktop-gtk-theme, ulteo-xfce4-restricted-menu-plugin, ulteo-ovd-slaveserver-role-aps
+Requires: xfce4-session, xfce4-settings, xfce4-panel, Thunar, xfdesktop
+Requires: ulteo-ovd-desktop-gtk-theme, ulteo-xfce4-restricted-menu-plugin, ulteo-ovd-slaveserver-role-aps, ulteo-ovd-logout-dialog
 BuildArch: noarch
 
 %description -n ulteo-ovd-desktop
