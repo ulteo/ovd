@@ -29,7 +29,7 @@ Description: Ulteo Open Virtual Desktop - application server role for slave serv
 Package: ulteo-ovd-slaveserver-role-fs
 Architecture: all
 Depends: ${python:Depends}, debconf,
- ulteo-ovd-slaveserver, samba, apache2, ulteo-ovd-regular-union-fs
+ ulteo-ovd-slaveserver, samba, apache2, apache2-utils, ulteo-ovd-regular-union-fs
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - file server role for slave server
  File server role for the Ulteo OVD slave server
