@@ -48,8 +48,14 @@ class SessionManagement_internal extends SessionManagement {
 		$buf = $this->prefs->get('SessionManagement', 'internal');
 		if (! array_key_exists('generate_aps_login', $buf) || $buf['generate_aps_login'] != 0)
 			$this->credentials[Server::SERVER_ROLE_APS]['login'] = 'u'.time().gen_string(5).'_APS'; //hardcoded
-		else
-			$this->credentials[Server::SERVER_ROLE_APS]['login'] = $this->user->getAttribute('login');
+		else {
+			$this->credentials[Server::SERVER_ROLE_APS]['login'] =  $this->user->getAttribute('login');
+			$pos = strpos($this->credentials[Server::SERVER_ROLE_APS]['login'], '@');
+			if ($pos !== false) {
+				$this->credentials[Server::SERVER_ROLE_APS]['login'] = substr($this->credentials[Server::SERVER_ROLE_APS]['login'], 0, $pos);
+				Logger::info('main', 'toto ===> '.$this->credentials[Server::SERVER_ROLE_APS]['login']);
+			}
+		}
 		
 		if (! array_key_exists('generate_aps_password', $buf) || $buf['generate_aps_password'] != 0)
 			$this->credentials[Server::SERVER_ROLE_APS]['password'] = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
