@@ -85,7 +85,12 @@ fi
 %install -n ulteo-ovd-session-manager-premium
 make DESTDIR=%{buildroot}/tmp install
 mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager
+mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager/PEAR
+mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager/modules/AuthMethod
+mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager/client
 mv %{buildroot}/tmp/usr/share/ulteo/sessionmanager/premium %{buildroot}/usr/share/ulteo/sessionmanager/
+mv %{buildroot}/tmp/usr/share/ulteo/sessionmanager/PEAR/php-saml %{buildroot}/usr/share/ulteo/sessionmanager/PEAR/
+mv %{buildroot}/tmp/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php %{buildroot}/usr/share/ulteo/sessionmanager/modules/AuthMethod/
 
 %post -n ulteo-ovd-session-manager-premium
 # Update database
@@ -118,3 +123,5 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %exclude /tmp
 /usr/share/ulteo/sessionmanager/premium/*
+/usr/share/ulteo/sessionmanager/PEAR/php-saml
+/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php

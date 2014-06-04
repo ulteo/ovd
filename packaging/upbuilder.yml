@@ -10,6 +10,8 @@ upbuilder:
       builder: autotools
       archs: $(consts.ALL_ARCH)
       autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz'"
+      clones:
+        - { dest: "web/PEAR/php-saml", orig: "/ulteo/php-saml", branch: "master"}
     smp:
       premium: true
       repo: "ovd-private/$(branch)"
@@ -20,6 +22,7 @@ upbuilder:
       autogen_args: "-u '$(publish_uri)/subsystem/base.tar.gz' -p -m ovd-session-manager-premium"
       clones:
         - { source: "SessionManager", dest: "web/premium", orig: "/ulteo/premium"}
+        - { dest: "web/PEAR/php-saml", orig: "/ulteo/php-saml", branch: "master"}
     ac:
       src: "AdminConsole"
       module: "ovd-administration-console"
@@ -33,6 +36,8 @@ upbuilder:
       module: "ovd-web-client"
       builder: autotools
       archs: $(consts.ALL_ARCH)
+      clones:
+        - { dest: "web/PEAR/php-saml", orig: "/ulteo/php-saml", branch: "master"}
     shell:
       src: "ApplicationServer/OvdShells"
       module: "ovd-shells"

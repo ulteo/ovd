@@ -72,6 +72,9 @@ make
 
 %install -n ulteo-ovd-session-manager
 make DESTDIR=%{buildroot} install
+rm -rf %{buildroot}/usr/share/ulteo/sessionmanager/PEAR/php-saml
+rm -f %{buildroot}/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php
+
 
 # install the logrotate example
 mkdir -p %{buildroot}/etc/logrotate.d

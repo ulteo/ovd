@@ -76,6 +76,12 @@ uovd.provider.http.Base.prototype.build_sessionStart = function(parameters, type
 		user_node.setAttribute("login", parameters["login"]);
 		user_node.setAttribute("password", parameters["password"]);
 	}
+	
+	if (this.session_management.parameters.saml_response != undefined) {
+		var saml_node = doc.createElement("saml_ticket");
+		saml_node.appendChild(doc.createTextNode(this.session_management.parameters.saml_response));
+		user_node.appendChild(saml_node);
+	}
 
 	/* Application */
 	if("application" in parameters) {

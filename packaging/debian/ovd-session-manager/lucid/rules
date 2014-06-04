@@ -16,6 +16,10 @@ install/ulteo-ovd-session-manager::
 	# remove sm-config (useless on Debian OS) and var folders create later
 	rm -rf debian/ulteo-ovd-session-manager/var
 	rm -rf debian/ulteo-ovd-session-manager/usr/bin
+	
+	# remove premium modules
+	rm -rf debian/ulteo-ovd-session-manager/usr/share/ulteo/sessionmanager/PEAR/php-saml
+	rm -f debian/ulteo-ovd-session-manager/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php
 
 clean::
 	debconf-updatepo

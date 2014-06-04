@@ -1,1 +1,3 @@
 usr/share/ulteo/sessionmanager/premium/*
+usr/share/ulteo/sessionmanager/PEAR/php-saml
+usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php

@@ -53,7 +53,6 @@ class SessionManagement_internal extends SessionManagement {
 			$pos = strpos($this->credentials[Server::SERVER_ROLE_APS]['login'], '@');
 			if ($pos !== false) {
 				$this->credentials[Server::SERVER_ROLE_APS]['login'] = substr($this->credentials[Server::SERVER_ROLE_APS]['login'], 0, $pos);
-				Logger::info('main', 'toto ===> '.$this->credentials[Server::SERVER_ROLE_APS]['login']);
 			}
 		}
 		

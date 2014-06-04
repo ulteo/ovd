@@ -65,6 +65,26 @@ if (defined('OPTION_FORCE_SSO') && OPTION_FORCE_SSO === true) {
 		$wi_use_local_credentials = 0;
 	}
 }
+if (array_key_exists('SAML2', $_SESSION) && $_SESSION['SAML2'] === true && array_key_exists('ovd-sso', $_COOKIE)) {
+	require_once(dirname(__file__) . "/auth/saml2/common.inc.php");
+	$response = new OneLogin_Saml2_Response(new OneLogin_Saml2_Settings(build_saml_settings('https://www.ulteo.com', NULL, NULL)), $_SESSION['SAML2_ticket']);
+	$sessionExpiration = $response->getSessionNotOnOrAfter();
+	if ((!empty($sessionExpiration) &&  $sessionExpiration <= time()) || !$response->validateTimestamps()) {
+		setcookie('ovd-sso', '', time() - 42000, '/ovd/');
+		require(dirname(__file__) . "/auth/saml2/sp.php");
+	}
+	$wi_remote_user_login = $_SESSION['SAML2_login'];
+	$force_sso = true;
+	$wi_use_local_credentials = 0;
+	setcookie('ovd-sso', 'true', 0, '/ovd/');
+} elseif (defined('OPTION_FORCE_SAML2') && OPTION_FORCE_SAML2 === true) {
+	// Redirect the user to the SAML2 Identity Provider
+	setcookie('ovd-sso', '', time() - 42000, '/ovd/');
+	require(dirname(__file__) . "/auth/saml2/sp.php");
+} else {
+	setcookie('ovd-sso', '', time() - 42000, '/ovd/');
+}
+
 
 $wi_session_mode = 'desktop';
 if (defined('OPTION_FORCE_SESSION_MODE'))
@@ -269,6 +289,7 @@ $gateway_first = (is_array($headers) && array_key_exists('OVD-Gateway', $headers
 			window.ovd.defaults.force_input_method          = <?php echo defined('OPTION_FORCE_INPUT_METHOD') && OPTION_FORCE_INPUT_METHOD === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_keymap                = <?php echo defined('OPTION_FORCE_KEYMAP') && OPTION_FORCE_KEYMAP === true ? 'true' : 'false'; ?>;
 			window.ovd.defaults.force_sso                   = <?php echo $force_sso === true ? 'true' : 'false'; ?>;
+			window.ovd.defaults.saml_response               = <?php echo array_key_exists('SAML2_ticket', $_SESSION) ? '\''.preg_replace('/\s+/', '', $_SESSION['SAML2_ticket']).'\'' : 'undefined'; ?>;
 
 			var i18n = {};
 			<?php

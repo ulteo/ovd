@@ -1,1 +1,1 @@
-SUBDIRS = cas
+SUBDIRS = cas saml2

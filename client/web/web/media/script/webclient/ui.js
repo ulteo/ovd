@@ -179,6 +179,10 @@ function generateEnd_internal(error) {
 		jQuery('#endContent').append(buf);
 
 		jQuery("#close_text a").click( function() {
+			if (window.ovd.defaults.force_sso) {
+				document.location.reload();
+				return;
+			}
 			hideEnd();
 			showLogin();
 			pullLogin();

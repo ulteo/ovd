@@ -264,6 +264,7 @@ function initialize_settings() {
 	if(defaults.local_integration) { settings.local_integration = defaults.local_integration; }
 	if(defaults.rdp_input_method)  { settings.rdp_input_method = defaults.rdp_input_method; }
 	if(defaults.force_sso)         { settings.force_sso = defaults.force_sso; }
+	if(defaults.saml_response)         { settings.saml_response = defaults.saml_response; }
 
 	/* Keymap autodetect */
 	if(defaults.keymap_autodetect && ! defaults.force_keymap) {
@@ -293,6 +294,15 @@ function initialize_settings() {
 }
 
 function initialize_ui() {
+	if (window.ovd.defaults.force_sso) {
+		jQuery(window).on('beforeunload', function() {
+			var d = new Date();
+			d.setTime(d - 42000);
+			document.cookie = "ovd-sso=;path=/ovd/;expires="+d.toUTCString();
+			document.cookie = "PHPSESSID=;path=/;expires="+d.toUTCString();
+		});
+	}
+	
 	/* shorten names */
 	var framework = window.ovd.framework;
 	var settings = window.ovd.settings;
@@ -463,6 +473,12 @@ function initialize_framework() {
 		hideMainContainer();
 		hideSplash();
 		generateEnd_internal();
+		if (window.ovd.defaults.force_sso) {
+			var d = new Date();
+			d.setTime(d - 42000);
+			document.cookie = "ovd-sso=;path=/ovd/;expires="+d.toUTCString();
+			document.cookie = "PHPSESSID=;path=/;expires="+d.toUTCString();
+		}
 		showEnd();
 	});
 
