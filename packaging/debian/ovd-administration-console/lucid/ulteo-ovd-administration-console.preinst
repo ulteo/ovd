@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+SMDIR=/usr/share/ulteo/sessionmanager
+A2USER=www-data
+
+# Check if update is possible
+if [ -f $SMDIR/tools/can_update.php ]
+then
+   su $A2USER -c "php $SMDIR/tools/can_update.php" 2>/dev/null
+   [ $? -ne 0 ] && exit 1
+fi
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
