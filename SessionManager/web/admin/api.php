@@ -2194,7 +2194,7 @@ class OvdAdminSoap {
 		}
 		
 		if (! $modify) {
-			return false;
+			return true;
 		}
 		
 		$app->setAttribute('revision', ($app->getAttribute('revision')+1));
