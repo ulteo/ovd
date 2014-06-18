@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012, 2014
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
@@ -158,7 +158,7 @@ class Session(AbstractSession):
 		uid = pwd.getpwnam(System.local_encode(self.user.name))[2]
 		for f in os.listdir("/tmp"):
 			filename = os.path.join("/tmp", f)
-			s = os.stat(filename)
+			s = os.lstat(filename)
 			if s.st_uid != uid:
 				continue
 			
