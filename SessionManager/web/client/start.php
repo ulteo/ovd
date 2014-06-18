@@ -172,12 +172,6 @@ $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	$stop = false;
 	foreach ($sessions as $session) {
-		$same_mode = ($session->mode == $session_mode);
-		if (! $same_mode) {
-			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' do not specify the right session mode');
-			throw_response(USER_WITH_ACTIVE_SESSION);
-		}
-		
 		switch ($session->status) {
 			case Session::SESSION_STATUS_CREATING:
 			case Session::SESSION_STATUS_CREATED:
