@@ -3,12 +3,12 @@
  * 
  * Revision: $Revision: 1.3 $
  * Author: $Author: suvarov $
- * Author: David LECHEVALIER <david@ulteo.com> 2011
+ * Author: David LECHEVALIER <david@ulteo.com> 2011, 2014
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  * Date: $Date: 2007/03/15 23:16:33 $
  *
  * Copyright (c) 2005 Propero Limited
- * Copyright (C) 2011-2013 Ulteo SAS
+ * Copyright (C) 2011-2014 Ulteo SAS
  *
  * Purpose: Canvas component, handles drawing requests from server,
  *          and passes user input to Input class.
@@ -1559,6 +1559,8 @@ public abstract class RdesktopCanvas extends Canvas implements ImeStateListener,
      * Handle the window gaining focus, notify input classes
      */
     public void gainedFocus() {
+    	this.input.updateKeyboardFocus(this);
+    	
         if (input != null)
             input.gainedFocus();
     }

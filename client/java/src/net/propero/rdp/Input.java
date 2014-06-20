@@ -56,6 +56,7 @@ public abstract class Input {
 
 	protected Boolean proceedOnKeyPressed = false;
 	protected Boolean imeActive = false;
+	protected Component lastFocused;
 
     protected static long last_mousemove = 0;
     
@@ -138,6 +139,7 @@ public abstract class Input {
 		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
+		this.lastFocused = null;
 		this.resetState();
 	}
 
@@ -163,6 +165,7 @@ public abstract class Input {
 		pressedKeys = new Vector<Integer>();
 		this.keystrokesList = new HashMap<KeyStroke, Long>();
 		this.inputListeners = new CopyOnWriteArrayList<InputListener>();
+		this.lastFocused = null;
 		this.resetState();
 	}
 
@@ -273,15 +276,25 @@ public abstract class Input {
 	public boolean getImeActive() {
 		return this.imeActive;
 	}
+	
+	public void updateKeyboardFocus(Component component) {
+		if (component == null)
+			return;
+		
+		this.lastFocused = component;
+	}
+	
 
 	public void setImeActive(boolean state) {
-		KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-		Component last_focus = keyboard_focus_manager.getFocusOwner();
+		if (this.lastFocused == null) {
+			KeyboardFocusManager keyboard_focus_manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+			this.lastFocused = keyboard_focus_manager.getFocusOwner();
+		}
 
 		this.imeActive = state;
 
-		if (last_focus != null && last_focus instanceof net.propero.rdp.ImeStateListener) {
-			((net.propero.rdp.ImeStateListener)last_focus).setImeState(this, state);
+		if (this.lastFocused != null && lastFocused instanceof net.propero.rdp.ImeStateListener)  {
+			((net.propero.rdp.ImeStateListener)this.lastFocused).setImeState(this, state);
 		}
 	}
 
