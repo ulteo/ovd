@@ -154,8 +154,11 @@ Function InputBoxPageLeave
 FunctionEnd
 
 !include WindowsVersion.nsh
+!include CheckRDS.sh
 
 Function .onInit
+  Call .CheckRDS
+  
   !insertmacro setRegViewFromArch
 
   ; to install for all user
