@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2013 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2012, 2013, 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2010, 2012-2013
  * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2011

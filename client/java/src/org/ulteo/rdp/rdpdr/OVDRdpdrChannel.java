@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Ulteo SAS
+ * Copyright (C) 2010-2014 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com> 2010, 2011, 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2010, 2011, 2012, 2014
  * Author Yann Hodique <y.hodique@ulteo.com> 2012
  *
  * This program is free software; you can redistribute it and/or
@@ -311,6 +311,12 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	
 	public boolean isReady() {
 		return this.ready;
+	}
+	
+	public void reset() {
+		this.ready = false;
+		this.g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
+		this.g_num_devices = 0;
 	}
 	
 	public boolean mountNewDrive(String name, String path) {

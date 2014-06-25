@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import net.propero.rdp.RdesktopException;
 import net.propero.rdp.Rdp;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
@@ -145,6 +147,12 @@ public abstract class OvdClient implements RdpListener {
 		this.setWaitSession(false);
 		
 		for (RdpConnectionOvd each : this.connections) {
+			try {
+				each.initSecondaryChannels();
+			} catch (RdesktopException ex) {
+				Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+			}
+			
 			each.addRdpListener(this);
 			each.connect();
 		}
