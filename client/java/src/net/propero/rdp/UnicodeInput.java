@@ -194,6 +194,10 @@ public class UnicodeInput extends Input {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_SHIFT){
 					shiftDown = true;
+					if(ctrlDown || altDown || altgrDown) {
+						shiftServerDown = true;
+						sendScancode(getTime(), RDP_KEYPRESS, KBD_SHIFT_KEY);
+					}
 					return true;
 				}
 			}

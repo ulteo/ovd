@@ -146,7 +146,7 @@ Guacamole.NativeKeyboard = function() {
 				}
 			}
 		} else if((self.altKey || e.ctrlKey || e.metaKey) && !(e.altKey && e.ctrlKey)) {
-			var keysym = parseInt(e.which)+0x20;
+			var keysym = String.fromCharCode(e.which).toLocaleLowerCase().charCodeAt(0);
 			e.preventDefault();
 			e.stopPropagation();
 
