@@ -573,17 +573,17 @@ and view documents"&gt;
   &lt;head&gt;
     &lt;!-- Load the Ulteo javascript files --&gt;
     &lt;script type="text/javascript" 
-	    src="http://web.test.demo/media/script/lib/prototype/prototype.js" 
+	    src="http://web.test.demo/ovd/media/script/lib/jquery/jquery.js" 
 	    charset="utf-8"&gt;&lt;/script&gt;
     &lt;script type="text/javascript" 
-	    src="http://web.test.demo/media/script/external.js" 
+	    src="http://web.test.demo/ovd/media/script/webclient/external.js" 
 	    charset="utf-8"&gt;&lt;/script&gt;
 
     &lt;script type="text/javascript"&gt;
 function start(form_) {
-	var ovd = new UlteoOVD_start_Application(
+	var ovd = new UlteoOVD_session(
                  'http://'+form_.server.value+'/ovd', 
-                 form_.app.value
+                 ULTEO_OVD_SESSION_MODE_DESKTOP
              );
         ovd.setAuthPassword(form_.login.value, form_.password.value);
 	ovd.start();

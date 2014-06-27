@@ -63,9 +63,9 @@
         </listitem>
       </itemizedlist></para>
 
-    <para>You also have <trademark>Terminal services</trademark> (2003) or
+    <para><emphasis role="strong">You also have <trademark>Terminal services</trademark> (2003) or
     <trademark>Remote Desktop services</trademark> (2008R2 and 2012R2)
-    installed and configured.</para>
+    installed and configured.</emphasis></para>
 
     <important>
       <para>The Windows server may run in workgroup or be member of an AD

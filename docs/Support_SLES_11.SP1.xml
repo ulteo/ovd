@@ -186,12 +186,12 @@
 Admin login: admin
 Password: 
 Retype password: 
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@]: 
+Chroot download url [http://archive.ulteo.com/ovd/@VERSION@/subsystem/base.tar.gz]: 
 Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]: 
 
 Options:
 * chroot download:  yes
-* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@
+* chroot URI:       http://archive.ulteo.com/ovd/@VERSION@/subsystem/base.tar.gz
 * chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
 
 Is this correct? [Y/n]
