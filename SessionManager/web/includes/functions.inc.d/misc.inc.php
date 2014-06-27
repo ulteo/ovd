@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2011
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
- * Author David LECHEVALIER <david@ulteo.com> 2012
+ * Author David LECHEVALIER <david@ulteo.com> 2012, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -370,11 +370,38 @@ function shadow($input_, $password_) {
        return (crypt($password_, '$'.$type.'$'.$hash.'$') == $input_);
 }
 
+function jsonLastErrorMsg() {
+	if (!function_exists('json_last_error_msg')) {
+		if (!defined("JSON_ERROR_UTF8")) {
+			define("JSON_ERROR_UTF8", 5);
+		}
+		
+		static $errors = array(
+			JSON_ERROR_NONE             => null,
+			JSON_ERROR_DEPTH            => 'Maximum stack depth exceeded',
+			JSON_ERROR_STATE_MISMATCH   => 'Underflow or the modes mismatch',
+			JSON_ERROR_CTRL_CHAR        => 'Unexpected control character found',
+			JSON_ERROR_SYNTAX           => 'Syntax error, malformed JSON',
+			JSON_ERROR_UTF8             => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+		);
+		
+		$error = json_last_error();
+		return array_key_exists($error, $errors) ? $errors[$error] : "Unknown error ({$error})";
+	}
+	
+	return json_last_error_msg();
+}
+
+
 function json_serialize($array) {
 	if (function_exists("json_encode"))
 		$ret = json_encode($array);
 	else
 		$ret = FALSE;
+	
+	if (json_last_error() != 0) {
+		error_log("json serialize error: ".jsonLastErrorMsg());
+	}
 	
 	if ($ret === FALSE)
 		return serialize($array);
@@ -387,6 +414,10 @@ function json_unserialize($string) {
 		$ret = json_decode($string, true);
 	else
 		$ret = NULL;
+	
+	if (json_last_error() != 0) {
+		error_log("json serialize error: ".jsonLastErrorMsg());
+	}
 	
 	if ($ret === NULL) // try with old method
 		$ret = @unserialize($string);
