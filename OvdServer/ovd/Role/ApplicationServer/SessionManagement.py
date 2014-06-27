@@ -105,9 +105,9 @@ class SessionManagement(Process):
 				self.create_session(session)
 				Logger.unregisterHook(session.log)
 				session.locked = False
-				Logger.info("Before put session %s in spool"%(session.id))
+				Logger.debug("Before put session %s in spool"%(session.id))
 				self.queue_sync.put(session)
-				Logger.info("After put session %s in spool"%(session.id))
+				Logger.debug("After put session %s in spool"%(session.id))
 			elif request == "destroy":
 				session = obj
 				self.current_session_id.value = session.id
