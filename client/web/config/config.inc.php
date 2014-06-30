@@ -60,6 +60,11 @@
 // define('OPTION_FORCE_SSO', false);
 // default is false
 
+// Option force SAML2: do not let the user enter a login and password the user is redirected th the Identity Provider.
+// define('OPTION_FORCE_SAML2', true);
+// define('OPTION_FORCE_SAML2', false);
+// default is false
+
 // Enable/disable debug mode
 //  define('DEBUG_MODE', true);
 //  define('DEBUG_MODE', false);

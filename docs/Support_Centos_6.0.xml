@@ -5,13 +5,13 @@
 ]>
 <article>
   <transform_var name="distrib_pretty_name"
-                 value="Red Hat Enterprise Linux (RHEL) 6.0"/>
+                 value="CentOS 6.0"/>
 
-  <transform_var name="distrib_name" value="rhel"/>
+  <transform_var name="distrib_name" value="centos"/>
 
   <transform_var name="distrib_version" value="6.0"/>
 
-  <transform_var name="distrib_dvd_url" value="http://www.redhat.com/rhel/"/>
+  <transform_var name="distrib_dvd_url" value="https://www.centos.org/download/"/>
 
   <transform_var name="rpm_install_cmd" value="yum"/>
 
@@ -44,59 +44,7 @@
   <xi:include href="Support_RHEL_5.5.xml" xpointer="wc"
               xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
-  <!--
-  <section id="aps">
-    <title id="aps_title">Application Server installation (native
-    method)</title>
 
-    <itemizedlist>
-      <listitem>
-        <para id="aps_desktop">Install a desktop envirnoment into your server
-        if there is none yet:</para>
-
-        <screen>
-# @rpm_install_cmd@ install kdebase
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para id="aps_applications">Install some useful graphical applications
-        :</para>
-
-        <screen>
-# @rpm_install_cmd@ install gimp libreoffice
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para id="aps_package">Install the package
-        <emphasis>ulteo-ovd-slaveserver-role-aps</emphasis>:</para>
-
-        <screen>
-# @rpm_install_cmd@ install ulteo-ovd-slaveserver-role-aps
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para>Launch the configuration tool</para>
-
-        <screen>
-# ovd-slaveserver-config
-Session Manager address [127.0.0.1]: sm.test.demo
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para>Restart the service</para>
-
-        <screen>
-# chkconfig ulteo-ovd-slaveserver on
-# service ulteo-ovd-slaveserver stop
-        </screen>
-      </listitem>
-    </itemizedlist>
-  </section>
-  -->
 
   <xi:include href="colophon.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>

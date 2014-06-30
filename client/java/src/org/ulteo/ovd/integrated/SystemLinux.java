@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2009-2011 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
- * Author David LECHEVALIER <david@ulteo.com> 2011
+ * Author David LECHEVALIER <david@ulteo.com> 2011, 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -462,6 +462,10 @@ public class SystemLinux extends SystemAbstract {
 	public void refresh() {
 		XDGMime.updateDatabase();
 		String xdg_dir = Constants.PATH_XDG_APPLICATIONS;
+		
+		if (new File(Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS).exists()) {
+			xdg_dir = Constants.PATH_OVD_SPOOL_XDG_APPLICATIONS;
+		}
 		
 		try {
 			Runtime runtime = Runtime.getRuntime();

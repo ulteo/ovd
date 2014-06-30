@@ -1,12 +1,12 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009-2012 Ulteo SAS
+# Copyright (C) 2009-2014 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010-2011
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010, 2011, 2012, 2014
 # Author Thomas MOUTON <thomas@ulteo.com> 2010
 # Author David LECHEVALIER <david@ulteo.com> 2012
-# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+# Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -63,6 +63,9 @@ class Session(AbstractSession):
 			path = os.path.join(xdg_app_d, ".show_on_desktop")
 			f = file(path, "w")
 			f.close()
+		
+		for f in os.listdir(xdg_app_d):
+			os.chown(os.path.join(xdg_app_d, f), pwd.getpwnam(name)[2], -1)
 		
 		env_file_lines = []
 		# Set the language
@@ -158,7 +161,7 @@ class Session(AbstractSession):
 		uid = pwd.getpwnam(System.local_encode(self.user.name))[2]
 		for f in os.listdir("/tmp"):
 			filename = os.path.join("/tmp", f)
-			s = os.stat(filename)
+			s = os.lstat(filename)
 			if s.st_uid != uid:
 				continue
 			

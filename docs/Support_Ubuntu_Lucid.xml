@@ -415,7 +415,7 @@ deb @BASE_URI@/@distrib_name@ @distrib_version@ main
 
       <para>Retrieve the <emphasis>base.tar.gz</emphasis> archive from <ulink
       url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=@VERSION@">the
-      Ulteo website</ulink> or from the Ulteo OVD DVD and copy it into the
+      Ulteo website</ulink> and copy it into the
       <emphasis>/var/cache/ulteo/sessionmanager/</emphasis> folder of your
       machine.</para>
     </simplesect>

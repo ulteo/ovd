@@ -1,9 +1,8 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2014 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2014
  * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
@@ -21,25 +20,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-abstract class AuthMethod extends Module {
-	protected $prefs;
-	protected $userDB;
-	protected $login;
 
-	public function __construct($prefs_, $userDB_, $user_node_request_) {
-		$this->prefs = $prefs_;
-		$this->userDB = $userDB_;
-		$this->user_node_request = $user_node_request_;
-	}
+require_once(dirname(__FILE__).'/common.inc.php');
 
-	abstract public function get_login();
-	abstract public function authenticate($user_);
-
-	public function getClientParameters() {
-		return null;
-	}
-
-	public static final function multiSelectModule() {
-		return true;
-	}
+try {
+	$auth = init_saml2_auth();
+	$auth->processResponse();
+} catch (Exception $e) {
+	send_error($e->getMessage());
 }
+
+$errors = $auth->getErrors();
+if (!empty($errors)) {
+	send_error(implode(', ', $errors));
+}
+
+if (!$auth->isAuthenticated()) {
+	send_error("Not authenticated");
+}
+
+$_SESSION['SAML2'] = true;
+$_SESSION['SAML2_login'] = $auth->getNameId();
+$_SESSION['SAML2_ticket'] = $_POST['SAMLResponse'];
+
+setcookie('ovd-sso', 'true', 0, '/ovd/');
+$auth->redirectTo(SAML2_REDIRECT_URI.'/ovd/');

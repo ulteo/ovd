@@ -75,10 +75,7 @@ foreach ($files as $file) {
 	$name = null;
 	
 	switch ($infos['filename']){
-		
-		case "FAQ":
-			$name="Frequently Asked Questions";
-		break;
+				
 		case "Installation_ApS_Windows":
 			$name="Installing a Windows Application Server";
 		break;
@@ -97,6 +94,9 @@ foreach ($files as $file) {
 		case "Installation_Gateway_RHEL6.0":
 			$name="Installing OVD Gateway on RHEL 6.0";
 		break;
+		case "Installation_Gateway_Centos6.0":
+			$name="Installing OVD Gateway on CentOS 6.0";
+		break;
 		case "Installation_Gateway_SLES_11.SP1":
 			$name="Installing OVD Gateway on SLES 11.SP1";
 		break;
@@ -109,8 +109,11 @@ foreach ($files as $file) {
 		case "Protocol":
 			$name="Protocol Overview";
 		break;
+		case "Premium_Edition":
+			$name="Premium Edition Guide";
+		break;
 		case "QuickStart":
-			$name="Quick Start";
+			$name="Quick Start with OVD";
 		break;
 		case "Support_Debian_Squeeze":
 			$name="Installing OVD 4 on Debian Squeeze";
@@ -120,6 +123,9 @@ foreach ($files as $file) {
 		break;
 		case "Support_RHEL_6.0":
 			$name="Installing OVD 4 on RHEL 6.0";
+		break;
+		case "Support_Centos_6.0":
+			$name="Installing OVD 4 on CentOS 6.0";
 		break;
 		case "Support_SLES_11.SP1":
 			$name="Installing OVD 4 on SLES 11.SP1";

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009-2013 Ulteo SAS
+ * Copyright (C) 2009-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author David LECHEVALIER <david@ulteo.com> 2014
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
@@ -173,7 +174,11 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 			this.rw.setVisible(false);
 	}
 
-	public void setImeState(boolean state) {
+	public void setImeState(Input input, boolean state) {
+		if (input != this.input) {
+			return;
+		}
+
 		ImeStateSetter imeStS = new ImeStateSetter(this, this, state);
 	}
 
@@ -198,9 +203,15 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing, 
 	
 	@Override
 	public void focusGained(FocusEvent e) {
+		this.input.updateKeyboardFocus(this);
+		
 		if (SeamlessFrame.focusManager != null)
 		{
 			SeamlessFrame.focusManager.performedFocusLost(this);
+		}
+		
+		if (this.input.getImeActive() != this.getInputContext().isCompositionEnabled()) {
+			this.input.setImeActive(this.input.getImeActive());
 		}
 	}
 

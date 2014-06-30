@@ -51,6 +51,7 @@ import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.apache.log4j.Logger;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 public class RdpConnection implements SeamListener, Runnable{
 	public static final int RDP_PORT = 3389;
@@ -662,6 +663,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		if (this.soundChannel != null) {
 			this.soundChannel.stopPlayThread();
 			this.soundChannel = null;
+		}
+		
+		if (this.rdpdrChannel != null) {
+			((OVDRdpdrChannel)this.rdpdrChannel).reset();
 		}
 	}
 	

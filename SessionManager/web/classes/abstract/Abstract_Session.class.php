@@ -48,7 +48,7 @@ class Abstract_Session {
 			'settings'			=>	'text',
 			'user_login'		=>	'varchar(255)',
 			'user_displayname'	=>	'varchar(255)',
-			'servers'			=>	'text',
+			'servers'			=>	'mediumtext',
 			'applications'		=>	'text',
 			'start_time'		=>	'varchar(255)',
 			'timestamp'			=>	'int(10)'

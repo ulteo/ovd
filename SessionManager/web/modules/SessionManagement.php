@@ -36,6 +36,7 @@ abstract class SessionManagement extends Module {
 	public $applications = array();
 	public $sharedfolders_known_rid= array();
 	public $forced_sharedfolders = array();
+	private $user_node_request = null;
 
 	public static function getInstance() {
 		if (is_null(self::$instance)) {
@@ -119,6 +120,7 @@ abstract class SessionManagement extends Module {
 			$this->no_desktop = true;
 		
 		$user_node = $dom->getElementsByTagname('user')->item(0);
+		$this->user_node_request = $user_node;
 		if (! is_null($user_node)) {
 			if ($user_node->hasAttribute('login'))
 				$_POST['login'] = $user_node->getAttribute('login');
@@ -282,7 +284,7 @@ abstract class SessionManagement extends Module {
 
 		foreach ($authMethods as $authMethod_name_) {
 			$authMethod_module = 'AuthMethod_'.$authMethod_name_;
-			$authMethod = new $authMethod_module($this->prefs, $this->userDB);
+			$authMethod = new $authMethod_module($this->prefs, $this->userDB, $this->user_node_request);
 
 			Logger::debug('main', 'SessionManagement::authenticate - Trying "'.$authMethod_module.'"');
 

@@ -64,12 +64,19 @@ class UserGroupDB_ldap {
 			}
 			
 			$configLDAP = $userDBAD->makeLDAPconfig();
-			if (array_keys_exists_not_empty(array('ou'), $this->preferences)) {
-				$configLDAP['suffix'] = $this->preferences['ou'].','.$configLDAP['suffix'];
-			}
 			
 			return $configLDAP;
 		}
+	}
+
+	protected function get_usergroup_ldap_config() {
+		$configLDAP = $this->makeLDAPconfig();
+		
+		if (array_keys_exists_not_empty(array('ou'), $this->preferences)) {
+			$configLDAP['suffix'] = $this->preferences['ou'].','.$configLDAP['suffix'];
+		}
+		
+		return $configLDAP;
 	}
 	
 	public function get_prefs() {
@@ -170,7 +177,7 @@ class UserGroupDB_ldap {
 		
 		$filter = LDAP::join_filters($filters, '&');
 		
-		$ldap = new LDAP($this->makeLDAPconfig());
+		$ldap = new LDAP($this->get_usergroup_ldap_config());
 		$sr = $ldap->search($filter, array_values($this->preferences['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UsersGroupDB::ldap::getUsersContaint search failed');
@@ -209,7 +216,7 @@ class UserGroupDB_ldap {
 		}
 		else {
 			$field = $this->preferences['group_field'];
-			$configLDAP = $this->makeLDAPconfig();
+			$configLDAP = $this->get_usergroup_ldap_config();
 			$ldap = new LDAP($configLDAP);
 			$sr = $ldap->searchDN($group_->id, array($field));
 			if ($sr === false) {
@@ -305,7 +312,7 @@ class UserGroupDB_ldap {
 			$groups = $this->imports($groups_dn);
 			
 			$field = $this->preferences['user_field'];
-			$configLDAP = $this->makeLDAPconfig();
+			$configLDAP = $this->get_usergroup_ldap_config();
 			// get userdb ldap config instead!!!
 		
 			$ldap = new LDAP($configLDAP);
@@ -422,7 +429,7 @@ class UserGroupDB_ldap {
 	
 	protected function import_nocache($id_) {
 		Logger::debug('main',"UserGroupDB::ldap::import_nocache (id = $id_)");
-		$configLDAP = $this->makeLDAPconfig();
+		$configLDAP = $this->get_usergroup_ldap_config();
 		
 		if (! str_endswith(strtolower($id_), strtolower($configLDAP['suffix']))) {
 			Logger::error('main', "UserGroupDB::ldap::import_nocache unable to import '$id_' because not same LDAP suffix");
@@ -491,7 +498,7 @@ class UserGroupDB_ldap {
 	 public function import_from_filter($filter_) {
 		$filter = LDAP::join_filters(array($this->preferences['filter'], $filter_), '&');
 		
-		$configLDAP = $this->makeLDAPconfig();
+		$configLDAP = $this->get_usergroup_ldap_config();
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search($filter, array_values($this->preferences['match']));
 		if ($sr === false) {

@@ -45,7 +45,7 @@ class UserDB_ldap  extends UserDB {
 				return NULL;
 		}
 		
-		$ldap = new LDAP($this->makeLDAPconfig());
+		$ldap = new LDAP($this->get_user_ldap_config());
 		$sr = $ldap->search($this->config['match']['login'].'='.$login_, array_values($this->config['match']), 1);
 		if ($sr === false) {
 			Logger::error('main', "UserDB_ldap::import($login_) ldap failed (usually timeout on server)");
@@ -103,7 +103,7 @@ class UserDB_ldap  extends UserDB {
 	public function import_from_filter($filter_) {
 		$filter = LDAP::join_filters(array($this->generateFilter(), $filter_), '&');
 		
-		$ldap = new LDAP($this->makeLDAPconfig());
+		$ldap = new LDAP($this->get_user_ldap_config());
 		$sr = $ldap->search($filter, array_values($this->config['match']));
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::imports search failed');
@@ -175,7 +175,7 @@ class UserDB_ldap  extends UserDB {
 		}
 		
 		$filter = LDAP::join_filters($filters, '&');
-		$ldap = new LDAP($this->makeLDAPconfig());
+		$ldap = new LDAP($this->get_user_ldap_config());
 		$sr = $ldap->search($filter, array_values($this->config['match']), $limit_);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
@@ -362,6 +362,13 @@ class UserDB_ldap  extends UserDB {
 		}
 		
 		$configLDAP = array_merge(array(), $this->config);
+		
+		return $configLDAP;
+	}
+	
+	protected function get_user_ldap_config() {
+		$configLDAP = $this->makeLDAPconfig();
+		
 		if (array_keys_exists_not_empty(array('ou'), $configLDAP)) {
 			$configLDAP['suffix'] = $configLDAP['ou'].','.$configLDAP['suffix'];
 		}

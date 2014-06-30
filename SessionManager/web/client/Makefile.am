@@ -1,5 +1,6 @@
 scripts_DATA = applications.php \
                auth.php \
+               auth_params.php \
                icon.php \
                logout.php \
                mimetype-icon.php \
@@ -9,6 +10,7 @@ scripts_DATA = applications.php \
                sign.php \
                start.php \
                userlist.php
+               
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/client
 

@@ -300,6 +300,14 @@ class Session {
 	}
 	
 	public function setServerDump($server_, $dumps_) {
+		$limit = 1000000;
+		foreach($dumps_ as $type => $data) {
+			if (strlen($data) > $limit) { // limit dump size to 1M
+				Logger::warning('main', 'Session::setServerDump server dump is truncated to 1M');
+				$dumps_[$type] = substr($data, 0, $limit);
+			}
+		}
+		
 		if (! array_key_exists($server_, $this->servers[Server::SERVER_ROLE_APS]))
 			return false;
 		

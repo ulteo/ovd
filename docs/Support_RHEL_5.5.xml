@@ -104,10 +104,10 @@ SELinux status:              disabled
       <screen>
 [ovd-@VERSIONNOTILD@]
 name=Ulteo OVD @VERSION@
-baseurl=@BASE_URI@/rhel/@distrib_version@/
+baseurl=@BASE_URI@/@distrib_name@/@distrib_version@/
 enabled=1
 gpgcheck=1
-gpgkey=@BASE_URI@/rhel/@distrib_version@/keyring
+gpgkey=@BASE_URI@/@distrib_name@/@distrib_version@/keyring
         </screen>
     </section>
   </section>

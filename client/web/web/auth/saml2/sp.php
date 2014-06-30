@@ -1,9 +1,11 @@
-/*
- * Copyright (C) 2013 Ulteo SAS
+<?php
+/**
+ * Copyright (C) 2014 Ulteo SAS
  * http://www.ulteo.com
- * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+ * Author Julien LANGLOIS <julien@ulteo.com> 2014
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -16,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+ **/
 
-package net.propero.rdp;
+require_once(dirname(__FILE__).'/common.inc.php');
 
-public interface ImeStateListener {
-	public void setImeState(Input input, boolean state);
-}
+$auth = init_saml2_auth();
+$auth->login(SAML2_REDIRECT_URI.'/ovd/auth/saml2/asc.php');

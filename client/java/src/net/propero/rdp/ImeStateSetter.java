@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2013 Ulteo SAS
+ * Copyright (C) 2013-2014 Ulteo SAS
  * http://www.ulteo.com
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
+ * David LECHEVALIER <david@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@ import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
+import java.awt.im.InputContext;
 
 public class ImeStateSetter implements FocusListener {
 
@@ -51,15 +53,16 @@ public class ImeStateSetter implements FocusListener {
 		/* Add the ImeStateSetter as a FocusListener */
 		component.addFocusListener(this);
 
-		/* Add a dummy text box to make "component" to loose the focus */
-		this.textField = new TextField();
-		container.add(this.textField);
-		this.textField.requestFocusInWindow();
+		/* Remove the focus from component */
+		container.enableInputMethods(imeState);
+		InputContext ic = container.getInputContext();
+		
+		FocusEvent event = new FocusEvent(container, FocusEvent.FOCUS_LOST);
+		ic.dispatchEvent(event);
 	}
 
 	public void focusLost(FocusEvent e) {
-		/* Remove the TextField */
-		this.container.remove(this.textField);
+		this.component.requestFocusInWindow();
 	}
 
 	public void focusGained(FocusEvent e) {

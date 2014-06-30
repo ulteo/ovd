@@ -3,7 +3,7 @@
  * Copyright (C) 2008-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012, 2014
  * Author Julien LANGLOIS <julien@ulteo.com> 2012, 2013, 2014
  * Author David LECHEVALIER <david@ulteo.com> 2014
  * Author Vincent ROULLIER <vincent.roullier@ulteo.com> 2013
@@ -452,6 +452,10 @@ class Preferences_admin {
 			
 			'AuthMethod_RemoteUser_user_authenticate_trust' => _('SERVER variable for SSO'),
 			'AuthMethod_RemoteUser_remove_domain_if_exists' => _('Remove domain if exists'),
+			
+			'AuthMethod_SAML2_idp_url' => _('Identity provider url'),
+			'AuthMethod_SAML2_idp_fingerprint' => _('Certificate fingerprint'),
+			'AuthMethod_SAML2_idp_cert' => _('Certificate'),
 			
 			'AuthMethod_Token_url' => _('Token validation URL'),
 			'AuthMethod_Token_user_node_name' => _('Token XML user node name'),

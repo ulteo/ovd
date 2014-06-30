@@ -11,12 +11,12 @@ STYLE_XSL_XHTML=style/xhtml.xsl
 
 SRC=\
 	Architecture.xml \
-	FAQ.xml \
 	Support_Ubuntu_Lucid.xml \
 	Support_Ubuntu_Precise.xml \
 	Support_Debian_Squeeze.xml \
 	Support_Debian_Wheezy.xml \
 	Support_RHEL_6.0.xml \
+	Support_Centos_6.0.xml \
 	Support_SLES_11.SP1.xml \
 	Support_openSUSE_11.3.xml \
 	Installation_ApS_Windows.xml \
@@ -25,6 +25,7 @@ SRC=\
 	Installation_Gateway_Wheezy.xml \
 	Installation_Gateway_Squeeze.xml \
 	Installation_Gateway_RHEL6.0.xml \
+	Installation_Gateway_Centos6.0.xml \
 	Installation_Gateway_SLES_11.SP1.xml \
 	Installation_Gateway_openSUSE_11.3.xml \
 	Internationalization.xml \

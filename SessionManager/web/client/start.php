@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com> 2008-2011
  * Author Julien LANGLOIS <julien@ulteo.com> 2011, 2012
  * Author David LECHEVALIER <david@ulteo.com> 2012-2014
- * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2012-2014
  * Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
  * Alexandre CONFIANT-LATOUR <a.confiant@ulteo.com> 2013
  *
@@ -81,10 +81,15 @@ if (! $sessionManagement->parseClientRequest($_SESSION['from_Client_start_XML'])
 	throw_response(INTERNAL_ERROR);
 }
 
-if (! $sessionManagement->authenticate()) {
-	unset($_SESSION['from_Client_start_XML']);
-	Logger::error('main', '(client/start) Authentication failed');
-	throw_response(AUTH_FAILED);
+try {
+	if (! $sessionManagement->authenticate()) {
+		unset($_SESSION['from_Client_start_XML']);
+		Logger::error('main', '(client/start) Authentication failed');
+		throw_response(AUTH_FAILED);
+	}
+}
+catch (Exception $err) {
+	throw_response(INTERNAL_ERROR);
 }
 
 unset($_SESSION['from_Client_start_XML']);
@@ -167,12 +172,6 @@ $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	$stop = false;
 	foreach ($sessions as $session) {
-		$same_mode = ($session->mode == $session_mode);
-		if (! $same_mode) {
-			Logger::error('main', '(client/start) User \''.$user->getAttribute('login').'\' do not specify the right session mode');
-			throw_response(USER_WITH_ACTIVE_SESSION);
-		}
-		
 		switch ($session->status) {
 			case Session::SESSION_STATUS_CREATING:
 			case Session::SESSION_STATUS_CREATED:

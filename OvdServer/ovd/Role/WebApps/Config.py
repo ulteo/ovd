@@ -7,6 +7,7 @@
 # Author Maciej SKINDZIER <maciej.skindzier@stxnext.pl> 2013
 # Author Wojciech LICHOTA <wojciech.lichota@stxnext.pl> 2013
 # Author David PHAM-VAN <d.pham-van@ulteo.com> 2013, 2014
+# Author David LECHEVALIER <david@ulteo.com> 2014
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@
 import json
 
 from ovd.Logger import Logger
+from ovd.Platform.System import System
 from ApplicationRequestProcessor import ApplicationRequestProcessor
 import re
 
@@ -130,6 +132,8 @@ def setup_apps(reset=False):
 		app_id = webapp_dom.getAttribute('id')
 		app_name = config.keys()[0]
 		try:
+			app_id = System.local_encode(app_id)
+			app_name = System.local_encode(app_name)
 			appl = setup_app(config, app_id, app_name, Config.mode)
 		except:
 			Logger.exception("Setting up an application failed. Correct its configuration.")
