@@ -14,7 +14,7 @@ if [ "$1" = "purge" ] ; then
     db_input high ulteo-ovd-slaveserver-role-fs/purge_cache || true
     db_go
     db_get ulteo-ovd-slaveserver-role-fs/purge_cache || true
-    [ "$RET" = "true" ] && rm -rf $FSCACHEDIR
+    [ "$RET" = "true" ] && rm -rf $FSCACHEDIR ${FSCACHEDIR}.real
 fi
 
 #DEBHELPER#
