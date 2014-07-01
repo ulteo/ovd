@@ -21,7 +21,6 @@ Depends: ${python:Depends},
  ulteo-ovd-slaveserver, ulteo-ovd-shells, ulteo-ovd-externalapps-client,
  uxda-server-python, uxda-server-seamrdp, uxda-server-rdpdr, uxda-server-printer, uxda-server-sound, uxda-server-clipboard,
  desktop-file-utils, imagemagick, passwd, adduser, rsync, smbfs | cifs-utils, python-xdg, xdg-utils, ulteo-ovd-regular-union-fs
-Recommends: tmpreaper
 XB-Python-Version: ${python:Versions}
 Description: Ulteo Open Virtual Desktop - application server role for slave server
  Application server role for the Ulteo OVD slave server
