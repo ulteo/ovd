@@ -30,8 +30,6 @@
 #include <libxfce4panel/xfce-panel-plugin.h>
 #include <libxfce4panel/xfce-hvbox.h>
 
-#include <thunar-vfs/thunar-vfs.h>
-
 #include "s-menu.h"
 #include "image.h"
 
@@ -116,6 +114,50 @@ rm_position_menu (GtkMenu *menu,
     *push_in = TRUE;
 }
 
+gchar*
+str_replace (const gchar *str,
+                 const gchar *pattern,
+                 const gchar *replacement)
+{
+  const gchar *s, *p;
+  GString     *result;
+
+  g_return_val_if_fail (str != NULL, NULL);
+  g_return_val_if_fail (pattern != NULL, NULL);
+  g_return_val_if_fail (replacement != NULL, NULL);
+
+  /* empty patterns are kinda useless, so we just return a copy of str */
+  if (G_UNLIKELY (*pattern == '\0'))
+    return g_strdup (str);
+
+  /* allocate the result string */
+  result = g_string_new (NULL);
+
+  /* process the input string */
+  while (*str != '\0')
+    {
+      if (G_UNLIKELY (*str == *pattern))
+        {
+          /* compare the pattern to the current string */
+          for (p = pattern + 1, s = str + 1; *p == *s; ++s, ++p)
+            if (*p == '\0' || *s == '\0')
+              break;
+
+          /* check if the pattern matches */
+          if (G_LIKELY (*p == '\0'))
+            {
+              g_string_append (result, replacement);
+              str = s;
+              continue;
+            }
+        }
+
+      g_string_append_c (result, *str++);
+    }
+
+  return g_string_free (result, FALSE);
+}
+
 const gchar *
 build_ddir (const gchar *template)
 {
@@ -123,12 +165,12 @@ build_ddir (const gchar *template)
     const gchar *ret;
     gchar uid_str[10];
 
-    tmp = exo_str_replace (template, "@USER@", g_get_user_name ());
+    tmp = str_replace (template, "@USER@", g_get_user_name ());
     ret = g_strdup (tmp);
     g_free (tmp);
 
     g_sprintf (uid_str, "%d", getuid ());
-    tmp = exo_str_replace (ret, "@UID@", uid_str);
+    tmp = str_replace (ret, "@UID@", uid_str);
     ret = g_strdup (tmp);
     g_free (tmp);
 
@@ -258,8 +300,6 @@ rm_free (XfcePanelPlugin *plugin,
   gtk_widget_destroy (rm->button);
   gtk_widget_destroy (rm->ebox);
 
-  thunar_vfs_shutdown ();
-
   panel_slice_free (RmPlugin, rm);
 }
 
@@ -268,7 +308,10 @@ rm_orientation_changed (XfcePanelPlugin *plugin,
                         GtkOrientation   orientation,
                         RmPlugin        *rm)
 {
-  xfce_hvbox_set_orientation (XFCE_HVBOX (rm->hvbox), orientation);
+  gint size = xfce_panel_plugin_get_size (plugin);
+  ulteo_img_btn_update((UlteoImgBtn*)rm->button, size, orientation);
+
+  return TRUE;
 }
 
 static gboolean
@@ -278,11 +321,8 @@ rm_size_changed (XfcePanelPlugin *plugin,
 {
   GtkOrientation orientation =
     xfce_panel_plugin_get_orientation (plugin);
-
-  if (orientation == GTK_ORIENTATION_HORIZONTAL)
-    gtk_widget_set_size_request (GTK_WIDGET (plugin), -1, size);
-  else
-    gtk_widget_set_size_request (GTK_WIDGET (plugin), size, -1);
+    
+  ulteo_img_btn_update((UlteoImgBtn*)rm->button, size, orientation);
 
   return TRUE;
 }
@@ -293,7 +333,6 @@ rm_construct (XfcePanelPlugin *plugin)
   RmPlugin *rm;
 
   xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
-  thunar_vfs_init ();
   rm = rm_new (plugin);
 
   xfce_panel_plugin_add_action_widget (plugin, rm->button);

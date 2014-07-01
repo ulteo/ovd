@@ -62,6 +62,9 @@ GtkWidget *ulteo_img_btn_new        (const gchar   *normal_file,
 gboolean   ulteo_img_btn_get_active (UlteoImgBtn *img);
 void       ulteo_img_btn_set_active (UlteoImgBtn *img,
                                      gboolean active);
+void ulteo_img_btn_update (UlteoImgBtn *img, 
+                           gint           size,
+                           GtkOrientation orientation);
 
 G_END_DECLS
 

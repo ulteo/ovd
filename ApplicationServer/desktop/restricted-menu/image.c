@@ -30,6 +30,8 @@ struct _UlteoImgBtnPrivate {
     GdkPixbuf *normal;
     GdkPixbuf *hover;
 
+    gchar   *normal_file;
+    gchar   *hover_file;
     gboolean active;
 };
 
@@ -138,12 +140,28 @@ get_pxb_scaled (const gchar   *file,
 
     w = orientation == GTK_ORIENTATION_HORIZONTAL ? size*aspect : size;
     h = orientation == GTK_ORIENTATION_VERTICAL ? size*aspect : size;
+    
+    if (orientation == GTK_ORIENTATION_VERTICAL) {
+        tmp = gdk_pixbuf_rotate_simple (px, 270);
+        g_object_unref (G_OBJECT (px));
+        px = tmp;
+    }
 
     tmp = gdk_pixbuf_scale_simple (px, w, h, GDK_INTERP_BILINEAR);
     g_object_unref (G_OBJECT (px));
     px = tmp;
 
     return px;
+}
+
+void ulteo_img_btn_update (UlteoImgBtn *img, 
+                           gint           size,
+                           GtkOrientation orientation)
+{
+    img->priv->normal = get_pxb_scaled (img->priv->normal_file, size, orientation);
+    img->priv->hover = get_pxb_scaled (img->priv->hover_file ? img->priv->hover_file : img->priv->normal_file, size, orientation);
+
+    gtk_image_set_from_pixbuf (GTK_IMAGE (img->priv->image), img->priv->normal);
 }
 
 /* public api */
@@ -157,6 +175,9 @@ ulteo_img_btn_new (const gchar   *normal_file,
     UlteoImgBtn *img;
 
     img = g_object_new (ulteo_img_btn_get_type (), NULL);
+
+    img->priv->normal_file = g_strdup(normal_file);
+    img->priv->hover_file = g_strdup(hover_file);
 
     /* connect to mouse events */
     gtk_widget_set_events (GTK_WIDGET (img), GDK_ENTER_NOTIFY_MASK);

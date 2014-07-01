@@ -26,13 +26,11 @@ xfce4_restricted_menu_plugin_CFLAGS =						\
 	$(LIBXFCE4UTIL_CFLAGS)						\
 	$(LIBXFCEGUI4_CFLAGS)						\
 	$(LIBXFCE4PANEL_CFLAGS)						\
-	$(THUNARVFS_CFLAGS)						\
 	$(PLATFORM_CFLAGS)
 
 xfce4_restricted_menu_plugin_LDADD =						\
 	$(LIBXFCE4UTIL_LIBS)						\
 	$(LIBXFCEGUI4_LIBS)						\
-	$(THUNARVFS_LIBS)						\
 	$(LIBXFCE4PANEL_LIBS)
 
 desktopdir =								\
