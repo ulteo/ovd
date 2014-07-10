@@ -27,6 +27,7 @@
 #include <common/sys/System.h>
 #include <common/fs/RSync.h>
 #include <common/fs/File.h>
+#include <common/sys/Event.h>
 
 
 VFS::VFS() { }
@@ -66,8 +67,11 @@ VFS::status VFS::start() {
 	Configuration& conf = Configuration::getInstance();
 	Process hook32(VFS_HOOK_LOADER_32);
 	Process hook64(VFS_HOOK_LOADER_64);
+	Event evt64(L"HookInstalled64", false);
+	Event evt32(L"HookInstalled32", false);
 	Registry reg(REGISTRY_PATH_KEY);
-	std::list<Process*> processList;
+	std::list<Event> eventList;
+	std::list<Event>::iterator itEvent;
 
 	// Manage rsync if needed
 	std::list<Union> unionList = conf.getUnions();
@@ -119,14 +123,23 @@ VFS::status VFS::start() {
 	}
 
 	hook32.start(false);
-	processList.push_back(&hook32);
+	evt32.create();
+	eventList.push_back(evt32);
 
 	if (System::is64()) {
 		hook64.start(false);
-		processList.push_back(&hook64);
+		evt64.create();
+		eventList.push_back(evt64);
 	}
 
-	Process::wait(processList, INFINITE);
+	for (itEvent = eventList.begin() ; itEvent != eventList.end() ; itEvent++) {
+		Event evt = (Event)(*itEvent);
+		evt.wait(INFINITE);
+	}
+
+	Sleep(3000);
+	System::refreshDesktop();
+
 	return SUCCESS;
 }
 

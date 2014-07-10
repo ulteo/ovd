@@ -29,6 +29,7 @@
 #include <string>
 #include <iostream>
 #include <common/sys/System.h>
+#include <common/sys/Event.h>
 
 
 
@@ -42,9 +43,11 @@ typedef void (*set_hooks_proc_t) ();
 typedef void (*remove_hooks_proc_t) ();
 
 
-int main() {
+int main(int argc, char** argv) {
+	bool run = true;
 	set_hooks_proc_t set_hooks_fn;
 	remove_hooks_proc_t remove_hooks_fn;
+	Event event(L"HookInstalled", true);
 	
 	HMODULE hookdll = LoadLibraryW(HOOK_DLL);
 	
@@ -58,11 +61,15 @@ int main() {
 
 	set_hooks_fn();
 	
-	Sleep(3000);
-	System::refreshDesktop();
 	printf("Running... \n");
 
-	bool run = true;
+	if (! event.create()) {
+		return -4;
+	}
+
+	if (! event.fire()) {
+		return -5;
+	}
 
 	while(run) {
 		//TODO: End condition, or just let Windows terminate this program on user exit.

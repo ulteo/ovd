@@ -88,7 +88,7 @@ class Folders(AbstractFolders):
 				
 				if self.mode == 'advanced':
 					try:
-						Platform.launch("VFS.exe -p U:\\", False)
+						Platform.launch("VFS.exe -p U:\\", True, False)
 					except:
 						print "Failed to start VFS program"
 		

@@ -104,8 +104,13 @@ def existProcess(pid):
 	win32file.CloseHandle(hProcess);
 	return True
 
-def launch(cmd, wait=False):
-	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
+def launch(cmd, wait=False, visible=True):
+	startupinfo = win32process.STARTUPINFO()
+	if not visible:
+		startupinfo.dwFlags |= win32process.STARTF_USESHOWWINDOW
+		startupinfo.wShowWindow = win32con.SW_HIDE
+
+	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, startupinfo)
 	
 	if wait:
 		win32event.WaitForSingleObject(hProcess, win32event.INFINITE)
