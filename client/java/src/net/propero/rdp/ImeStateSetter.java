@@ -26,14 +26,33 @@ import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
-import java.awt.im.InputContext;
 
 public class ImeStateSetter implements FocusListener {
+	public class IMEField extends TextField implements FocusListener {
+		Component component;
+		
+		public IMEField(Component component) {
+			super();
+			this.component = component;
+			this.addFocusListener(this);
+		}
+		
+		@Override
+		public void focusGained(FocusEvent arg0) {
+			this.setFocusable(false);
+			this.setVisible(false);
+			this.setEnabled(false);
+			this.component.requestFocusInWindow();
+		}
+		
+		@Override
+		public void focusLost(FocusEvent arg0) { }
+	}
 
 	protected Component component;
 	protected Container container;
 	protected FocusListener focusListeners[];
-	protected TextField textField;
+	protected IMEField textField;
 
 	public ImeStateSetter(Component component, Container container, boolean imeState) {
 		this.component = component;
@@ -53,16 +72,16 @@ public class ImeStateSetter implements FocusListener {
 		/* Add the ImeStateSetter as a FocusListener */
 		component.addFocusListener(this);
 
-		/* Remove the focus from component */
-		container.enableInputMethods(imeState);
-		InputContext ic = container.getInputContext();
-		
-		FocusEvent event = new FocusEvent(container, FocusEvent.FOCUS_LOST);
-		ic.dispatchEvent(event);
+		/* Add a dummy text box to make "component" to loose the focus */
+		this.textField = new IMEField(component);
+		container.add(this.textField);
+		this.textField.requestFocusInWindow();
 	}
 
 	public void focusLost(FocusEvent e) {
 		this.component.requestFocusInWindow();
+		/* Remove the TextField */
+		this.container.remove(this.textField);
 	}
 
 	public void focusGained(FocusEvent e) {
