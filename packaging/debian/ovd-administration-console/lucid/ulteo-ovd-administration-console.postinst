@@ -27,7 +27,7 @@ fi
 if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
 then
    echo "Purging wsdl cache files."
-   php $INSTALLDIR/tools/update_wsdl_cache.php 2>/dev/null
+   su -s /usr/bin/php $A2USER "$INSTALLDIR/tools/update_wsdl_cache.php"
    [ $? -ne 0 ] && exit 1
 fi
 
