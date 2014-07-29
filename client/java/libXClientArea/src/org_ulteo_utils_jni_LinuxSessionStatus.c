@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2013-2014 Ulteo SAS
  * http://www.ulteo.com
  * Author Vincent ROULLIER <v.roullier@ulteo.com> 2013
+ * Author David PHAM-VAN <d.pham-van@ulteo.com> 2014
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,31 +38,11 @@ struct stream {
 	int size;
 };
 
-void* g_malloc(int size, int zero) {
-	char* rv;
-
-	rv = (char*) malloc(size);
-	if (zero) {
-		if (rv != 0) {
-			memset(rv, 0, size);
-		}
-	}
-	return rv;
-}
-
-#define make_stream(s) \
+#define make_stream(s, v) \
 { \
-  (s) = (struct stream*) g_malloc(sizeof(struct stream), 1); \
-}
-
-#define init_stream(s, v) \
-{ \
-  if ((v) > (s)->size) \
-  { \
-    free((s)->data); \
-    (s)->data = (char*)g_malloc((v), 1); \
-    (s)->size = (v); \
-  } \
+  (s) = (struct stream*) malloc(sizeof(struct stream)); \
+  (s)->data = (char*)malloc((v)); \
+  (s)->size = (v); \
   (s)->p = (s)->data; \
   (s)->end = (s)->data; \
 }
@@ -199,8 +180,7 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_utils_jni_LinuxSessionStatus_nGetSessio
 	int rv;
 	int sck = unix_connect(f);
 	struct stream* st;
-	make_stream(st);
-	init_stream(st, msg_len + 6);
+	make_stream(st, msg_len + 6);
 	out_uint32_be(st, msg_len);
 	out_uint8p(st, dom, msg_len);
 	int size = st->p - st->data;
@@ -210,8 +190,7 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_utils_jni_LinuxSessionStatus_nGetSessio
 		return NULL;
 	}
 	struct stream* in;
-	make_stream(in);
-	init_stream(in, 256);
+	make_stream(in, 256);
 	if ((rv = tcp_recv(sck, in->data, 4, 0)) < 0) {
 		fprintf(stderr, "Error in receiving message : %s \n", strerror(errno));
 		close(sck);
