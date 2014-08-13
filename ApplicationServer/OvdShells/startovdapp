@@ -36,8 +36,10 @@ from ovd_shells import Util
 def main():
 	# stop if we don't have the needed env vars
 	if not os.environ.has_key("OVD_SESSION_DIR"):
-		print "no 'OVD_SESSION_DIR' env var define"
-		sys.exit(1)
+		os.environ['OVD_SESSION_DIR'] = Platform.getUserSessionDir()
+		if os.environ['OVD_SESSION_DIR'] is None:
+			print "Exit because no OVD environment"
+			sys.exit(1)
 	
 	path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances")
 	if not os.path.exists(path):
