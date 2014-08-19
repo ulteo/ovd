@@ -22,3 +22,6 @@
 
 * ulteo_tree_view.patch
   fix a segfault when we activate the tree view in thunar
+
+* ulteo_remove_sendto_desktop.patch
+  remove send to desktop action

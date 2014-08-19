@@ -1,0 +1,56 @@
+--- thunar/thunar-launcher.c	2007-12-02 13:46:32.000000000 +0000
++++ thunar_new/thunar-launcher.c	2014-08-19 09:52:29.214683973 +0000
+@@ -142,7 +142,7 @@
+   { "open-with-other", NULL, N_ ("Open With Other _Application..."), NULL, N_ ("Choose another application with which to open the selected file"), G_CALLBACK (thunar_launcher_action_open_with_other), },
+   { "open-with-menu", NULL, N_ ("Open With"), NULL, NULL, NULL, },
+   { "open-with-other-in-menu", NULL, N_ ("Open With Other _Application..."), NULL, N_ ("Choose another application with which to open the selected file"), G_CALLBACK (thunar_launcher_action_open_with_other), },
+-  { "sendto-desktop", THUNAR_STOCK_DESKTOP, "", NULL, NULL, G_CALLBACK (thunar_launcher_action_sendto_desktop), },
++  //{ "sendto-desktop", THUNAR_STOCK_DESKTOP, "", NULL, NULL, G_CALLBACK (thunar_launcher_action_sendto_desktop), },
+ };
+ 
+ static GObjectClass *thunar_launcher_parent_class;
+@@ -1287,6 +1287,7 @@
+     }
+ 
+   /* update the "Desktop (Create Link)" sendto action */
++/* remove the possibility to create symlink
+   action = gtk_action_group_get_action (launcher->action_group, "sendto-desktop");
+   g_object_set (G_OBJECT (action),
+                 "label", ngettext ("Desktop (Create Link)", "Desktop (Create Links)", n_selected_files),
+@@ -1295,6 +1296,7 @@
+                                      n_selected_files),
+                 "visible", (linkable && n_selected_files > 0),
+                 NULL);
++*/
+ 
+   /* re-add the content to "Send To" if we have any files */
+   if (G_LIKELY (n_selected_files > 0))
+--- thunar/thunar-launcher-ui.xml	2007-12-02 13:46:32.000000000 +0000
++++ thunar_new/thunar-launcher-ui.xml	2014-08-19 09:50:34.798490315 +0000
+@@ -25,11 +25,11 @@
+         <placeholder name="placeholder-actions" />
+       </placeholder>
+ 
+-      <menu action="sendto-menu">
++      <!--<menu action="sendto-menu">
+         <placeholder name="placeholder-sendto-actions">
+           <menuitem action="sendto-desktop" />
+         </placeholder>
+-      </menu>
++      </menu> --!>
+     </menu>
+   </menubar>
+ 
+@@ -47,10 +47,10 @@
+       <placeholder name="placeholder-actions" />
+     </placeholder>
+ 
+-    <menu action="sendto-menu">
++    <!--<menu action="sendto-menu">
+       <placeholder name="placeholder-sendto-actions">
+         <menuitem action="sendto-desktop" />
+       </placeholder>
+-    </menu>
++    </menu> --!>
+   </popup>
+ </ui>
