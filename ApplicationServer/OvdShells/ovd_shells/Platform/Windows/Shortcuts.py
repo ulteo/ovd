@@ -44,6 +44,8 @@ class Shortcuts(AbstractShortcuts):
 	
 	
 	def synchronize(self, config, path):
+		self.addFavorites()
+
 		if self.version > 6.1:
 			self.defaultProgram = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_PROGRAMS, 0, 0)
 			desktopLNKFile = os.path.join(self.windowsProgramsDir, "desktop.lnk")
@@ -130,3 +132,28 @@ class Shortcuts(AbstractShortcuts):
 					os.remove(dstFile)
 				except Exception, e:
 					print "Failed to remote %s: %s"%(dstFile, str(e))
+	
+	
+	def addFavorites(self):
+		desktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, 0, 0)
+		documentsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PERSONAL, 0, 0)
+		sysDir = shell.SHGetFolderPath(0, shellcon.CSIDL_SYSTEM, 0, 0)
+		home = shell.SHGetFolderPath(0, shellcon.CSIDL_PROFILE, 0, 0)
+		
+		shortcut = pythoncom.CoCreateInstance (shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+		
+		shortcut.SetPath (desktopDir)
+		shortcut.SetDescription ("Desktop favorite")
+		shortcut.SetIconLocation (os.path.join (sysDir, "imageres.dll"), 105)
+		
+		persist_file = shortcut.QueryInterface (pythoncom.IID_IPersistFile)
+		persist_file.Save (os.path.join (home, "Links", "Desktop.lnk"), 0)
+		
+		
+		shortcut.SetPath (documentsDir)
+		shortcut.SetDescription ("Documents favorite")
+		shortcut.SetIconLocation (os.path.join (sysDir, "imageres.dll"), 202)
+		
+		persist_file = shortcut.QueryInterface (pythoncom.IID_IPersistFile)
+		persist_file.Save (os.path.join (home, "Links", "Documents.lnk"), 0)
+
