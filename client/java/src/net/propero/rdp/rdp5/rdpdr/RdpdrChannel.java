@@ -186,14 +186,7 @@ public class RdpdrChannel extends VChannel {
 			RdpPacket_Localised s;
 			int hostlen;
 
-			String g_rdpdr_clientname = "";
-			try {
-				InetAddress localMachine = InetAddress.getLocalHost();
-				g_rdpdr_clientname = localMachine.getHostName();
-			}
-			catch (java.net.UnknownHostException e) {
-				System.err.println("Unable to get hostname of the machine");
-			}
+			String g_rdpdr_clientname = this.opt.clientName;
 			hostlen = (g_rdpdr_clientname.length() + 1) * 2;
 
 			s = new RdpPacket_Localised( 16 + hostlen );
