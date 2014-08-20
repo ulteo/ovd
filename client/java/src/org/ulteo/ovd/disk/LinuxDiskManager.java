@@ -65,11 +65,20 @@ public class LinuxDiskManager extends DiskManager {
 		
 		for (String shareName : dir.list()) {
 			sharePath = rdpdrDirectory + File.separator + shareName;
-			if (! this.isMounted(sharePath) && this.testDir(sharePath))
-				result.add(sharePath);
+			result.add(sharePath);
 		}
 		
 		return result;
+	}
+	
+	/**************************************************************************/	
+	public boolean testDir(String directoryName) {
+		if ((this.tsDrive != null) && directoryName.contains(".rdp_drive")) {
+			return this.tsDrive.contains(directoryName);
+		}
+		File directory = new File(directoryName);
+		return (directory.isDirectory() && 
+				directory.canRead());
 	}
 	
 	/**************************************************************************/
@@ -155,11 +164,12 @@ public class LinuxDiskManager extends DiskManager {
 			}
 		}
 		
-		for (String drive : getRdpShare()) {
+		this.tsDrive = getRdpShare();
+		for (String drive : this.tsDrive) {
 			logger.debug("Drive "+drive);
 			dir = new File(drive);
 			
-			if (! this.isMounted(drive) && this.testDir(drive))
+			if (! this.isMounted(drive))
 				newDrives.add(drive);
 		}
 		

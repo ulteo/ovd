@@ -43,6 +43,8 @@ public abstract class DiskManager {
 	private boolean isStaticShareMounted = false;
 	protected boolean mountingMode = MOUNTING_RESTRICTED;
 	private int shareCount;
+	protected ArrayList<String> tsDrive;
+
 	
 	/**************************************************************************/
 	public DiskManager(OVDRdpdrChannel diskChannel, boolean mountingMode_) {

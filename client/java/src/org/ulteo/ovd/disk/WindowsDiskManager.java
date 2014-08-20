@@ -146,7 +146,8 @@ public class WindowsDiskManager extends DiskManager {
 			}
 		}
 
-		for (String drive : getTSDrive()) {
+		this.tsDrive = getTSDrive();
+		for (String drive : this.tsDrive) {
 			logger.debug("TSDrive "+drive);
 			dir = new File(drive);
 
@@ -172,6 +173,10 @@ public class WindowsDiskManager extends DiskManager {
 	/**************************************************************************/
 	//http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4939819
 	public boolean testDir(String directoryName) {
+		if ((this.tsDrive != null) && (directoryName.startsWith("\\\\tsclient") || directoryName.startsWith("\\\\TSCLIENT"))) {
+			return this.tsDrive.contains(directoryName);
+		}
+		
 		File directory = new File(directoryName);
 		return (directory.isDirectory() && 
 				directory.canRead());
