@@ -357,13 +357,14 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	protected boolean _checkRDPConnections() {
 		int nSeveralConnectionsFailed = 0;
 		int nConnections = this.performedConnections.size();
+		ArrayList<RdpConnectionOvd> toRemove = new ArrayList<RdpConnectionOvd>();
 		
 		for (RdpConnectionOvd co : this.performedConnections) {
 			RdpConnection.State state = co.getState();
 
 			if (state == RdpConnection.State.CONNECTED)
 				continue;
-
+			
 			if (state != RdpConnection.State.FAILED) {
 				Logger.debug("checkRDPConnections "+co.getServer()+" -- Bad connection state("+state+"). Will continue normal process.");
 				continue;
@@ -379,11 +380,16 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				Logger.error("checkRDPConnections "+co.getServer()+" -- Several try to connect failed.");
 				nSeveralConnectionsFailed++;
 				this.hide(co);
+				toRemove.add(co);
 				continue;
 			}
 
 			Logger.warn("checkRDPConnections "+co.getServer()+" -- Connection failed. Will try to reconnect.");
 			co.connect();
+		}
+		
+		for (RdpConnectionOvd co : toRemove) {
+			this.performedConnections.remove(co);
 		}
 		
 		return (nSeveralConnectionsFailed == nConnections) ? false : true;
