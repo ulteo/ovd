@@ -180,7 +180,7 @@ function show_default() {
 	
 	echo '  function calendars_init() {';
 	echo '    calendar_day_from.setReturnFunction("calendars_callback_from");';
-	echo '    calendar_day_to.setReturnFunction("calendars_callback");';
+	echo '    calendar_day_to.setReturnFunction("calendars_callback_to");';
 	
 	echo '    var from_date = new Date();';
 	echo '    from_date.setTime($("from").value*1000);';
