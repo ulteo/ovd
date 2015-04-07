@@ -96,5 +96,17 @@ if (array_key_exists('admin_language', $_SESSION['configuration'])) {
 	}
 }
 
-if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&  $_SESSION['configuration']['system_in_maintenance'] == '1')
+if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
+    $_SESSION['configuration']['system_in_maintenance'] == '1') {
 	popup_error(_('The system is in maintenance mode'));
+	if (isset($_SESSION['infomsg'][0]) &&
+	    $_SESSION['infomsg'][0] == _('The system is in production mode'))
+		$_SESSION['infomsg'] = array();
+}
+elseif (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
+        $_SESSION['configuration']['system_in_maintenance'] == '0') {
+	popup_info(_('The system is in production mode'));
+	if (isset($_SESSION['errormsg'][0]) &&
+	    $_SESSION['errormsg'][0] == _('The system is in maintenance mode'))
+		$_SESSION['errormsg'] = array();
+}
