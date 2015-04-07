@@ -98,7 +98,7 @@ function server_display_role_preparation_aps($server) {
 			else
 				$start = $_GET['start'];
 
-			$pagechanger = get_pagechanger('servers.php?action=manage&id='.$server->id.'&', $search_limit, $total);
+			$pagechanger = get_pagechanger('servers.php?action=manage&id='.urlencode($server->id).'&', $search_limit, $total);
 
 			$sessions = $_SESSION['service']->sessions_list_by_server($server->id, $start);
 			
@@ -308,7 +308,7 @@ function server_display_role_aps($server, $var) {
 				echo '<tr class="'.$content.'">';
 				echo '<td>';
 				echo '<img class="icon32" src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
-				echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
+				echo '<a href="applications.php?action=manage&id='.urlencode($app->getAttribute('id')).'">';
 				echo $app->getAttribute('name').'</a>';
 				echo '</td>';
 				if ($server_online && $can_do_action && $can_use_apt) {
@@ -336,7 +336,7 @@ function server_display_role_aps($server, $var) {
 			
 			echo '<tr class="'.$content.'">';
 			echo '<td>';
-			echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
+			echo '<a href="applications.php?action=manage&id='.urlencode($app->getAttribute('id')).'">';
 			echo $app->getAttribute('name').'</a>';
 			echo '</td>';
 			echo '<td>'._('install in progress').'</td>';
@@ -396,7 +396,7 @@ function server_display_role_aps($server, $var) {
 		foreach($servers_replication as $server_) {
 		echo '<tr>';
 		echo '<td><input class="input_checkbox" type="checkbox" name="servers[]" value="'.$server_->id.'" /></td>';
-		echo '<td><a href="servers.php?action=manage&id='.$server_->id.'">'.$server_->getDisplayName().'</a></td></tr>';
+		echo '<td><a href="servers.php?action=manage&id='.urlencode($server_->id).'">'.$server_->getDisplayName().'</a></td></tr>';
 		}
 		echo '<tr><td></td><td><input type="submit" value="'._('Replicate on those servers').'" /></td></tr>';
 		echo '</table>';
@@ -425,7 +425,7 @@ function server_display_role_aps($server, $var) {
 				$status = '<span class="msg_ok">'.$task->status.'</span>';
 			
 			echo '<tr class="'.$content.'">';
-			echo '<td><a href="tasks.php?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
+			echo '<td><a href="tasks.php?action=manage&id='.urlencode($task->id).'">'.$task->id.'</a></td>';
 			echo '<td>'.get_class($task).'</td>';
 			echo '<td>'.$status.'</td>';
 			echo '<td>'.$task->getAttribute('request').'</td>';
@@ -452,7 +452,7 @@ function server_display_role_aps($server, $var) {
 			else
 				echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
 			echo '</td>';
-			echo '<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
+			echo '<td><a href="users.php?action=manage&id='.urlencode($session->getAttribute('user_login')).'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '<td>';
 			echo '<input type="hidden" name="info" value="'.$session->id.'" />';
 			echo '</td><td><input type="submit" value="'._('Information about this session').'" /></td>';
@@ -565,7 +565,7 @@ function server_display_role_fs($server_, $var_) {
 			if (array_key_exists($a_networkfolder['id'], $var_['used by profiles'])) {
 				$objs = $var_['used by profiles'][$a_networkfolder['id']];
 					$a_obj = array_pop($objs);
-					echo '<a href="users.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+					echo '<a href="users.php?action=manage&id='.urlencode($a_obj['id']).'">'.$a_obj['name'].'</a>';
 			}
 			echo '</td>';
 			echo '<td>';
@@ -644,7 +644,7 @@ function server_display_role_fs($server_, $var_) {
 			}
 			
 			echo '<td>';
-			echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder['id'].'">'.$a_networkfolder['name'].'</a>';
+			echo '<a href="sharedfolders.php?action=manage&id='.urlencode($a_networkfolder['id']).'">'.$a_networkfolder['name'].'</a>';
 			echo '</td>';
 			echo '<td>';
 			if (array_key_exists($a_networkfolder['id'], $var_['used by sharedfolders'])) {
@@ -652,7 +652,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '<ul>';
 				foreach ($objs as $a_obj) {
 					echo '<li>';
-					echo '<a href="usersgroup.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+					echo '<a href="usersgroup.php?action=manage&id='.urlencode($a_obj['id']).'">'.$a_obj['name'].'</a>';
 					echo '</li>';
 				}
 				echo '</ul>';
