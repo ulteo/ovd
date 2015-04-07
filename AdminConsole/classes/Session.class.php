@@ -151,4 +151,27 @@ class Session extends AbstractObject {
 	public static function textEndStatus($end_status_) {
 		return $end_status_; // for now the text is not translated
 	}
+
+	/**
+	 * Tells if the current session is killable.
+	 * @return {boolean} True : the session is killable | False : otherwise
+	 */
+	public function isKillable() {
+		return
+			$this->status == Session::SESSION_STATUS_CREATING ||
+			$this->status == Session::SESSION_STATUS_CREATED ||
+			$this->status == Session::SESSION_STATUS_INIT ||
+			$this->status == Session::SESSION_STATUS_INACTIVE ||
+			$this->isDisconnectable();
+	}
+
+	/**
+	 * Tells if the current session can be disconnected.
+	 * @return {boolean} True : the session is disconnectable | False : otherwise
+	 */
+	public function isDisconnectable() {
+		return
+			$this->status == Session::SESSION_STATUS_ACTIVE ||
+			$this->status == Session::SESSION_STATUS_READY;
+	}
 }

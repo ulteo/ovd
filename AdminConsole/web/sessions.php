@@ -153,21 +153,24 @@ if (isset($_GET['info'])) {
 	}
 
 	if (isAuthorized('manageSession')) {
-		echo '<h2>'._('Kill this session').'</h2>';
-		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-		echo '  <input type="hidden" name="name" value="Session" />';
-		echo '	<input type="hidden" name="action" value="del" />';
-		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-		echo '	<input type="submit" value="'._('Kill this session').'" />';
-		echo '</form>';
-		
-		echo '<h2>'._('Disconnect this session').'</h2>';
-		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
-		echo '  <input type="hidden" name="name" value="Session" />';
-		echo '	<input type="hidden" name="action" value="disc" />';
-		echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-		echo '	<input type="submit" value="'._('Disconnect this session').'" />';
-		echo '</form>';
+		if ($session->isKillable()) {
+			echo '<h2>'._('Kill this session').'</h2>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+			echo '  <input type="hidden" name="name" value="Session" />';
+			echo '	<input type="hidden" name="action" value="del" />';
+			echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+			echo '	<input type="submit" value="'._('Kill this session').'" />';
+			echo '</form>';
+		}
+		if ($session->isDisconnectable()) {
+			echo '<h2>'._('Disconnect this session').'</h2>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+			echo '  <input type="hidden" name="name" value="Session" />';
+			echo '	<input type="hidden" name="action" value="disc" />';
+			echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+			echo '	<input type="submit" value="'._('Disconnect this session').'" />';
+			echo '</form>';
+		}
 	}
 
 	echo '</div>';
@@ -219,6 +222,7 @@ else {
 		echo '		<th>'._('Servers').'</th>';
 		echo '		<th>'._('User').'</th>';
 		echo '		<th>'._('Status').'</th>';
+		echo '		<th colspan="2">'._('Actions').'</th>';
 		echo '	</tr>';
 		echo '</thead>';
 		echo '<tbody>';
@@ -264,21 +268,25 @@ else {
 			echo '		<td>'.$session->stringStatus().'</td>';
 			if (isAuthorized('manageSession')) {
 				echo '<td style="vertical-align: middle;">';
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-				echo '<input type="hidden" name="name" value="Session" />';
-				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-				echo '<input type="submit" value="'._('Kill').'" />';
-				echo '</form>';
+				if ($session->isKillable()) {
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+					echo '<input type="hidden" name="name" value="Session" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+					echo '<input type="submit" value="'._('Kill').'" />';
+					echo '</form>';
+				}
 				echo '</td>';
 				
 				echo '<td style="vertical-align: middle;">';
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
-				echo '<input type="hidden" name="name" value="Session" />';
-				echo '<input type="hidden" name="action" value="disc" />';
-				echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
-				echo '<input type="submit" value="'._('Disconnect').'" />';
-				echo '</form>';
+				if ($session->isDisconnectable()) {
+					echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect this session?').'\');">';
+					echo '<input type="hidden" name="name" value="Session" />';
+					echo '<input type="hidden" name="action" value="disc" />';
+					echo '<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
+					echo '<input type="submit" value="'._('Disconnect').'" />';
+					echo '</form>';
+				}
 				echo '</td>';
 			}
 			echo '	</tr>';
@@ -286,23 +294,29 @@ else {
 		echo '</tbody>';
 		$css_class = 'content'.(($i++%2==0)?1:2);
 		if (isAuthorized('manageSession') && count($sessions) > 1) {
+			$count_status = count_status_sessions($sessions);
 			echo '<tfoot>';
 			echo '	<tr class="'.$css_class.'">';
 			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
-			echo '  <input type="hidden" name="name" value="Session" />';
-			echo '  <input type="hidden" name="action" value="del" />';
-			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
-			echo '</form>';
+			if ($count_status['killable'] > 0) {
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+				echo '  <input type="hidden" name="name" value="Session" />';
+				echo '  <input type="hidden" name="action" value="del" />';
+				echo '<input type="submit" name="kill" value="'._('Kill').'" />';
+				echo '</form>';
+			}
+
 			echo '</td>';
 			
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
-			echo '  <input type="hidden" name="name" value="Session" />';
-			echo '  <input type="hidden" name="action" value="disc" />';
-			echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
-			echo '</form>';
+			if ($count_status['disconnectable'] > 0) {
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to disconnect the selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+				echo '  <input type="hidden" name="name" value="Session" />';
+				echo '  <input type="hidden" name="action" value="disc" />';
+				echo '<input type="submit" name="disconnect" value="'._('Disconnect').'" />';
+				echo '</form>';
+			}
 			echo '</td>';
 
 			echo '	</tr>';
@@ -341,4 +355,25 @@ else {
 
 	echo '</div>';
 	page_footer();
+}
+
+/**
+ * Count the number of sessions for each status.
+ * @param {array(Session.class)} List of sessions
+ * @return {array} The number of sessions for each status
+ */
+function count_status_sessions($sessions) {
+	$count_status = array(
+		'killable'       => 0,
+		'disconnectable' => 0,
+	);
+
+	foreach ($sessions as $session) {
+		if ($session->isDisconnectable())
+			$count_status['disconnectable'] += 1;
+		if ($session->isKillable())
+			$count_status['killable'] += 1;
+	}
+
+	return $count_status;
 }
