@@ -13,36 +13,31 @@ CONFFILE=$CONFDIR/config.inc.php
 ############################# APACHE CONFIGURATION #############################
 
 A2SITESDIR=/etc/apache2/sites-available
-if [ -d /etc/apache2/conf-available ]; then
-    A2CONFDIR=/etc/apache2/conf-available
-else
-    A2CONFDIR=/etc/apache2/conf.d
-fi
+A2CONFDIR=/etc/apache2/conf.d
 
 A2USER=www-data
 
 # VHost server config
-if [ ! -e $A2SITESDIR/sessionmanager-vhost-server.conf ]; then
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
     ln -sfT $CONFDIR/apache2-vhost-server.conf \
-        $A2SITESDIR/sessionmanager-vhost-server.conf
-    a2ensite sessionmanager-vhost-server.conf > /dev/null
+        $A2SITESDIR/sessionmanager-vhost-server
+    a2ensite sessionmanager-vhost-server > /dev/null
     a2enmod rewrite >/dev/null
 fi
 
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
     ln -sfT $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
-    which a2enconf && a2enconf ovd-admin
 fi
 
 # VHost SSL config
-if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl.conf ]; then
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
     serverName=$(hostname -f 2>/dev/null || true)
     [ -z "$serverName" ] && serverName=$(hostname) #Bad /etc/hosts configuration
     sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
         $CONFDIR/apache2-vhost-ssl.conf
-    ln -sfT $CONFDIR/apache2-vhost-ssl.conf $A2SITESDIR/sessionmanager-vhost-ssl.conf
-    a2ensite sessionmanager-vhost-ssl.conf > /dev/null
+    ln -sfT $CONFDIR/apache2-vhost-ssl.conf $A2SITESDIR/sessionmanager-vhost-ssl
+    a2ensite sessionmanager-vhost-ssl > /dev/null
     a2enmod ssl > /dev/null
 fi
 
@@ -86,13 +81,41 @@ then
     # clear the password
     db_reset ulteo-ovd-session-manager/admin_password
     db_reset ulteo-ovd-session-manager/admin_password_again
+
+    # download the chroot if needed
+    while [ ! -e $CACHEDIR/base.tar.gz ]; do
+        mkdir -p $CACHEDIR
+
+        # get the tarball url and quit if empty
+        db_get ulteo-ovd-session-manager/tarball_url && URL="$RET"
+        [ -z "$URL" ] && break
+        [ "$URL" = "NONE" ] && break
+
+        # get the chroot
+        CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+        if curl $CURLOPTS -f -s -I "$URL" > /dev/null ; then
+            echo "Retrieving the chroot tarball..."
+            curl $CURLOPTS "$URL" > $CACHEDIR/base.tar.gz && continue
+        fi
+
+        # chroot download failed
+        rm -f $CACHEDIR/base.tar.gz
+
+        db_subst ulteo-ovd-session-manager/download_error URL "$URL"
+        db_input critical ulteo-ovd-session-manager/download_error || true
+        db_go
+
+        db_fset ulteo-ovd-session-manager/tarball_url seen false || true
+        db_input high ulteo-ovd-session-manager/tarball_url || true
+        db_go
+    done
 fi
 
 # Update database
 if [ -f $INSTALLDIR/tools/update_database.php ]
 then
    echo "Updating database."
-   su -s /usr/bin/php $A2USER "$INSTALLDIR/tools/update_database.php"
+   su $A2USER -c "php $INSTALLDIR/tools/update_database.php" 2>/dev/null
    [ $? -ne 0 ] && exit 1
 fi
 
@@ -100,7 +123,7 @@ fi
 if [ -f $INSTALLDIR/tools/update_wsdl_cache.php ]
 then
    echo "Purging wsdl cache files."
-   su -s /usr/bin/php $A2USER "$INSTALLDIR/tools/update_wsdl_cache.php"
+   su $A2USER -c "php $INSTALLDIR/tools/update_wsdl_cache.php" 2>/dev/null
    [ $? -ne 0 ] && exit 1
 fi
 
