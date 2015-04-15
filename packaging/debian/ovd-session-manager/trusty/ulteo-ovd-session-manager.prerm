@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+if [ -d /etc/apache2/conf-available ]; then
+    A2CONFDIR=/etc/apache2/conf-available
+else
+    A2CONFDIR=/etc/apache2/conf.d
+fi
+A2SITESDIR=/etc/apache2/sites-available
+
+a2dissite sessionmanager-vhost-server.conf > /dev/null 2>&1 || true
+a2dissite sessionmanager-vhost-ssl.conf > /dev/null 2>&1 || true
+which a2disconf && a2disconf ovd-admin > /dev/null 2>&1 || true
+
+# remove apache2 config link
+rm -f $A2CONFDIR/ovd-admin.conf \
+      $A2SITESDIR/sessionmanager-vhost-server.conf \
+      $A2SITESDIR/sessionmanager-vhost-ssl.conf
+
+# reload apache
+if apache2ctl configtest 2>/dev/null; then
+    invoke-rc.d apache2 reload || true
+else
+    echo "Your apache2 configuration is broken, so we're not restarting it for you."
+fi
+
+#DEBHELPER#
+
+exit 0

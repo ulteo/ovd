@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFDIR=/etc/ulteo/sessionmanager
+SPOOLDIR=/var/spool/ulteo/sessionmanager
+CACHEDIR=/var/cache/ulteo/sessionmanager
+LOGDIR=/var/log/ulteo/sessionmanager
+
+if [ "$1" = "purge" ]
+then
+    # remove log and spool dir
+    rm -rf $LOGDIR $SPOOLDIR
+
+    # remove keys and certificates SSL files generated
+    rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+#DEBHELPER#
+
+exit 0

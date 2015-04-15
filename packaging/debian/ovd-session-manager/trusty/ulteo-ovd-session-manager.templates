@@ -1,0 +1,28 @@
+Template: ulteo-ovd-session-manager/admin_login
+Type: string
+Default: admin
+_Description: Administrator login:
+ Ulteo Session Manager needs to register an administrator. You can define the
+ login of this user here.
+
+Template: ulteo-ovd-session-manager/admin_password
+Type: password
+_Description: Administrator password:
+ Password of the session manager administrator.
+
+Template: ulteo-ovd-session-manager/admin_password_again
+Type: password
+_Description: Repeat password for the administrator:
+
+Template: ulteo-ovd-session-manager/password_mismatch
+Type: error
+_Description: Password input error
+ The two passwords you entered were not the same. Please try again.
+
+Template: ulteo-ovd-session-manager/ssl_disable_warning
+Type: note
+Description: SSL configuration error
+ Apache configuration error after enable OVD virtual hosts. Please remove your
+ old SSL configuration or be sure that the following URL are valid:
+ https://hostname/ovd/admin, https://hostname/ovd/client.
+ If you don't change anything, you won't start OVD sessions.
