@@ -3,6 +3,8 @@ EXTRA_DIST = sm-config.in sm-config.8.in
 sbin_SCRIPTS = sm-config
 man_MANS = sm-config.8
 
+generated = sm-config sm-config.8
+
 sm-config:
 	sed -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
 		-e "s,@LOCALSTATEDIR@,$(localstatedir)," \
@@ -17,6 +19,6 @@ sm-config.8:
 		< $(srcdir)/sm-config.8.in > $@
 
 clean-local:
-	rm -f $(sbin_SCRIPTS) $(man_MANS)
+	rm -f $(generated)
 
 .PHONY: sm-config.8 sm-config

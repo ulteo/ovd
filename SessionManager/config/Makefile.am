@@ -31,7 +31,10 @@ generate_conf = apache2.conf \
 				apache2-vhost-server.conf \
 				config.inc.php
 
+generated = $(generate_conf) sessionmanager.cron
+
 conf_SCRIPTS = sessionmanager.cron
+
 conf_DATA = $(generate_conf) apache2-vhost-ssl.conf
 
 confdir = $(sysconfdir)/ulteo/sessionmanager
@@ -58,6 +61,6 @@ install-exec-hook:
 	mkdir -p $(DESTDIR)$(localstatedir)/cache/ulteo/sessionmanager
 
 clean-local:
-	rm -f $(generate_conf) $(conf_SCRIPTS)
+	rm -f $(generated)
 
 .PHONY: $(conf_DATA) $(conf_SCRIPTS)
