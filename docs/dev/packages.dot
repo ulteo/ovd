@@ -1,0 +1,141 @@
+digraph G {
+	subgraph "cluster-ovd-administration-console" {
+		label = "ovd-administration-console"
+		"ulteo-ovd-administration-console"
+	}
+	subgraph "cluster-ovd-desktop" {
+		label = "ovd-desktop"
+		"ulteo-ovd-desktop"
+		"ulteo-ovd-desktop-apparmor"
+		"ulteo-ovd-desktop-gtk-theme"
+		"ulteo-ovd-logout-dialog"
+		"ulteo-plymouth-theme"
+		"ulteo-xfce4-restricted-menu-plugin"
+	}
+	subgraph "cluster-ovd-guacamole" {
+		label = "ovd-guacamole"
+		"ulteo-ovd-guacamole"
+	}
+	subgraph "cluster-ovd-integrated-launcher" {
+		label = "ovd-integrated-launcher"
+		"ulteo-ovd-integrated-launcher"
+	}
+	subgraph "cluster-ovd-java-clients" {
+		label = "ovd-java-clients"
+		"libovd-accelerator"
+		"libovd-xclient-area"
+		"ulteo-ovd-applets"
+		"ulteo-ovd-externalapps-client"
+	}
+	subgraph "cluster-ovd-l10n" {
+		label = "ovd-l10n"
+		"ulteo-ovd-l10n"
+	}
+	subgraph "cluster-ovd-session-manager[-premium]" {
+		label = "ovd-session-manager[-premium]"
+		"ulteo-ovd-session-manager[-premium]"
+	}
+	subgraph "cluster-ovd-slaveserver" {
+		label = "ovd-slaveserver"
+		"ulteo-ovd-slaveserver"
+		"ulteo-ovd-slaveserver-role-aps"
+		"ulteo-ovd-slaveserver-role-fs"
+		"ulteo-ovd-slaveserver-role-web"
+	}
+	subgraph "cluster-ovd-regular-union-fs" {
+		label = "ovd-regular-union-fs"
+		"ulteo-ovd-regular-union-fs"
+	}
+	subgraph "cluster-ovd-vnc-server" {
+		label = "ovd-vnc-server"
+		"ulteo-ovd-vnc-server"
+	}
+	subgraph "cluster-ovd-web-client" {
+		label = "ovd-web-client"
+		"ulteo-ovd-web-client"
+		"ulteo-ovd-web-client-ajaxplorer"
+	}
+	subgraph "cluster-php-libchart" {
+		label = "php-libchart"
+		"php-libchart"
+	}
+	subgraph "cluster-python-ntlm" {
+		label = "python-ntlm"
+		"python-ntlm"
+	}
+	subgraph "cluster-xrdp" {
+		label = "xrdp"
+		"uxda-server"
+		"uxda-server-clipboard"
+		"uxda-server-printer"
+		"uxda-server-python"
+		"uxda-server-rdpdr"
+		"uxda-server-scim"
+		"uxda-server-seamrdp"
+		"uxda-server-sound"
+	}
+	subgraph "cluster-ovd-shells" {
+		label = "ovd-shells"
+		"ulteo-ovd-shells"
+	}
+
+	"ulteo-ovd-administration-console" -> "php-libchart"
+	"ulteo-ovd-administration-console" -> "ulteo-ovd-l10n"
+
+	"ulteo-ovd-desktop" -> "ulteo-ovd-desktop-gtk-theme"
+	"ulteo-ovd-desktop" -> "ulteo-xfce4-restricted-menu-plugin"
+	"ulteo-ovd-desktop" -> "ulteo-ovd-logout-dialog"
+	"ulteo-ovd-desktop" -> "ulteo-ovd-desktop-apparmor"
+
+	"ulteo-ovd-externalapps-client" -> "libovd-xclient-area"
+	"ulteo-ovd-externalapps-client" -> "libovd-accelerator"
+	"ulteo-ovd-externalapps-client" -> "ulteo-ovd-integrated-launcher"
+
+	"ulteo-ovd-guacamole" -> "ulteo-ovd-web-client"
+
+	"ulteo-ovd-session-manager[-premium]" -> "ulteo-ovd-administration-console"
+
+	"ulteo-ovd-shells" -> "uxda-server-python"
+	"ulteo-ovd-shells" -> "uxda-server-printer" [color = white]
+
+	"ulteo-ovd-slaveserver-role-aps" -> "ulteo-ovd-slaveserver" [constraint = false]
+	"ulteo-ovd-slaveserver-role-aps" -> "ulteo-ovd-shells"
+	"ulteo-ovd-slaveserver-role-aps" -> "ulteo-ovd-externalapps-client"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-python"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-seamrdp"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-rdpdr"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-printer"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-sound"
+	"ulteo-ovd-slaveserver-role-aps" -> "uxda-server-clipboard"
+	"ulteo-ovd-slaveserver-role-aps" -> "ulteo-ovd-regular-union-fs"
+
+	"ulteo-ovd-slaveserver-role-fs" -> "ulteo-ovd-slaveserver" [constraint = false]
+	"ulteo-ovd-slaveserver-role-fs" -> "ulteo-ovd-regular-union-fs"
+
+	"ulteo-ovd-slaveserver-role-web" -> "ulteo-ovd-slaveserver" [constraint = false]
+	"ulteo-ovd-slaveserver-role-web" -> "python-ntlm"
+
+	"ulteo-ovd-slaveserver" -> "ulteo-ovd-slaveserver-role-web" [color = white]
+	"ulteo-ovd-slaveserver" -> "ulteo-ovd-slaveserver-role-fs" [color = white]
+
+	"ulteo-ovd-web-client" -> "ulteo-ovd-applets"
+	"ulteo-ovd-web-client" -> "ulteo-ovd-l10n"
+	"ulteo-ovd-web-client" -> "ulteo-ovd-web-client-ajaxplorer"
+	"ulteo-ovd-web-client" -> "ulteo-ovd-guacamole"
+
+	"ulteo-ovd-web-client-ajaxplorer" -> "ulteo-ovd-web-client"
+
+	"uxda-server" -> "ulteo-ovd-vnc-server"
+	"uxda-server" -> "uxda-server-scim"
+
+	"uxda-server-clipboard" -> "uxda-server"
+
+	"uxda-server-printer" -> "uxda-server"
+	"uxda-server-printer" -> "uxda-server-rdpdr"
+
+	"uxda-server-python" -> "uxda-server"
+	"uxda-server-rdpdr" -> "uxda-server"
+	"uxda-server-scim" -> "uxda-server"
+	"uxda-server-seamrdp" -> "uxda-server"
+	"uxda-server-sound" -> "uxda-server"
+}
