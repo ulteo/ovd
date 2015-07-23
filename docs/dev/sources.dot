@@ -1,0 +1,41 @@
+digraph G {
+	subgraph "cluster-ovd" {
+		label = "ovd/ovd"
+		"AdminConsole"
+		"ApplicationServer/desktop"
+		"client/OVDIntegratedLauncher"
+		subgraph "cluster-client/java" {
+			label="client/java"
+			"java-clients"
+			"native-client"
+		}
+		"i18n"
+		"ApplicationServer/linux/rufs"
+		"SessionManager"
+		"ApplicationServer/OvdShells"
+		subgraph "cluster-slaveserver" {
+			label="OvdServer"
+			"slaveserver-role-*"
+			"slaveserver-role-web"
+		}
+		"client/web"
+	}
+
+	subgraph "cluster-utils" {
+		label="legacy-ulteo/utils"
+		"tigervnc"
+	}
+
+	"AdminConsole" -> "legacy-ulteo/tcpdf" [label="includes/tcpdf"]
+	"AdminConsole" -> "legacy-ulteo/EditArea//edit_area" [label="web/media/script/lib/edit_area"]
+	"ApplicationServer/desktop" -> "legacy-ulteo/artwork//icon-theme" [label="icons/theme"]
+	"native-client" -> "legacy-ulteo/premium//JavaClient" [label="src/org/ulteo/ovd/premium"]
+	"SessionManager" -> "legacy-ulteo/php-saml" [label="web/PEAR/php-saml"]
+	"SessionManager" -> "legacy-ulteo/premium//SessionManager" [label="web/premium"]
+	"client/web" -> "legacy-ulteo/php-saml" [label="web/PEAR/php-saml"]
+	"slaveserver-role-web" -> "legacy-ulteo/premium//Gateway" [label="ovd/Role/Gateway/premium"]
+
+
+
+
+}
