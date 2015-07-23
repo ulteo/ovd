@@ -14,78 +14,80 @@ else
 HOOKS += scriptaculous-hook
 endif
 
-editarea_DATA = edit_area/edit_area_full.js
+PATH_EDITAREA = EditArea/edit_area
+
+editarea_DATA = $(PATH_EDITAREA)/edit_area_full.js
 editareadir = $(datadir)/ulteo/administration_console/web/media/script/lib/edit_area
 
-regsyntax_DATA = edit_area/reg_syntax/basic.js \
-               edit_area/reg_syntax/c.js \
-               edit_area/reg_syntax/cpp.js \
-               edit_area/reg_syntax/html.js \
-               edit_area/reg_syntax/js.js \
-               edit_area/reg_syntax/perl.js \
-               edit_area/reg_syntax/python.js \
-               edit_area/reg_syntax/ruby.js \
-               edit_area/reg_syntax/tsql.js \
-               edit_area/reg_syntax/xml.js \
-               edit_area/reg_syntax/brainfuck.js \
-               edit_area/reg_syntax/coldfusion.js \
-               edit_area/reg_syntax/css.js \
-               edit_area/reg_syntax/java.js \
-               edit_area/reg_syntax/pas.js \
-               edit_area/reg_syntax/php.js \
-               edit_area/reg_syntax/robotstxt.js \
-               edit_area/reg_syntax/sql.js \
-               edit_area/reg_syntax/vb.js \
-               edit_area/reg_syntax/vbs.js \
-               edit_area/reg_syntax/reg.js \
-               edit_area/reg_syntax/bash.js \
-               edit_area/reg_syntax/powershell.js \
-               edit_area/reg_syntax/batch.js
+regsyntax_DATA = $(PATH_EDITAREA)/reg_syntax/basic.js \
+               $(PATH_EDITAREA)/reg_syntax/c.js \
+               $(PATH_EDITAREA)/reg_syntax/cpp.js \
+               $(PATH_EDITAREA)/reg_syntax/html.js \
+               $(PATH_EDITAREA)/reg_syntax/js.js \
+               $(PATH_EDITAREA)/reg_syntax/perl.js \
+               $(PATH_EDITAREA)/reg_syntax/python.js \
+               $(PATH_EDITAREA)/reg_syntax/ruby.js \
+               $(PATH_EDITAREA)/reg_syntax/tsql.js \
+               $(PATH_EDITAREA)/reg_syntax/xml.js \
+               $(PATH_EDITAREA)/reg_syntax/brainfuck.js \
+               $(PATH_EDITAREA)/reg_syntax/coldfusion.js \
+               $(PATH_EDITAREA)/reg_syntax/css.js \
+               $(PATH_EDITAREA)/reg_syntax/java.js \
+               $(PATH_EDITAREA)/reg_syntax/pas.js \
+               $(PATH_EDITAREA)/reg_syntax/php.js \
+               $(PATH_EDITAREA)/reg_syntax/robotstxt.js \
+               $(PATH_EDITAREA)/reg_syntax/sql.js \
+               $(PATH_EDITAREA)/reg_syntax/vb.js \
+               $(PATH_EDITAREA)/reg_syntax/vbs.js \
+               $(PATH_EDITAREA)/reg_syntax/reg.js \
+               $(PATH_EDITAREA)/reg_syntax/bash.js \
+               $(PATH_EDITAREA)/reg_syntax/powershell.js \
+               $(PATH_EDITAREA)/reg_syntax/batch.js
 
 regsyntaxdir = $(datadir)/ulteo/administration_console/web/media/script/lib/edit_area/reg_syntax
 
-langs_DATA = edit_area/langs/bg.js \
-               edit_area/langs/de.js \
-               edit_area/langs/en.js \
-               edit_area/langs/es.js \
-               edit_area/langs/fr.js \
-               edit_area/langs/it.js \
-               edit_area/langs/mk.js \
-               edit_area/langs/pl.js \
-               edit_area/langs/ru.js \
-               edit_area/langs/zh.js \
-               edit_area/langs/cs.js \
-               edit_area/langs/dk.js \
-               edit_area/langs/eo.js \
-               edit_area/langs/fi.js \
-               edit_area/langs/hr.js \
-               edit_area/langs/ja.js \
-               edit_area/langs/nl.js \
-               edit_area/langs/pt.js \
-               edit_area/langs/sk.js
+langs_DATA = $(PATH_EDITAREA)/langs/bg.js \
+               $(PATH_EDITAREA)/langs/de.js \
+               $(PATH_EDITAREA)/langs/en.js \
+               $(PATH_EDITAREA)/langs/es.js \
+               $(PATH_EDITAREA)/langs/fr.js \
+               $(PATH_EDITAREA)/langs/it.js \
+               $(PATH_EDITAREA)/langs/mk.js \
+               $(PATH_EDITAREA)/langs/pl.js \
+               $(PATH_EDITAREA)/langs/ru.js \
+               $(PATH_EDITAREA)/langs/zh.js \
+               $(PATH_EDITAREA)/langs/cs.js \
+               $(PATH_EDITAREA)/langs/dk.js \
+               $(PATH_EDITAREA)/langs/eo.js \
+               $(PATH_EDITAREA)/langs/fi.js \
+               $(PATH_EDITAREA)/langs/hr.js \
+               $(PATH_EDITAREA)/langs/ja.js \
+               $(PATH_EDITAREA)/langs/nl.js \
+               $(PATH_EDITAREA)/langs/pt.js \
+               $(PATH_EDITAREA)/langs/sk.js
 
 langsdir = $(datadir)/ulteo/administration_console/web/media/script/lib/edit_area/langs
 
-images_DATA = edit_area/images/autocompletion.gif \
-               edit_area/images/help.gif \
-               edit_area/images/newdocument.gif \
-               edit_area/images/reset_highlight.gif \
-               edit_area/images/spacer.gif \
-               edit_area/images/close.gif \
-               edit_area/images/highlight.gif \
-               edit_area/images/opacity.png \
-               edit_area/images/save.gif \
-               edit_area/images/statusbar_resize.gif \
-               edit_area/images/fullscreen.gif \
-               edit_area/images/load.gif \
-               edit_area/images/processing.gif \
-               edit_area/images/search.gif \
-               edit_area/images/undo.gif \
-               edit_area/images/go_to_line.gif \
-               edit_area/images/move.gif \
-               edit_area/images/redo.gif \
-               edit_area/images/smooth_selection.gif \
-               edit_area/images/word_wrap.gif
+images_DATA = $(PATH_EDITAREA)/images/autocompletion.gif \
+               $(PATH_EDITAREA)/images/help.gif \
+               $(PATH_EDITAREA)/images/newdocument.gif \
+               $(PATH_EDITAREA)/images/reset_highlight.gif \
+               $(PATH_EDITAREA)/images/spacer.gif \
+               $(PATH_EDITAREA)/images/close.gif \
+               $(PATH_EDITAREA)/images/highlight.gif \
+               $(PATH_EDITAREA)/images/opacity.png \
+               $(PATH_EDITAREA)/images/save.gif \
+               $(PATH_EDITAREA)/images/statusbar_resize.gif \
+               $(PATH_EDITAREA)/images/fullscreen.gif \
+               $(PATH_EDITAREA)/images/load.gif \
+               $(PATH_EDITAREA)/images/processing.gif \
+               $(PATH_EDITAREA)/images/search.gif \
+               $(PATH_EDITAREA)/images/undo.gif \
+               $(PATH_EDITAREA)/images/go_to_line.gif \
+               $(PATH_EDITAREA)/images/move.gif \
+               $(PATH_EDITAREA)/images/redo.gif \
+               $(PATH_EDITAREA)/images/smooth_selection.gif \
+               $(PATH_EDITAREA)/images/word_wrap.gif
 
 imagesdir = $(datadir)/ulteo/administration_console/web/media/script/lib/edit_area/images
 
