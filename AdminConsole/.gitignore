@@ -1,0 +1,5 @@
+/INSTALL
+/configure.ac
+/install-sh
+/missing
+*.tar.gz
