@@ -14,7 +14,14 @@ Listen 1111
 
 	DocumentRoot @DATADIR@/ulteo/sessionmanager/webservices
 	<Directory @DATADIR@/ulteo/sessionmanager/webservices>
-		Order allow,deny
-		allow from all
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        allow from all
+    </IfModule>
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
 	</Directory>
 </VirtualHost>

@@ -4,8 +4,15 @@ Alias /ovd/client @DATADIR@/ulteo/sessionmanager/client
 <Directory @DATADIR@/ulteo/sessionmanager/client>
     Options FollowSymLinks
     AllowOverride None
-    Order allow,deny
-    allow from all
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        allow from all
+    </IfModule>
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
     DirectoryIndex index.php
     php_admin_flag magic_quotes_gpc Off
 
