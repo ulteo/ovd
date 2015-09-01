@@ -83,30 +83,34 @@ catch (Exception $e) {
 $_SESSION['service'] = $service;
 $_SESSION['configuration'] = $configuration;
 
-if (! array_key_exists('system_inited', $_SESSION['configuration']) or  $_SESSION['configuration']['system_inited'] !== true) {
+if (! is_array($_SESSION['configuration']) or
+    ! array_key_exists('system_inited', $_SESSION['configuration']) or
+    $_SESSION['configuration']['system_inited'] !== true) {
 	if ($_SERVER['REQUEST_METHOD'] == 'GET' && CURRENT_ADMIN_PAGE != 'configuration.php?action=init') {
 		redirect('configuration.php?action=init');
 	}
 }
 
-if (array_key_exists('admin_language', $_SESSION['configuration'])) {
+if (is_array($_SESSION['configuration']) and
+    array_key_exists('admin_language', $_SESSION['configuration'])) {
 	$lang = $_SESSION['configuration']['admin_language'];
 	if ($lang != 'auto') {
 		set_language($lang);
 	}
 }
-
-if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
-    $_SESSION['configuration']['system_in_maintenance'] == '1') {
-	popup_error(_('The system is in maintenance mode'));
-	if (isset($_SESSION['infomsg'][0]) &&
-	    $_SESSION['infomsg'][0] == _('The system is in production mode'))
-		$_SESSION['infomsg'] = array();
-}
-elseif (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
-        $_SESSION['configuration']['system_in_maintenance'] == '0') {
-	popup_info(_('The system is in production mode'));
-	if (isset($_SESSION['errormsg'][0]) &&
-	    $_SESSION['errormsg'][0] == _('The system is in maintenance mode'))
-		$_SESSION['errormsg'] = array();
+if (is_array($_SESSION['configuration'])) {
+	if (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
+	    $_SESSION['configuration']['system_in_maintenance'] == '1') {
+		popup_error(_('The system is in maintenance mode'));
+		if (isset($_SESSION['infomsg'][0]) &&
+		    $_SESSION['infomsg'][0] == _('The system is in production mode'))
+			$_SESSION['infomsg'] = array();
+	}
+	elseif (array_key_exists('system_in_maintenance', $_SESSION['configuration']) &&
+	        $_SESSION['configuration']['system_in_maintenance'] == '0') {
+		popup_info(_('The system is in production mode'));
+		if (isset($_SESSION['errormsg'][0]) &&
+		    $_SESSION['errormsg'][0] == _('The system is in maintenance mode'))
+			$_SESSION['errormsg'] = array();
+	}
 }

@@ -425,7 +425,8 @@ function getProfileMode($prefs) {
 }
 
 function isAuthorized($policy_) {
-	if (! array_key_exists('policy', $_SESSION['configuration'])) {
+	if (! is_array($_SESSION['configuration']) or
+	    ! array_key_exists('policy', $_SESSION['configuration'])) {
 		return false;
 	}
 	

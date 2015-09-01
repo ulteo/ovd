@@ -56,10 +56,10 @@ class WebAppConfDB_sql extends ApplicationDB {
 		return NULL;
 	}
 
-	public function search($application_id){
-	Logger::debug('main',"WebAppConfDB_sql::search ('".$application_id."')");
+	public function search($app_name, $app_description, $app_type, $app_path_exe){
+	Logger::debug('main',"WebAppConfDB_sql::search ('".$app_name."')");
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4', 'id', self::table, 'application_id', $application_id);
+		$res = $sql2->DoQuery('SELECT @1 FROM #2 WHERE @3 = %4', 'id', self::table, 'application_id', $app_name);
 		if ($res !== false){
 			if ($sql2->NumRows($res) > 0){
 				$row = $sql2->FetchResult($res);

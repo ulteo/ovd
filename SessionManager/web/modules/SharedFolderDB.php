@@ -95,7 +95,7 @@ abstract class SharedFolderDB extends Module  {
 		return false;
 	}
 	
-	public function addUserGroupToSharedFolder($usergroup_, $sharedfolder_) {
+	public function addUserGroupToSharedFolder($usergroup_, $sharedfolder_, $mode_) {
 		return false;
 	}
 	
