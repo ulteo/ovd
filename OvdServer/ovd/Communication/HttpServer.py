@@ -77,12 +77,12 @@ class ThreadPoolingHttpServer(HTTPServer):
 		# On Windows, if we authorize the 'allow_reuse_address' parameter. Two servers can bind on the same ip
 		self.allow_reuse_address = Config.server_allow_reuse_address
 		
+		self.spooler = Queue()
+		self.threads = []
+		
 		self.serverHasBeLanched = False
 		HTTPServer.__init__(self, server_address, RequestHandlerClass)
 		self.threadNumber = numberOfThread
-		
-		self.spooler = Queue()
-		self.threads = []
 		
 		for _ in xrange(self.threadNumber):
 			t = Thread(name = "HTTPRequestHandler", target = self.thread_run)
