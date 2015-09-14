@@ -52,3 +52,9 @@ class SessionLogger(LoggerHook):
 	
 	def debug(self, message):
 		self.add("debug", message)
+
+	def debug2(self, message):
+		self.add("debug2", message)
+
+	def debug3(self, message):
+		self.add("debug3", message)
