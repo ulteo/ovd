@@ -45,7 +45,7 @@ class Session(AbstractSession):
 	
 	def init(self):
 		self.succefully_initialized = False
-	
+		Logger.warn("--Session.py Session class access")
 	
 	def install_client(self):
 		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
@@ -110,6 +110,8 @@ class Session(AbstractSession):
 		
 		self.archive_shell_dump()
 		
+		Logger.warn("--uninstall_client")
+
 		if self.profile is not None and self.profile.hasProfile():
 			if not self.profile.mount():
 				Logger.warn("Unable to mount profile at uninstall_client of session "+self.id)
@@ -131,6 +133,8 @@ class Session(AbstractSession):
 	def overwriteDefaultRegistry(self, directory):
 		registryFile = os.path.join(directory, "NTUSER.DAT")
 		
+		Logger.warn("--overwriteDefaultRegistry")
+
 		hiveName = "OVD_%s_%d"%(str(self.id), random.randrange(10000, 50000))
 		
 		# Load the hive

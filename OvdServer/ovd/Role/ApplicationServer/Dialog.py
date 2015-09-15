@@ -29,6 +29,7 @@ from ovd.Logger import Logger
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 
 import Apt
+import pprint
 from Platform.ApplicationsDetection import ApplicationsDetection
 from Platform.DomainMicrosoft import DomainMicrosoft
 from Platform.DomainNovell import DomainNovell
@@ -51,6 +52,7 @@ class Dialog(AbstractDialog):
 	
 	def process(self, request):
 		path = request["path"]
+		Logger.debug2("Request body: " + pprint.pformat(request))
 		
 		if request["method"] == "GET":
 			Logger.debug("do_GET "+path)

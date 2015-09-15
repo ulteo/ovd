@@ -140,9 +140,10 @@ class Session:
 	
 	
 	def install_desktop_shortcuts(self):
+		Logger.debug("Session::install_desktop_shortcuts in %s" % self.shortcutDirectory)
 		for application in self.applications:
 			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(application))
-			#Logger.debug("install_client %s %s %s"%(str(application["filename"]), str(final_file), str(application["id"])))
+			Logger.debug("install_client %s %s %s"%(str(application["filename"]), str(final_file), str(application["id"])))
 			
 			ret = self.clone_shortcut(application["filename"], final_file, "startovdapp", [application["id"]])
 			if not ret:
