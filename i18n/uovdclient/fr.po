@@ -185,7 +185,7 @@ msgstr "Chargement Open Virtual Desktop"
 
 #: ../../client/web/web/includes/functions.inc.php:242
 msgid "Disconnecting Open Virtual Desktop"
-msgstr "Déconnection de Open Virtual Desktop"
+msgstr "Déconnexion de Open Virtual Desktop"
 
 #: ../../client/web/web/includes/functions.inc.php:243
 msgid "Welcome!"
@@ -359,7 +359,7 @@ msgstr ""
 
 #: ../../client/web/web/classes/Ajaxplorer.class.php:61
 msgid "Profile"
-msgstr "Profile"
+msgstr "Profil"
 
 #: ../../client/java/src/org/ulteo/ovd/client/bugreport/BugReporter.java:85
 msgid "Text file (*.txt)"
@@ -568,13 +568,13 @@ msgstr "Attention !"
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:718
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:722
 msgid "Invalid host field!"
-msgstr "Champs hôte invalide !"
+msgstr "Champ hôte invalide !"
 
 # 96%
 # 100%
 #: ../../client/java/src/org/ulteo/ovd/client/NativeClient.java:752
 msgid "You must specify the host field!"
-msgstr "Vous devez renseigner le champs serveur !"
+msgstr "Vous devez renseigner le champ serveur !"
 
 # 96%
 # 100%
@@ -708,7 +708,7 @@ msgid ""
 "No Internet connection has been detected on this\n"
 "\t\tdevice. Please enable Wifi/3G before using this application"
 msgstr ""
-"Aucune connexion Internet n'a été détecté sur ce système. Veuillez activer "
+"Aucune connexion Internet n'a été détectée sur ce système. Veuillez activer "
 "le Wifi ou la 3G avant d'utiliser cette application"
 
 msgid "View gestures"

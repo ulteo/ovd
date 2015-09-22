@@ -1195,7 +1195,7 @@ msgid ""
 "Authorize a user connection even if the password has expired, to have the "
 "Windows server perform the password renew process"
 msgstr ""
-"Authoriser la connection utilisateur même si le mot de passe est expiré afin "
+"Authoriser la connexion utilisateur même si le mot de passe est expiré afin "
 "de laisser le serveur Windows s'occuper de la procédure de renouvellement "
 "de mot de passe"
 
@@ -2041,13 +2041,13 @@ msgstr "Votre %sclé d'enregistrement Edition Premium%s va expiré dans %d jours
 #: ../../AdminConsole/includes/page_template.php:380
 #, php-format
 msgid "Your %sPremium Edition Subscription Key%s has expired."
-msgstr "Votre %sclé d'enregistrement édition premium%s est expirée"
+msgstr "Votre %sclé d'enregistrement Edition Premium%s est expirée"
 
 # 77%
 #: ../../AdminConsole/includes/page_template.php:383
 #, php-format
 msgid "You don't have any valid %sPremium Edition Subscription Keys%s."
-msgstr "Vous n'avez pas de %sclé d'enregistrement édition premium%s valide."
+msgstr "Vous n'avez pas de %sclé d'enregistrement Edition Premium%s valide."
 
 #: ../../AdminConsole/includes/page_template.php:513
 #: ../../AdminConsole/includes/page_template_static.php:95
@@ -3774,16 +3774,16 @@ msgstr "Vérification du FQDN"
 #: ../../AdminConsole/web/configuration-sumup.php:152
 #, php-format
 msgid "Your Premium Edition Subscription Key will expire in %d days"
-msgstr "Votre %sclé d'enresitrement édition premium%s va expiré dans %d jours"
+msgstr "Votre %sclé d'enregistrement Edition Premium%s va expirer dans %d jours"
 
 #: ../../AdminConsole/web/configuration-sumup.php:154
 msgid "Your Premium Edition Subscription Key has expired."
-msgstr "Votre clé d'enregistrement édition premium est expirée"
+msgstr "Votre clé d'enregistrement Edition Premium est expirée"
 
 #: ../../AdminConsole/web/configuration-sumup.php:156
 #, php-format
 msgid "Your Premium Edition Subscription Key is valid for %d days."
-msgstr "Votre clé d'enregistrement édition premium est valide pour %d jours."
+msgstr "Votre clé d'enregistrement Edition Premium est valide pour %d jours."
 
 # 91%
 # 78%
@@ -3791,7 +3791,7 @@ msgstr "Votre clé d'enregistrement édition premium est valide pour %d jours."
 # 76%
 #: ../../AdminConsole/web/configuration-sumup.php:159
 msgid "You don't have any valid Premium Edition Subscription Keys."
-msgstr "Vous n'avez pas de %sclé d'enregistrement édition premium%s valide."
+msgstr "Vous n'avez pas de %sclé d'enregistrement Edition Premium%s valide."
 
 # 90%
 #: ../../AdminConsole/web/index.php:50
@@ -4035,7 +4035,7 @@ msgstr "Supprimer les profils"
 
 #: ../../AdminConsole/web/profiles.php:126
 msgid "No profile"
-msgstr "Aucun profile"
+msgstr "Aucun profil"
 
 #: ../../AdminConsole/web/profiles.php:155
 #, php-format
@@ -4110,7 +4110,7 @@ msgstr ""
 #: ../../AdminConsole/web/reporting.php:780
 msgid "Error: \"to\" field is in the future, the current time will be used"
 msgstr ""
-"Erreur : la date du champ \"fin\" est dans le future. La date actuelle sera "
+"Erreur : la date du champ \"fin\" est dans le futur. La date actuelle sera "
 "utilisée"
 
 #: ../../AdminConsole/web/reporting.php:347
@@ -4625,7 +4625,7 @@ msgstr "Arrêtée : "
 #: ../../AdminConsole/web/session-reporting.php:830
 #: ../../AdminConsole/web/session-reporting.php:894
 msgid "No information available"
-msgstr "Aucun information disponible"
+msgstr "Aucune information disponible"
 
 #: ../../AdminConsole/web/session-reporting.php:474
 #: ../../AdminConsole/web/session-reporting.php:532
@@ -4887,7 +4887,7 @@ msgstr "Dans ces groupes d'utilisateurs"
 # 89%
 #: ../../AdminConsole/web/summary.php:88
 msgid "Published Application Groups"
-msgstr "Groupes d'applications publiés"
+msgstr "Groupes d'applications publiées"
 
 # 96%
 # 100%
@@ -4988,7 +4988,7 @@ msgstr "Terminé"
 
 #: ../../AdminConsole/web/tasks.php:129
 msgid "Internal error requestings tasks"
-msgstr "erreur interne en requétant les tâches"
+msgstr "Erreur interne en requétant les tâches"
 
 #: ../../AdminConsole/web/tasks.php:153
 msgid "List of tasks"
