@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+DEB_PYTHON2_MODULE_PACKAGES = ulteo-ovd-slaveserver-role-gateway
+
+DEB_PYTHON_DESTDIR = debian/tmp
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+

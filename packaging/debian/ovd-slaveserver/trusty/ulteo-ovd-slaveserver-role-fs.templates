@@ -1,0 +1,5 @@
+Template: ulteo-ovd-slaveserver-role-fs/purge_cache
+Type: boolean
+Default: false
+Description: Do you want to delete all user data cache ?
+ Some user data are stored in /var/lib/ulteo/ovd/slaverver/fs folder.

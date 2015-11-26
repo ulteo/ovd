@@ -1,0 +1,14 @@
+Source: ovd-slaveserver-gateway
+Section: net
+Priority: extra
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
+Build-Depends: cdbs, debhelper (>= 6),
+ python (>= 2.6), dh-python
+Standards-Version: 3.7.3
+X-Python-Version: >= 2.6
+
+Package: ulteo-ovd-slaveserver-role-gateway
+Architecture: all
+Depends: ${python:Depends}, ulteo-ovd-slaveserver, openssl, python-openssl, python-m2crypto
+Description: Ulteo Open Virtual Desktop - gateway role for slave server
+ Gateway role for the Ulteo OVD slave server

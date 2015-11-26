@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+if [ -z "$2" ]; then
+	ovd-slaveserver-role add ApplicationServer
+fi
+
+[ -d /usr/share/ovd ] || mkdir /usr/share/ovd
+for i in icons pixmaps mime themes glib-2.0; do
+	[ -d /usr/share/$i -a ! -e /usr/share/ovd/$i ] && ln -s /usr/share/$i /usr/share/ovd/
+done
+
+#DEBHELPER#
+
+exit 0

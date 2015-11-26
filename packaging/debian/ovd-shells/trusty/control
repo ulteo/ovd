@@ -1,0 +1,14 @@
+Source: ovd-shells
+Section: net
+Priority: extra
+Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 6),
+ python (>= 2.6), dh-python
+Standards-Version: 3.7.3
+X-Python-Version: >= 2.6
+
+Package: ulteo-ovd-shells
+Architecture: all
+Depends: ${python:Depends}, uxda-server-python
+Description:  Ulteo Open Virtual Desktop - shell
+ These scripts handle the Open Virtual Desktop user sessions.
