@@ -39,7 +39,7 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: David PHAM-VAN <d.pham-van@ulteo.com>
+Packager: Simon Nivault <simon.nivault@aznetwork.eu>
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch

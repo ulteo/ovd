@@ -25,7 +25,7 @@ License: GPL2
 Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
-Packager: Julien LANGLOIS <julien@ulteo.com>
+Packager: Simon Nivault <simon.nivault@aznetwork.eu>
 
 Source: %{name}-%{version}.tar.gz
 BuildRequires: gcc, autoconf, automake, make, intltool, libtool
