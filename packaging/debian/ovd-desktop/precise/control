@@ -1,7 +1,7 @@
 Source: ovd-desktop
 Section: x11
 Priority: extra
-Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: cdbs, cdbs-xfce, debhelper (>= 6), intltool,
  libxfce4util-dev (>= 4.4), libxfcegui4-dev (>= 4.4),
  xfce4-panel-dev (>= 4.4), xfce4-dev-tools, libgconf2-dev, libgtk2.0-dev,

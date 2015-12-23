@@ -1,7 +1,7 @@
 Source: ovd-session-manager-premium
 Section: net
 Priority: optional
-Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: debhelper (>= 6), cdbs, po-debconf, intltool
 Standards-Version: 3.7.3
 

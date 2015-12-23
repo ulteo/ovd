@@ -1,7 +1,7 @@
 Source: ovd-integrated-launcher
 Section: net
 Priority: extra
-Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: debhelper (>= 6), autotools-dev, cdbs
 Standards-Version: 3.8.4
 Homepage: http://www.ulteo.com

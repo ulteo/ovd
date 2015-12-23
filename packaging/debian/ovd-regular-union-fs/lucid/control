@@ -1,7 +1,7 @@
 Source: ovd-regular-union-fs
 Section: utils
 Priority: optional
-Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: debhelper (>= 6), cmake, libfuse-dev (>= 2.6), libpam-dev, cdbs
 Standards-Version: 3.8.2
 

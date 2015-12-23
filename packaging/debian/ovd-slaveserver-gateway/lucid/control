@@ -1,7 +1,7 @@
 Source: ovd-slaveserver-gateway
 Section: net
 Priority: extra
-Maintainer: David PHAM-VAN <d.pham-van@ulteo.com>
+Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: cdbs, debhelper (>= 6),
  python (>= 2.6), python-central | dh-python
 Standards-Version: 3.7.3
