@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Simon Nivault <simon.nivault@aznetwork.eu>
 Build-Depends: debhelper (>= 6), cdbs,
- default-jdk, ant, ant-optional, mingw32, libx11-dev, libjpeg8-dev, cmake,  icedtea-plugin | icedtea6-plugin
+ default-jdk, ant, ant-optional, mingw32, libx11-dev, libjpeg-dev, cmake,  icedtea-plugin | icedtea6-plugin
 Standards-Version: 3.8.2
 
 Package: ulteo-ovd-applets
