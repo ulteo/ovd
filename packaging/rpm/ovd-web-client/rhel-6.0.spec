@@ -65,13 +65,13 @@ Requires: apache2-mod_php5, php5, php5-curl, php5-dom, php5-gettext, php5-pear
 %description -n ulteo-ovd-web-client
 This is a web based client for Ulteo OVD.
 
-%prep -n ulteo-ovd-web-client
+%prep
 %setup -q
 
-%build -n ulteo-ovd-web-client
+%build
 ./configure --prefix=/usr --sysconfdir=/etc --without-ulteo-applets
 
-%install -n ulteo-ovd-web-client
+%install
 make DESTDIR=$RPM_BUILD_ROOT install
 cp -a ajaxplorer $RPM_BUILD_ROOT/usr/share/ulteo/webclient
 

@@ -47,10 +47,10 @@ Conflicts: ulteo-ovd-slaveserver, samba, uxda-server
 %description -n ulteo-ovd-subsystem
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
 
-%prep -n ulteo-ovd-subsystem
+%prep
 %setup -q
 
-%install -n ulteo-ovd-subsystem
+%install
 install -D conf/default.conf %{buildroot}/etc/default/ulteo-ovd-subsystem
 install -D conf/subsystem.conf %{buildroot}/etc/ulteo/subsystem.conf
 %if %{defined rhel}

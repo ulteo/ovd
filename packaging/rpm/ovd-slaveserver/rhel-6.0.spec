@@ -136,6 +136,7 @@ fi
 %config %{_sysconfdir}/init.d/ulteo-ovd-slaveserver
 %config %{_sysconfdir}/ulteo/ovd/slaveserver.conf
 %{_datadir}/ulteo/ovd/slaveserver/*.py
+%exclude %{_datadir}/ulteo/ovd/slaveserver/*.py[co]
 %{_sbindir}/ulteo-ovd-slaveserver
 %{_sbindir}/ovd-slaveserver-role
 %{_sbindir}/ovd-slaveserver-config

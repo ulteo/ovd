@@ -46,13 +46,13 @@ Group: Applications/System
 %description -n ulteo-ovd-l10n
 Localization package for Ulteo Open Virtual Desktop
 
-%prep -n ulteo-ovd-l10n
+%prep
 %setup -q
 
-%build -n ulteo-ovd-l10n
+%build
 make
 
-%install -n ulteo-ovd-session-manager
+%install
 make DESTDIR=%{buildroot} install
 
 %clean -n ulteo-ovd-l10n

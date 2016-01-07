@@ -63,10 +63,10 @@ Requires: ulteo-ovd-session-manager
 This source package provides the Session Manager Premium Edition 
 web services for the Ulteo Open Virtual Desktop.
 
-%prep -n ulteo-ovd-session-manager-premium
+%prep
 %setup -q
 
-%build -n ulteo-ovd-session-manager-premium
+%build
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart --enable-premium
 make
 
@@ -82,7 +82,7 @@ then
    fi
 fi
 
-%install -n ulteo-ovd-session-manager-premium
+%install
 make DESTDIR=%{buildroot}/tmp install
 mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager
 mkdir -p %{buildroot}/usr/share/ulteo/sessionmanager/PEAR

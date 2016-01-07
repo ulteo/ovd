@@ -47,13 +47,13 @@ Requires: python uxda-server-python
 %description -n ulteo-ovd-shells
 These scripts handle the Open Virtual Desktop user sessions.
 
-%prep -n ulteo-ovd-shells
+%prep
 %setup -q
 
-%build -n ulteo-ovd-shells
+%build
 %{__python} setup.py build
 
-%install -n ulteo-ovd-shells
+%install
 %{__python} setup.py install --root $RPM_BUILD_ROOT --prefix %{_prefix}
 
 %clean -n ulteo-ovd-shells

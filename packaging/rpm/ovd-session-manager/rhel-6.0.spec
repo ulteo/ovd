@@ -63,14 +63,14 @@ Requires: %{php_bin}, %{php_bin}-ldap, %{php_bin}-mysql, %{php_bin}-mbstring, %{
 This package provides the Session Manager web services for the Ulteo
 Open Virtual Desktop.
 
-%prep -n ulteo-ovd-session-manager
+%prep
 %setup -q
 
-%build -n ulteo-ovd-session-manager
+%build
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart
 make
 
-%install -n ulteo-ovd-session-manager
+%install
 make DESTDIR=%{buildroot} install
 rm -rf %{buildroot}/usr/share/ulteo/sessionmanager/PEAR/php-saml
 rm -f %{buildroot}/usr/share/ulteo/sessionmanager/modules/AuthMethod/SAML2.php

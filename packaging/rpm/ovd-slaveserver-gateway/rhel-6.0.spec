@@ -56,15 +56,15 @@ Requires: python, ulteo-ovd-slaveserver, openssl, python-openssl, python-m2crypt
 Gateway role for the Ulteo OVD slave server.
 
 
-%prep -n ulteo-ovd-slaveserver-role-gateway
+%prep
 %setup -q
 
 
-%build -n ulteo-ovd-slaveserver-role-gateway
+%build
 %{__python} setup.py build
 
 
-%install -n ulteo-ovd-slaveserver-role-gateway
+%install
 %{__python} setup.py install --root %{buildroot} --prefix %{_prefix}
 
 %{__rm} -r %{buildroot}{%{_datadir},%{_sysconfdir},%{_sbindir}}

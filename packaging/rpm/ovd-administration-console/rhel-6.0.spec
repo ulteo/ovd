@@ -64,14 +64,14 @@ Requires: ulteo-ovd-l10n, %{php_bin}, %{php_bin}-dom, %{php_bin}-mbstring, %{php
 This package provides the web Administration Console for the Ulteo
 Open Virtual Desktop solution.
 
-%prep -n ulteo-ovd-administration-console
+%prep
 %setup -q
 
-%build -n ulteo-ovd-administration-console
+%build
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart
 make
 
-%install -n ulteo-ovd-administration-console
+%install
 make DESTDIR=%{buildroot} install
 
 %post -n ulteo-ovd-administration-console

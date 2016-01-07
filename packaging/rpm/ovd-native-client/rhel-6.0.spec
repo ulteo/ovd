@@ -59,10 +59,10 @@ Requires: java-1.6.0-openjdk
 This application is used in the Open Virtual Desktop to display the user
 session and launch applications via a native client.
 
-%prep -n ulteo-ovd-native-client
+%prep
 %setup -q
 
-%install -n ulteo-ovd-native-client
+%install
 ant ovdNativeClient.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dlanguages=true
 
 %post -n ulteo-ovd-native-client

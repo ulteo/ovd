@@ -43,14 +43,14 @@ Group: Applications/System
 %description -n ulteo-ovd-integrated-launcher
 Launch hook for seamless applications
 
-%prep -n ulteo-ovd-integrated-launcher
+%prep
 %setup -q
 
-%build -n ulteo-ovd-integrated-launcher
+%build
 ./configure --prefix=%{_prefix} --libdir=%{_libdir} -sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir}
 make
 
-%install -n ulteo-ovd-integrated-launcher
+%install
 make DESTDIR=%{buildroot} install
 
 %clean ulteo-ovd-integrated-launcher
