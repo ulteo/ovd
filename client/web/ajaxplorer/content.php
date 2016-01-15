@@ -60,7 +60,7 @@ require_once($confStorageDriver->getUserClassFileName());
 //session_name("AjaXplorer");
 @session_start();
 
-set_error_handler(array("AJXP_XMLWriter", "catchError"), E_ALL & ~E_NOTICE & ~E_WARNING);
+set_error_handler(array("AJXP_XMLWriter", "catchError"), E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT);
 
 if(isSet($_GET["tmp_repository_id"])){
 	ConfService::switchRootDir($_GET["tmp_repository_id"], true);
