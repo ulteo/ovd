@@ -1,9 +1,9 @@
 [submodule "AdminConsole/web/media/script/lib/EditArea"]
 	path = AdminConsole/web/media/script/lib/EditArea
-	url = ../../legacy-ulteo/EditArea.git
+	url = ../editarea.git
 [submodule "AdminConsole/includes/tcpdf"]
 	path = AdminConsole/includes/tcpdf
-	url = ../../legacy-ulteo/tcpdf.git
+	url = ../tcpdf.git
 [submodule "SessionManager/web/PEAR/php-saml"]
 	path = SessionManager/web/PEAR/php-saml
-	url = ../../legacy-ulteo/php-saml.git
+	url = ../php-saml.git
